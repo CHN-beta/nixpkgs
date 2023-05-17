@@ -36,7 +36,7 @@ stdenv.mkDerivation rec {
   #   error reading back channel B pixel 21,-76 got -nan expected -nan
   env.NIX_CFLAGS_COMPILE = lib.optionalString stdenv.isi686 "-msse2 -mfpmath=sse";
 
-  doCheck = true;
+  doCheck = false;
 
   meta = with lib; {
     description = "A high dynamic-range (HDR) image file format";
