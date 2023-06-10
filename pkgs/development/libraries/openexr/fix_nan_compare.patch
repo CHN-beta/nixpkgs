@@ -1,0 +1,13 @@
+diff --git a/src/test/OpenEXRTest/testOptimizedInterleavePatterns.cpp b/src/test/OpenEXRTest/testOptimizedInterleavePatterns.cpp
+index b1e92cab..0d2bd93f 100644
+--- a/src/test/OpenEXRTest/testOptimizedInterleavePatterns.cpp
++++ b/src/test/OpenEXRTest/testOptimizedInterleavePatterns.cpp
+@@ -221,7 +221,7 @@ bool compare(const FrameBuffer& asRead,
+                     writtenHalf=half(i.slice().fillValue);
+                 }
+ 
+-                if (writtenHalf.bits()!=readHalf.bits())
++                if (!(writtenHalf.bits() == readHalf.bits() || (writtenHalf.isNan() && readHalf.isNan())))
+                 {
+                     if (nonfatal)
+                     {
