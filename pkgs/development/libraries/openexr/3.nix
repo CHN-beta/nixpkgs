@@ -18,8 +18,6 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-Kl+aOA797aZvrvW4ZQNHdSU7YFPieZEzX3aYeaoH6eU=";
   };
 
-  patches = [ ./fix_nan_compare.patch ];
-
   outputs = [ "bin" "dev" "out" "doc" ];
 
   # tests are determined to use /var/tmp on unix
