@@ -103,8 +103,6 @@ buildPythonPackage rec {
     "test_async_with_session"
     "test_session_close_awaitable"
     "test_close_run_until_complete_not_deprecated"
-	# issue https://github.com/NixOS/nixpkgs/issues/236552
-	"test_web_sendfile_functional"
   ] ++ lib.optionals stdenv.is32bit [
     "test_cookiejar"
   ] ++ lib.optionals stdenv.isDarwin [
