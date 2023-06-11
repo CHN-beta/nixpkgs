@@ -4,7 +4,6 @@
 , enableParallelBuilding ? true
 , srcArchiveSuffix ? "tar.bz2"
 , extraPatches ? []
-, sourceSubdir ? ""
 }:
 
 let
@@ -16,7 +15,7 @@ stdenv.mkDerivation rec {
 
   src = fetchurl {
     inherit sha256;
-    url = "https://download.mono-project.com/sources/mono/${sourceSubdir}${pname}-${version}.${srcArchiveSuffix}";
+    url = "https://download.mono-project.com/sources/mono/${pname}-${version}.${srcArchiveSuffix}";
   };
 
   nativeBuildInputs = [ automake bison cmake pkg-config which gnumake42 ];
