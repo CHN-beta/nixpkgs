@@ -56,7 +56,7 @@ rec {
     cascadelake    = [ "skylake-avx512" ] ++ inferiors.cannonlake;
     cooperlake     = [ "cascadelake"    ] ++ inferiors.cascadelake;
     tigerlake      = [ "icelake-server" ] ++ inferiors.icelake-server;
-    alderlake      = [ "syklake"        ] ++ inferiors.tigerlake;
+    alderlake      = [ ];
 
     # x86_64 AMD
     # TODO: fill this (need testing)
