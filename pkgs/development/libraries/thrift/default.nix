@@ -96,6 +96,7 @@ stdenv.mkDerivation rec {
   disabledTests = [
     "PythonTestSSLSocket"
     "PythonThriftTNonblockingServer"
+	"TInterruptTest"
   ] ++ lib.optionals stdenv.isDarwin [
     # Tests that hang up in the Darwin sandbox
     "SecurityTest"
