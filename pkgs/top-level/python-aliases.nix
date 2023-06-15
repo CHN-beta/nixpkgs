@@ -41,6 +41,7 @@ mapAliases ({
   ansible-later = throw "ansible-later has been promoted to a top-level attribute"; # Added 2023-05-16
   ansible-lint = throw "ansible-lint has been promoted to a top-level attribute"; # Added 2023-05-16
   anyjson = throw "anyjson has been removed, it was using setuptools 2to3 translation feature, which has been removed in setuptools 58"; # added 2022-01-18
+  apache-airflow = throw "apache-airflow has been moved out of pythonPackages and is available as a standalone package"; # added 2023-06-05
   argon2_cffi = argon2-cffi; # added 2022-05-09
   APScheduler = apscheduler; # added 2023-02-19
   asyncio-nats-client = nats-py; # added 2022-02-08
@@ -104,6 +105,7 @@ mapAliases ({
   face_recognition_models = face-recognition-models; # added 2022-10-15
   fake_factory = throw "fake_factory has been removed because it is unused and deprecated by upstream since 2016."; # added 2022-05-30
   faulthandler = throw "faulthandler is built into ${python.executable}"; # added 2021-07-12
+  inherit (super.pkgs) fetchPypi; # added 2023-05-25
   filemagic = throw "inactive since 2014, so use python-magic instead"; # added 2022-11-19
   flaskbabel = flask-babel; # added 2023-01-19
   flask_login = flask-login; # added 2022-10-17
@@ -112,6 +114,10 @@ mapAliases ({
   flask_testing = flask-testing; # added 2022-04-25
   flask_wtf = flask-wtf; # added 2022-05-24
   FormEncode = formencode; # added 2023-02-19
+  foundationdb51 = throw "foundationdb51 is no longer maintained, use foundationdb71 instead"; # added 2023-06-06
+  foundationdb52 = throw "foundationdb52 is no longer maintained, use foundationdb71 instead"; # added 2023-06-06
+  foundationdb60 = throw "foundationdb60 is no longer maintained, use foundationdb71 instead"; # added 2023-06-06
+  foundationdb61 = throw "foundationdb61 is no longer maintained, use foundationdb71 instead"; # added 2023-06-06
   functorch = throw "functorch is now part of the torch package and has therefore been removed. See https://github.com/pytorch/functorch/releases/tag/v1.13.0 for more info."; # added 2022-12-01
   garages-amsterdam = throw "garages-amsterdam has been renamed odp-amsterdam."; # added 2023-01-04
   garminconnect-ha = garminconnect; # added 2022-02-05
@@ -125,6 +131,7 @@ mapAliases ({
   google_api_python_client = google-api-python-client; # added 2021-03-19
   googleapis_common_protos = googleapis-common-protos; # added 2021-03-19
   google-apitools = throw "google-apitools was removed because it is deprecated and unsupported by upstream"; # added 2023-02-25
+  gpyopt = throw "gpyopt was remove because it's been archived upstream"; # added 2023-06-07
   graphite_api = throw "graphite_api was removed, because it is no longer maintained"; # added 2022-07-10
   graphite_beacon = throw "graphite_beacon was removed, because it is no longer maintained"; # added 2022-07-09
   grpc_google_iam_v1 = grpc-google-iam-v1; # added 2021-08-21
@@ -138,6 +145,7 @@ mapAliases ({
   ihatemoney = throw "ihatemoney was removed because it is no longer maintained downstream"; # added 2023-04-08
   IMAPClient = imapclient; # added 2021-10-28
   imdbpy = throw "imdbpy has been renamed to cinemagoer"; # added 2022-08-08
+  image-match = throw "image-match has been removed because it is no longer maintained"; # added 2023-06-10
   intreehook =  throw "intreehooks has been removed because it is obsolete as a backend-path key was added to PEP 517"; # added 2023-04-11
   ipaddress = throw "ipaddress has been removed because it is no longer required since python 2.7."; # added 2022-05-30
   influxgraph = throw "influxgraph has been removed because it is no longer maintained"; # added 2022-07-10
@@ -157,6 +165,7 @@ mapAliases ({
   loo-py = loopy; # added 2022-05-03
   Mako = mako; # added 2023-02-19
   Markups = markups; # added 2022-02-14
+  markdownsuperscript = throw "markdownsuperscript is unmaintained, use pymdown-extensions"; # added 2023-06-10
   MDP = mdp; # added 2023-02-19
   MechanicalSoup = mechanicalsoup; # added 2021-06-01
   memcached = python-memcached; # added 2022-05-06
@@ -214,6 +223,7 @@ mapAliases ({
   pymssql = throw "pymssql has been abandoned upstream."; # added 2020-05-04
   PyMVGLive = pymvglive; # added 2023-02-19
   pyramid_hawkauth = throw "pyramid_hawkauth has been removed because it is no longer maintained"; # added 2023-02-2
+  pyramid_jinja2 = pyramid-jinja2; # added 2023-06-06
   pyreadability = readability-lxml; # added 2022-05-24
   pyroute2-core = throw "pyroute2 migrated back to a single package scheme in version 0.7.1"; # added 2022-07-16
   pyroute2-ethtool = throw "pyroute2 migrated back to a single package scheme in version 0.7.1"; # added 2022-07-16

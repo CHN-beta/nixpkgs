@@ -293,6 +293,7 @@ with lib.maintainers; {
       imincik
       sikmir
       nh2
+      willcohen
     ];
     scope = "Maintain geospatial packages.";
     shortName = "Geospatial";
@@ -537,7 +538,6 @@ with lib.maintainers; {
       ma27
       fadenb
       mguentner
-      ekleog
       ralith
       dandellion
       sumnerevans

@@ -995,7 +995,7 @@ and in this case the `python3` interpreter is automatically used.
 ### Interpreters {#interpreters}
 
 Versions 2.7, 3.8, 3.9, 3.10 and 3.11 of the CPython interpreter are available
-as respectively `python27`, python38`, `python39`, `python310` and `python311`.
+as respectively `python27`, `python38`, `python39`, `python310` and `python311`.
 The aliases `python2` and `python3` correspond to respectively `python27` and
 `python310`. The attribute `python` maps to `python2`. The PyPy interpreters
 compatible with Python 2.7 and 3 are available as `pypy27` and `pypy3`, with
@@ -1514,10 +1514,6 @@ Note: There is a boolean value `lib.inNixShell` set to `true` if nix-shell is in
 Packages inside nixpkgs are written by hand. However many tools exist in
 community to help save time. No tool is preferred at the moment.
 
-- [pypi2nix](https://github.com/nix-community/pypi2nix): Generate Nix
-  expressions for your Python project. Note that [sharing derivations from
-  pypi2nix with nixpkgs is possible but not
-  encouraged](https://github.com/nix-community/pypi2nix/issues/222#issuecomment-443497376).
 - [nixpkgs-pytools](https://github.com/nix-community/nixpkgs-pytools)
 - [poetry2nix](https://github.com/nix-community/poetry2nix)
 

@@ -9857,10 +9857,10 @@ with self; {
 
   FinanceQuote = buildPerlPackage {
     pname = "Finance-Quote";
-    version = "1.55";
+    version = "1.56";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/B/BP/BPSCHUCK/Finance-Quote-1.55.tar.gz";
-      hash = "sha256-4uAAtnxmtq9Q1HYYWEkhEFEKVaAwqJEBfUDH3iGLdI8=";
+      url = "mirror://cpan/authors/id/B/BP/BPSCHUCK/Finance-Quote-1.56.tar.gz";
+      hash = "sha256-ER1vBY5kZLdIXAGPidDhiR/OC5aNnG+6G/JU1hLHpKs=";
     };
     buildInputs = [ DateManip DateRange DateSimple DateTime DateTimeFormatISO8601 StringUtil TestKwalitee TestPerlCritic TestPod TestPodCoverage ];
     propagatedBuildInputs = [ DateTimeFormatStrptime Encode HTMLTableExtract HTMLTokeParserSimple HTMLTree HTMLTreeBuilderXPath HTTPCookies JSON IOCompress LWPProtocolHttps Readonly StringUtil SpreadsheetXLSX TextTemplate TryTiny WebScraper XMLLibXML libwwwperl ];
@@ -10912,6 +10912,7 @@ with self; {
       url = "mirror://cpan/authors/id/Z/ZE/ZEFRAM/Hash-SharedMem-0.005.tar.gz";
       hash = "sha256-Mkd2gIYC973EStqpN4lTZUVAKakm+mEfMhyb9rlAu14=";
     };
+    env.NIX_CFLAGS_COMPILE = lib.optionalString stdenv.isAarch64 "-mno-outline-atomics";
     buildInputs = [ ScalarString ];
     meta = {
       description = "Efficient shared mutable hash";
