@@ -103,14 +103,14 @@ buildPythonPackage rec {
     "test_async_with_session"
     "test_session_close_awaitable"
     "test_close_run_until_complete_not_deprecated"
-	# issue https://github.com/NixOS/nixpkgs/issues/236552
-	"test_web_sendfile_functional"
   ] ++ lib.optionals stdenv.is32bit [
     "test_cookiejar"
   ] ++ lib.optionals stdenv.isDarwin [
     "test_addresses"  # https://github.com/aio-libs/aiohttp/issues/3572, remove >= v4.0.0
     "test_close"
-  ];
+  ]
+  # issue https://github.com/NixOS/nixpkgs/issues/236552
+  ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake") [ "test_web_sendfile_functional" ];
 
   disabledTestPaths = [
     "test_proxy_functional.py" # FIXME package proxy.py

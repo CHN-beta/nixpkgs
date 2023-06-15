@@ -1,3 +1,19 @@
+Modified for personal use, mainly for compiling natively on Alderlake.
+
+The following files were modified:
+
+* `lib/systems/architectures.nix`
+* `pkgs/development`:
+  * `haskell-modules/default.nix`
+  * `libraries`:
+    * `thrift/default.nix`
+    * `openexr`:
+      * `3.nix`
+      * `fix_nan_compare.patch`
+  * `python-modules`:
+    * `debugpy/default.nix`
+    * `aiohttp/default.nix`
+
 <p align="center">
   <a href="https://nixos.org#gh-light-mode-only">
     <img src="https://raw.githubusercontent.com/NixOS/nixos-homepage/master/logo/nixos-hires.png" width="500px" alt="NixOS logo"/>

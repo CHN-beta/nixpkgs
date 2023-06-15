@@ -27,7 +27,8 @@ let
     (configurationDarwin { inherit pkgs haskellLib; })
   ]
   # override for alderlake
-  ++ [( self: super: { cryptonite = haskellLib.dontCheck super.cryptonite; } )];
+  ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake")
+  	[( self: super: { cryptonite = haskellLib.dontCheck super.cryptonite; } )];
 
   extensions = lib.composeManyExtensions ([
     nonHackagePackages
