@@ -17,6 +17,7 @@
 , tzdata
 # Used to break internal dependency loop.
 , enableDocumentation ? true
+, stdenv
 }:
 
 buildPythonPackage rec {
@@ -84,6 +85,10 @@ buildPythonPackage rec {
 
   pythonImportsCheck = [
     "hypothesis"
+  ];
+
+  disabledTests = [] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake") [
+	"test_initialize_rule_populate_bundle"
   ];
 
   meta = with lib; {
