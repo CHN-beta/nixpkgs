@@ -367,10 +367,10 @@ in
       find -name "*.cmd" -exec sed -i s,/lib:/usr/lib,, {} \;
     ''
 
-	+ (lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake") 
+	+ ( if stdenv.hostPlatform.gcc.arch or "" == "alderlake" then
 	''
 		sed -e '/CPPUNIT_TEST(testDubiousArrayFormulasFODS);/d' -i './sc/qa/unit/functions_array.cxx'
-	'');
+	'' else "");
 
   makeFlags = [ "SHELL=${bash}/bin/bash" ];
 
