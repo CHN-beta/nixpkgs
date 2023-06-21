@@ -641,7 +641,7 @@ class Machine:
             return status != 0
 
         with self.nested(f"waiting for failure: {command}"):
-            retry(check_failure)
+            retry(check_failure, timeout)
             return output
 
     def wait_for_shutdown(self) -> None:
@@ -868,7 +868,7 @@ class Machine:
         # to match multiline regexes.
         console = io.StringIO()
 
-        def console_matches() -> bool:
+        def console_matches(_: Any) -> bool:
             nonlocal console
             try:
                 # This will return as soon as possible and
@@ -884,7 +884,7 @@ class Machine:
             if timeout is not None:
                 retry(console_matches, timeout)
             else:
-                while not console_matches():
+                while not console_matches(False):
                     pass
 
     def send_key(
