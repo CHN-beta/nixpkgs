@@ -17,7 +17,6 @@
 , sphinx-hoverxref
 , sphinx-codeautolink
 , tzdata
-, stdenv
 }:
 
 buildPythonPackage rec {
