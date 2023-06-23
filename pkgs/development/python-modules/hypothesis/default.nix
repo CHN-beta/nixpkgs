@@ -8,22 +8,22 @@
 , doCheck ? true
 , pytestCheckHook
 , pytest-xdist
+, python
 , sortedcontainers
+, stdenv
 , pythonOlder
 , sphinxHook
 , sphinx-rtd-theme
 , sphinx-hoverxref
 , sphinx-codeautolink
 , tzdata
-# Used to break internal dependency loop.
-, enableDocumentation ? true
 , stdenv
 }:
 
 buildPythonPackage rec {
   pname = "hypothesis";
   version = "6.68.2";
-  outputs = [ "out" ] ++ lib.optional enableDocumentation "doc";
+  outputs = [ "out" ];
   format = "setuptools";
 
   disabled = pythonOlder "3.7";
@@ -50,13 +50,6 @@ buildPythonPackage rec {
 
   postUnpack = "sourceRoot=$sourceRoot/hypothesis-python";
 
-  nativeBuildInputs = lib.optionals enableDocumentation [
-    sphinxHook
-    sphinx-rtd-theme
-    sphinx-hoverxref
-    sphinx-codeautolink
-  ];
-
   propagatedBuildInputs = [
     attrs
     sortedcontainers
@@ -68,7 +61,7 @@ buildPythonPackage rec {
     pexpect
     pytest-xdist
     pytestCheckHook
-  ] ++ lib.optionals (isPyPy) [
+  ] ++ lib.optionals isPyPy [
     tzdata
   ];
 
@@ -86,6 +79,30 @@ buildPythonPackage rec {
   pythonImportsCheck = [
     "hypothesis"
   ];
+
+  passthru = {
+    doc = stdenv.mkDerivation {
+      # Forge look and feel of multi-output derivation as best as we can.
+      #
+      # Using 'outputs = [ "doc" ];' breaks a lot of assumptions.
+      name = "${pname}-${version}-doc";
+      inherit src pname version;
+
+      postInstallSphinx = ''
+        mv $out/share/doc/* $out/share/doc/python$pythonVersion-$pname-$version
+      '';
+
+      nativeBuildInputs = [
+        sphinxHook
+        sphinx-rtd-theme
+        sphinx-hoverxref
+        sphinx-codeautolink
+      ];
+
+      inherit (python) pythonVersion;
+      inherit meta;
+    };
+  };
 
   disabledTests = [] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake") [
 	"test_initialize_rule_populate_bundle"

@@ -29,6 +29,7 @@ rec {
     znver1         = [ "sse3" "ssse3" "sse4_1" "sse4_2" "sse4a" "aes" "avx" "avx2"          "fma"        ];
     znver2         = [ "sse3" "ssse3" "sse4_1" "sse4_2" "sse4a" "aes" "avx" "avx2"          "fma"        ];
     znver3         = [ "sse3" "ssse3" "sse4_1" "sse4_2" "sse4a" "aes" "avx" "avx2"          "fma"        ];
+    znver4         = [ "sse3" "ssse3" "sse4_1" "sse4_2" "sse4a" "aes" "avx" "avx2" "avx512" "fma"        ];
     # other
     armv5te        = [ ];
     armv6          = [ ];
@@ -56,6 +57,7 @@ rec {
     cascadelake    = [ "skylake-avx512" ] ++ inferiors.cannonlake;
     cooperlake     = [ "cascadelake"    ] ++ inferiors.cascadelake;
     tigerlake      = [ "icelake-server" ] ++ inferiors.icelake-server;
+    # CX16 does not exist on alderlake, while it does on nearly all other intel CPUs
     alderlake      = [ ];
 
     # x86_64 AMD
@@ -88,6 +90,7 @@ rec {
     znver1         = [ "skylake" ] ++ inferiors.skylake;
     znver2         = [ "znver1"  ] ++ inferiors.znver1;
     znver3         = [ "znver2"  ] ++ inferiors.znver2;
+    znver4         = [ "znver3"  ] ++ inferiors.znver3;
 
     # other
     armv5te        = [ ];
