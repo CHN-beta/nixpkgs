@@ -2,16 +2,16 @@
 
 buildGoModule rec {
   pname = "earthly";
-  version = "0.7.8";
+  version = "0.7.10";
 
   src = fetchFromGitHub {
     owner = "earthly";
     repo = "earthly";
     rev = "v${version}";
-    sha256 = "sha256-zLv0wuAM6d84Z2jCf89KDIIqX+Hiiw40g3DnTZxVTYY=";
+    sha256 = "sha256-Agg1r/5QYk5U9ZblVO/WvLCBy9od7vQuDYKOJeR93XA=";
   };
 
-  vendorHash = "sha256-NUm+vkJsT78pxrPqwDofPlrc6jQMTFjsRF7uPUPhDGQ=";
+  vendorHash = "sha256-tEhUywjJtNaWLPSRNeHTcNsPNCZtXzqjg0VG4g4N9E0=";
   subPackages = [ "cmd/earthly" "cmd/debugger" ];
 
   CGO_ENABLED = 0;

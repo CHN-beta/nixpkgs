@@ -26,6 +26,10 @@ rustPlatform.buildRustPackage rec {
     fetchSubmodules = true;
   };
 
+  preConfigure = ''
+    echo 'pub const VERSION: &str = "${version}";' > crates/utils/src/version.rs
+  '';
+
   cargoSha256 = pinData.serverCargoSha256;
 
   buildInputs = [ postgresql ]
@@ -49,7 +53,7 @@ rustPlatform.buildRustPackage rec {
     description = "🐀 Building a federated alternative to reddit in rust";
     homepage = "https://join-lemmy.org/";
     license = licenses.agpl3Only;
-    maintainers = with maintainers; [ happysalada billewanick ];
+    maintainers = with maintainers; [ happysalada billewanick adisbladis ];
     mainProgram = "lemmy_server";
   };
 }

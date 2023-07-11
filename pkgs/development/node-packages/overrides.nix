@@ -521,7 +521,7 @@ final: prev: {
     nativeBuildInputs = [ pkgs.buildPackages.makeWrapper ];
     postInstall = ''
       wrapProgram "$out/bin/ts-node" \
-      --prefix NODE_PATH : ${final.typescript}/lib/node_modules
+      --prefix NODE_PATH : ${pkgs.typescript}/lib/node_modules
     '';
   };
 
@@ -529,14 +529,14 @@ final: prev: {
     nativeBuildInputs = [ pkgs.buildPackages.makeWrapper ];
     postInstall = ''
       wrapProgram "$out/bin/tsun" \
-      --prefix NODE_PATH : ${final.typescript}/lib/node_modules
+      --prefix NODE_PATH : ${pkgs.typescript}/lib/node_modules
     '';
   };
 
   typescript-language-server = prev.typescript-language-server.override {
     nativeBuildInputs = [ pkgs.buildPackages.makeWrapper ];
     postInstall = ''
-      ${pkgs.xorg.lndir}/bin/lndir ${final.typescript} $out
+      ${pkgs.xorg.lndir}/bin/lndir ${pkgs.typescript} $out
     '';
   };
 
@@ -597,6 +597,11 @@ final: prev: {
 
   wrangler = prev.wrangler.override (oldAttrs: {
     meta = oldAttrs.meta // { broken = before "16.13"; };
+    buildInputs = [ pkgs.llvmPackages.libcxx pkgs.llvmPackages.libunwind ] ++ lib.optional stdenv.isLinux pkgs.autoPatchelfHook;
+    preFixup = ''
+      # patch elf is trying to patch binary for sunos
+      rm -r $out/lib/node_modules/wrangler/node_modules/@esbuild/sunos-x64
+    '';
   });
 
   yaml-language-server = prev.yaml-language-server.override {

@@ -1,4 +1,4 @@
-{ mkDerivation, haskellPackages, fetchFromGitHub, lib, writeText }:
+{ mkDerivation, haskellPackages, fetchFromGitHub, lib }:
 
 let
   # deadd-notification-center.service
@@ -17,13 +17,13 @@ let
   '';
 in mkDerivation rec {
   pname = "deadd-notification-center";
-  version = "2.0.3";
+  version = "2.0.4";
 
   src = fetchFromGitHub {
     owner = "phuhl";
     repo = "linux_notification_center";
-    rev = "${version}";
-    hash = "sha256-OM4zzKdo0HMvzAl7BG9IuSHmTauSC5rLWoJJOAshDYg=";
+    rev = version;
+    hash = "sha256-ascg31HsHeXKhvMNntiRLuZ4+T2+fokfDhZ3c8N/Gzg=";
   };
 
   isLibrary = false;

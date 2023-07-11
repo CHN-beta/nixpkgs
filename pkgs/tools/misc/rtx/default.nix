@@ -11,16 +11,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "rtx";
-  version = "1.32.0";
+  version = "1.32.2";
 
   src = fetchFromGitHub {
     owner = "jdxcode";
     repo = "rtx";
     rev = "v${version}";
-    sha256 = "sha256-1TaBxVu/aNZ3iZWlo1Gn9pFK5j/vKsx6yT+eAPkmYSw=";
+    sha256 = "sha256-Q210UAyPPeBfxFJvmudjhrNsVpBOG2hSQ0PeLLWMZx8=";
   };
 
-  cargoSha256 = "sha256-wgTckF1IqnTa6gYVYHDNLdyx2w2urYG5Qqkq1iyuA3M=";
+  cargoHash = "sha256-1Pmt+DWXSkY8uwE4bNu68NTnQLnfsoQr7I7BgCiQ+1E=";
 
   nativeBuildInputs = [ installShellFiles ];
   buildInputs = lib.optionals stdenv.isDarwin [ Security ];

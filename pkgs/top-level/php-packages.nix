@@ -1,7 +1,6 @@
 { stdenv
 , lib
 , pkgs
-, fetchgit
 , phpPackage
 , autoconf
 , pkg-config
@@ -10,22 +9,16 @@
 , curl
 , cyrus_sasl
 , enchant2
-, fetchpatch
 , freetds
-, freetype
 , gd
 , gettext
 , gmp
 , html-tidy
 , icu64
-, libXpm
 , libffi
 , libiconv
-, libjpeg
 , libkrb5
-, libpng
 , libsodium
-, libwebp
 , libxml2
 , libxslt
 , libzip
@@ -46,6 +39,7 @@
 , uwimap
 , valgrind
 , zlib
+, fetchpatch
 }:
 
 lib.makeScope pkgs.newScope (self: with self; {
@@ -84,15 +78,15 @@ lib.makeScope pkgs.newScope (self: with self; {
   # will mark the extension as a zend extension or not.
   mkExtension = lib.makeOverridable
     ({ name
-    , configureFlags ? [ "--enable-${extName}" ]
-    , internalDeps ? [ ]
-    , postPhpize ? ""
-    , buildInputs ? [ ]
-    , zendExtension ? false
-    , doCheck ? true
-    , extName ? name
-    , ...
-    }@args: stdenv.mkDerivation ((builtins.removeAttrs args [ "name" ]) // {
+     , configureFlags ? [ "--enable-${extName}" ]
+     , internalDeps ? [ ]
+     , postPhpize ? ""
+     , buildInputs ? [ ]
+     , zendExtension ? false
+     , doCheck ? true
+     , extName ? name
+     , ...
+     }@args: stdenv.mkDerivation ((builtins.removeAttrs args [ "name" ]) // {
       pname = "php-${name}";
       extensionName = extName;
 
@@ -209,14 +203,22 @@ lib.makeScope pkgs.newScope (self: with self; {
   # This is a set of PHP extensions meant to be used in php.buildEnv
   # or php.withExtensions to extend the functionality of the PHP
   # interpreter.
-  extensions = {
+  # The extensions attributes is composed of three sections:
+  # 1. The contrib conditional extensions, which are only available on specific PHP versions
+  # 2. The contrib extensions available
+  # 3. The core extensions
+  extensions =
+  # Contrib conditional extensions
+   lib.optionalAttrs (!(lib.versionAtLeast php.version "8.3")) {
+    blackfire = callPackage ../development/tools/misc/blackfire/php-probe.nix { inherit php; };
+  } //
+  # Contrib extensions
+  {
     amqp = callPackage ../development/php-packages/amqp { };
 
     apcu = callPackage ../development/php-packages/apcu { };
 
     ast = callPackage ../development/php-packages/ast { };
-
-    blackfire = pkgs.callPackage ../development/tools/misc/blackfire/php-probe.nix { inherit php; };
 
     couchbase = callPackage ../development/php-packages/couchbase { };
 
@@ -282,7 +284,7 @@ lib.makeScope pkgs.newScope (self: with self; {
 
     redis = callPackage ../development/php-packages/redis { };
 
-    relay = callPackage ../development/php-packages/relay  { inherit php; };
+    relay = callPackage ../development/php-packages/relay { inherit php; };
 
     smbclient = callPackage ../development/php-packages/smbclient { };
 
@@ -300,6 +302,7 @@ lib.makeScope pkgs.newScope (self: with self; {
 
     yaml = callPackage ../development/php-packages/yaml { };
   } // (
+    # Core extensions
     let
       # This list contains build instructions for different modules that one may
       # want to build.
@@ -332,7 +335,10 @@ lib.makeScope pkgs.newScope (self: with self; {
         }
         { name = "exif"; doCheck = false; }
         { name = "ffi"; buildInputs = [ libffi ]; }
-        { name = "fileinfo"; buildInputs = [ pcre2 ]; }
+        {
+          name = "fileinfo";
+          buildInputs = [ pcre2 ];
+        }
         { name = "filter"; buildInputs = [ pcre2 ]; }
         { name = "ftp"; buildInputs = [ openssl ]; }
         {
@@ -440,7 +446,7 @@ lib.makeScope pkgs.newScope (self: with self; {
         }
         {
           name = "openssl";
-          buildInputs = if (lib.versionAtLeast php.version "8.1") then [ openssl ] else [ openssl_1_1 ];
+          buildInputs = [ openssl ];
           configureFlags = [ "--with-openssl" ];
           doCheck = false;
         }
@@ -519,7 +525,9 @@ lib.makeScope pkgs.newScope (self: with self; {
           '';
           doCheck = false;
         }
-        { name = "session"; doCheck = false; }
+        { name = "session";
+          doCheck = false;
+        }
         { name = "shmop"; }
         {
           name = "simplexml";
@@ -556,8 +564,7 @@ lib.makeScope pkgs.newScope (self: with self; {
         { name = "tidy"; configureFlags = [ "--with-tidy=${html-tidy}" ]; doCheck = false; }
         {
           name = "tokenizer";
-          patches = lib.optional (lib.versionAtLeast php.version "8.1")
-            ../development/interpreters/php/fix-tokenizer-php81.patch;
+          patches = [ ../development/interpreters/php/fix-tokenizer-php81.patch ];
         }
         {
           name = "xml";

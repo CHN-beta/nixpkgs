@@ -36,6 +36,7 @@ mapAliases ({
   abodepy = jaraco-abode; # added 2023-02-01
   acebinf = throw "acebinf has been removed because it is abandoned and broken."; # Added 2023-05-19
   aioh2 = throw "aioh2 has been removed because it is abandoned and broken."; # Added 2022-03-30
+  aiosenseme = throw "aiosenseme has been removed, because it does no longer work with the latest firmware and has become unmaintained"; # Added 2023-07-05
   ansible-base = throw "ansible-base has been removed, because it is end of life"; # added 2022-03-30
   ansible-doctor = throw "ansible-doctor has been promoted to a top-level attribute"; # Added 2023-05-16
   ansible-later = throw "ansible-later has been promoted to a top-level attribute"; # Added 2023-05-16
@@ -156,6 +157,7 @@ mapAliases ({
   JayDeBeApi = jaydebeapi; # added 2023-02-19
   jinja2_time = jinja2-time; # added 2022-11-07
   JPype1 = jpype1; # added 2023-02-19
+  jsonschema_3 = throw "jsonschema 3 is neither the latest version nor needed inside nixpkgs anymore"; # added 2023-06-28
   jupyter_client = jupyter-client; # added 2021-10-15
   jupyter_core = jupyter-core; # added 2023-01-05
   jupyter_server = jupyter-server; # added 2023-01-05
@@ -193,6 +195,7 @@ mapAliases ({
   pam = python-pam; # added 2020-09-07.
   PasteDeploy = pastedeploy; # added 2021-10-07
   pathpy = path; # added 2022-04-12
+  pdfposter = throw "pdfposter was promoted to a top-level attribute"; # Added 2023-06-29
   pdfminer = pdfminer-six; # added 2022-05-25
   pep257 = pydocstyle; # added 2022-04-12
   poetry = throw "poetry was promoted to a top-level attribute, use poetry-core to build Python packages"; # added 2023-01-09
@@ -211,6 +214,7 @@ mapAliases ({
   pyblake2 = throw "pyblake2 is deprecated in favor of hashlib"; # added 2023-04-23
   pyblock = throw "pyblock has been removed, since it is abandoned and broken"; # added 2023-06-20
   pydrive = throw "pydrive is broken and deprecated and has been replaced with pydrive2."; # added 2022-06-01
+  pygbm = throw "pygbm has been removed, since it is abandoned and broken"; # added 2023-06-20
   PyGithub = pygithub; # added 2023-02-19
   pyGtkGlade = throw "Glade support for pygtk has been removed"; # added 2022-01-15
   pycallgraph = throw "pycallgraph has been removed, it was using setuptools 2to3 translation feature, which has been removed in setuptools 58"; # added 2022-01-18
@@ -250,9 +254,11 @@ mapAliases ({
   PyStemmer = pystemmer; # added 2023-02-19
   pytest_6 = pytest; # added 2022-02-10
   pytestcov = pytest-cov; # added 2021-01-04
+  pytest-ordering = throw "pytest-ordering has been removed, since it is no longer maintained and broken"; # added 2023-06-22
   pytest-pep8 = pytestpep8; # added 2021-01-04
   pytest-pep257 = throw "pytest-pep257 was removed, as the pep257 package was migrated into pycodestyle"; # added 2022-04-12
   pytest-pythonpath = throw "pytest-pythonpath is obsolete as of pytest 7.0.0 and has been removed"; # added 2022-03-09
+  pytest-sanic = throw "pytest-sanic has been removed because it is unmaintained and broken"; # added 2023-06-22
   pytestpep8 = throw "pytestpep8 was removed because it is abandoned and no longer compatible with pytest v6.0"; # added 2020-12-10
   pytestquickcheck = pytest-quickcheck; # added 2021-07-20
   pytestrunner = pytest-runner; # added 2021-01-04
@@ -264,6 +270,7 @@ mapAliases ({
   python_mimeparse = python-mimeparse; # added 2021-10-31
   python-language-server = throw "python-language-server is no longer maintained, use the python-lsp-server community fork instead."; # Added 2022-08-03
   python-Levenshtein = levenshtein;
+  python-pushover = throw "python-pushover has been removed, since it is unmaintained and is broken"; # added 2023-07-03
   python-subunit = subunit; # added 2021-09-10
   pytest_xdist = pytest-xdist; # added 2021-01-04
   python_simple_hipchat = python-simple-hipchat; # added 2021-07-21
@@ -275,9 +282,11 @@ mapAliases ({
   pytwitchapi = twitchapi; # added 2022-03-07
   pyvcf = throw "pyvcf has been removed, it was using setuptools 2to3 translation feature, which has been removed in setuptools 58"; # added 2023-05-19
   PyVirtualDisplay = pyvirtualdisplay; # added 2023-02-19
+  pywick = throw "pywick has been removed, since it is no longer maintained"; # added 2023-07-01
   qasm2image = throw "qasm2image is no longer maintained (since November 2018), and is not compatible with the latest pythonPackages.qiskit versions."; # added 2020-12-09
   Quandl = quandl; # added 2023-02-19
   qiskit-aqua = throw "qiskit-aqua has been removed due to deprecation, with its functionality moved to different qiskit packages";
+  rabbitpy = throw "rabbitpy has been removed, since it is unmaintained and broken"; # added 2023-07-01
   rdflib-jsonld = throw "rdflib-jsonld is not compatible with rdflib 6"; # added 2021-11-05
   retworkx = rustworkx; # added 2023-05-14
   repeated_test = repeated-test; # added 2022-11-15
@@ -291,11 +300,13 @@ mapAliases ({
   ruamel_base = ruamel-base; # added 2021-11-01
   ruamel_yaml = ruamel-yaml; # added 2021-11-01
   ruamel_yaml_clib = ruamel-yaml-clib; # added 2021-11-01
+  inherit (super.pkgs) ruff-lsp; # added 2023-06-23
   runway-python = throw "SDK has been deprecated and was archived by upstream"; # added 2023-05-03
   sapi-python-client = kbcstorage; # added 2022-04-20
   scikitimage = scikit-image; # added 2023-05-14
   scikitlearn = scikit-learn; # added 2021-07-21
   selectors34 = throw "selectors34 has been removed: functionality provided by Python itself; archived by upstream."; # added 2021-06-10
+  sequoia = throw "python3Packages.sequoia was replaced by pysequoia - built from a dedicated repository, with a new API."; # added 2023-06-24
   setuptools_scm = setuptools-scm; # added 2021-06-03
   sharkiqpy = sharkiq; # added 2022-05-21
   ssh-mitm = throw "ssh-mitm was removed in favor of the top-level ssh-mitm"; # added 2023-05-09
@@ -307,6 +318,7 @@ mapAliases ({
   sphinx_rtd_theme = sphinx-rtd-theme; # added 2022-08-03
   sphinxcontrib-autoapi = sphinx-autoapi; # added 2023-02=28
   sphinxcontrib_plantuml = sphinxcontrib-plantuml; # added 2021-08-02
+  sphinx-navtree = throw "sphinx-navtree has been removed since it is not compatible with sphinx 3.3 and unmaintained"; # added 2023-07-03
   sqlalchemy_migrate = sqlalchemy-migrate; # added 2021-10-28
   SQLAlchemy-ImageAttach = throw "sqlalchemy-imageattach has been removed as it is incompatible with sqlalchemy 1.4 and unmaintained"; # added 2022-04-23
   suds-jurko = throw "suds-jurko has been removed, it was using setuptools 2to3 translation feature, which has been removed in setuptools 58"; # added 2023-02-27
