@@ -14,7 +14,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ cmake ];
 
-  cmakeFlags = [ "-DCMAKE_INSTALL_LIBDIR=lib" ];
+  cmakeFlags = [ "-DCMAKE_INSTALL_LIBDIR=lib" "-DCMAKE_C_COMPILER=clang" "-DCMAKE_CXX_COMPILER=clang++" ];
 
   meta = with lib; {
     broken = stdenv.isDarwin;
