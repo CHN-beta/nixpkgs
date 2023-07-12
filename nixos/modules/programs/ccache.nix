@@ -52,8 +52,10 @@ in {
     # target configuration
     (mkIf (cfg.packageNames != []) {
       nixpkgs.overlays = [
-        (self: super: genAttrs cfg.packageNames (pn: super.${pn}.override { stdenv = builtins.trace "with ccache: ${pn}" self.ccacheStdenv; }))
+        (self: super: genAttrs cfg.packageNames (pn: super.${pn}.override { stdenv = builtins.trace "with ccache: ${pn}" self.ccacheStdenv; }))];})
 
+    (mkIf cfg.enable {
+      nixpkgs.overlays = [
         (self: super: {
           ccacheWrapper = super.ccacheWrapper.override {
             extraConfig = ''
