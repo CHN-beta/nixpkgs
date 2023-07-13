@@ -1,6 +1,6 @@
-{ lib, stdenv, fetchurl, clang, which, libobjc }:
+{ lib, llvmPackages, fetchurl, clang, which, libobjc }:
 
-stdenv.mkDerivation rec {
+llvmPackages.stdenv.mkDerivation rec {
   pname = "gnustep-make";
   version = "2.9.0";
 

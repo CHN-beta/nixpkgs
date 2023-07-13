@@ -1,6 +1,6 @@
-{ stdenv, lib, fetchFromGitHub, cmake }:
+{ llvmPackages, lib, fetchFromGitHub, cmake }:
 
-stdenv.mkDerivation rec {
+llvmPackages.stdenv.mkDerivation rec {
   pname = "libobjc2";
   version = "2.1";
 
@@ -14,10 +14,10 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ cmake ];
 
-  cmakeFlags = [ "-DCMAKE_INSTALL_LIBDIR=lib" "-DCMAKE_C_COMPILER=clang" "-DCMAKE_CXX_COMPILER=clang++" ];
+  cmakeFlags = [ "-DCMAKE_INSTALL_LIBDIR=lib" ];
 
   meta = with lib; {
-    broken = stdenv.isDarwin;
+    broken = llvmPackages.stdenv.isDarwin;
     description = "Objective-C runtime for use with GNUstep";
     homepage = "http://gnustep.org/";
     license = licenses.mit;
