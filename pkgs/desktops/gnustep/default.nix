@@ -6,6 +6,8 @@ let
   callPackage = newScope self;
 
   self = rec {
+    stdenv = llvmPackages.stdenv;
+
     gsmakeDerivation = callPackage ./make/gsmakeDerivation.nix {};
     gorm = callPackage ./gorm {};
     projectcenter = callPackage ./projectcenter {};
