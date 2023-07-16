@@ -67,6 +67,7 @@
 , withLibsecret ? true
 , systemdSupport ? lib.meta.availableOn stdenv.hostPlatform systemd
 , testers
+, enableUnifiedBuilds ? null
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -221,6 +222,8 @@ stdenv.mkDerivation (finalAttrs: {
     "-DENABLE_JOURNALD_LOG=OFF"
   ] ++ lib.optionals (stdenv.isLinux && enableGLES) [
     "-DENABLE_GLES2=ON"
+  ] ++ lib.optionals (enableUnifiedBuilds != null) [
+    "-DENABLE_UNIFIED_BUILDS=${cmakeBool enableUnifiedBuilds}"
   ];
 
   postPatch = ''
