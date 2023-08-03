@@ -75,8 +75,7 @@ let
       };
 
       yubicoAuth = mkOption {
-        default = config.security.pam.yubico.enable;
-        defaultText = literalExpression "config.security.pam.yubico.enable";
+        default = false;
         type = types.bool;
         description = lib.mdDoc ''
           If set, users listed in
