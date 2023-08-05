@@ -23,21 +23,24 @@
 
 stdenv.mkDerivation rec {
   pname = "netease-cloud-music-gtk";
-  version = "2.0.3";
+  version = "2.2.0";
 
   src = fetchFromGitHub {
     owner = "gmg137";
     repo = pname;
-    rev = version;
-    hash = "sha256-A3mvf6TZ3+aiWA6rg9G5NMaDKvO0VQzwIM1t0MaTpTc=";
+    rev = "ebe2d38e14b832d59e2efd77c980c412e0f05072";
+    sha256 = "sha256-LgiASzHTgm5J+UoPvu2/pjcwu+t6Y7Jy29akkhCEDtk=";
   };
 
   cargoDeps = rustPlatform.importCargoLock {
     lockFile = ./Cargo.lock;
     outputHashes = {
-      "netease-cloud-music-api-1.0.2" = "sha256-7Yp2ZBg5wHnDPtdPLwZQnqcSlVuGCrXpV5M/dp/IaOE=";
+      "netease-cloud-music-api-1.2.0" = "sha256-MR1yVPrNzhZC65mQen88t7NbLfRcoWvT6DMSLGCMeTY=";
     };
   };
+  postPatch = ''
+    ln -s ${./Cargo.lock} Cargo.lock
+  '';
 
   nativeBuildInputs = [
     meson
