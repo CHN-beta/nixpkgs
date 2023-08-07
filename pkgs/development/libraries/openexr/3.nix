@@ -18,7 +18,8 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-Kl+aOA797aZvrvW4ZQNHdSU7YFPieZEzX3aYeaoH6eU=";
   };
 
-  patches = [] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake") [ ./fix_nan_compare.patch ];
+  patches = [] ++ lib.optionals (builtins.elem (stdenv.hostPlatform.gcc.arch or "") [ "alderlake" "znver2" "znver3" ])
+    [ ./fix_nan_compare.patch ];
 
   outputs = [ "bin" "dev" "out" "doc" ];
 
