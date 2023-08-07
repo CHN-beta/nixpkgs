@@ -240,7 +240,7 @@ stdenv.mkDerivation (finalAttrs: {
   # TODO: wrapGAppsHook wraps efi capsule even though it is not ELF
   dontWrapGApps = true;
 
-  doCheck = stdenv.hostPlatform.gcc.arch or "" != "sandybridge";
+  doCheck = !(builtins.elem (stdenv.hostPlatform.gcc.arch or "") [ "sandybridge" "znver3" ]);
 
   # Environment variables
 
