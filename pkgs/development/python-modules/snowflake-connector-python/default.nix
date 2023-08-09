@@ -1,12 +1,14 @@
 { lib
 , asn1crypto
 , buildPythonPackage
+, pythonRelaxDepsHook
 , certifi
 , cffi
 , charset-normalizer
 , fetchPypi
 , filelock
 , idna
+, keyring
 , oscrypto
 , pycryptodomex
 , pyjwt
@@ -30,11 +32,14 @@ buildPythonPackage rec {
     hash = "sha256-F0EbgRSS/kYKUDPhf6euM0eLqIqVjQsHC6C9ZZSRCIE=";
   };
 
-  postPatch = ''
-    substituteInPlace setup.cfg \
-      --replace "charset_normalizer>=2,<3" "charset_normalizer" \
-      --replace "pyOpenSSL>=16.2.0,<23.0.0" "pyOpenSSL"
-  '';
+  nativeBuildInputs = [
+    pythonRelaxDepsHook
+  ];
+  pythonRelaxDeps = [
+    "pyOpenSSL"
+    "charset-normalizer"
+    "cryptography"
+  ];
 
   propagatedBuildInputs = [
     asn1crypto
@@ -52,6 +57,10 @@ buildPythonPackage rec {
     setuptools
     typing-extensions
   ];
+
+  passthru.optional-dependencies = {
+    secure-local-storage = [ keyring ];
+  };
 
   # Tests require encrypted secrets, see
   # https://github.com/snowflakedb/snowflake-connector-python/tree/master/.github/workflows/parameters

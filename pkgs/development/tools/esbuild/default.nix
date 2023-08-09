@@ -2,13 +2,13 @@
 
 buildGoModule rec {
   pname = "esbuild";
-  version = "0.18.11";
+  version = "0.18.19";
 
   src = fetchFromGitHub {
     owner = "evanw";
     repo = "esbuild";
     rev = "v${version}";
-    hash = "sha256-j1hOzSqnEmbatfIxOnS551gXTjJp09Qw1A1R6k1cWN8=";
+    hash = "sha256-/W+vEtK84o16AqEU3akuA2uujXjBR3E5SDujdlsty4w=";
   };
 
   vendorHash = "sha256-+BfxCyg0KkDQpHt/wycy/8CTG6YBA/VJvJFhhzUnSiQ=";
@@ -23,5 +23,6 @@ buildGoModule rec {
     changelog = "https://github.com/evanw/esbuild/blob/v${version}/CHANGELOG.md";
     license = licenses.mit;
     maintainers = with maintainers; [ lucus16 marsam undefined-moe ];
+    mainProgram = "esbuild";
   };
 }

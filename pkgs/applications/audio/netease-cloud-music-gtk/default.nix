@@ -28,8 +28,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "gmg137";
     repo = pname;
-    rev = "ebe2d38e14b832d59e2efd77c980c412e0f05072";
-    sha256 = "sha256-LgiASzHTgm5J+UoPvu2/pjcwu+t6Y7Jy29akkhCEDtk=";
+    rev = version;
+    hash = "sha256-9qUzRmm3WQEVjzhzHMT1vNw3r3ymWGlBWXnnPsYGSnk=";
   };
 
   cargoDeps = rustPlatform.importCargoLock {
@@ -38,8 +38,9 @@ stdenv.mkDerivation rec {
       "netease-cloud-music-api-1.2.0" = "sha256-MR1yVPrNzhZC65mQen88t7NbLfRcoWvT6DMSLGCMeTY=";
     };
   };
+
   postPatch = ''
-    ln -s ${./Cargo.lock} Cargo.lock
+    cp ${./Cargo.lock} Cargo.lock
   '';
 
   nativeBuildInputs = [
@@ -78,5 +79,6 @@ stdenv.mkDerivation rec {
     license = licenses.gpl3Plus;
     maintainers = with maintainers; [ diffumist ];
     mainProgram = "netease-cloud-music-gtk4";
+    platforms = platforms.linux;
   };
 }

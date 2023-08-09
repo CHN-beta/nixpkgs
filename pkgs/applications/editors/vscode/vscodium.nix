@@ -15,21 +15,21 @@ let
   archive_fmt = if stdenv.isDarwin then "zip" else "tar.gz";
 
   sha256 = {
-    x86_64-linux = "1qwgdvsqwkbfxf9xdxfxfmf10xcxgik4v6s5djggq130mqvrnv7x";
-    x86_64-darwin = "12cn369yi652fvk6lha5y6nglms2zqmvqsjwklj3dl0ms9329jzq";
-    aarch64-linux = "1fxmbz3qv027spgh6j075s00r69hff1m4fqvs9p2axb5m7ikdp16";
-    aarch64-darwin = "0g5ylxcn41x8ajl7lv3h2fkx52pkgmkw95malgh8h1y3rvg73a4n";
-    armv7l-linux = "0m1v24gg2dy79hgrz37gysgrazg8vkr1gkp52j6m6y76vi0l8249";
+    x86_64-linux = "0dynpi8l2102z8kbzgdm8qwbpzm7jxjqvz8a3x0vsikxbfwhsdmy";
+    x86_64-darwin = "1z3vzwgcjj57xrw8mklhsdr8n9214rb4vj6jfnqv5nxpdgx4dw55";
+    aarch64-linux = "0jiwp6i9q8c87pfkhvj45viqi2m5x5aq94skrvxa8wjbkyafvm1d";
+    aarch64-darwin = "1as6zfrv2jymxspmc3m453vs61b7y1lh5qh34xr0ps8c4h6dbjas";
+    armv7l-linux = "17yd3bb4z99q4r0d91grifrbr50wln1fkz0bjp4s4snqnj9q9gfk";
   }.${system} or throwSystem;
 
-  sourceRoot = if stdenv.isDarwin then "" else ".";
+  sourceRoot = lib.optionalString (!stdenv.isDarwin) ".";
 in
   callPackage ./generic.nix rec {
     inherit sourceRoot commandLineArgs useVSCodeRipgrep;
 
     # Please backport all compatible updates to the stable release.
     # This is important for the extension ecosystem.
-    version = "1.79.2.23166";
+    version = "1.80.2.23209";
     pname = "vscodium";
 
     executableName = "codium";

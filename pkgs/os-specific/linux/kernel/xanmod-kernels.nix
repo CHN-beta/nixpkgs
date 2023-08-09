@@ -3,14 +3,14 @@
 let
   # These names are how they are designated in https://xanmod.org.
   ltsVariant = {
-    version = "6.1.37";
-    hash = "sha256-g8cmAhsM03jBu7UZoNOLBX7cGg8rz70/xhF7sJj9nCY=";
+    version = "6.1.43";
+    hash = "sha256-IdNW0gzYl6L3OjN2meWnGbMZsTcLfSMbKFDx12Z9Ll4=";
     variant = "lts";
   };
 
   mainVariant = {
-    version = "6.4.1";
-    hash = "sha256-WPnINDkOj0IoUDLBG/2LOrppVi9o9XSSgMrs/NBbqdA=";
+    version = "6.4.8";
+    hash = "sha256-GkNWXngIx/aoSzu2pfpuv8kGwV9evbHl3hauux0lSwk=";
     variant = "main";
   };
 

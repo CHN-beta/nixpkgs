@@ -127,7 +127,6 @@ in {
       kernelPatches = [
         kernelPatches.bridge_stp_helper
         kernelPatches.request_key_helper
-        kernelPatches.CVE-2023-32233
       ];
     };
 
@@ -173,13 +172,6 @@ in {
         kernelPatches.bridge_stp_helper
         kernelPatches.request_key_helper
         kernelPatches.export-rt-sched-migrate
-      ];
-    };
-
-    linux_6_3 = callPackage ../os-specific/linux/kernel/linux-6.3.nix {
-      kernelPatches = [
-        kernelPatches.bridge_stp_helper
-        kernelPatches.request_key_helper
       ];
     };
 
@@ -267,7 +259,7 @@ in {
     linux_5_10_hardened = hardenedKernelFor kernels.linux_5_10 { };
     linux_5_15_hardened = hardenedKernelFor kernels.linux_5_15 { };
     linux_6_1_hardened = hardenedKernelFor kernels.linux_6_1 { };
-    linux_6_3_hardened = hardenedKernelFor kernels.linux_6_3 { };
+    linux_6_4_hardened = hardenedKernelFor kernels.linux_6_4 { };
 
   } // lib.optionalAttrs config.allowAliases {
     linux_4_9 = throw "linux 4.9 was removed because it will reach its end of life within 22.11";
@@ -275,6 +267,7 @@ in {
     linux_5_19 = throw "linux 5.19 was removed because it has reached its end of life upstream";
     linux_6_0 = throw "linux 6.0 was removed because it has reached its end of life upstream";
     linux_6_2 = throw "linux 6.2 was removed because it has reached its end of life upstream";
+    linux_6_3 = throw "linux 6.3 was removed because it has reached its end of life upstream";
 
     linux_xanmod_tt = throw "linux_xanmod_tt was removed because upstream no longer offers this option";
 
@@ -349,10 +342,11 @@ in {
 
     evdi = callPackage ../os-specific/linux/evdi { };
 
+    fanout = callPackage ../os-specific/linux/fanout { };
+
     fwts-efi-runtime = callPackage ../os-specific/linux/fwts/module.nix { };
 
     gcadapter-oc-kmod = callPackage ../os-specific/linux/gcadapter-oc-kmod { };
-    hid-nintendo = callPackage ../os-specific/linux/hid-nintendo { };
 
     hyperv-daemons = callPackage ../os-specific/linux/hyperv-daemons { };
 
@@ -504,6 +498,8 @@ in {
 
     turbostat = callPackage ../os-specific/linux/turbostat { };
 
+    trelay = callPackage ../os-specific/linux/trelay { };
+
     usbip = callPackage ../os-specific/linux/usbip { };
 
     v86d = callPackage ../os-specific/linux/v86d { };
@@ -559,6 +555,7 @@ in {
 
   } // lib.optionalAttrs config.allowAliases {
     ati_drivers_x11 = throw "ati drivers are no longer supported by any kernel >=4.1"; # added 2021-05-18;
+    hid-nintendo = throw "hid-nintendo was added in mainline kernel version 5.16"; # Added 2023-07-30
     sch_cake = throw "sch_cake was added in mainline kernel version 4.19"; # Added 2023-06-14
     rtl8723bs = throw "rtl8723bs was added in mainline kernel version 4.12"; # Added 2023-06-14
     xmm7360-pci = throw "Support for the XMM7360 WWAN card was added to the iosm kmod in mainline kernel version 5.18";
@@ -574,7 +571,6 @@ in {
     linux_5_10 = recurseIntoAttrs (packagesFor kernels.linux_5_10);
     linux_5_15 = recurseIntoAttrs (packagesFor kernels.linux_5_15);
     linux_6_1 = recurseIntoAttrs (packagesFor kernels.linux_6_1);
-    linux_6_3 = recurseIntoAttrs (packagesFor kernels.linux_6_3);
     linux_6_4 = recurseIntoAttrs (packagesFor kernels.linux_6_4);
   } // lib.optionalAttrs config.allowAliases {
     linux_4_9 = throw "linux 4.9 was removed because it will reach its end of life within 22.11"; # Added 2022-11-08
@@ -582,6 +578,7 @@ in {
     linux_5_19 = throw "linux 5.19 was removed because it reached its end of life upstream"; # Added 2022-11-01
     linux_6_0 = throw "linux 6.0 was removed because it reached its end of life upstream"; # Added 2023-01-20
     linux_6_2 = throw "linux 6.2 was removed because it reached its end of life upstream"; # Added 2023-05-26
+    linux_6_3 = throw "linux 6.3 was removed because it reached its end of life upstream"; # Added 2023-07-22
   };
 
   rtPackages = {
@@ -613,7 +610,7 @@ in {
     linux_5_10_hardened = recurseIntoAttrs (packagesFor kernels.linux_5_10_hardened);
     linux_5_15_hardened = recurseIntoAttrs (packagesFor kernels.linux_5_15_hardened);
     linux_6_1_hardened = recurseIntoAttrs (packagesFor kernels.linux_6_1_hardened);
-    linux_6_3_hardened = recurseIntoAttrs (packagesFor kernels.linux_6_3_hardened);
+    linux_6_4_hardened = recurseIntoAttrs (packagesFor kernels.linux_6_4_hardened);
 
     linux_zen = recurseIntoAttrs (packagesFor kernels.linux_zen);
     linux_lqx = recurseIntoAttrs (packagesFor kernels.linux_lqx);

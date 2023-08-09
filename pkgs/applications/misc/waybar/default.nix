@@ -18,6 +18,7 @@
 , libxkbcommon
 , cavaSupport     ? true,  alsa-lib, fftw, iniparser, ncurses, pipewire, portaudio, SDL2
 , evdevSupport    ? true,  libevdev
+, hyprlandSupport ? false, hyprland
 , inputSupport    ? true,  libinput
 , jackSupport     ? true,  libjack2
 , mpdSupport      ? true,  libmpdclient
@@ -48,13 +49,13 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "waybar";
-  version = "0.9.19";
+  version = "0.9.20";
 
   src = fetchFromGitHub {
     owner = "Alexays";
     repo = "Waybar";
     rev = version;
-    hash = "sha256-55ZPqq/tJmF4sNdK72cgjXUWR4YtUfOrpePHn+E9T74=";
+    hash = "sha256-xLcoysnCPB9+jI5cZokWWIvXM5wo3eXOe/hXfuChBR4=";
   };
 
   postUnpack = lib.optional cavaSupport ''
@@ -64,6 +65,10 @@ stdenv.mkDerivation rec {
       patchShebangs .
     )
   '';
+
+  # Patch for workspaces support in wlr/workspaces
+  # See https://wiki.hyprland.org/Useful-Utilities/Status-Bars/#waybar
+  patches = lib.optional hyprlandSupport [ ./hyprland.diff ];
 
   nativeBuildInputs = [
     meson ninja pkg-config scdoc wrapGAppsHook
@@ -88,6 +93,7 @@ stdenv.mkDerivation rec {
     ++ optional  cavaSupport   portaudio
     ++ optional  cavaSupport   SDL2
     ++ optional  evdevSupport  libevdev
+    ++ optional  hyprlandSupport hyprland
     ++ optional  inputSupport  libinput
     ++ optional  jackSupport   libjack2
     ++ optional  mpdSupport    libmpdclient
@@ -126,7 +132,7 @@ stdenv.mkDerivation rec {
     "-Dsystemd=disabled"
     "-Dgtk-layer-shell=enabled"
     "-Dman-pages=enabled"
-  ];
+  ] ++ lib.optional hyprlandSupport "-Dexperimental=true";
 
   preFixup = lib.optionalString withMediaPlayer ''
       cp $src/resources/custom_modules/mediaplayer.py $out/bin/waybar-mediaplayer.py
@@ -139,8 +145,9 @@ stdenv.mkDerivation rec {
     changelog = "https://github.com/alexays/waybar/releases/tag/${version}";
     description = "Highly customizable Wayland bar for Sway and Wlroots based compositors";
     license = licenses.mit;
-    maintainers = with maintainers; [ FlorianFranzen minijackson synthetica lovesegfault rodrgz ];
+    maintainers = with maintainers; [ FlorianFranzen minijackson synthetica lovesegfault rodrgz jtbx ];
     platforms = platforms.unix;
     homepage = "https://github.com/alexays/waybar";
+    mainProgram = "waybar";
   };
 }

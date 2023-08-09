@@ -1,6 +1,5 @@
 { lib
 , stdenvNoCC
-, callPackage
 , fetchurl
 , autoPatchelfHook
 , unzip
@@ -12,7 +11,7 @@
 }:
 
 stdenvNoCC.mkDerivation rec {
-  version = "0.6.13";
+  version = "0.7.1";
   pname = "bun";
 
   src = passthru.sources.${stdenvNoCC.hostPlatform.system} or (throw "Unsupported system: ${stdenvNoCC.hostPlatform.system}");
@@ -26,26 +25,29 @@ stdenvNoCC.mkDerivation rec {
 
   installPhase = ''
     runHook preInstall
+
     install -Dm 755 ./bun $out/bin/bun
+    ln -s $out/bin/bun $out/bin/bunx
+
     runHook postInstall
   '';
   passthru = {
     sources = {
       "aarch64-darwin" = fetchurl {
         url = "https://github.com/oven-sh/bun/releases/download/bun-v${version}/bun-darwin-aarch64.zip";
-        sha256 = "6d4pDuAJCgUIFpmp8gGLn2rHvpQ54I6vCXU2WmIYe0M=";
+        hash = "sha256-5AC1jd2rTVZ+Rfn7B1uvps9NVVAByMlo0mjhM8Wc6jI=";
       };
       "aarch64-linux" = fetchurl {
         url = "https://github.com/oven-sh/bun/releases/download/bun-v${version}/bun-linux-aarch64.zip";
-        sha256 = "Hr3c0840fz47jDNjigTsz7HEUSP6btXVDFUUtDtdO5I=";
+        hash = "sha256-DM1HVlbqPCOkT05IAVciP1c5g7PIZPmjHmlbWD8DmoU=";
       };
       "x86_64-darwin" = fetchurl {
         url = "https://github.com/oven-sh/bun/releases/download/bun-v${version}/bun-darwin-x64.zip";
-        sha256 = "H7pjr6ySoxYOGrOpLjzMb/b3BiG50XSmMi6atQooRN4=";
+        hash = "sha256-UjInXqkdfigrmIJycee4Nxjv+LhYGLjP+Z/B8WnAfmI=";
       };
       "x86_64-linux" = fetchurl {
         url = "https://github.com/oven-sh/bun/releases/download/bun-v${version}/bun-linux-x64.zip";
-        sha256 = "f3VysZdTfs4G4a48AahbaEACVpiKPG7OfbAYTCGHi1k=";
+        hash = "sha256-l5lSbJwsPHejcgCXvTDPjvzSP6s/OBgOS44g2xTxfYo=";
       };
     };
     updateScript = writeShellScript "update-bun" ''
@@ -64,7 +66,7 @@ stdenvNoCC.mkDerivation rec {
   };
   meta = with lib; {
     homepage = "https://bun.sh";
-    changelog = "https://github.com/Jarred-Sumner/bun/releases/tag/bun-v${version}";
+    changelog = "https://bun.sh/blog/bun-v${version}";
     description = "Incredibly fast JavaScript runtime, bundler, transpiler and package manager – all in one";
     sourceProvenance = with sourceTypes; [ binaryNativeCode ];
     longDescription = ''
@@ -74,7 +76,7 @@ stdenvNoCC.mkDerivation rec {
       mit # bun core
       lgpl21Only # javascriptcore and webkit
     ];
-    maintainers = with maintainers; [ DAlperin jk thilobillerbeck ];
+    maintainers = with maintainers; [ DAlperin jk thilobillerbeck cdmistman ];
     platforms = builtins.attrNames passthru.sources;
   };
 }

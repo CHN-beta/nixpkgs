@@ -1181,6 +1181,7 @@ let
     ocamlformat_0_23_0 = ocamlformat.override { version = "0.23.0"; };
     ocamlformat_0_24_1 = ocamlformat.override { version = "0.24.1"; };
     ocamlformat_0_25_1 = ocamlformat.override { version = "0.25.1"; };
+    ocamlformat_0_26_0 = ocamlformat.override { version = "0.26.0"; };
 
     ocamlformat = callPackage ../development/ocaml-modules/ocamlformat/ocamlformat.nix {};
 
@@ -1432,7 +1433,10 @@ let
 
     psq = callPackage ../development/ocaml-modules/psq { };
 
-    ptime = callPackage ../development/ocaml-modules/ptime { };
+    ptime =
+      if lib.versionAtLeast ocaml.version "4.08"
+      then callPackage ../development/ocaml-modules/ptime { }
+      else null;
 
     ptmap = callPackage ../development/ocaml-modules/ptmap { };
 
@@ -1638,6 +1642,10 @@ let
     torch = callPackage ../development/ocaml-modules/torch {
       inherit (pkgs.python3Packages) torch;
     };
+
+    trace = callPackage ../development/ocaml-modules/trace { };
+
+    trace-tef = callPackage ../development/ocaml-modules/trace/tef.nix { };
 
     trie = callPackage ../development/ocaml-modules/trie { };
 

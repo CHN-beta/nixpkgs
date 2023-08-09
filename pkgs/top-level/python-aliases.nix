@@ -48,6 +48,11 @@ mapAliases ({
   asyncio-nats-client = nats-py; # added 2022-02-08
   awkward0 = throw "awkward0 has been removed, use awkward instead"; # added 2022-12-13
   Babel = babel; # added 2022-05-06
+  backports_csv = throw "backports_csv has been removed, since we no longer need to backport to python2"; # added 2023-07-28
+  backports_functools_lru_cache = throw "backports_functools_lru_cache has been removed, since we no longer need to backport to python3.2"; # added 2023-07-28
+  backports_tempfile = throw "backports_tempfile has been removed, since we no longer need to backport to python3.3"; # added 2023-07-28
+  backports_unittest-mock = throw "backports_unittest-mock has been removed, since we no longer need to backport to python3.2"; # added 2023-07-28
+  backports_weakref = throw "backports_weakref has been removed, since we no longer need to backport to python3.3"; # added 2023-07-28
   bedup = throw "bedup was removed because it was broken and abandoned upstream"; # added 2023-02-04
   bitcoin-price-api = throw "bitcoin-price-api has been removed, it was using setuptools 2to3 translation feautre, which has been removed in setuptools 58"; # added 2022-02-15
   BlinkStick = blinkstick; # added 2023-02-19
@@ -72,6 +77,7 @@ mapAliases ({
   coronavirus = throw "coronavirus was removed, because the source is not providing the data anymore."; # added 2023-05-04
   cozy = throw "cozy was removed because it was not actually https://pypi.org/project/Cozy/."; # added 2022-01-14
   cryptography_vectors = "cryptography_vectors is no longer exposed in python*Packages because it is used for testing cryptography only."; # Added 2022-03-23
+  cx_Freeze = cx-freeze; # added 2023-08-02
   dask-xgboost = throw "dask-xgboost was removed because its features are available in xgboost"; # added 2022-05-24
   dateutil = python-dateutil; # added 2021-07-03
   demjson = throw "demjson has been removed, it was using setuptools 2to3 translation feature, which has been removed in setuptools 58"; # added 2022-01-18
@@ -85,6 +91,10 @@ mapAliases ({
   django-sampledatahelper = throw "django-sampledatahelper was removed because it is no longer compatible to latest Django version"; # added 2022-07-18
   django_2 = throw "Django 2 has reached it's projected EOL in 2022/04 and has therefore been removed."; # added 2022-03-05
   django_appconf = django-appconf; # added 2022-03-03
+  django_classytags = django-classy-tags; # added 2023-07-25
+  django_colorful = django-colorful; # added 2023-07-25
+  django_compat = django-compat; # added 2023-07-25
+  django_contrib_comments = django-contrib-comments; # added 2023-07-25
   django-discover-runner = throw "django-discover-runner was removed because it is no longer maintained."; # added 2022-11-21
   django_environ = django-environ; # added 2021-12-25
   django_extensions = django-extensions; # added 2022-01-09
@@ -93,10 +103,14 @@ mapAliases ({
   django_hijack_admin = django-hijack-admin; # added 2023-05-16
   django-hijack-admin = throw "django-hijack-admin has been removed, since it is no longer compatible to django-hijack"; # added 2023-06-21
   django_modelcluster = django-modelcluster; # added 2022-04-02
+  django_nose = django-nose; # added 2023-07-25
   django_reversion = django-reversion; # added 2022-06-18
   django_polymorphic = django-polymorphic; # added 2022-05-24
   django_redis = django-redis; # added 2021-10-11
+  django_silk = django-silk; # added 2023-07-25
+  django_tagging = django-tagging; # added 2023-07-25
   django_taggit = django-taggit; # added 2021-10-11
+  django_treebeard = django-treebeard; # added 2023-07-25
   dns = dnspython; # added 2017-12-10
   dogpile_cache = dogpile-cache; # added 2021-10-28
   dogpile-core = throw "dogpile-core is no longer maintained, use dogpile-cache instead"; # added 2021-11-20
@@ -154,7 +168,14 @@ mapAliases ({
   intreehook =  throw "intreehooks has been removed because it is obsolete as a backend-path key was added to PEP 517"; # added 2023-04-11
   ipaddress = throw "ipaddress has been removed because it is no longer required since python 2.7."; # added 2022-05-30
   influxgraph = throw "influxgraph has been removed because it is no longer maintained"; # added 2022-07-10
-  itanium_demangler = itanium-demangler; # added 2022-1017
+  itanium_demangler = itanium-demangler; # added 2022-10-17
+  jaraco_classes = jaraco-classes; # added 2023-07-14
+  jaraco_collections = jaraco-collections; # added 2023-07-14
+  jaraco_functools = jaraco-functools; # added 2023-07-14
+  jaraco_itertools = jaraco-itertools; # added 2023-07-14
+  jaraco_logging = jaraco-logging; # added 2023-07-14
+  jaraco_text = jaraco-text; # added 2023-07-14
+  jaraco_stream = jaraco-stream; # added 2023-07-14
   JayDeBeApi = jaydebeapi; # added 2023-02-19
   jinja2_time = jinja2-time; # added 2022-11-07
   JPype1 = jpype1; # added 2023-02-19
@@ -162,11 +183,12 @@ mapAliases ({
   jupyter_client = jupyter-client; # added 2021-10-15
   jupyter_core = jupyter-core; # added 2023-01-05
   jupyter_server = jupyter-server; # added 2023-01-05
+  jupyter-server-ydoc = jupyter-collaboration; # added 2023-07-18
   Kajiki = kajiki; # added 2023-02-19
   Keras = keras; # added 2021-11-25
-  larynx-train = piper-train; # added 2023-06-09
   ldap = python-ldap; # added 2022-09-16
   lammps-cython = throw "lammps-cython no longer builds and is unmaintained"; # added 2021-07-04
+  lektor = throw "lektor has been promoted to a top-level attribute"; # added 2023-08-01
   logilab_astng = throw "logilab-astng has not been released since 2013 and is unmaintained"; # added 2022-11-29
   logilab_common = logilab-common; # added 2022-11-21
   loo-py = loopy; # added 2022-05-03
@@ -185,8 +207,10 @@ mapAliases ({
   mistune_0_8 = throw "mistune_0_8 was removed because it was outdated and insecure"; # added 2022-08-12
   mistune_2_0 = mistune; # added 2022-08-12
   mox = throw "mox was removed because it is unmaintained"; # added 2023-02-21
+  mrkd = throw "mrkd has been promoted to a top-level attribute"; # added 2023-08-01
   mutmut = throw "mutmut has been promoted to a top-level attribute"; # added 2022-10-02
   net2grid = gridnet; # add 2022-04-22
+  nghttp2 = throw "in 1.52.0 removed deprecated python bindings."; # added 2023-06-08
   nose-cover3 = throw "nose-cover3 has been removed, it was using setuptools 2to3 translation feature, which has been removed in setuptools 58"; # added 2022-02-16
   nose_progressive = throw "nose_progressive has been removed, it was using setuptools 2to3 translation feature, which has been removed in setuptools 58"; #added 2023-02-21
   notifymuch = throw "notifymuch has been promoted to a top-level attribute"; # added 2022-10-02
@@ -291,6 +315,7 @@ mapAliases ({
   qiskit-aqua = throw "qiskit-aqua has been removed due to deprecation, with its functionality moved to different qiskit packages";
   rabbitpy = throw "rabbitpy has been removed, since it is unmaintained and broken"; # added 2023-07-01
   rdflib-jsonld = throw "rdflib-jsonld is not compatible with rdflib 6"; # added 2021-11-05
+  rednose = throw "rednose is no longer maintained (since February 2018)"; # added 2023-08-06
   retworkx = rustworkx; # added 2023-05-14
   repeated_test = repeated-test; # added 2022-11-15
   requests_oauthlib = requests-oauthlib; # added 2022-02-12
@@ -361,4 +386,6 @@ mapAliases ({
   zake = throw "zake has been removed because it is abandoned"; # added 2023-06-20
   zc-buildout221 = zc-buildout; # added 2021-07-21
   zc_buildout_nix = throw "zc_buildout_nix was pinned to a version no longer compatible with other modules";
+  zope_broken = throw "zope_broken has been removed because it is obsolete and not needed in zodb>=3.10"; # added 2023-07-26
+  zope_component = zope-component; # added 2023-07-28
 })
