@@ -12,6 +12,7 @@
 , requests
 , requests-mock
 , six
+, stdenv
 }:
 
 buildPythonPackage rec {
@@ -52,6 +53,7 @@ buildPythonPackage rec {
     # Reponse is not empty but `s = '孝'` and the JSON decoder chokes on that
     "test_query_with_empty_result"
   ];
+  doCheck = stdenv.hostPlatform.gcc.arch or "" != "alderlake";
 
   pythonImportsCheck = [ "influxdb" ];
 

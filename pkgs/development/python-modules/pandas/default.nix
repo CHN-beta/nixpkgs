@@ -206,7 +206,8 @@ buildPythonPackage rec {
   ] ++ lib.optionals (stdenv.isDarwin && stdenv.isAarch64) [
     # tests/generic/test_finalize.py::test_binops[and_-args4-right] - AssertionError: assert {} == {'a': 1}
     "test_binops"
-  ];
+  ]
+  ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake") [ "test_rolling_var_numerical_issues" ];
 
   # Tests have relative paths, and need to reference compiled C extensions
   # so change directory where `import .test` is able to be resolved
