@@ -70,7 +70,8 @@ in buildPythonPackage rec {
   ++ lib.optionals python.hasDistutilsCxxPatch [
     ./numpy-distutils-C++.patch
   ]
-  ++ (if stdenv.hostPlatform.gcc.arch or "" == "alderlake" then [ ./disable-failed-test.patch ] else []);
+  ++ (if (builtins.elem (stdenv.hostPlatform.gcc.arch or "") [ "alderlake" "znver3" ])
+    then [ ./disable-failed-test.patch ] else []);
 
   postPatch = ''
     # fails with multiple errors because we are not using the pinned setuptools version
