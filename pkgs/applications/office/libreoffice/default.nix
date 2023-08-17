@@ -391,7 +391,7 @@ in
       find -name "*.cmd" -exec sed -i s,/lib:/usr/lib,, {} \;
     ''
 
-	+ ( if stdenv.hostPlatform.gcc.arch or "" == "alderlake" then
+	+ (if builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "alderlake" "znver3" ] then
 	''
 		sed -e '/CPPUNIT_TEST(testDubiousArrayFormulasFODS);/d' -i './sc/qa/unit/functions_array.cxx'
 	'' else "");
