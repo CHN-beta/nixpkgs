@@ -10,13 +10,13 @@
 , lib
 }:
 let
-  version = "2.5.0";
+  version = "2.7.3";
   dir = "native";
   source = fetchFromGitHub {
     owner = "filips123";
     repo = "PWAsForFirefox";
     rev = "v${version}";
-    sha256 = "sha256-bGju7nCc/WQUrtI6M4+ysZge0VxDeqXz8dDszdTc9GA=";
+    hash = "sha256-G1szjwQwlidtUaJZb1KdlkSXfgTIM26ZVj4Fn5VEZgQ=";
     sparseCheckout = [ dir ];
   };
   pname = "firefoxpwa";
@@ -29,9 +29,9 @@ let
     cargoLock = {
       lockFile = "${unwrapped.src}/Cargo.lock";
       outputHashes = {
-        "data-url-0.1.0" = "sha256-rESQz5jjNpVfIuTaRCAV2TLeUs09lOaLZVACsb/3Adg=";
+        "data-url-0.3.0" = "sha256-SDOOwwvZrX4i04NElBJe5NRS9MXCgRVhBz7L4G8B4m8=";
         "mime-0.4.0-a.0" = "sha256-LjM7LH6rL3moCKxVsA+RUL9lfnvY31IrqHa9pDIAZNE=";
-        "web_app_manifest-0.0.0" = "sha256-CpND9SxPwFmXe6fINrvd/7+HHzESh/O4GMJzaKQIjc8=";
+        "web_app_manifest-0.0.0" = "sha256-G+kRN8AEmAY1TxykhLmgoX8TG8y2lrv7SCRJlNy0QzA=";
       };
     };
 
