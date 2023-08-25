@@ -102,6 +102,14 @@ let
     proxy_set_header        X-Forwarded-Server $host;
   '';
 
+  recommendedProxyConfigNoHost = pkgs.writeText "nginx-recommended-proxy-headers-no-host.conf" ''
+    proxy_set_header        X-Real-IP $remote_addr;
+    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header        X-Forwarded-Proto $scheme;
+    proxy_set_header        X-Forwarded-Host $host;
+    proxy_set_header        X-Forwarded-Server $host;
+  '';
+
   proxyCachePathConfig = concatStringsSep "\n" (mapAttrsToList (name: proxyCachePath: ''
     proxy_cache_path ${concatStringsSep " " [
       "/var/cache/nginx/${name}"
@@ -446,6 +454,7 @@ let
       ${optionalString (config.alias != null) "alias ${config.alias};"}
       ${optionalString (config.return != null) "return ${config.return};"}
       ${optionalString (config.proxyPass != null && config.recommendedProxySettings) "include ${recommendedProxyConfig};"}
+      ${optionalString (config.proxyPass != null && config.recommendedProxySettingsNoHost) "include ${recommendedProxyConfigNoHost};"}
       ${mkBasicAuth "sublocation" config}
       ${config.extraConfig}
     }
