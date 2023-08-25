@@ -453,10 +453,10 @@ let
       ${optionalString (config.root != null) "root ${config.root};"}
       ${optionalString (config.alias != null) "alias ${config.alias};"}
       ${optionalString (config.return != null) "return ${config.return};"}
+      ${config.extraConfig}
       ${optionalString (config.proxyPass != null && config.recommendedProxySettings) "include ${recommendedProxyConfig};"}
       ${optionalString (config.proxyPass != null && config.recommendedProxySettingsNoHost) "include ${recommendedProxyConfigNoHost};"}
       ${mkBasicAuth "sublocation" config}
-      ${config.extraConfig}
     }
   '') (sortProperties (mapAttrsToList (k: v: v // { location = k; }) locations)));
 
