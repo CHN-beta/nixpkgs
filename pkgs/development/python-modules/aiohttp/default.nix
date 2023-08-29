@@ -112,7 +112,8 @@ buildPythonPackage rec {
     "test_close"
   ]
   # issue https://github.com/NixOS/nixpkgs/issues/236552
-  ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake") [ "test_web_sendfile_functional" ];
+  ++ lib.optionals (builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "broadwell" "alderlake" ])
+    [ "test_web_sendfile_functional" ];
 
   disabledTestPaths = [
     "test_proxy_functional.py" # FIXME package proxy.py

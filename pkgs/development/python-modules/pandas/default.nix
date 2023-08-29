@@ -207,7 +207,7 @@ buildPythonPackage rec {
     # tests/generic/test_finalize.py::test_binops[and_-args4-right] - AssertionError: assert {} == {'a': 1}
     "test_binops"
   ]
-  ++ lib.optionals (builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "alderlake" "znver3" ])
+  ++ lib.optionals (builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "broadwell" "alderlake" "znver3" ])
     [ "test_rolling_var_numerical_issues" ];
 
   # Tests have relative paths, and need to reference compiled C extensions
