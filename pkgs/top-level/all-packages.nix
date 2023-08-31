@@ -21948,6 +21948,8 @@ with pkgs;
 
   intel-media-driver = callPackage ../development/libraries/intel-media-driver { };
 
+  intel-mpi = callPackage ../development/libraries/intel-mpi { };
+
   intltool = callPackage ../development/tools/misc/intltool { };
 
   ios-cross-compile = callPackage ../development/compilers/ios-cross-compile/9.2.nix { };
