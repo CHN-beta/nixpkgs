@@ -7,7 +7,7 @@
 , nix-update-script
 }:
 
-let version = "1.3.2";
+let version = "1.3.1";
 in
 rustPlatform.buildRustPackage rec {
   pname = "meilisearch";
@@ -16,8 +16,8 @@ rustPlatform.buildRustPackage rec {
   src = fetchFromGitHub {
     owner = "meilisearch";
     repo = "MeiliSearch";
-    rev = "v${version}";
-    hash = "sha256-FHuUB61/KP08nV1MSdCf6tnkLQ0ySzkqTdvJPwRP70k=";
+    rev = "refs/tags/v${version}";
+    hash = "sha256-jttT4qChoqwTnjjoW0Zc15ZieZN7KD1Us64Tk0eDG3Y=";
   };
 
   cargoBuildFlags = [
