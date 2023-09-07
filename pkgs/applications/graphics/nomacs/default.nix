@@ -16,6 +16,10 @@
 , libraw
 , libtiff
 , quazip
+
+, config
+, cudaSupport ? config.cudaSupport
+, cudatoolkit
 }:
 
 mkDerivation rec {
@@ -43,7 +47,8 @@ mkDerivation rec {
   '';
 
   nativeBuildInputs = [cmake
-                       pkg-config];
+                       pkg-config]
+    ++ lib.optional cudaSupport [cudatoolkit];
 
   buildInputs = [qtbase
                  qttools

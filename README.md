@@ -1,3 +1,5 @@
+Modified for personal use, mainly for compiling natively on Alderlake.
+
 <p align="center">
   <a href="https://nixos.org#gh-light-mode-only">
     <img src="https://raw.githubusercontent.com/NixOS/nixos-homepage/master/logo/nixos-hires.png" width="500px" alt="NixOS logo"/>

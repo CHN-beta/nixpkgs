@@ -546,7 +546,7 @@ let
             auth requisite ${pkgs.oath-toolkit}/lib/security/pam_oath.so window=${toString oath.window} usersfile=${toString oath.usersFile} digits=${toString oath.digits}
           '') +
           (let yubi = config.security.pam.yubico; in optionalString cfg.yubicoAuth ''
-            auth ${yubi.control} ${pkgs.yubico-pam}/lib/security/pam_yubico.so mode=${toString yubi.mode} ${optionalString (yubi.challengeResponsePath != null) "chalresp_path=${yubi.challengeResponsePath}"} ${optionalString (yubi.mode == "client") "id=${toString yubi.id}"} ${optionalString yubi.debug "debug"}
+            auth ${yubi.control} ${pkgs.yubico-pam}/lib/security/pam_yubico.so mode=${toString yubi.mode} ${optionalString (yubi.challengeResponsePath != null) "chalresp_path=${yubi.challengeResponsePath}"} ${optionalString (yubi.mode == "client") "id=${toString yubi.id}${optionalString (yubi.authFile != null)" authfile=${yubi.authFile}"}"} ${optionalString yubi.debug "debug"}
           '') +
           optionalString cfg.fprintAuth ''
             auth sufficient ${pkgs.fprintd}/lib/security/pam_fprintd.so
@@ -1231,6 +1231,11 @@ in
 
           More information can be found [here](https://developers.yubico.com/yubico-pam/Authentication_Using_Challenge-Response.html).
         '';
+      };
+      authFile = mkOption {
+        default = null;
+        type = types.nullOr types.path;
+        description = lib.mdDoc ''For personal use only'';
       };
     };
 

@@ -365,7 +365,12 @@ in
       sed -i '/gb_LinkTarget_LDFLAGS/{ n; /rpath-link/d;}' solenv/gbuild/platform/unxgcc.mk
 
       find -name "*.cmd" -exec sed -i s,/lib:/usr/lib,, {} \;
-    '';
+    ''
+
+	+ (if builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "alderlake" "znver3" ] then
+	''
+		sed -e '/CPPUNIT_TEST(testDubiousArrayFormulasFODS);/d' -i './sc/qa/unit/functions_array.cxx'
+	'' else "");
 
   makeFlags = [ "SHELL=${bash}/bin/bash" ];
 

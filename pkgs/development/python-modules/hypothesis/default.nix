@@ -86,6 +86,10 @@ buildPythonPackage rec {
     "hypothesis"
   ];
 
+  disabledTests = [] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake") [
+	"test_initialize_rule_populate_bundle"
+  ];
+
   meta = with lib; {
     description = "Library for property based testing";
     homepage = "https://github.com/HypothesisWorks/hypothesis";

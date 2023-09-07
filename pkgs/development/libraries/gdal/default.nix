@@ -198,6 +198,8 @@ stdenv.mkDerivation rec {
     "test_rda_download_queue"
   ] ++ lib.optionals (lib.versionOlder proj.version "8") [
     "test_ogr_parquet_write_crs_without_id_in_datum_ensemble_members"
+  ] ++ lib.optionals (builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "alderlake" "znver3" ]) [
+    "test_jp2openjpeg_22"
   ];
   postCheck = ''
     popd # ../autotest

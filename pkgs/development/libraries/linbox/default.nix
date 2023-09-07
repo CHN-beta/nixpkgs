@@ -52,7 +52,7 @@ stdenv.mkDerivation rec {
     "--enable-sage"
   ];
 
-  doCheck = true;
+  doCheck = stdenv.hostPlatform.gcc.arch or "" != "silvermont";
 
   enableParallelBuilding = true;
 

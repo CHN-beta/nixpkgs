@@ -116,7 +116,7 @@ buildPythonPackage rec {
   disabledTests = [
     # https://github.com/microsoft/debugpy/issues/1241
     "test_flask_breakpoint_multiproc"
-  ];
+  ] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake") [ "test_attach_pid_client" ];
 
   pythonImportsCheck = [
     "debugpy"

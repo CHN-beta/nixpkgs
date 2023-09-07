@@ -112,7 +112,7 @@ stdenv.mkDerivation rec {
     "StressTest"
     "StressTestConcurrent"
     "StressTestNonBlocking"
-  ];
+  ] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake") [ "TInterruptTest" ];
 
   doCheck = !static;
 

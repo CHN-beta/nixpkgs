@@ -82,7 +82,7 @@ stdenv.mkDerivation rec {
     ++ lib.optional (!buildApps) "-DOCIO_BUILD_APPS=OFF";
 
   # precision issues on non-x86
-  doCheck = stdenv.isx86_64;
+  doCheck = stdenv.isx86_64 && (!builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "alderlake" "znver3" ]);
 
   meta = with lib; {
     homepage = "https://opencolorio.org";

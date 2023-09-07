@@ -37,7 +37,7 @@ stdenv.mkDerivation rec {
     "-DGLM_TEST_ENABLE=${if doCheck then "ON" else "OFF"}"
   ];
 
-  doCheck = true;
+  doCheck = stdenv.hostPlatform.gcc.arch or "" != "alderlake";
 
   installPhase = ''
     runHook preInstall

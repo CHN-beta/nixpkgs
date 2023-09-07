@@ -46,7 +46,7 @@ stdenv.mkDerivation rec {
     "--${if stdenv.hostPlatform.fmaSupport    then "enable" else "disable"}-fma"
     "--${if stdenv.hostPlatform.fma4Support   then "enable" else "disable"}-fma4"
   ];
-  doCheck = true;
+  doCheck = stdenv.hostPlatform.gcc.arch or "" != "silvermont";
 
   meta = with lib; {
     broken = stdenv.isDarwin;

@@ -96,7 +96,10 @@ buildPythonPackage rec {
   ] ++ lib.optionals stdenv.isDarwin [
     "test_addresses"  # https://github.com/aio-libs/aiohttp/issues/3572, remove >= v4.0.0
     "test_close"
-  ];
+  ]
+  # issue https://github.com/NixOS/nixpkgs/issues/236552
+  ++ lib.optionals (builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "broadwell" "alderlake" ])
+    [ "test_web_sendfile_functional" ];
 
   disabledTestPaths = [
     "test_proxy_functional.py" # FIXME package proxy.py

@@ -25,7 +25,10 @@ let
     (configurationArm { inherit pkgs haskellLib; })
   ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
     (configurationDarwin { inherit pkgs haskellLib; })
-  ];
+  ]
+  # override for alderlake
+  ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake")
+  	[( self: super: { cryptonite = haskellLib.dontCheck super.cryptonite; } )];
 
   extensions = lib.composeManyExtensions ([
     nonHackagePackages

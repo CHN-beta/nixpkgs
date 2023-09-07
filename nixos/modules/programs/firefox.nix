@@ -209,6 +209,7 @@ in
       passff = "PassFF support";
       tridactyl = "Tridactyl support";
       ugetIntegrator = "Uget Integrator support";
+      firefoxpwa = "Progressive Web App support";
     };
   };
 
@@ -237,6 +238,7 @@ in
       enableTridactylNative = nmh.tridactyl;
       enableUgetIntegrator = nmh.ugetIntegrator;
       enableFXCastBridge = nmh.fxCast;
+      enableFirefoxPwa = nmh.firefoxpwa;
     };
 
     environment.etc =
