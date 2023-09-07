@@ -404,7 +404,7 @@ let
     fetchAttrs = {
       sha256 = {
       x86_64-linux = if cudaSupport
-        then "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+        then "sha256-+Y8Oyl0x+GfIx6rDsRP0zRDSPLNX+6/1tcJG/5uu9Yo="
         else "sha256-o27yVljNno2HNDhT+GodYBMZrwwbc5Z+W0RX5SLDP8w=";
       aarch64-linux = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG=";
       x86_64-darwin = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ=";
