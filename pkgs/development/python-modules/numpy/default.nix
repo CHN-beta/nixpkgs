@@ -55,9 +55,7 @@ in buildPythonPackage rec {
     # Patching of numpy.distutils is needed to prevent it from undoing the
     # patch to distutils.
     ./numpy-distutils-C++.patch
-  ]
-  ++ (if (builtins.elem (stdenv.hostPlatform.gcc.arch or "") [ "broadwell" "alderlake" "znver2" "znver3" ])
-    then [ ./disable-failed-test.patch ] else []);
+  ];
 
   nativeBuildInputs = [ gfortran cython ];
   buildInputs = [ blas lapack ];

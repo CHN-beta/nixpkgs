@@ -17,6 +17,7 @@
 , tzdata
 # Used to break internal dependency loop.
 , enableDocumentation ? true
+, stdenv
 }:
 
 buildPythonPackage rec {
