@@ -20,6 +20,10 @@ stdenv.mkDerivation rec {
 
   outputs = [ "bin" "dev" "out" "doc" ];
 
+  patches = [] ++ lib.optionals
+    (builtins.elem (stdenv.hostPlatform.gcc.arch or "") [ "broadwell" "alderlake" "znver2" "znver3" ])
+    [ ./fix_nan_compare.patch ];
+
   # tests are determined to use /var/tmp on unix
   postPatch = ''
     cat <(find . -name tmpDir.h) <(echo src/test/OpenEXRCoreTest/main.cpp) | while read -r f ; do
