@@ -6,6 +6,7 @@
 , libxml2
 , zlib
 , coreutils
+, callPackage
 , ...
 }:
 
@@ -53,12 +54,18 @@ stdenv.mkDerivation (finalAttrs: {
     runHook postInstallCheck
   '';
 
+  passthru = {
+    hook = callPackage ./hook.nix {
+      zig = finalAttrs.finalPackage;
+    };
+  };
+
   meta = {
     description = "General-purpose programming language and toolchain for maintaining robust, optimal, and reusable software";
     homepage = "https://ziglang.org/";
     changelog = "https://ziglang.org/download/${finalAttrs.version}/release-notes.html";
     license = lib.licenses.mit;
-    maintainers = with lib.maintainers; [ aiotter andrewrk AndersonTorres figsoda ];
+    maintainers = with lib.maintainers; [ andrewrk ] ++ lib.teams.zig.members;
     platforms = lib.platforms.unix;
   };
 } // removeAttrs args [ "hash" ])

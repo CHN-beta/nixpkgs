@@ -4,10 +4,7 @@
   "@antfu/ni" = "ni";
   "@electron-forge/cli" = "electron-forge";
   "@microsoft/rush" = "rush";
-  "@squoosh/cli" = "squoosh-cli";
   "@webassemblyjs/cli-1.11.1" = "wasm2wast";
-  coffee-script = "coffee";
-  vue-cli = "vue";
   "@withgraphite/graphite-cli" = "gt";
 
   # Packages that provide a single executable.
@@ -18,7 +15,6 @@
   "@commitlint/cli" = "commitlint";
   "@forge/cli" = "forge";
   "@gitbeaker/cli" = "gitbeaker";
-  "@medable/mdctl-cli" = "mdctl";
   "@mermaid-js/mermaid-cli" = "mmdc";
   "@nerdwallet/shepherd" = "shepherd";
   "@prisma/language-server" = "prisma-language-server";
@@ -30,19 +26,15 @@
   "@webassemblyjs/wasm-text-gen-1.11.1" = "wasmgen";
   "@webassemblyjs/wast-refmt-1.11.1" = "wast-refmt";
   aws-cdk = "cdk";
-  carbon-now-cli = "carbon-now";
   cdk8s-cli = "cdk8s";
   cdktf-cli = "cdktf";
-  clean-css-cli = "cleancss";
   clipboard-cli = "clipboard";
   clubhouse-cli = "club";
   conventional-changelog-cli = "conventional-changelog";
   cpy-cli = "cpy";
   diff2html-cli = "diff2html";
-  dockerfile-language-server-nodejs = "docker-langserver";
   fast-cli = "fast";
   fauna-shell = "fauna";
-  firebase-tools = "firebase";
   fkill-cli = "fkill";
   fleek-cli = "fleek";
   git-run = "gr";
@@ -52,7 +44,6 @@
   grunt-cli = "grunt";
   gulp-cli = "gulp";
   kaput-cli = "kaput";
-  leetcode-cli = "leetcode";
   less = "lessc";
   localtunnel = "lt";
   lua-fmt = "luafmt";
@@ -64,10 +55,10 @@
   postcss-cli = "postcss";
   prettier = "prettier";
   purescript-psa = "psa";
+  purs-tidy = "purs-tidy";
   react-native-cli = "react-native";
   react-tools = "jsx";
   remod-cli = "remod";
-  s3http = "s3http.js";
   svelte-language-server = "svelteserver";
   teck-programmer = "teck-firmware-upgrade";
   typescript-language-server = "typescript-language-server";
@@ -77,7 +68,6 @@
   vscode-css-languageserver-bin = "css-languageserver";
   vscode-html-languageserver-bin = "html-languageserver";
   vscode-json-languageserver-bin = "json-languageserver";
-  vue-language-server = "vls";
   webtorrent-cli = "webtorrent";
   "@zwave-js/server" = "zwave-server";
 }

@@ -17,14 +17,14 @@
 
 stdenv.mkDerivation rec {
   # Don't forget to update go.d.plugin.nix as well
-  version = "1.41.0";
+  version = "1.42.2";
   pname = "netdata";
 
   src = fetchFromGitHub {
     owner = "netdata";
     repo = "netdata";
     rev = "v${version}";
-    sha256 = "sha256-MZQ1ZTghH4bN7kCMqbyQlAGSgE70sYJxjiamTTH/6ds=";
+    hash = "sha256-8L8PhPgNIHvw+Dcx2D6OE8fp2+GEYOc9wEIoPJSqXME=";
     fetchSubmodules = true;
   };
 

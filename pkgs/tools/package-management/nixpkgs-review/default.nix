@@ -16,14 +16,14 @@
 
 python3.pkgs.buildPythonApplication rec {
   pname = "nixpkgs-review";
-  version = "2.10.0";
+  version = "2.10.1";
   format = "pyproject";
 
   src = fetchFromGitHub {
     owner = "Mic92";
     repo = "nixpkgs-review";
     rev = version;
-    hash = "sha256-uMcTwRmELk/vFI7vU4+UUvBDhlF+gVgohIXE0Sm1/d8=";
+    hash = "sha256-zZM0Ozl6uoYfzvHhQRluS4/5NNRuumQgc4MV993LNyY=";
   };
 
   nativeBuildInputs = [
@@ -60,10 +60,11 @@ python3.pkgs.buildPythonApplication rec {
   '';
 
   meta = with lib; {
+    changelog = "https://github.com/Mic92/nixpkgs-review/releases/tag/${version}";
     description = "Review pull-requests on https://github.com/NixOS/nixpkgs";
     homepage = "https://github.com/Mic92/nixpkgs-review";
-    changelog = "https://github.com/Mic92/nixpkgs-review/releases/tag/${version}";
     license = licenses.mit;
+    mainProgram = "nixpkgs-review";
     maintainers = with maintainers; [ figsoda mic92 ];
   };
 }

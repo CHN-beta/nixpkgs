@@ -7,7 +7,7 @@
 , scdoc
 , wayland
 , wayland-protocols
-, zigHook
+, zig_0_10
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -26,7 +26,7 @@ stdenv.mkDerivation (finalAttrs: {
     pkg-config
     scdoc
     wayland
-    zigHook
+    zig_0_10.hook
   ];
 
   buildInputs = [
@@ -42,6 +42,7 @@ stdenv.mkDerivation (finalAttrs: {
     description = "A small screenlocker for Wayland compositors";
     license = lib.licenses.isc;
     maintainers = with lib.maintainers; [ jordanisaacs ];
+    mainProgram = "waylock";
     platforms = lib.platforms.linux;
   };
 })

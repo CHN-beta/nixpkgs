@@ -1,6 +1,6 @@
 { lib, stdenv, fetchFromGitHub, pkg-config, python3Packages, makeWrapper
 , libsamplerate, libsndfile, readline, eigen, celt
-, wafHook
+, waf
 # Darwin Dependencies
 , aften, AudioUnit, CoreAudio, libobjc, Accelerate
 
@@ -28,18 +28,18 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "${prefix}jack2";
-  version = "1.9.19";
+  version = "1.9.22";
 
   src = fetchFromGitHub {
     owner = "jackaudio";
     repo = "jack2";
     rev = "v${finalAttrs.version}";
-    sha256 = "01s8i64qczxqawgrzrw19asaqmcspf5l2h3203xzg56wnnhhzcw7";
+    sha256 = "sha256-Cslfys5fcZDy0oee9/nM5Bd1+Cg4s/ayXjJJOSQCL4E=";
   };
 
   outputs = [ "out" "dev" ];
 
-  nativeBuildInputs = [ pkg-config python makeWrapper wafHook ];
+  nativeBuildInputs = [ pkg-config python makeWrapper waf.hook ];
   buildInputs = [ libsamplerate libsndfile readline eigen celt
     optDbus optPythonDBus optLibffado optAlsaLib optLibopus
   ] ++ lib.optionals stdenv.isDarwin [

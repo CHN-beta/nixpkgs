@@ -12,16 +12,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "pylyzer";
-  version = "0.0.39";
+  version = "0.0.42";
 
   src = fetchFromGitHub {
     owner = "mtshiba";
     repo = "pylyzer";
     rev = "v${version}";
-    hash = "sha256-GHrB4FmZWmnkcfr3y4Ulk3TBmVn1Xsixqeni8h9PykY=";
+    hash = "sha256-SZwMgxQUuGq74mca1mgZ41esW/mr+mvlOhHXFALjd8U=";
   };
 
-  cargoHash = "sha256-Fe/bD8pIXElYfxYHF6JPVlpHhRrgJMDjEFfnequ00Bo=";
+  cargoHash = "sha256-iPNdkKLvLyJGwdd19tNNwuxVBctp1K+UuQjjLLzkgHg=";
 
   nativeBuildInputs = [
     git
