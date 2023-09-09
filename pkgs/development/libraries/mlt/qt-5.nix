@@ -23,6 +23,9 @@
 , rubberband
 , mkDerivation
 , which
+, config
+, cudaSupport ? config.cudaSupport
+, cudaPackages ? { }
 }:
 
 mkDerivation rec {
@@ -55,9 +58,9 @@ mkDerivation rec {
     ladspa-sdk
     ladspaPlugins
     rubberband
-  ];
+  ] ++ lib.optionals cudaSupport [ cudaPackages.cuda_cudart ];
 
-  nativeBuildInputs = [ cmake which pkg-config ];
+  nativeBuildInputs = [ cmake which pkg-config ] ++ lib.optionals cudaSupport [ cudaPackages.cuda_nvcc ];
 
   outputs = [ "out" "dev" ];
 
