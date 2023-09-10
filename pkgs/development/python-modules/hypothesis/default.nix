@@ -20,7 +20,7 @@
 , stdenv
 }:
 
-buildPythonPackage rec {
+buildPythonPackage (rec {
   pname = "hypothesis";
   version = "6.68.2";
   outputs = [ "out" ] ++ lib.optional enableDocumentation "doc";
@@ -87,10 +87,6 @@ buildPythonPackage rec {
     "hypothesis"
   ];
 
-  disabledTests = [] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake") [
-	"test_initialize_rule_populate_bundle"
-  ];
-
   meta = with lib; {
     description = "Library for property based testing";
     homepage = "https://github.com/HypothesisWorks/hypothesis";
@@ -99,3 +95,5 @@ buildPythonPackage rec {
     maintainers = with maintainers; [ SuperSandro2000 ];
   };
 }
+// (if (stdenv.hostPlatform.gcc.arch or "" == "alderlake") then
+  { disabledTests = [ "test_initialize_rule_populate_bundle" ]; } else {}))
