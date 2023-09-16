@@ -352,7 +352,7 @@ let
 
         redirectListen = filter (x: !x.ssl) defaultListen;
 
-        acmeLocation = optionalString (vhost.enableACME || vhost.useACMEHost != null) ''
+        acmeLocation = optionalString (vhost.enableACME || (vhost.useACMEHost != null && config.security.acme.certs.${vhost.useACMEHost}.dnsProvider == null)) ''
           # Rule for legitimate ACME Challenge requests (like /.well-known/acme-challenge/xxxxxxxxx)
           # We use ^~ here, so that we don't check any regexes (which could
           # otherwise easily override this intended match accidentally).
