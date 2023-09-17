@@ -242,7 +242,7 @@ let
       else if cfg.backend == "podman" then [ config.virtualisation.podman.package ]
       else throw "Unhandled backend: ${cfg.backend}";
 
-    script = ''
+    preStart = ''
       ${cfg.backend} rm -f ${name} || true
       ${optionalString (isValidLogin container.login) ''
         cat ${container.login.passwordFile} | \
@@ -257,8 +257,9 @@ let
       ${optionalString (cfg.backend == "podman") ''
         rm -f /run/podman-${escapedName}.ctr-id
         ''}
-      ''
-      + concatStringsSep " \\\n  " ([
+      '';
+
+    script = concatStringsSep " \\\n  " ([
       "exec ${cfg.backend} run"
       "--rm"
       "--name=${escapedName}"
@@ -282,12 +283,12 @@ let
       ++ map escapeShellArg container.cmd
     );
 
-    preStop = (if cfg.backend == "podman"
+    preStop = if cfg.backend == "podman"
       then "[ $SERVICE_RESULT = success ] || podman stop --ignore --cidfile=/run/podman-${escapedName}.ctr-id"
-      else "[ $SERVICE_RESULT = success ] || ${cfg.backend} stop ${name}")
-      + "\n" + (if cfg.backend == "podman"
+      else "[ $SERVICE_RESULT = success ] || ${cfg.backend} stop ${name}";
+    postStop =  if cfg.backend == "podman"
       then "podman rm -f --ignore --cidfile=/run/podman-${escapedName}.ctr-id"
-      else "${cfg.backend} rm -f ${name} || true");
+      else "${cfg.backend} rm -f ${name} || true";
 
     serviceConfig = {
       ### There is no generalized way of supporting `reload` for docker
