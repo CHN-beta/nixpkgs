@@ -1,21 +1,21 @@
 { lib
 , stdenv
 , fetchFromGitHub
-, fetchpatch
-, zlib
 , cmake
 , imath
+, libdeflate
+, pkg-config
 }:
 
 stdenv.mkDerivation rec {
   pname = "openexr";
-  version = "3.1.11";
+  version = "3.2.0";
 
   src = fetchFromGitHub {
     owner = "AcademySoftwareFoundation";
     repo = "openexr";
     rev = "v${version}";
-    sha256 = "sha256-xW/BmMtEYHiLk8kLZFXYE809jL/uAnCzkINugqJ8Iig=";
+    hash = "sha256-cV+qgx3WzdotypgpZhVFxzdKAU2rNVw0KWSdkeN0gLk=";
   };
 
   patches = [] ++ lib.optionals
@@ -23,6 +23,12 @@ stdenv.mkDerivation rec {
     [ ./fix_nan_compare.patch ];
 
   outputs = [ "bin" "dev" "out" "doc" ];
+
+  patches =
+    # Disable broken test on musl libc
+    # https://github.com/AcademySoftwareFoundation/openexr/issues/1556
+    lib.optional stdenv.hostPlatform.isMusl ./disable-iex-test.patch
+  ;
 
   # tests are determined to use /var/tmp on unix
   postPatch = ''
@@ -33,8 +39,8 @@ stdenv.mkDerivation rec {
 
   cmakeFlags = lib.optional stdenv.hostPlatform.isStatic "-DCMAKE_SKIP_RPATH=ON";
 
-  nativeBuildInputs = [ cmake ];
-  propagatedBuildInputs = [ imath zlib ];
+  nativeBuildInputs = [ cmake pkg-config ];
+  propagatedBuildInputs = [ imath libdeflate ];
 
   # Without 'sse' enforcement tests fail on i686 as due to excessive precision as:
   #   error reading back channel B pixel 21,-76 got -nan expected -nan
