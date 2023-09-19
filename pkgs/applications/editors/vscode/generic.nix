@@ -8,7 +8,8 @@
 , tests
 
 # needed to fix "Save as Root"
-, asar, bash
+, nodePackages
+, asar ? nodePackages.asar, bash
 
 # Attributes inherit from specific versions
 , version, src, meta, sourceRoot, commandLineArgs
