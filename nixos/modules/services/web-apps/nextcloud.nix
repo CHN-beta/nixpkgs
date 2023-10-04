@@ -1085,7 +1085,7 @@ in {
       };
     }
     {
-      services.nextcloud.nginx.recommendedConfig = {
+      services.nextcloud.nginx.recommendedConfig = { upstream ? "127.0.0.1" }: {
         root = cfg.package;
         locations = {
           "= /robots.txt" = {
@@ -1149,7 +1149,7 @@ in {
               fastcgi_param HTTPS ${if cfg.https then "on" else "off"};
               fastcgi_param modHeadersAvailable true;
               fastcgi_param front_controller_active true;
-              fastcgi_pass 127.0.0.1:9000;
+              fastcgi_pass ${upstream}:9000;
               fastcgi_intercept_errors on;
               fastcgi_request_buffering off;
               fastcgi_read_timeout ${builtins.toString cfg.fastcgiTimeout}s;
