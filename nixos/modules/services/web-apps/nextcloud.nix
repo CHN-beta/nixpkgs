@@ -705,7 +705,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable (mkMerge [
+  config = mkMerge [ (mkIf cfg.enable (mkMerge [
     { warnings = let
         latest = 26;
         upgradeWarning = major: nixos:
@@ -1084,6 +1084,7 @@ in {
         };
       };
     }
+  ]))
     {
       services.nextcloud.nginx.recommendedConfig = { upstream ? "127.0.0.1" }: {
         root = cfg.package;
@@ -1200,7 +1201,7 @@ in {
         '';
       };
     }
-  ]);
+  ];
 
   meta.doc = ./nextcloud.md;
 }
