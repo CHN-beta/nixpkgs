@@ -303,6 +303,7 @@ in {
         "pm.min_spare_servers" = "2";
         "pm.max_spare_servers" = "4";
         "pm.max_requests" = "500";
+        "listen" = "127.0.0.1:9000";
       };
       description = lib.mdDoc ''
         Options for nextcloud's PHP pool. See the documentation on `php-fpm.conf` for details on configuration directives.
@@ -1038,9 +1039,7 @@ in {
             NEXTCLOUD_CONFIG_DIR = "${datadir}/config";
             PATH = "/run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin";
           };
-          settings = mapAttrs (name: mkDefault) {
-            "listen" = "127.0.0.1:9000";
-          } // cfg.poolSettings;
+          settings = cfg.poolSettings;
           extraConfig = cfg.poolConfig;
         };
       };
