@@ -1073,19 +1073,14 @@ in {
         }];
       };
 
-      services.redis.servers.nextcloud = lib.mkIf cfg.configureRedis {
-        enable = true;
-        user = "nextcloud";
-      };
-
       services.nextcloud = lib.mkIf cfg.configureRedis {
         caching.redis = true;
         extraOptions = {
           "memcache.distributed" = ''\OC\Memcache\Redis'';
           "memcache.locking" = ''\OC\Memcache\Redis'';
           redis = {
-            host = config.services.redis.servers.nextcloud.unixSocket;
-            port = 0;
+            host = "127.0.0.1";
+            port = config.services.redis.servers.nextcloud.port;
           };
         };
       };
