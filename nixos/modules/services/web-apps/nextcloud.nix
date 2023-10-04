@@ -1086,7 +1086,7 @@ in {
       };
     }
     {
-      services.nextcound.nginx.recommendedConfig = {
+      services.nextcloud.nginx.recommendedConfig = {
         root = cfg.package;
         locations = {
           "= /robots.txt" = {
