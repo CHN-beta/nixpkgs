@@ -60,6 +60,8 @@ let
 
     ### B ###
 
+    b0 = callPackage ../development/ocaml-modules/b0 { };
+
     bap = janeStreet_0_15.bap;
 
     base64 = callPackage ../development/ocaml-modules/base64 { };
@@ -336,6 +338,10 @@ let
     dnssec = callPackage ../development/ocaml-modules/dns/dnssec.nix { };
 
     dolmen =  callPackage ../development/ocaml-modules/dolmen { };
+
+    dolmen_loop =  callPackage ../development/ocaml-modules/dolmen/loop.nix { };
+
+    dolmen_type =  callPackage ../development/ocaml-modules/dolmen/type.nix { };
 
     dolog = callPackage ../development/ocaml-modules/dolog { };
 
@@ -1290,6 +1296,8 @@ let
 
     ocf_ppx = callPackage ../development/ocaml-modules/ocf/ppx.nix { };
 
+    ocolor = callPackage ../development/ocaml-modules/ocolor { };
+
     ocp-build = callPackage ../development/tools/ocaml/ocp-build { };
 
     ocp-indent = callPackage ../development/tools/ocaml/ocp-indent { };
@@ -1323,6 +1331,8 @@ let
     ocurl = callPackage ../development/ocaml-modules/ocurl { };
 
     odate = callPackage ../development/ocaml-modules/odate { };
+
+    odig = callPackage ../development/ocaml-modules/odig { };
 
     odoc = callPackage ../development/ocaml-modules/odoc { };
 
@@ -1515,10 +1525,7 @@ let
 
     psq = callPackage ../development/ocaml-modules/psq { };
 
-    ptime =
-      if lib.versionAtLeast ocaml.version "4.08"
-      then callPackage ../development/ocaml-modules/ptime { }
-      else null;
+    ptime = callPackage ../development/ocaml-modules/ptime { };
 
     ptmap = callPackage ../development/ocaml-modules/ptmap { };
 
@@ -1885,6 +1892,8 @@ let
 
     buildOasisPackage = callPackage ../build-support/ocaml/oasis.nix { };
 
+    buildTopkgPackage = callPackage ../build-support/ocaml/topkg.nix { };
+
     # Apps from all-packages, to be eventually removed
 
     google-drive-ocamlfuse = callPackage ../applications/networking/google-drive-ocamlfuse { };
@@ -1935,7 +1944,7 @@ in let inherit (pkgs) callPackage; in rec
 
   ocamlPackages_5_1 = mkOcamlPackages (callPackage ../development/compilers/ocaml/5.1.nix { });
 
-  ocamlPackages_latest = ocamlPackages_5_0;
+  ocamlPackages_latest = ocamlPackages_5_1;
 
   ocamlPackages = ocamlPackages_4_14;
 
