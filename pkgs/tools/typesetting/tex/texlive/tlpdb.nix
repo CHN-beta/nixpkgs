@@ -6459,7 +6459,6 @@
     "chicago-annote"
     "chicagoa"
     "chscite"
-    "citation-style-language"
     "citeall"
     "citeref"
     "collection-latex"
