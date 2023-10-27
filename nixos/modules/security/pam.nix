@@ -1379,11 +1379,6 @@ in
           More information can be found [here](https://developers.yubico.com/yubico-pam/Authentication_Using_Challenge-Response.html).
         '';
       };
-      authFile = mkOption {
-        default = null;
-        type = types.nullOr types.path;
-        description = lib.mdDoc ''For personal use only'';
-      };
     };
 
     security.pam.zfs = {

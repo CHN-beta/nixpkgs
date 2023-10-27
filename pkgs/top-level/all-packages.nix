@@ -19888,8 +19888,6 @@ with pkgs;
 
   puppeteer-cli = callPackage ../tools/graphics/puppeteer-cli { };
 
-  firefoxpwa = callPackage ../tools/networking/firefoxpwa { };
-
   pyrseas = callPackage ../development/tools/database/pyrseas { };
 
   pycritty = with python3Packages; toPythonApplication pycritty;
