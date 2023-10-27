@@ -457,10 +457,12 @@ in {
           "inkbird"
           "keymitt_ble"
           "led_ble"
+          "medcom_ble"
           "melnor"
           "moat"
           "mopeka"
           "oralb"
+          "private_ble_device"
           "qingping"
           "rapt_ble"
           "ruuvi_gateway"
@@ -586,11 +588,12 @@ in {
           "~@privileged"
         ] ++ optionals (any useComponent componentsUsingPing) [
           "capset"
+          "setuid"
         ];
         UMask = "0077";
       };
       path = [
-        "/run/wrappers" # needed for ping
+        pkgs.unixtools.ping # needed for ping
       ];
     };
 

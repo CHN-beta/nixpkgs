@@ -4,12 +4,13 @@
 , rustPlatform
 , nix-update-script
 , protobuf
+, rust-jemalloc-sys
 , Security
 }:
 
 let
   pname = "quickwit";
-  version = "0.6.3";
+  version = "0.6.4";
 in
 rustPlatform.buildRustPackage rec {
   inherit pname version;
@@ -18,7 +19,7 @@ rustPlatform.buildRustPackage rec {
     owner = "quickwit-oss";
     repo = pname;
     rev = "v${version}";
-    hash = "sha256-u8t6QIoislQUQO/xMKfNx/vVTgeEoh8ZIhJ+RvD3YCw=";
+    hash = "sha256-stlm3oDMQVoMza3s4JApynXbzhrarfXw3uAxGMZQJqs=";
   };
 
   postPatch = ''
@@ -32,7 +33,9 @@ rustPlatform.buildRustPackage rec {
 
   sourceRoot = "${src.name}/quickwit";
 
-  buildInputs = lib.optionals stdenv.isDarwin [ Security ];
+  buildInputs = [
+    rust-jemalloc-sys
+  ] ++ lib.optionals stdenv.isDarwin [ Security ];
 
   cargoLock = {
     lockFile = ./Cargo.lock;

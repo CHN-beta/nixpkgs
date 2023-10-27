@@ -88,7 +88,7 @@
 , withAnalyze ? true
 , withApparmor ? true
 , withAudit ? true
-, withBootloader ? !stdenv.hostPlatform.isMusl # compiles systemd-boot, assumes EFI is available.
+, withBootloader ? withEfi && !stdenv.hostPlatform.isMusl # compiles systemd-boot, assumes EFI is available.
 , withCompression ? true  # adds bzip2, lz4, xz and zstd
 , withCoredump ? true
 , withCryptsetup ? true
@@ -201,6 +201,7 @@ stdenv.mkDerivation (finalAttrs: {
     ./0016-inherit-systemd-environment-when-calling-generators.patch
     ./0017-core-don-t-taint-on-unmerged-usr.patch
     ./0018-tpm2_context_init-fix-driver-name-checking.patch
+    ./0019-systemctl-edit-suggest-systemdctl-edit-runtime-on-sy.patch
   ] ++ lib.optional stdenv.hostPlatform.isMusl (
     let
       oe-core = fetchzip {
@@ -481,7 +482,6 @@ stdenv.mkDerivation (finalAttrs: {
     "-Dportabled=${lib.boolToString withPortabled}"
     "-Dhwdb=${lib.boolToString withHwdb}"
     "-Dremote=${lib.boolToString withRemote}"
-    "-Dsysusers=false"
     "-Dtimedated=${lib.boolToString withTimedated}"
     "-Dtimesyncd=${lib.boolToString withTimesyncd}"
     "-Duserdb=${lib.boolToString withUserDb}"

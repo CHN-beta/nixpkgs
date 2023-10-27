@@ -337,7 +337,7 @@ let
         listenString = { addr, port, ssl, proxyProtocol ? false, extraParameters ? [], ... }:
           # UDP listener for QUIC transport protocol.
           (optionalString (ssl && vhost.quic) ("
-            listen ${addr}:${toString port} quic "
+            listen ${addr}${optionalString (port != null) ":${toString port}"} quic "
           + optionalString vhost.default "default_server "
           + optionalString vhost.reuseport "reuseport "
           + optionalString (extraParameters != []) (concatStringsSep " "
@@ -346,7 +346,7 @@ let
             in filter isCompatibleParameter extraParameters))
           + ";"))
           + "
-            listen ${addr}:${toString port} "
+            listen ${addr}${optionalString (port != null) ":${toString port}"} "
           + optionalString (ssl && vhost.http2 && oldHTTP2) "http2 "
           + optionalString ssl "ssl "
           + optionalString vhost.default "default_server "
@@ -1348,6 +1348,11 @@ in
     users.groups = optionalAttrs (cfg.group == "nginx") {
       nginx.gid = config.ids.gids.nginx;
     };
+
+    # do not delete the default temp directories created upon nginx startup
+    systemd.tmpfiles.rules = [
+      "X /tmp/systemd-private-%b-nginx.service-*/tmp/nginx_*"
+    ];
 
     services.logrotate.settings.nginx = mapAttrs (_: mkDefault) {
       files = "/var/log/nginx/*.log";

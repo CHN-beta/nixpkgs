@@ -18,7 +18,7 @@
 
 buildPythonPackage rec {
   pname = "pyenphase";
-  version = "1.11.4";
+  version = "1.13.1";
   format = "pyproject";
 
   disabled = pythonOlder "3.11";
@@ -27,7 +27,7 @@ buildPythonPackage rec {
     owner = "pyenphase";
     repo = "pyenphase";
     rev = "refs/tags/v${version}";
-    hash = "sha256-ZFK7Pyn8YsxdxPICtDXx2L+3t/xG3x2HC+F0plDbvHk=";
+    hash = "sha256-8wGGx7ERYm+lKvLW/NUcJeBTqEXPM0jJNOOlkj/UzYk=";
   };
 
   postPatch = ''
@@ -54,6 +54,11 @@ buildPythonPackage rec {
     pytestCheckHook
     respx
     syrupy
+  ];
+
+  disabledTests = [
+    # https://github.com/pyenphase/pyenphase/issues/97
+    "test_with_7_x_firmware"
   ];
 
   pythonImportsCheck = [

@@ -690,6 +690,9 @@ in {
           "zpool create rpool /dev/vda2",
           "zfs create -o mountpoint=legacy rpool/root",
           "mount -t zfs rpool/root /mnt",
+          "zfs create -o mountpoint=legacy rpool/root/usr",
+          "mkdir /mnt/usr",
+          "mount -t zfs rpool/root/usr /mnt/usr",
           "udevadm settle",
       )
     '';
@@ -931,9 +934,8 @@ in {
         "udevadm settle",
         "mkswap /dev/vda2 -L swap",
         "swapon -L swap",
-        "keyctl link @u @s",
         "echo password | mkfs.bcachefs -L root --encrypted /dev/vda3",
-        "echo password | bcachefs unlock /dev/vda3",
+        "echo password | bcachefs unlock -k session /dev/vda3",
         "echo password | mount -t bcachefs /dev/vda3 /mnt",
         "mkfs.ext3 -L boot /dev/vda1",
         "mkdir -p /mnt/boot",

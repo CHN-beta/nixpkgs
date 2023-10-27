@@ -39,7 +39,7 @@ in
 assert cudaSupport -> lib.versionAtLeast cudatoolkit.version "11.1" && lib.versionAtLeast cudnn.version "8.2" && stdenv.isLinux;
 
 let
-  version = "0.4.16";
+  version = "0.4.19";
 
   inherit (python) pythonVersion;
 
@@ -60,15 +60,15 @@ let
     {
       "x86_64-linux" = getSrcFromPypi {
         platform = "manylinux2014_x86_64";
-        hash = "sha256-4XyaDnKEMhAbfPEvN3RCDEjXTWbOL6tWrTlyYeiboVs=";
+        hash = "sha256-ksnY+CPEstact5lKjbSg+ZSPJtSt0Y0NFWEFufBCByk=";
       };
       "aarch64-darwin" = getSrcFromPypi {
         platform = "macosx_11_0_arm64";
-        hash = "sha256-IG2pCui/Yj+LDMbQwBVlu7yl2llqnaxMzz/MtBvBr6U=";
+        hash = "sha256-O7dHvdKLKfNELGfF4TKy7N5EX6Ca7Zu8OtLXWvFykR8=";
       };
       "x86_64-darwin" = getSrcFromPypi {
         platform = "macosx_10_14_x86_64";
-        hash = "sha256-x5DqsmHqEb7Dl7dnxT5N0l30GKt5OPZpq3HGX9MFKmo=";
+        hash = "sha256-gqKMUZSXrt8sQtTAoQbzAfCzO8gM9Y1/tZpuJVWyN0Y=";
       };
     };
 
@@ -77,8 +77,8 @@ let
   # When upgrading, you can get these hashes from prefetch.sh. See
   # https://github.com/google/jax/issues/12879 as to why this specific URL is the correct index.
   gpuSrc = fetchurl {
-    url = "https://storage.googleapis.com/jax-releases/cuda11/jaxlib-${version}+cuda11.cudnn86-cp310-cp310-manylinux2014_x86_64.whl";
-    hash = "sha256-eLOprP2kv6roodwRKZXVZFQCD1wC26TSTEDJBjMu/Uo=";
+    url = "https://storage.googleapis.com/jax-releases/cuda12/jaxlib-${version}+cuda12.cudnn89-cp310-cp310-manylinux2014_x86_64.whl";
+    hash = "sha256-zfN0n31+5GohwBkeQrqHus4qOyhM/GEdqG6KUupCZ4o=";
   };
 
 in

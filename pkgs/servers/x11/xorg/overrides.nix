@@ -134,7 +134,15 @@ self: super:
     };
   });
 
-  libxcvt = addMainProgram super.libxcvt { mainProgram = "cvt"; };
+  libxcvt = super.libxcvt.overrideAttrs ({ meta ? {}, ... }: {
+    meta = meta // {
+      homepage = "https://gitlab.freedesktop.org/xorg/lib/libxcvt";
+      mainProgram = "cvt";
+      badPlatforms = meta.badPlatforms or [] ++ [
+        lib.systems.inspect.platformPatterns.isStatic
+      ];
+    };
+  });
 
   libX11 = super.libX11.overrideAttrs (attrs: {
     outputs = [ "out" "dev" "man" ];
@@ -296,7 +304,7 @@ self: super:
     postInstall = ''
       sed "/^Requires:/s/$/, freetype2/" -i "$dev/lib/pkgconfig/xft.pc"
     '';
-    passthru = {
+    passthru = attrs.passthru // {
       inherit freetype fontconfig;
     };
   });
@@ -826,7 +834,9 @@ self: super:
             done
           )
         '';
-        passthru.version = version; # needed by virtualbox guest additions
+        passthru = attrs.passthru // {
+          inherit version; # needed by virtualbox guest additions
+        };
       } else {
         nativeBuildInputs = attrs.nativeBuildInputs ++ [ autoreconfHook bootstrap_cmds xorg.utilmacros xorg.fontutil ];
         buildInputs = commonBuildInputs ++ [
@@ -896,7 +906,9 @@ self: super:
 
           cp ${darwinOtherX}/share/man -rT $out/share/man
         '' ;
-        passthru.version = version;
+        passthru = attrs.passthru // {
+          inherit version;
+        };
       }));
 
   lndir = super.lndir.overrideAttrs (attrs: {

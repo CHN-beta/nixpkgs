@@ -350,6 +350,7 @@ with lib.maintainers; {
       mic92
       zowoq
       qbit
+      mfrw
     ];
     githubTeams = [
       "golang"
@@ -611,6 +612,7 @@ with lib.maintainers; {
 
   minimal-bootstrap = {
     members = [
+      alejandrosame
       artturin
       emilytrau
       ericson2314
@@ -680,6 +682,18 @@ with lib.maintainers; {
     ];
     scope = "Group registration for Numtide team members who collectively maintain packages.";
     shortName = "Numtide team";
+  };
+
+  ocaml = {
+    members = [
+      alizter
+    ];
+    githubTeams = [
+      "ocaml"
+    ];
+    scope = "Maintain the OCaml compiler and package set.";
+    shortName = "OCaml";
+    enableFeatureFreezePing = true;
   };
 
   openstack = {
