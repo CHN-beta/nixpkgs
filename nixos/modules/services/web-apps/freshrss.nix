@@ -162,7 +162,6 @@ in
     mkIf cfg.enable {
       # Set up a Nginx virtual host.
       services.nginx = mkIf (cfg.virtualHost != null) {
-        enable = true;
         virtualHosts.${cfg.virtualHost} = {
           root = "${cfg.package}/p";
 
