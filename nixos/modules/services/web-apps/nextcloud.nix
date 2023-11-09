@@ -305,7 +305,6 @@ in {
         "pm.min_spare_servers" = "2";
         "pm.max_spare_servers" = "4";
         "pm.max_requests" = "500";
-        "listen" = "127.0.0.1:9000";
       };
       description = lib.mdDoc ''
         Options for nextcloud's PHP pool. See the documentation on `php-fpm.conf` for details on configuration directives.
@@ -700,14 +699,10 @@ in {
           directive and header.
         '';
       };
-      recommendedConfig = mkOption {
-        type = types.anything;
-        description = lib.mdDoc "personal use only";
-      };
     };
   };
 
-  config = mkMerge [ (mkIf cfg.enable (mkMerge [
+  config = mkIf cfg.enable (mkMerge [
     { warnings = let
         latest = 26;
         upgradeWarning = major: nixos:
@@ -1041,7 +1036,10 @@ in {
             NEXTCLOUD_CONFIG_DIR = "${datadir}/config";
             PATH = "/run/wrappers/bin:/nix/var/nix/profiles/default/bin:/run/current-system/sw/bin:/usr/bin:/bin";
           };
-          settings = cfg.poolSettings;
+          settings = mapAttrs (name: mkDefault) {
+            "listen.owner" = config.services.nginx.user;
+            "listen.group" = config.services.nginx.group;
+          } // cfg.poolSettings;
           extraConfig = cfg.poolConfig;
         };
       };
@@ -1074,21 +1072,26 @@ in {
         }];
       };
 
+      services.redis.servers.nextcloud = lib.mkIf cfg.configureRedis {
+        enable = true;
+        user = "nextcloud";
+      };
+
       services.nextcloud = lib.mkIf cfg.configureRedis {
         caching.redis = true;
         extraOptions = {
           "memcache.distributed" = ''\OC\Memcache\Redis'';
           "memcache.locking" = ''\OC\Memcache\Redis'';
           redis = {
-            host = "127.0.0.1";
-            port = config.services.redis.servers.nextcloud.port;
+            host = config.services.redis.servers.nextcloud.unixSocket;
+            port = 0;
           };
         };
       };
-    }
-  ]))
-    {
-      services.nextcloud.nginx.recommendedConfig = { upstream ? "127.0.0.1" }: {
+
+      services.nginx.enable = mkDefault true;
+
+      services.nginx.virtualHosts.${cfg.hostName} = {
         root = cfg.package;
         locations = {
           "= /robots.txt" = {
@@ -1152,7 +1155,7 @@ in {
               fastcgi_param HTTPS ${if cfg.https then "on" else "off"};
               fastcgi_param modHeadersAvailable true;
               fastcgi_param front_controller_active true;
-              fastcgi_pass ${upstream}:9000;
+              fastcgi_pass unix:${fpm.socket};
               fastcgi_intercept_errors on;
               fastcgi_request_buffering off;
               fastcgi_read_timeout ${builtins.toString cfg.fastcgiTimeout}s;
@@ -1203,7 +1206,7 @@ in {
         '';
       };
     }
-  ];
+  ]);
 
   meta.doc = ./nextcloud.md;
 }
