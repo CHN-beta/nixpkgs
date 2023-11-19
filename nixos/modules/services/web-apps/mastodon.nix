@@ -119,10 +119,10 @@ let
       threads = toString (if processCfg.threads == null then cfg.sidekiqThreads else processCfg.threads);
     in {
       after = [ "network.target" "mastodon-init-dirs.service" ]
-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
+        ++ lib.optional true "postgresql.service"
         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
       requires = [ "mastodon-init-dirs.service" ]
-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
+        ++ lib.optional true "postgresql.service"
         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
       description = "Mastodon sidekiq${jobClassLabel}";
       wantedBy = [ "mastodon.target" ];
@@ -685,17 +685,17 @@ in {
         SystemCallFilter = [ ("~" + lib.concatStringsSep " " (systemCallsList ++ [ "@resources" ])) "@chown" "pipe" "pipe2" ];
       } // cfgService;
       after = [ "network.target" "mastodon-init-dirs.service" ]
-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service";
+        ++ lib.optional true "postgresql.service";
       requires = [ "mastodon-init-dirs.service" ]
-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service";
+        ++ lib.optional true "postgresql.service";
     };
 
     systemd.services.mastodon-streaming = {
       after = [ "network.target" "mastodon-init-dirs.service" ]
-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
+        ++ lib.optional true "postgresql.service"
         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
       requires = [ "mastodon-init-dirs.service" ]
-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
+        ++ lib.optional true "postgresql.service"
         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
       wantedBy = [ "mastodon.target" ];
       description = "Mastodon streaming";
@@ -719,10 +719,10 @@ in {
 
     systemd.services.mastodon-web = {
       after = [ "network.target" "mastodon-init-dirs.service" ]
-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
+        ++ lib.optional true "postgresql.service"
         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
       requires = [ "mastodon-init-dirs.service" ]
-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
+        ++ lib.optional true "postgresql.service"
         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
       wantedBy = [ "mastodon.target" ];
       description = "Mastodon web";
