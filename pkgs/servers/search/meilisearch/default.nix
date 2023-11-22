@@ -7,9 +7,9 @@
 , nix-update-script
 }:
 
-let version = "1.3.1";
+let version = "1.5.0";
 in
-rustPlatform.buildRustPackage {
+rustPlatform.buildRustPackage rec {
   pname = "meilisearch";
   inherit version;
 
@@ -17,7 +17,7 @@ rustPlatform.buildRustPackage {
     owner = "meilisearch";
     repo = "MeiliSearch";
     rev = "refs/tags/v${version}";
-    hash = "sha256-jttT4qChoqwTnjjoW0Zc15ZieZN7KD1Us64Tk0eDG3Y=";
+    hash = "sha256-UP5i89hXmbATbHwN4wu42L6zX2fnd/hF4NEGK5VwmiM=";
   };
 
   cargoBuildFlags = [
@@ -25,7 +25,7 @@ rustPlatform.buildRustPackage {
   ];
 
   cargoLock = {
-    lockFile = ./Cargo.lock;
+    lockFile = "${src}/Cargo.lock";
     outputHashes = {
       "actix-web-static-files-3.0.5" = "sha256-2BN0RzLhdykvN3ceRLkaKwSZtel2DBqZ+uz4Qut+nII=";
       "heed-0.12.7" = "sha256-mthHMaTqmNae8gpe4ZnozABKBrgFQdn9KWCvIzJJ+u4=";
