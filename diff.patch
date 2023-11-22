@@ -1,0 +1,2636 @@
+diff --git a/README.md b/README.md
+index d840e2a8c503..9dc8c5d59026 100644
+--- a/README.md
++++ b/README.md
+@@ -1,3 +1,5 @@
++Modified for personal use, mainly for compiling natively on Alderlake.
++
+ <p align="center">
+   <a href="https://nixos.org#gh-light-mode-only">
+     <img src="https://raw.githubusercontent.com/NixOS/nixos-homepage/master/logo/nixos-hires.png" width="500px" alt="NixOS logo"/>
+diff --git a/lib/systems/architectures.nix b/lib/systems/architectures.nix
+index 57b9184ca60c..782c9e25bee1 100644
+--- a/lib/systems/architectures.nix
++++ b/lib/systems/architectures.nix
+@@ -18,6 +18,7 @@ rec {
+     cascadelake    = [ "sse3" "ssse3" "sse4_1" "sse4_2"         "aes" "avx" "avx2" "avx512" "fma"        ];
+     cooperlake     = [ "sse3" "ssse3" "sse4_1" "sse4_2"         "aes" "avx" "avx2" "avx512" "fma"        ];
+     tigerlake      = [ "sse3" "ssse3" "sse4_1" "sse4_2"         "aes" "avx" "avx2" "avx512" "fma"        ];
++    alderlake      = [ "sse3" "ssse3" "sse4_1" "sse4_2"         "aes" "avx" "avx2"          "fma"        ];
+     # x86_64 AMD
+     btver1         = [ "sse3" "ssse3" "sse4_1" "sse4_2"                                                  ];
+     btver2         = [ "sse3" "ssse3" "sse4_1" "sse4_2"         "aes" "avx"                              ];
+@@ -55,6 +56,8 @@ rec {
+     cascadelake    = [ "skylake-avx512" ] ++ inferiors.cannonlake;
+     cooperlake     = [ "cascadelake"    ] ++ inferiors.cascadelake;
+     tigerlake      = [ "icelake-server" ] ++ inferiors.icelake-server;
++    # CX16 does not exist on alderlake, while it does on nearly all other intel CPUs
++    alderlake      = [ ];
+ 
+     # x86_64 AMD
+     # TODO: fill this (need testing)
+diff --git a/nixos/modules/programs/ccache.nix b/nixos/modules/programs/ccache.nix
+index 567c853e8c7d..e492106aa73f 100644
+--- a/nixos/modules/programs/ccache.nix
++++ b/nixos/modules/programs/ccache.nix
+@@ -52,14 +52,17 @@ in {
+     # target configuration
+     (mkIf (cfg.packageNames != []) {
+       nixpkgs.overlays = [
+-        (self: super: genAttrs cfg.packageNames (pn: super.${pn}.override { stdenv = builtins.trace "with ccache: ${pn}" self.ccacheStdenv; }))
++        (self: super: genAttrs cfg.packageNames (pn: super.${pn}.override { stdenv = builtins.trace "with ccache: ${pn}" self.ccacheStdenv; }))];})
+ 
++    (mkIf cfg.enable {
++      nixpkgs.overlays = [
+         (self: super: {
+           ccacheWrapper = super.ccacheWrapper.override {
+             extraConfig = ''
+-              export CCACHE_COMPRESS=1
++              export CCACHE_NOCOMPRESS=true
+               export CCACHE_DIR="${cfg.cacheDir}"
+               export CCACHE_UMASK=007
++              export CCACHE_MAXSIZE=300G
+               if [ ! -d "$CCACHE_DIR" ]; then
+                 echo "====="
+                 echo "Directory '$CCACHE_DIR' does not exist"
+diff --git a/nixos/modules/programs/firefox.nix b/nixos/modules/programs/firefox.nix
+index ead048134d8d..47b99a9aab1f 100644
+--- a/nixos/modules/programs/firefox.nix
++++ b/nixos/modules/programs/firefox.nix
+@@ -209,6 +209,7 @@ in
+       passff = "PassFF support";
+       tridactyl = "Tridactyl support";
+       ugetIntegrator = "Uget Integrator support";
++      firefoxpwa = "Progressive Web App support";
+     };
+   };
+ 
+@@ -237,6 +238,7 @@ in
+       enableTridactylNative = nmh.tridactyl;
+       enableUgetIntegrator = nmh.ugetIntegrator;
+       enableFXCastBridge = nmh.fxCast;
++      enableFirefoxPwa = nmh.firefoxpwa;
+     };
+ 
+     environment.etc =
+diff --git a/nixos/modules/programs/gnupg.nix b/nixos/modules/programs/gnupg.nix
+index 764a67a160c1..697b6e9a0bd0 100644
+--- a/nixos/modules/programs/gnupg.nix
++++ b/nixos/modules/programs/gnupg.nix
+@@ -75,9 +75,7 @@ in
+       defaultText = literalMD ''matching the configured desktop environment'';
+       description = lib.mdDoc ''
+         Which pinentry interface to use. If not null, the path to the
+-        pinentry binary will be passed to gpg-agent via commandline and
+-        thus overrides the pinentry option in gpg-agent.conf in the user's
+-        home directory.
++        pinentry binary will be set in /etc/gnupg/gpg-agent.conf.
+         If not set at all, it'll pick an appropriate flavor depending on the
+         system configuration (qt flavor for lxqt and plasma5, gtk2 for xfce
+         4.12, gnome3 on all other systems with X enabled, ncurses otherwise).
+@@ -94,38 +92,111 @@ in
+   };
+ 
+   config = mkIf cfg.agent.enable {
++    environment.etc."gnupg/gpg-agent.conf".text =
++      lib.optionalString (cfg.agent.pinentryFlavor != null) ''
++      pinentry-program ${pkgs.pinentry.${cfg.agent.pinentryFlavor}}/bin/pinentry
++    '';
++
+     # This overrides the systemd user unit shipped with the gnupg package
+-    systemd.user.services.gpg-agent = mkIf (cfg.agent.pinentryFlavor != null) {
+-      serviceConfig.ExecStart = [ "" ''
+-        ${cfg.package}/bin/gpg-agent --supervised \
+-          --pinentry-program ${pkgs.pinentry.${cfg.agent.pinentryFlavor}}/bin/pinentry
+-      '' ];
++    systemd.user.services.gpg-agent = {
++      unitConfig = {
++        Description = "GnuPG cryptographic agent and passphrase cache";
++        Documentation = "man:gpg-agent(1)";
++        Requires = [ "gpg-agent.socket" ];
++      };
++      serviceConfig = {
++        ExecStart = "${cfg.package}/bin/gpg-agent --supervised";
++        ExecReload = "${cfg.package}/bin/gpgconf --reload gpg-agent";
++      };
+     };
+ 
+     systemd.user.sockets.gpg-agent = {
++      unitConfig = {
++        Description = "GnuPG cryptographic agent and passphrase cache";
++        Documentation = "man:gpg-agent(1)";
++      };
++      socketConfig = {
++        ListenStream = "%t/gnupg/S.gpg-agent";
++        FileDescriptorName = "std";
++        SocketMode = "0600";
++        DirectoryMode = "0700";
++      };
+       wantedBy = [ "sockets.target" ];
+     };
+ 
+     systemd.user.sockets.gpg-agent-ssh = mkIf cfg.agent.enableSSHSupport {
++      unitConfig = {
++        Description = "GnuPG cryptographic agent (ssh-agent emulation)";
++        Documentation = "man:gpg-agent(1) man:ssh-add(1) man:ssh-agent(1) man:ssh(1)";
++      };
++      socketConfig = {
++        ListenStream = "%t/gnupg/S.gpg-agent.ssh";
++        FileDescriptorName = "ssh";
++        Service = "gpg-agent.service";
++        SocketMode = "0600";
++        DirectoryMode = "0700";
++      };
+       wantedBy = [ "sockets.target" ];
+     };
+ 
+     systemd.user.sockets.gpg-agent-extra = mkIf cfg.agent.enableExtraSocket {
++      unitConfig = {
++        Description = "GnuPG cryptographic agent and passphrase cache (restricted)";
++        Documentation = "man:gpg-agent(1)";
++      };
++      socketConfig = {
++        ListenStream = "%t/gnupg/S.gpg-agent.extra";
++        FileDescriptorName = "extra";
++        Service = "gpg-agent.service";
++        SocketMode = "0600";
++        DirectoryMode = "0700";
++      };
+       wantedBy = [ "sockets.target" ];
+     };
+ 
+     systemd.user.sockets.gpg-agent-browser = mkIf cfg.agent.enableBrowserSocket {
++      unitConfig = {
++        Description = "GnuPG cryptographic agent and passphrase cache (access for web browsers)";
++        Documentation = "man:gpg-agent(1)";
++      };
++      socketConfig = {
++        ListenStream = "%t/gnupg/S.gpg-agent.browser";
++        FileDescriptorName = "browser";
++        Service = "gpg-agent.service";
++        SocketMode = "0600";
++        DirectoryMode = "0700";
++      };
+       wantedBy = [ "sockets.target" ];
+     };
+ 
++    systemd.user.services.dirmngr = mkIf cfg.dirmngr.enable {
++      unitConfig = {
++        Description = "GnuPG network certificate management daemon";
++        Documentation = "man:dirmngr(8)";
++        Requires = "dirmngr.socket";
++      };
++      serviceConfig = {
++        ExecStart = "${cfg.package}/bin/dirmngr --supervised";
++        ExecReload = "${cfg.package}/bin/gpgconf --reload dirmngr";
++      };
++    };
++
+     systemd.user.sockets.dirmngr = mkIf cfg.dirmngr.enable {
++      unitConfig = {
++        Description = "GnuPG network certificate management daemon";
++        Documentation = "man:dirmngr(8)";
++      };
++      socketConfig = {
++        ListenStream = "%t/gnupg/S.dirmngr";
++        SocketMode = "0600";
++        DirectoryMode = "0700";
++      };
+       wantedBy = [ "sockets.target" ];
+     };
+ 
+     services.dbus.packages = mkIf (cfg.agent.pinentryFlavor == "gnome3") [ pkgs.gcr ];
+ 
+     environment.systemPackages = with pkgs; [ cfg.package ];
+-    systemd.packages = [ cfg.package ];
+ 
+     environment.interactiveShellInit = ''
+       # Bind gpg-agent to this TTY if gpg commands are used.
+diff --git a/nixos/modules/security/pam.nix b/nixos/modules/security/pam.nix
+index 4172bc6fbe1e..1955b7e1d1d3 100644
+--- a/nixos/modules/security/pam.nix
++++ b/nixos/modules/security/pam.nix
+@@ -546,7 +546,7 @@ let
+             auth requisite ${pkgs.oath-toolkit}/lib/security/pam_oath.so window=${toString oath.window} usersfile=${toString oath.usersFile} digits=${toString oath.digits}
+           '') +
+           (let yubi = config.security.pam.yubico; in optionalString cfg.yubicoAuth ''
+-            auth ${yubi.control} ${pkgs.yubico-pam}/lib/security/pam_yubico.so mode=${toString yubi.mode} ${optionalString (yubi.challengeResponsePath != null) "chalresp_path=${yubi.challengeResponsePath}"} ${optionalString (yubi.mode == "client") "id=${toString yubi.id}"} ${optionalString yubi.debug "debug"}
++            auth ${yubi.control} ${pkgs.yubico-pam}/lib/security/pam_yubico.so mode=${toString yubi.mode} ${optionalString (yubi.challengeResponsePath != null) "chalresp_path=${yubi.challengeResponsePath}"} ${optionalString (yubi.mode == "client") "id=${toString yubi.id}${optionalString (yubi.authFile != null)" authfile=${yubi.authFile}"}"} ${optionalString yubi.debug "debug"}
+           '') +
+           optionalString cfg.fprintAuth ''
+             auth sufficient ${pkgs.fprintd}/lib/security/pam_fprintd.so
+@@ -1232,6 +1232,11 @@ in
+           More information can be found [here](https://developers.yubico.com/yubico-pam/Authentication_Using_Challenge-Response.html).
+         '';
+       };
++      authFile = mkOption {
++        default = null;
++        type = types.nullOr types.path;
++        description = lib.mdDoc ''For personal use only'';
++      };
+     };
+ 
+     security.pam.zfs = {
+diff --git a/nixos/modules/services/databases/mysql.nix b/nixos/modules/services/databases/mysql.nix
+index 128bb0862175..14e99c71ebb4 100644
+--- a/nixos/modules/services/databases/mysql.nix
++++ b/nixos/modules/services/databases/mysql.nix
+@@ -467,9 +467,9 @@ in
+ 
+         ${concatMapStrings (user:
+           ''
+-            ( echo "CREATE USER IF NOT EXISTS '${user.name}'@'localhost' IDENTIFIED WITH ${if isMariaDB then "unix_socket" else "auth_socket"};"
++            ( echo "CREATE USER IF NOT EXISTS '${user.name}' IDENTIFIED WITH ${if isMariaDB then "unix_socket" else "auth_socket"};"
+               ${concatStringsSep "\n" (mapAttrsToList (database: permission: ''
+-                echo "GRANT ${permission} ON ${database} TO '${user.name}'@'localhost';"
++                echo "GRANT ${permission} ON ${database} TO '${user.name}';"
+               '') user.ensurePermissions)}
+             ) | ${cfg.package}/bin/mysql -N
+           '') cfg.ensureUsers}
+diff --git a/nixos/modules/services/web-apps/freshrss.nix b/nixos/modules/services/web-apps/freshrss.nix
+index 89e29f7ccb51..31edb243f431 100644
+--- a/nixos/modules/services/web-apps/freshrss.nix
++++ b/nixos/modules/services/web-apps/freshrss.nix
+@@ -162,7 +162,6 @@ in
+     mkIf cfg.enable {
+       # Set up a Nginx virtual host.
+       services.nginx = mkIf (cfg.virtualHost != null) {
+-        enable = true;
+         virtualHosts.${cfg.virtualHost} = {
+           root = "${cfg.package}/p";
+ 
+diff --git a/nixos/modules/services/web-apps/mastodon.nix b/nixos/modules/services/web-apps/mastodon.nix
+index 2ad6cd6aae19..cb9e33e28eb2 100644
+--- a/nixos/modules/services/web-apps/mastodon.nix
++++ b/nixos/modules/services/web-apps/mastodon.nix
+@@ -119,10 +119,10 @@ let
+       threads = toString (if processCfg.threads == null then cfg.sidekiqThreads else processCfg.threads);
+     in {
+       after = [ "network.target" "mastodon-init-dirs.service" ]
+-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
++        ++ lib.optional true "postgresql.service"
+         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
+       requires = [ "mastodon-init-dirs.service" ]
+-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
++        ++ lib.optional true "postgresql.service"
+         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
+       description = "Mastodon sidekiq${jobClassLabel}";
+       wantedBy = [ "mastodon.target" ];
+@@ -685,17 +685,17 @@ in {
+         SystemCallFilter = [ ("~" + lib.concatStringsSep " " (systemCallsList ++ [ "@resources" ])) "@chown" "pipe" "pipe2" ];
+       } // cfgService;
+       after = [ "network.target" "mastodon-init-dirs.service" ]
+-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service";
++        ++ lib.optional true "postgresql.service";
+       requires = [ "mastodon-init-dirs.service" ]
+-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service";
++        ++ lib.optional true "postgresql.service";
+     };
+ 
+     systemd.services.mastodon-streaming = {
+       after = [ "network.target" "mastodon-init-dirs.service" ]
+-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
++        ++ lib.optional true "postgresql.service"
+         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
+       requires = [ "mastodon-init-dirs.service" ]
+-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
++        ++ lib.optional true "postgresql.service"
+         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
+       wantedBy = [ "mastodon.target" ];
+       description = "Mastodon streaming";
+@@ -719,10 +719,10 @@ in {
+ 
+     systemd.services.mastodon-web = {
+       after = [ "network.target" "mastodon-init-dirs.service" ]
+-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
++        ++ lib.optional true "postgresql.service"
+         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
+       requires = [ "mastodon-init-dirs.service" ]
+-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
++        ++ lib.optional true "postgresql.service"
+         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
+       wantedBy = [ "mastodon.target" ];
+       description = "Mastodon web";
+diff --git a/nixos/modules/services/web-servers/nginx/default.nix b/nixos/modules/services/web-servers/nginx/default.nix
+index f5fa2ef5f866..357bb7ed1f58 100644
+--- a/nixos/modules/services/web-servers/nginx/default.nix
++++ b/nixos/modules/services/web-servers/nginx/default.nix
+@@ -102,6 +102,14 @@ let
+     proxy_set_header        X-Forwarded-Server $host;
+   '';
+ 
++  recommendedProxyConfigNoHost = pkgs.writeText "nginx-recommended-proxy-headers-no-host.conf" ''
++    proxy_set_header        X-Real-IP $remote_addr;
++    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
++    proxy_set_header        X-Forwarded-Proto $scheme;
++    proxy_set_header        X-Forwarded-Host $host;
++    proxy_set_header        X-Forwarded-Server $host;
++  '';
++
+   proxyCachePathConfig = concatStringsSep "\n" (mapAttrsToList (name: proxyCachePath: ''
+     proxy_cache_path ${concatStringsSep " " [
+       "/var/cache/nginx/${name}"
+@@ -344,7 +352,7 @@ let
+ 
+         redirectListen = filter (x: !x.ssl) defaultListen;
+ 
+-        acmeLocation = optionalString (vhost.enableACME || vhost.useACMEHost != null) ''
++        acmeLocation = optionalString (vhost.enableACME || (vhost.useACMEHost != null && config.security.acme.certs.${vhost.useACMEHost}.dnsProvider == null)) ''
+           # Rule for legitimate ACME Challenge requests (like /.well-known/acme-challenge/xxxxxxxxx)
+           # We use ^~ here, so that we don't check any regexes (which could
+           # otherwise easily override this intended match accidentally).
+@@ -441,6 +449,7 @@ let
+       ${optionalString (config.return != null) "return ${config.return};"}
+       ${config.extraConfig}
+       ${optionalString (config.proxyPass != null && config.recommendedProxySettings) "include ${recommendedProxyConfig};"}
++      ${optionalString (config.proxyPass != null && config.recommendedProxySettingsNoHost) "include ${recommendedProxyConfigNoHost};"}
+       ${mkBasicAuth "sublocation" config}
+     }
+   '') (sortProperties (mapAttrsToList (k: v: v // { location = k; }) locations)));
+diff --git a/nixos/modules/services/web-servers/nginx/location-options.nix b/nixos/modules/services/web-servers/nginx/location-options.nix
+index 2728852058ea..006c5601c8c1 100644
+--- a/nixos/modules/services/web-servers/nginx/location-options.nix
++++ b/nixos/modules/services/web-servers/nginx/location-options.nix
+@@ -137,5 +137,11 @@ with lib;
+         Enable recommended proxy settings.
+       '';
+     };
++
++    recommendedProxySettingsNoHost = mkOption {
++      type = types.bool;
++      default = false;
++      description = lib.mdDoc ''recommendedProxySettingsNoHost'';
++    };
+   };
+ }
+diff --git a/pkgs/applications/editors/vscode/extensions/default.nix b/pkgs/applications/editors/vscode/extensions/default.nix
+index cd315435b8d3..994ddd2bc767 100644
+--- a/pkgs/applications/editors/vscode/extensions/default.nix
++++ b/pkgs/applications/editors/vscode/extensions/default.nix
+@@ -326,8 +326,8 @@ let
+         mktplcRef = {
+           name = "astro-vscode";
+           publisher = "astro-build";
+-          version = "1.0.6";
+-          sha256 = "sha256-/gpZtOO8MA/MJ1o9eG4qmPqhWRZ5E+elA9Rr/kpOprI=";
++          version = "2.1.1";
++          sha256 = "sha256-UVZOpkOHbLiwA4VfTgXxuIU8EtJLnqRa5zUVha6xQJY=";
+         };
+         meta = {
+           changelog = "https://marketplace.visualstudio.com/items/astro-build.astro-vscode/changelog";
+@@ -372,13 +372,13 @@ let
+         mktplcRef = {
+           name = "Millet";
+           publisher = "azdavis";
+-          version = "0.3.5";
+-          sha256 = "sha256-lQ7EMs6nsTEgP9BESMpyoZG7QVOe7DXzfg/iZr1+DCQ=";
++          version = "0.12.5";
++          sha256 = "sha256-gJIxCdoxWGThalY+qJ930UtRLFkvr34LfaSioAZH9TQ=";
+         };
+         nativeBuildInputs = [ jq moreutils ];
+         postInstall = ''
+           cd "$out/$installPrefix"
+-          jq '.contributes.configuration.properties."millet.server.path".default = "${millet}/bin/lang-srv"' package.json | sponge package.json
++          jq '.contributes.configuration.properties."millet.server.path".default = "${millet}/bin/millet-ls"' package.json | sponge package.json
+         '';
+         meta = {
+           description = "Standard ML support for VS Code";
+@@ -433,6 +433,39 @@ let
+         };
+       };
+ 
++      ban.spellright = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          publisher = "ban";
++          name = "spellright";
++          version = "3.0.112";
++          sha256 = "sha256-79Yg4I0OkfG7PaDYnTA8HK8jrSxre4FGriq0Baiq7wA=";
++        };
++        meta = {
++          description = "A Visual Studio Code extension for Spellchecker";
++          changelog = "https://marketplace.visualstudio.com/items/ban.spellright/changelog";
++          homepage = "https://github.com/bartosz-antosik/vscode-spellright";
++          license = lib.licenses.mit;
++          maintainers = with lib.maintainers; [ onedragon ];
++        };
++      };
++
++      batisteo.vscode-django = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          publisher = "batisteo";
++          name = "vscode-django";
++          version = "1.10.0";
++          sha256 = "sha256-vTaE3KhG5i2jGc5o33u76RUUFYaW4s4muHvph48HeQ4=";
++        };
++        meta = {
++          changelog = "https://marketplace.visualstudio.com/items/batisteo.vscode-django/changelog";
++          description = "Django extension for Visual Studio Code";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=batisteo.vscode-django";
++          homepage = "https://github.com/vscode-django/vscode-django";
++          license = lib.licenses.mit;
++          maintainers = with lib.maintainers; [ azd325 ];
++        };
++      };
++
+       bbenoist.nix = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "Nix";
+@@ -461,8 +494,8 @@ let
+         mktplcRef = {
+           name = "calva";
+           publisher = "betterthantomorrow";
+-          version = "2.0.205";
+-          sha256 = "sha256-umnG1uLB42fUNKjANaKcABjVmqbdOQakd/6TPsEpF9c";
++          version = "2.0.374";
++          sha256 = "sha256-VwdHOkduSSIrcOvrcVf7K8DSp3N1u9fvbaCVDCxp+bk=";
+         };
+         nativeBuildInputs = [ jq moreutils ];
+         postInstall = ''
+@@ -474,6 +507,22 @@ let
+         };
+       };
+ 
++       bierner.docs-view = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "docs-view";
++          publisher = "bierner";
++          version = "0.0.11";
++          sha256 = "sha256-3njIL2SWGFp87cvQEemABJk2nXzwI1Il/WG3E0ZYZxw=";
++        };
++        meta = {
++          changelog = "https://marketplace.visualstudio.com/items/bierner.docs-view/changelog";
++          description = "A VSCode extension that displays documentation in the sidebar or panel";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=bierner.docs-view";
++          homepage = "https://github.com/mattbierner/vscode-docs-view#readme";
++          license = lib.licenses.mit;
++        };
++      };
++
+       bierner.emojisense = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "emojisense";
+@@ -526,8 +575,8 @@ let
+         mktplcRef = {
+           name = "vscode-fish";
+           publisher = "bmalehorn";
+-          version = "1.0.33";
+-          sha256 = "sha256-ZQlG+HrjU4DFfpyiY8o0/ayDms6MGEObW8pV1Lmr5/Y=";
++          version = "1.0.35";
++          sha256 = "sha256-V51Qe6M1CMm9fLOSFEwqeZiC8tWCbVH0AzkLe7kR2vY=";
+         };
+         meta.license = lib.licenses.mit;
+       };
+@@ -571,6 +620,22 @@ let
+         };
+       };
+ 
++      brandonkirbyson.solarized-palenight = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "solarized-palenight";
++          publisher = "BrandonKirbyson";
++          version = "1.0.1";
++          sha256 = "sha256-vVbaHSaBX6QzpnYMQlpPsJU1TQYJEBe8jq95muzwN0o=";
++        };
++        meta = {
++          description = " A solarized-palenight theme for vscode";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=BrandonKirbyson.solarized-palenight";
++          homepage = "https://github.com/BrandonKirbyson/Solarized-Palenight";
++          license = lib.licenses.mit;
++          maintainers = [ lib.maintainers.sebtm ];
++        };
++      };
++
+       brettm12345.nixfmt-vscode = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "nixfmt-vscode";
+@@ -600,18 +665,51 @@ let
+         };
+       };
+ 
+-      catppuccin.catppuccin-vsc = buildVscodeMarketplaceExtension {
++      catppuccin = {
++        catppuccin-vsc = buildVscodeMarketplaceExtension {
++          mktplcRef = {
++            name = "catppuccin-vsc";
++            publisher = "catppuccin";
++            version = "2.6.1";
++            sha256 = "sha256-B56b7PeuVnkxEqvd4vL9TYO7s8fuA+LOCTbJQD9e7wY=";
++          };
++          meta = {
++            description = "Soothing pastel theme for VSCode";
++            license = lib.licenses.mit;
++            downloadPage = "https://marketplace.visualstudio.com/items?itemName=Catppuccin.catppuccin-vsc";
++            maintainers = [ lib.maintainers.nullx76 ];
++          };
++        };
++        catppuccin-vsc-icons = buildVscodeMarketplaceExtension {
++          mktplcRef = {
++            name = "catppuccin-vsc-icons";
++            publisher = "catppuccin";
++            version = "0.12.0";
++            sha256 = "sha256-i47tY6DSVtV8Yf6AgZ6njqfhaUFGEpgbRcBF70l2Xe0=";
++          };
++          meta = {
++            description = "Soothing pastel icon theme for VSCode";
++            license = lib.licenses.mit;
++            downloadPage = "https://marketplace.visualstudio.com/items?itemName=Catppuccin.catppuccin-vsc-icons";
++            maintainers = [ lib.maintainers.laurent-f1z1 ];
++          };
++        };
++      };
++
++      charliermarsh.ruff = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+-          name = "catppuccin-vsc";
+-          publisher = "catppuccin";
+-          version = "2.6.1";
+-          sha256 = "sha256-B56b7PeuVnkxEqvd4vL9TYO7s8fuA+LOCTbJQD9e7wY=";
++          name = "ruff";
++          publisher = "charliermarsh";
++          version = "2023.38.0";
++          sha256 = "sha256-Gcw+X8e8MrTflotHUwkrdP/DD/6AX/kEgtRiqvqyqRM=";
+         };
+         meta = {
+-          description = "Soothing pastel theme for VSCode";
+           license = lib.licenses.mit;
+-          downloadPage = "https://marketplace.visualstudio.com/items?itemName=Catppuccin.catppuccin-vsc";
+-          maintainers = [ lib.maintainers.nullx76 ];
++          changelog = "https://github.com/astral-sh/ruff-vscode/releases";
++          description = "Ruff extension for Visual Studio Code";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff";
++          homepage = "https://github.com/astral-sh/ruff-vscode/";
++          maintainers = [ lib.maintainers.azd325 ];
+         };
+       };
+ 
+@@ -690,6 +788,30 @@ let
+         };
+       };
+ 
++      w88975.code-translate = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "code-translate";
++          publisher = "w88975";
++          version = "1.0.20";
++          sha256 = "sha256-blqLK7S+RmEoyr9zktS5/SNC0GeSXnNpbhltyajoAfw=";
++        };
++        meta = {
++          description = "A Visual Studio Code extension to provide purely hover translation";
++          longDescription = ''
++            Code Translate is a purely hover translation extension
++            - Non-intrusive display of translation results: perfectly integrated with VS Code code analysis.
++            - Powerful word splitting capabilities: supports various forms of word splitting such as camel case and underscore.
++            - Rich local vocabulary: includes 3.4+ million offline words, supporting various rare words.
++            - Based on a rich local vocabulary: Code Translate has super-fast query speed, with each word typically queried in less than 10ms.
++            - Multi-platform support: supports both the desktop version and online version of VS Code, and the plugin can be used on both versions.
++          '';
++          homepage = "https://github.com/w88975/code-translate-vscode";
++          changelog = "https://marketplace.visualstudio.com/items/w88975.code-translate/changelog";
++          license = lib.licenses.mit;
++          maintainers = with lib.maintainers; [ onedragon ];
++        };
++      };
++
+       colejcummins.llvm-syntax-highlighting = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "llvm-syntax-highlighting";
+@@ -841,8 +963,8 @@ let
+         mktplcRef = {
+           name = "composer-php-vscode";
+           publisher = "devsense";
+-          version = "1.33.13032";
+-          sha256 = "sha256-4SL7hPcnxN6Bq0Cclaszk2zlYF1xR2w/8zaJo16OT+U=";
++          version = "1.36.13428";
++          sha256 = "sha256-dzRuD0XBWU+xUtr86eN8zbZ6bVIq1BP0/EqgQG4JbvY=";
+         };
+         meta = {
+           changelog = "https://marketplace.visualstudio.com/items/DEVSENSE.composer-php-vscode/changelog";
+@@ -859,25 +981,25 @@ let
+           sources = {
+             "x86_64-linux" = {
+               arch = "linux-x64";
+-              sha256 = "sha256-ccMkaXppkgdsN2XtSFaw85xLUCFMDF1z+XidP0KAHCA=";
++              sha256 = "sha256-x4Vsr/79vZuNPGQqwOVdIMi2Ba9DfnKM1AjxCZbzJms=";
+             };
+             "x86_64-darwin" = {
+               arch = "darwin-x64";
+-              sha256 = "17lsf736jagw2q6dwxvpj2dspiqrlyvmmhv6p6cf81vxijpgmq9d";
++              sha256 = "0c9jcjavkjiv92cd4wrvgcv70igghi5ha96hg7h63cgmxg7b87gk";
+             };
+             "aarch64-linux" = {
+               arch = "linux-arm64";
+-              sha256 = "1cnfzzpikcsp1l1a8amim0fz5r1pkszn231cfl745ggiksbjyhsp";
++              sha256 = "0b3w3ssxymf9p1h4amnqimbsjf1wpxsi55b05wgqwh2w2zfxd91l";
+             };
+             "aarch64-darwin" = {
+               arch = "darwin-arm64";
+-              sha256 = "0jli6l9qrssnpm5a3m1g7g1dw2i5bv9wxd0gqg6vda7dwfs2f494";
++              sha256 = "0mdqa9w1p6cmli6976v4wi0sw9r4p5prkj7lzfd1877wk11c9c73";
+             };
+           };
+         in {
+           name = "phptools-vscode";
+           publisher = "devsense";
+-          version = "1.33.13032";
++          version = "1.36.13428";
+         } // sources.${stdenv.system};
+ 
+         nativeBuildInputs = [
+@@ -908,8 +1030,8 @@ let
+         mktplcRef = {
+           name = "profiler-php-vscode";
+           publisher = "devsense";
+-          version = "1.33.13032";
+-          sha256 = "sha256-P0lzZkCHtLHJI/gwB+wbrZPR3OOia5VxTMCC2ZQULBg=";
++          version = "1.36.13428";
++          sha256 = "sha256-/CT83LdQkEvsWrQX30bgnklgGKduYC0LqZ8gaexqu60=";
+         };
+         meta = {
+           changelog = "https://marketplace.visualstudio.com/items/DEVSENSE.profiler-php-vscode/changelog";
+@@ -985,6 +1107,22 @@ let
+         };
+       };
+ 
++      dotenv.dotenv-vscode = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "dotenv-vscode";
++          publisher = "dotenv";
++          version = "0.28.0";
++          sha256 = "sha256-KiQgFvbfLsA/ADROoG6y6c/i0XHuTNH2AN+6mWEm0P8=";
++        };
++        meta = {
++          changelog = "https://marketplace.visualstudio.com/items/dotenv.dotenv-vscode/changelog";
++          description = "Official Dotenv extension for VSCode. Offers syntax highlighting, auto-cloaking, auto-completion, in-code secret peeking, and optionally dotenv-vault";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=dotenv.dotenv-vscode";
++          homepage = "https://github.com/dotenv-org/dotenv-vscode";
++          license = lib.licenses.mit;
++        };
++      };
++
+       dotjoshjohnson.xml = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "xml";
+@@ -1023,8 +1161,8 @@ let
+           # semver scheme, contrary to preview versions which are listed on
+           # the VSCode Marketplace and use a calver scheme. We should avoid
+           # using preview versions, because they expire after two weeks.
+-          version = "13.4.0";
+-          sha256 = "sha256-CYI62sWPlJNRP2KIkg4vQutIMC6gaCxtTVoOWZIS8Lw=";
++          version = "14.1.1";
++          sha256 = "sha256-eSN48IudpHYzT4u+S4b2I2pyEPyOwBCSL49awT/mzEE=";
+         };
+         meta = {
+           changelog = "https://marketplace.visualstudio.com/items/eamodio.gitlens/changelog";
+@@ -1086,8 +1224,8 @@ let
+         mktplcRef = {
+           name = "elixir-ls";
+           publisher = "JakeBecker";
+-          version = "0.14.7";
+-          sha256 = "sha256-RkwgQqasBKMA+0293QhbZhgyGSqhJSic5DuIpBB+OEA=";
++          version = "0.16.0";
++          sha256 = "sha256-PZUyOZ/U6OkGid+PYY2G/pAe5R5eumUibKNel9HBI+s=";
+         };
+         meta = {
+           changelog = "https://marketplace.visualstudio.com/items/JakeBecker.elixir-ls/changelog";
+@@ -1128,6 +1266,38 @@ let
+         };
+       };
+ 
++      emroussel.atomize-atom-one-dark-theme = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "atomize-atom-one-dark-theme";
++          publisher = "emroussel";
++          version = "2.0.2";
++          sha256 = "sha256-GwuFtBVj0Z2rHryst/7cegskvZIMPsrAH12+K942+JA=";
++        };
++        meta = {
++          changelog = "https://marketplace.visualstudio.com/items/emroussel.atomize-atom-one-dark-theme/changelog";
++          description = "A detailed and accurate Atom One Dark theme for VSCode";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=emroussel.atomize-atom-one-dark-theme";
++          homepage = "https://github.com/emroussel/atomize/blob/main/README.md";
++          license = lib.licenses.mit;
++        };
++      };
++
++      enkia.tokyo-night = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "tokyo-night";
++          publisher = "enkia";
++          version = "1.0.0";
++          sha256 = "sha256-/fM+aUDUzVJ6P38i+GrxhLv2eLJNa8OFkKsM4yPBy4c=";
++        };
++        meta = {
++          changelog = "https://marketplace.visualstudio.com/items/enkia.tokyo-night/changelog";
++          description = "A clean Visual Studio Code theme that celebrates the lights of Downtown Tokyo at night";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=enkia.tokyo-night";
++          homepage = "https://github.com/enkia/tokyo-night-vscode-theme";
++          license = lib.licenses.mit;
++        };
++      };
++
+       equinusocio.vsc-material-theme = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "vsc-material-theme";
+@@ -1149,8 +1319,8 @@ let
+         mktplcRef = {
+           name = "prettier-vscode";
+           publisher = "esbenp";
+-          version = "9.19.0";
+-          sha256 = "sha256-ymIlBzCcssj+J8hHOokVWUpxKTEkzkhNr80uCblhkFs=";
++          version = "10.1.0";
++          sha256 = "sha256-SQuf15Jq84MKBVqK6UviK04uo7gQw9yuw/WEBEXcQAc=";
+         };
+         meta = {
+           changelog = "https://marketplace.visualstudio.com/items/esbenp.prettier-vscode/changelog";
+@@ -1193,6 +1363,22 @@ let
+         };
+       };
+ 
++      ExiaHuang.dictionary = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          publisher = "ExiaHuang";
++          name = "dictionary";
++          version = "0.0.2";
++          sha256 = "sha256-caNcbDTB/F2mdlGpfIfJv13lzY5Wwj7p7r8dAte9+3A=";
++        };
++        meta = {
++          description = "A Visual Studio Code extension of using chinese-english dictonary in right-click menu";
++          homepage = "https://github.com/exiahuang/fanyi-vscode";
++          changelog = "https://marketplace.visualstudio.com/items/ExiaHuang.dictionary/changelog";
++          license = lib.licenses.gpl3Only;
++          maintainers = with lib.maintainers; [ onedragon ];
++        };
++      };
++
+       file-icons.file-icons = buildVscodeMarketplaceExtension {
+         meta = {
+           changelog = "https://marketplace.visualstudio.com/items/file-icons.file-icons/changelog";
+@@ -1320,6 +1506,23 @@ let
+         };
+       };
+ 
++      funkyremi.vscode-google-translate = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          publisher = "funkyremi";
++          name = "vscode-google-translate";
++          version = "1.4.13";
++          sha256 = "sha256-9Vo6lwqD1eE3zY0Gi9ME/6lPwmwuJ3Iq9StHPvncnM4=";
++        };
++        meta = {
++          description = "A Visual Studio Code extension using google translation to helping you quickly translate text right in your code rocket";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=funkyremi.vscode-google-translate";
++          homepage = "https://github.com/funkyremi/vscode-google-translate.git";
++          changelog = "https://marketplace.visualstudio.com/items/funkyremi.vscode-google-translate/changelog";
++          license = lib.licenses.mit;
++          maintainers = with lib.maintainers; [ onedragon ];
++        };
++      };
++
+       gencer.html-slim-scss-css-class-completion = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "html-slim-scss-css-class-completion";
+@@ -1357,8 +1560,8 @@ let
+         mktplcRef = {
+           publisher = "github";
+           name = "codespaces";
+-          version = "1.14.7";
+-          sha256 = "pcZGMxTVnMeD6rnNV0d9Wysk6MrYiYcJ+byuH9VR0ds=";
++          version = "1.14.8";
++          sha256 = "sha256-kCgnOODT1KDi9PMWs3CATXESWoHnDRhCIZhEUSkm14o=";
+         };
+         meta = { license = lib.licenses.unfree; };
+       };
+@@ -1367,8 +1570,8 @@ let
+         mktplcRef = {
+           publisher = "github";
+           name = "copilot";
+-          version = "1.86.82";
+-          sha256 = "isaqjrAmu/08gnNKQPeMV4Xc8u0Hx8gB2c78WE54kYQ=";
++          version = "1.89.156";
++          sha256 = "sha256-BJnYd9D3bWrZI8UETnAua8ngVjZJ7EXB1UrZAjVnx1E=";
+         };
+         meta = {
+           description = "GitHub Copilot uses OpenAI Codex to suggest code and entire functions in real-time right from your editor.";
+@@ -1379,6 +1582,22 @@ let
+         };
+       };
+ 
++      github.copilot-chat = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          publisher = "github";
++          name = "copilot-chat";
++          version = "0.3.2023061502";
++          sha256 = "sha256-sUoKwlPDMz+iQbmIsD2JhyDwmUQzOyCHXaXCUaizQ7k=";
++        };
++        meta = {
++          description = "GitHub Copilot Chat is a companion extension to GitHub Copilot that houses experimental chat features";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=GitHub.copilot-chat";
++          homepage = "https://github.com/features/copilot";
++          license = lib.licenses.unfree;
++          maintainers = [ lib.maintainers.laurent-f1z1 ];
++        };
++      };
++
+       github.github-vscode-theme = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "github-vscode-theme";
+@@ -1421,8 +1640,8 @@ let
+           # the VSCode Marketplace and use a calver scheme. We should avoid
+           # using preview versions, because they can require insider versions
+           # of VS Code
+-          version = "0.64.0";
+-          sha256 = "tgQD3o5uMbWofVx7FPyWT1yaeu2e4aPxterN4yXA33U=";
++          version = "0.68.1";
++          sha256 = "sha256-d60ZxWQLZa2skOB3Iv9K04aGNZA1d1A82N7zRaxAzlI=";
+         };
+         meta = { license = lib.licenses.mit; };
+       };
+@@ -1443,6 +1662,22 @@ let
+         };
+       };
+ 
++      gleam.gleam = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "gleam";
++          publisher = "gleam";
++          version = "2.3.0";
++          sha256 = "sha256-dhRS8fLKY0plRwnrAUWT4g/LfH6IpODTNhT79g4Nm+0=";
++        };
++        meta = {
++          description = "Support for the Gleam programming language";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=Gleam.gleam";
++          homepage = "https://github.com/gleam-lang/vscode-gleam#readme";
++          license = lib.licenses.asl20;
++          maintainers = [ lib.maintainers.msfjarvis ];
++        };
++      };
++
+       golang.go = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "Go";
+@@ -1507,8 +1742,8 @@ let
+         mktplcRef = {
+           name = "todo-tree";
+           publisher = "Gruntfuggly";
+-          version = "0.0.224";
+-          sha256 = "sha256-ObFmzAaOlbtWC31JRYR/1y+JK1h22SVDPPRWWqPzrQs=";
++          version = "0.0.226";
++          sha256 = "sha256-Fj9cw+VJ2jkTGUclB1TLvURhzQsaryFQs/+f2RZOLHs=";
+         };
+         meta = {
+           license = lib.licenses.mit;
+@@ -1594,12 +1829,32 @@ let
+         };
+       };
+ 
++      intellsmi.comment-translate = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          publisher = "intellsmi";
++          name = "comment-translate";
++          version = "2.2.4";
++          sha256 = "sha256-g6mlScxv8opZuqgWtTJ3k0Yo7W7WzIkwB+8lWf6cMiU=";
++        };
++        meta = {
++          description = "A Visual Studio Code extension to translate the comments for computer language";
++          longDescription = ''
++            This plugin uses the Google Translate API to translate comments for the VSCode programming language.
++          '';
++          homepage = "https://github.com/intellism/vscode-comment-translate/blob/HEAD/doc/README.md";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=intellsmi.comment-translate";
++          changelog = "https://marketplace.visualstudio.com/items/intellsmi.comment-translate/changelog";
++          maintainers = with lib.maintainers; [ onedragon ];
++          license = lib.licenses.mit;
++        };
++      };
++
+       ionide.ionide-fsharp = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "Ionide-fsharp";
+           publisher = "Ionide";
+-          version = "7.5.2";
+-          sha256 = "sha256-v2fd2vGaGwRnebKiyjyd/2pgWit0H5lhJT+PXWQq0h4=";
++          version = "7.5.4";
++          sha256 = "sha256-cM3ssUzQnqt5WL8UaLYkrmfHscVa2sGa7/UWLXMIHGg=";
+         };
+         meta = {
+           changelog = "https://marketplace.visualstudio.com/items/Ionide.Ionide-fsharp/changelog";
+@@ -1644,6 +1899,22 @@ let
+         };
+       };
+ 
++      janet-lang.vscode-janet = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "vscode-janet";
++          publisher = "janet-lang";
++          version = "0.0.2";
++          sha256 = "sha256-oj0e++z2BtadIXOnTlocIIHliYweZ1iyrV08DwatfLI=";
++        };
++        meta = {
++          description = "Janet language support for Visual Studio Code";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=janet-lang.vscode-janet";
++          homepage = "https://github.com/janet-lang/vscode-janet";
++          license = lib.licenses.mit;
++          maintainers = [ lib.maintainers.wackbyte ];
++        };
++      };
++
+       jdinhlife.gruvbox = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "gruvbox";
+@@ -1696,8 +1967,8 @@ let
+         mktplcRef = {
+           name = "nix-ide";
+           publisher = "jnoortheen";
+-          version = "0.2.1";
+-          sha256 = "sha256-yC4ybThMFA2ncGhp8BYD7IrwYiDU3226hewsRvJYKy4=";
++          version = "0.2.2";
++          sha256 = "sha256-jwOM+6LnHyCkvhOTVSTUZvgx77jAg6hFCCpBqY8AxIg=";
+         };
+         meta = {
+           changelog = "https://marketplace.visualstudio.com/items/jnoortheen.nix-ide/changelog";
+@@ -1705,7 +1976,7 @@ let
+           downloadPage = "https://marketplace.visualstudio.com/items?itemName=jnoortheen.nix-ide";
+           homepage = "https://github.com/jnoortheen/vscode-nix-ide";
+           license = lib.licenses.mit;
+-          maintainers = [ lib.maintainers.SuperSandro2000 ];
++          maintainers = [ ];
+         };
+       };
+ 
+@@ -1749,11 +2020,16 @@ let
+         mktplcRef = {
+           name = "magit";
+           publisher = "kahole";
+-          version = "0.6.40";
+-          sha256 = "sha256-AwkjfKBlAl6hTRN1nE6UuUuDXMJUXXDK2+3YzUp9drc=";
++          version = "0.6.43";
++          sha256 = "sha256-DPLlQ2IliyvzW8JvgVlGKNd2JjD/RbclNXU3gEFVhOE=";
+         };
+         meta = {
++          changelog = "https://marketplace.visualstudio.com/items/kahole.magit/changelog";
++          description = "Magit for VSCode";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=kahole.magit";
++          homepage = "https://github.com/kahole/edamagit";
+           license = lib.licenses.mit;
++          maintainers = [ lib.maintainers.azd325 ];
+         };
+       };
+ 
+@@ -1999,6 +2275,47 @@ let
+         };
+       };
+ 
++      mgt19937.typst-preview = buildVscodeMarketplaceExtension {
++        mktplcRef =
++        let
++          sources = {
++            "x86_64-linux" = {
++              arch = "linux-x64";
++              sha256 = "sha256-O8sFv23tlhJS6N8LRKkHcTJTupZejCLDRdVVCdDlWbA=";
++            };
++            "x86_64-darwin" = {
++              arch = "darwin-x64";
++              sha256 = "1npzjch67agswh3nm14dbbsx777daq2rdw1yny10jf3858z2qynr";
++            };
++            "aarch64-linux" = {
++              arch = "linux-arm64";
++              sha256 = "1vv1jfgnyjbmshh4w6rf496d9dpdsk3f0049ii4d9vi23igk4xpk";
++            };
++            "aarch64-darwin" = {
++              arch = "darwin-arm64";
++              sha256 = "0dfchzqm61kddq20zvp1pcpk1625b9wgj32ymc08piq06pbadk29";
++            };
++          };
++        in
++        {
++          name = "typst-preview";
++          publisher = "mgt19937";
++          version = "0.6.1";
++        } // sources.${stdenv.system};
++
++        nativeBuildInputs = lib.optionals stdenv.isLinux [ autoPatchelfHook ];
++
++        buildInputs = lib.optionals stdenv.isLinux [ stdenv.cc.cc.lib ];
++
++        meta = {
++          description = "Typst Preview is an extension for previewing your Typst files in vscode instantly";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=mgt19937.typst-preview";
++          homepage = "https://github.com/Enter-tainer/typst-preview-vscode";
++          license = lib.licenses.mit;
++          maintainers = [ lib.maintainers.drupol ];
++        };
++      };
++
+       mhutchie.git-graph = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "git-graph";
+@@ -2039,8 +2356,8 @@ let
+         mktplcRef = {
+           name = "direnv";
+           publisher = "mkhl";
+-          version = "0.12.0";
+-          sha256 = "sha256-UMGTWAiPAxSjy5ALUkijD0GE9TW37TZ3UvMmgFBNYsU=";
++          version = "0.14.0";
++          sha256 = "sha256-T+bt6ku+zkqzP1gXNLcpjtFAevDRiSKnZaE7sM4pUOs=";
+         };
+         meta = {
+           description = "direnv support for Visual Studio Code";
+@@ -2095,6 +2412,38 @@ let
+         };
+       };
+ 
++      ms-python.black-formatter = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "black-formatter";
++          publisher = "ms-python";
++          version = "2023.4.1";
++          sha256 = "sha256-IJaLke0WF1rlKTiuwJHAXDQB1SS39AoQhc4iyqqlTyY=";
++        };
++        meta = with lib; {
++          description = "Formatter extension for Visual Studio Code using black";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter";
++          homepage = "https://github.com/microsoft/vscode-black-formatter";
++          license = licenses.mit;
++          maintainers = with maintainers; [ sikmir ];
++        };
++      };
++
++      ms-python.isort = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "isort";
++          publisher = "ms-python";
++          version = "2023.10.1";
++          sha256 = "sha256-NRsS+mp0pIhGZiqxAMXNZ7SwLno9Q8pj+RS1WB92HzU=";
++        };
++        meta = with lib; {
++          description = "Import sorting extension for Visual Studio Code using isort";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=ms-python.isort";
++          homepage = "https://github.com/microsoft/vscode-isort";
++          license = licenses.mit;
++          maintainers = with maintainers; [ sikmir ];
++        };
++      };
++
+       ms-python.python = callPackage ./ms-python.python { };
+ 
+       ms-python.vscode-pylance = buildVscodeMarketplaceExtension {
+@@ -2202,6 +2551,21 @@ let
+         };
+       };
+ 
++      ms-vscode.live-server = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "live-server";
++          publisher = "ms-vscode";
++          version = "0.4.8";
++          sha256 = "sha256-/IrLq+nNxwQB1S1NIGYkv24DOY7Mc25eQ+orUfh42pg=";
++        };
++        meta = {
++          description = "Launch a development local Server with live reload feature for static & dynamic pages";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=ms-vscode.live-server";
++          homepage = "https://github.com/microsoft/vscode-livepreview";
++          license = lib.licenses.mit;
++        };
++      };
++
+       ms-vscode.makefile-tools = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "makefile-tools";
+@@ -2246,6 +2610,22 @@ let
+         };
+       };
+ 
++      ms-vscode-remote.remote-containers = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "remote-containers";
++          publisher = "ms-vscode-remote";
++          version = "0.305.0";
++          sha256 = "sha256-srSRD/wgDbQo9P1uJk8YtcXPZO62keG5kRnp1TmHqOc=";
++        };
++        meta = {
++          description = "Open any folder or repository inside a Docker container.";
++          downloadPage = "Use a container as your development environment";
++          homepage = "https://code.visualstudio.com/docs/devcontainers/containers";
++          license = lib.licenses.unfree;
++          maintainers = [ lib.maintainers.anthonyroussel ];
++        };
++      };
++
+       ms-vscode-remote.remote-ssh = callPackage ./ms-vscode-remote.remote-ssh { };
+ 
+       ms-vsliveshare.vsliveshare = callPackage ./ms-vsliveshare.vsliveshare { };
+@@ -2262,6 +2642,22 @@ let
+         };
+       };
+ 
++      mskelton.npm-outdated = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "npm-outdated";
++          publisher = "mskelton";
++          version = "2.2.0";
++          sha256 = "sha256-kHItIlTW+PIVXrLgzdGAoPeR6sWKuKl/QyJ5+TIv3/E=";
++        };
++        meta = {
++          changelog = "https://marketplace.visualstudio.com/items/mskelton.npm-outdated/changelog";
++          description = "Shows which packages are outdated in an npm project";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=mskelton.npm-outdated";
++          homepage = "https://github.com/mskelton/vscode-npm-outdated";
++          license = lib.licenses.isc;
++        };
++      };
++
+       mvllow.rose-pine = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           publisher = "mvllow";
+@@ -2329,8 +2725,8 @@ let
+         mktplcRef = {
+           name = "typst-lsp";
+           publisher = "nvarner";
+-          version = "0.4.1";
+-          sha256 = "sha256-NZejUb99JDcnqjihLTPkNzVCgpqDkbiwAySbBVZ0esY=";
++          version = "0.5.0";
++          sha256 = "sha256-4bZbjbcd/EjSRBMkzMs1pD00qyQb5W6gePh4xfoU6Ug=";
+         };
+ 
+         nativeBuildInputs = [ jq moreutils ];
+@@ -2431,8 +2827,8 @@ let
+         mktplcRef = {
+           name = "material-icon-theme";
+           publisher = "PKief";
+-          version = "4.25.0";
+-          sha256 = "sha256-/lD3i7ZdF/XOi7RduS3HIYHFXhkoW2+PJW249gQxcyk=";
++          version = "4.29.0";
++          sha256 = "sha256-YqleqYSpZuhGFGkNo3FRLjiglxX+iUCJl69CRCY/oWM=";
+         };
+         meta = {
+           license = lib.licenses.mit;
+@@ -2563,6 +2959,28 @@ let
+         };
+       };
+ 
++      RoweWilsonFrederiskHolme.wikitext = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "wikitext";
++          publisher = "RoweWilsonFrederiskHolme";
++          version = "3.8.0";
++          sha256 = "30540a85163e797028eec9bc3db1866bbf473e98615bf6ade6d1d672017ebe52";
++        };
++        meta = {
++          description = "Extension that helps users view and write MediaWiki's Wikitext files";
++          longDescription = ''
++            With this extension, you can more easily discover your grammatical problems
++            through the marked and styled text. The plugin is based on MediaWiki's
++            Wikitext standard, but the rules are somewhat stricter, which helps users
++            write text that is easier to read and maintain.
++          '';
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=RoweWilsonFrederiskHolme.wikitext";
++          homepage = "https://github.com/Frederisk/Wikitext-VSCode-Extension";
++          license = lib.licenses.mit;
++          maintainers = [ lib.maintainers.rapiteanu ];
++        };
++      };
++
+       rubbersheep.gi = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "gi";
+@@ -2645,12 +3063,28 @@ let
+         };
+       };
+ 
++      seatonjiang.gitmoji-vscode = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          publisher = "seatonjiang";
++          name = "gitmoji-vscode";
++          version = "1.2.2";
++          sha256 = "sha256-+lwbCLV62y1IHrjCygBphQZJUu+ZApYTwBQld5uu12w=";
++        };
++        meta = {
++          description = "Gitmoji tool for git commit messages in VSCode";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=seatonjiang.gitmoji-vscode";
++          homepage = "https://github.com/seatonjiang/gitmoji-vscode/";
++          license = lib.licenses.mit;
++          maintainers = [ lib.maintainers.laurent-f1z1 ];
++        };
++      };
++
+       serayuzgur.crates = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "crates";
+           publisher = "serayuzgur";
+-          version = "0.5.10";
+-          sha256 = "1dbhd6xbawbnf9p090lpmn8i5gg1f7y8xk2whc9zhg4432kdv3vd";
++          version = "0.6.0";
++          sha256 = "080zd103vjrz86vllr1ricq2vi3hawn4534n492m7xdcry9l9dpc";
+         };
+         meta = {
+           license = lib.licenses.mit;
+@@ -2674,8 +3108,8 @@ let
+         mktplcRef = {
+           publisher = "shd101wyy";
+           name = "markdown-preview-enhanced";
+-          version = "0.6.8";
+-          sha256 = "9NRaHgtyiZJ0ic6h1B01MWzYhDABAl3Jm2IUPogYWr0=";
++          version = "0.6.10";
++          sha256 = "sha256-nCsl7ZYwuTvNZSTUMR6jEywClmcPm8xW6ABu9220wJI=";
+         };
+         meta = {
+           description = "Provides a live preview of markdown using either markdown-it or pandoc";
+@@ -2896,6 +3330,23 @@ let
+         };
+       };
+ 
++      tailscale.vscode-tailscale = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "vscode-tailscale";
++          publisher = "tailscale";
++          version = "0.4.0";
++          sha256 = "sha256-c/BZHKHs2EKd37148dSxEeP1wBXv75HhDqzegmHPjOs=";
++        };
++        meta = {
++          changelog = "https://marketplace.visualstudio.com/items/tailscale.vscode-tailscale/changelog";
++          description = "VSCode extension to share a port over the internet with Tailscale Funnel";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=Tailscale.vscode-tailscale";
++          homepage = "https://github.com/tailscale-dev/vscode-tailscale";
++          license = lib.licenses.mit;
++          maintainers = [ lib.maintainers.drupol ];
++        };
++      };
++
+       takayama.vscode-qq = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           publisher = "takayama";
+@@ -2912,14 +3363,30 @@ let
+         mktplcRef = {
+           name = "even-better-toml";
+           publisher = "tamasfe";
+-          version = "0.19.0";
+-          sha256 = "sha256-MqSQarNThbEf1wHDTf1yA46JMhWJN46b08c7tV6+1nU=";
++          version = "0.19.2";
++          sha256 = "sha256-JKj6noi2dTe02PxX/kS117ZhW8u7Bhj4QowZQiJKP2E=";
+         };
+         meta = {
+           license = lib.licenses.mit;
+         };
+       };
+ 
++      techtheawesome.rust-yew = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "rust-yew";
++          publisher = "techtheawesome";
++          version = "0.2.2";
++          sha256 = "sha256-t9DYY1fqW7M5F1pbIUtnnodxMzIzURew4RXT78djWMI=";
++        };
++        meta = {
++          description = "A VSCode extension that provides some language features for Yew's html macro syntax";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=TechTheAwesome.rust-yew";
++          homepage = "https://github.com/TechTheAwesome/code-yew-server";
++          license = lib.licenses.gpl3Only;
++          maintainers = [ lib.maintainers.CardboardTurkey ];
++        };
++      };
++
+       theangryepicbanana.language-pascal = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "language-pascal";
+@@ -3032,10 +3499,26 @@ let
+         mktplcRef = {
+           name = "sort-lines";
+           publisher = "Tyriar";
+-          version = "1.9.1";
+-          sha256 = "0dds99j6awdxb0ipm15g543a5b6f0hr00q9rz961n0zkyawgdlcb";
++          version = "1.10.2";
++          sha256 = "sha256-AI16YBmmfZ3k7OyUrh4wujhu7ptqAwfI5jBbAc6MhDk=";
++        };
++        meta = {
++          license = lib.licenses.mit;
++        };
++      };
++
++      unifiedjs.vscode-mdx = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "vscode-mdx";
++          publisher = "unifiedjs";
++          version = "1.4.0";
++          sha256 = "sha256-qqqq0QKTR0ZCLdPltsnQh5eTqGOh9fV1OSOZMjj4xXg=";
+         };
+         meta = {
++          changelog = "https://marketplace.visualstudio.com/items/unifiedjs.vscode-mdx/changelog";
++          description = "VSCode language support for MDX";
++          downloadPage = "https://github.com/mdx-js/mdx-analyzer";
++          homepage = "https://github.com/mdx-js/mdx-analyzer#readme";
+           license = lib.licenses.mit;
+         };
+       };
+@@ -3044,8 +3527,8 @@ let
+         mktplcRef = {
+           name = "errorlens";
+           publisher = "usernamehw";
+-          version = "3.8.0";
+-          sha256 = "sha256-T2YTEbeC22/B5BlBBrBATLv95HQC5xGab+KnCMzI1vc=";
++          version = "3.12.0";
++          sha256 = "sha256-G5+We49/f5UwYqoBovegRK+UOT6KPZo85cvoDjD1Mu4=";
+         };
+         meta = {
+           changelog = "https://marketplace.visualstudio.com/items/usernamehw.errorlens/changelog";
+@@ -3202,7 +3685,7 @@ let
+           downloadPage = "https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons";
+           homepage = "https://github.com/vscode-icons/vscode-icons";
+           license = lib.licenses.mit;
+-          maintainers = [ lib.maintainers.ggwpaiushtha ];
++          maintainers = [ lib.maintainers.bastaynav ];
+         };
+       };
+ 
+@@ -3295,6 +3778,21 @@ let
+         };
+       };
+ 
++      wmaurer.change-case = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          name = "change-case";
++          publisher = "wmaurer";
++          version = "1.0.0";
++          sha256 = "sha256-tN/jlG2PzuiCeERpgQvdqDoa3UgrUaM7fKHv6KFqujc=";
++        };
++        meta = {
++          description = "A VSCode extension for quickly changing the case (camelCase, CONSTANT_CASE, snake_case, etc) of the current selection or current word";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=wmaurer.change-case";
++          homepage = "https://github.com/wmaurer/vscode-change-case";
++          license = lib.licenses.mit;
++        };
++      };
++
+       xadillax.viml = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "viml";
+@@ -3332,6 +3830,27 @@ let
+         };
+       };
+ 
++      yzhang.dictionary-completion = buildVscodeMarketplaceExtension {
++        mktplcRef = {
++          publisher = "yzhang";
++          name = "dictionary-completion";
++          version = "1.2.2";
++          sha256 = "sha256-dpJcJARRKzRNHfXs/qknud8OQ8xIyeaVnt/EcDq0k4E=";
++        };
++        meta = {
++          description = "A Visual Studio Code extension to help user easyly finish long words ";
++          longDescription = ''
++            Dictionary completion allows user to get a list of keywords, based off of the current word at the cursor.
++            This is useful if you are typing a long word (e.g. acknowledgeable) and don't want to finish typing or don't remember the Spelling
++          '';
++          homepage = "https://github.com/yzhang-gh/vscode-dic-completion#readme";
++          changelog = "https://marketplace.visualstudio.com/items/yzhang.dictionary-completion/changelog";
++          downloadPage = "https://marketplace.visualstudio.com/items?itemName=yzhang.dictionary-completion";
++          license = lib.licenses.mit;
++          maintainers = with lib.maintainers; [ onedragon ];
++        };
++      };
++
+       yzhang.markdown-all-in-one = buildVscodeMarketplaceExtension {
+         mktplcRef = {
+           name = "markdown-all-in-one";
+diff --git a/pkgs/applications/editors/vscode/extensions/ms-vscode-remote.remote-ssh/default.nix b/pkgs/applications/editors/vscode/extensions/ms-vscode-remote.remote-ssh/default.nix
+index de191e97e0dc..5bfe648d14c0 100644
+--- a/pkgs/applications/editors/vscode/extensions/ms-vscode-remote.remote-ssh/default.nix
++++ b/pkgs/applications/editors/vscode/extensions/ms-vscode-remote.remote-ssh/default.nix
+@@ -1,4 +1,5 @@
+ { lib
++, nixosTests
+ , vscode-utils
+ , useLocalExtensions ? false
+ }:
+@@ -9,8 +10,6 @@
+ let
+   inherit (vscode-utils) buildVscodeMarketplaceExtension;
+ 
+-  nodeVersion = "16";
+-
+   # As VS Code executes this code on the remote machine
+   # we test to see if we can build Node from Nixpkgs
+   # otherwise we check if the globally installed Node
+@@ -23,38 +22,44 @@ let
+     serverNode="$serverDir/node"
+     echo "VS Code Node: $serverNode"
+ 
+-    # Check if VS Code Server has a non-working Node or the wrong version of Node
+-    if ! nodeVersion=$($serverNode -v) || [ "\''${nodeVersion:1:2}" != "${nodeVersion}" ]; then
++    # Check if Node included with VS Code Server runs
++    if ! nodeVersion=$($serverNode -v); then
+       echo "VS Code Node Version: $nodeVersion"
+ 
+-      if nix-build "<nixpkgs>" -A nodejs-${nodeVersion}_x --out-link "$serverDir/nix" && [ -e "$serverDir/nix/bin/node" ]; then
+-        nodePath="$serverDir/nix/bin/node"
++      if ! nix-build "<nixpkgs>" -A patchelf --out-link "$serverDir/patchelf" || ! "$serverDir/patchelf/bin/patchelf" --version; then
++        echo "Failed to get patchelf from nixpkgs"
++      fi
++
++      if [ -e $serverNode.orig ]; then
++        cp $serverNode.orig $serverNode
++      else
++        cp $serverNode $serverNode.orig
+       fi
+ 
+-      echo "Node from Nix: $nodePath"
++      if ! nix-build "<nixpkgs>" -A bintools --out-link $serverDir/bintools; then
++        echo "Failed to build bintools from nixpkgs"
++      fi
+ 
+-      nodeVersion=$($nodePath -v)
+-      echo "Node from Nix Version: $nodeVersion"
++      INTERPRETER=$(cat $serverDir/bintools/nix-support/dynamic-linker)
+ 
+-      if [ "\''${nodeVersion:1:2}" != "${nodeVersion}" ]; then
+-        echo "Getting Node from Nix failed, use Local Node instead"
+-        nodePath=$(which node)
+-        echo "Local Node: $nodePath"
+-        nodeVersion=$($nodePath -v)
+-        echo "Local Node Version: $nodeVersion"
++      echo "Interpreter from bintools: $INTERPRETER"
++
++      if ! nix-build "<nixpkgs>" -A stdenv.cc.cc.lib --out-link $serverDir/cc; then
++        echo "Failed to build stdenv.cc.cc.lib from nixpkgs"
+       fi
+ 
+-      if [ "\''${nodeVersion:1:2}" == "${nodeVersion}" ]; then
+-        echo PATCH: replacing $serverNode with $nodePath
+-        ln -sf $nodePath $serverNode
++      if ! $serverDir/patchelf/bin/patchelf --set-interpreter $INTERPRETER --set-rpath $serverDir/cc-lib/lib $serverNode; then
++        echo "Failed to patch Node binary"
+       fi
++
++      rm "$serverDir/patchelf"
+     fi
+ 
+     nodeVersion=$($serverNode -v)
+     echo "VS Code Node Version: $nodeVersion"
+ 
+-    if [ "\''${nodeVersion:1:2}" != "${nodeVersion}" ]; then
+-      echo "Unsupported VS Code Node version: $nodeVersion", quitting
++    if ! nodeVersion=$($serverNode -v); then
++      echo "Unable to fix Node binary, quitting"
+       fail_with_exitcode ''${o.InstallExitCode.ServerTransferFailed}
+     fi
+ 
+@@ -87,9 +92,11 @@ buildVscodeMarketplaceExtension {
+       --replace '# Start the server\n' '${patch}'
+   '';
+ 
++  passthru.tests = { inherit (nixosTests) vscode-remote-ssh; };
++
+   meta = {
+     description = "Use any remote machine with a SSH server as your development environment.";
+     license = lib.licenses.unfree;
+-    maintainers = [ lib.maintainers.SuperSandro2000 lib.maintainers.tbenst ];
++    maintainers = [ lib.maintainers.tbenst ];
+   };
+ }
+diff --git a/pkgs/applications/editors/vscode/extensions/ms-vscode.cpptools/default.nix b/pkgs/applications/editors/vscode/extensions/ms-vscode.cpptools/default.nix
+index c51a86f888e4..1729256670c3 100644
+--- a/pkgs/applications/editors/vscode/extensions/ms-vscode.cpptools/default.nix
++++ b/pkgs/applications/editors/vscode/extensions/ms-vscode.cpptools/default.nix
+@@ -31,12 +31,12 @@
+ let
+   gdbDefaultsTo = if gdbUseFixed then "${gdb}/bin/gdb" else "gdb";
+ in
+-vscode-utils.buildVscodeMarketplaceExtension rec {
++vscode-utils.buildVscodeMarketplaceExtension {
+   mktplcRef = {
+     name = "cpptools";
+     publisher = "ms-vscode";
+-    version = "1.11.0";
+-    sha256 = "c0725d3914aeb2515627691727455cc27e7a75031fa02ca957be02cc210bd64d";
++    version = "1.17.3";
++    sha256 = "sha256-4mKCBqUCOndKEfsJqTIsfwEt+0CZI8QAhBj3Y4+wKlg=";
+     arch = "linux-x64";
+   };
+ 
+diff --git a/pkgs/applications/editors/vscode/extensions/rust-lang.rust-analyzer/build-deps/package.json b/pkgs/applications/editors/vscode/extensions/rust-lang.rust-analyzer/build-deps/package.json
+index 167f92fbede9..29f8c62b9af4 100644
+--- a/pkgs/applications/editors/vscode/extensions/rust-lang.rust-analyzer/build-deps/package.json
++++ b/pkgs/applications/editors/vscode/extensions/rust-lang.rust-analyzer/build-deps/package.json
+@@ -1,6 +1,6 @@
+ {
+   "name": "rust-analyzer",
+-  "version": "0.3.1426",
++  "version": "0.3.1607",
+   "dependencies": {
+     "anser": "^2.1.1",
+     "d3": "^7.6.1",
+diff --git a/pkgs/applications/editors/vscode/extensions/rust-lang.rust-analyzer/default.nix b/pkgs/applications/editors/vscode/extensions/rust-lang.rust-analyzer/default.nix
+index dadb291aa534..77c589dbba25 100644
+--- a/pkgs/applications/editors/vscode/extensions/rust-lang.rust-analyzer/default.nix
++++ b/pkgs/applications/editors/vscode/extensions/rust-lang.rust-analyzer/default.nix
+@@ -20,13 +20,13 @@ let
+   # Use the plugin version as in vscode marketplace, updated by update script.
+   inherit (vsix) version;
+ 
+-  releaseTag = "2023-03-06";
++  releaseTag = "2023-07-31";
+ 
+   src = fetchFromGitHub {
+     owner = "rust-lang";
+     repo = "rust-analyzer";
+     rev = releaseTag;
+-    sha256 = "sha256-Njlus+vY3N++qWE0JXrGjwcXY2QDFuOV/7NruBBMETY=";
++    sha256 = "sha256-PWEdqI+iiHbx4dkIwWHZCGJuTpRfJI3MLSHf3gQEJt4=";
+   };
+ 
+   build-deps = nodePackages."rust-analyzer-build-deps-../../applications/editors/vscode/extensions/rust-lang.rust-analyzer/build-deps";
+@@ -88,3 +88,4 @@ vscode-utils.buildVscodeExtension {
+     platforms = lib.platforms.all;
+   };
+ }
++
+diff --git a/pkgs/applications/editors/vscode/extensions/vadimcn.vscode-lldb/default.nix b/pkgs/applications/editors/vscode/extensions/vadimcn.vscode-lldb/default.nix
+index 34da970f745d..c994e53f37ef 100644
+--- a/pkgs/applications/editors/vscode/extensions/vadimcn.vscode-lldb/default.nix
++++ b/pkgs/applications/editors/vscode/extensions/vadimcn.vscode-lldb/default.nix
+@@ -106,7 +106,8 @@ in stdenv.mkDerivation {
+ 
+     mkdir -p $ext/{adapter,formatters}
+     mv -t $ext vsix-extracted/extension/*
+-    cp -t $ext/adapter ${adapter}/{bin,lib}/* ../adapter/*.py
++    cp -t $ext/adapter ${adapter}/{bin,lib}/*
++    cp -r ../adapter/scripts $ext/adapter
+     wrapProgram $ext/adapter/codelldb \
+       --set-default LLDB_DEBUGSERVER_PATH "${lldb.out}/bin/lldb-server"
+     cp -t $ext/formatters ../formatters/*.py
+diff --git a/pkgs/applications/editors/vscode/extensions/vadimcn.vscode-lldb/update.sh b/pkgs/applications/editors/vscode/extensions/vadimcn.vscode-lldb/update.sh
+index 03a71b557dad..c6cce01e6d3a 100755
+--- a/pkgs/applications/editors/vscode/extensions/vadimcn.vscode-lldb/update.sh
++++ b/pkgs/applications/editors/vscode/extensions/vadimcn.vscode-lldb/update.sh
+@@ -24,7 +24,7 @@ if [[ $# -ne 1 ]]; then
+     )
+ fi
+ old_version=$(sed -nE 's/.*\bversion = "(.*)".*/\1/p' ./default.nix)
+-if grep -q 'cargoSha256 = ""' ./default.nix; then
++if grep -q 'cargoHash = ""' ./default.nix; then
+     old_version='broken'
+ fi
+ if [[ "$version" == "$old_version" ]]; then
+@@ -34,10 +34,10 @@ echo "$old_version -> $version"
+ 
+ # update hashes
+ sed -E 's/\bversion = ".*?"/version = "'$version'"/' --in-place "$nixFile"
+-srcHash=$(nix-prefetch-github vadimcn vscode-lldb --rev "v$version" | jq --raw-output .sha256)
+-sed -E 's#\bsha256 = ".*?"#sha256 = "'$srcHash'"#' --in-place "$nixFile"
++srcHash=$(nix-prefetch-github vadimcn vscode-lldb --rev "v$version" | jq --raw-output .hash)
++sed -E 's#\bhash = ".*?"#hash = "'$srcHash'"#' --in-place "$nixFile"
+ cargoHash=$(nix-prefetch "{ sha256 }: (import $nixpkgs {}).vscode-extensions.vadimcn.vscode-lldb.adapter.cargoDeps.overrideAttrs (_: { outputHash = sha256; })")
+-sed -E 's#\bcargoSha256 = ".*?"#cargoSha256 = "'$cargoHash'"#' --in-place "$nixFile"
++sed -E 's#\bcargoHash = ".*?"#cargoHash = "'$cargoHash'"#' --in-place "$nixFile"
+ 
+ pushd $TMPDIR
+ curl -LO https://raw.githubusercontent.com/$owner/$repo/v${version}/package-lock.json
+diff --git a/pkgs/applications/editors/vscode/extensions/vscodeEnv.nix b/pkgs/applications/editors/vscode/extensions/vscodeEnv.nix
+index 818cca51772a..db00ba13e3c8 100644
+--- a/pkgs/applications/editors/vscode/extensions/vscodeEnv.nix
++++ b/pkgs/applications/editors/vscode/extensions/vscodeEnv.nix
+@@ -19,13 +19,13 @@
+ , keybindings                      ? {}
+ , createKeybindingsIfDoesNotExists ? true
+ , user-data-dir ? ''"''${TMP}''${name}"/vscode-data-dir''
+-# if file exists will use it and import the extensions in it into this dervation else will use empty extensions list
++# if file exists will use it and import the extensions in it into this derivation else will use empty extensions list
+ # this file will be created/updated by vscodeExts2nix when vscode exists
+ , mutableExtensionsFile
+ }:
+ let
+   mutableExtensionsFilePath = toString mutableExtensionsFile;
+-  mutableExtensions = lib.optionals builtins.pathExists mutableExtensionsFile (import mutableExtensionsFilePath);
++  mutableExtensions = lib.optionals (builtins.pathExists mutableExtensionsFile) (import mutableExtensionsFilePath);
+   vscodeWithConfiguration = import ./vscodeWithConfiguration.nix {
+     inherit lib writeShellScriptBin extensionsFromVscodeMarketplace;
+     vscodeDefault = vscode;
+diff --git a/pkgs/applications/editors/vscode/generic.nix b/pkgs/applications/editors/vscode/generic.nix
+index 7b7007910a5c..c320fec94eb7 100644
+--- a/pkgs/applications/editors/vscode/generic.nix
++++ b/pkgs/applications/editors/vscode/generic.nix
+@@ -2,21 +2,21 @@
+ , unzip, libsecret, libXScrnSaver, libxshmfence, buildPackages
+ , atomEnv, at-spi2-atk, autoPatchelfHook
+ , systemd, fontconfig, libdbusmenu, glib, buildFHSEnv, wayland
++, libglvnd, libkrb5
+ 
+ # Populate passthru.tests
+ , tests
+ 
+ # needed to fix "Save as Root"
+-, nodePackages, bash
++, nodePackages
++, asar ? nodePackages.asar, bash
+ 
+ # Attributes inherit from specific versions
+ , version, src, meta, sourceRoot, commandLineArgs
+ , executableName, longName, shortName, pname, updateScript
+ , dontFixup ? false
+-# sourceExecutableName is the name of the binary in the source archive, over
+-# which we have no control
++, rev ? null, vscodeServer ? null
+ , sourceExecutableName ? executableName
+-
+ , useVSCodeRipgrep ? false
+ , ripgrep
+ }:
+@@ -30,6 +30,8 @@ let
+       inherit executableName longName tests updateScript;
+       fhs = fhs {};
+       fhsWithPackages = f: fhs { additionalPkgs = f; };
++    } // lib.optionalAttrs (vscodeServer != null) {
++      inherit rev vscodeServer;
+     };
+ 
+     desktopItem = makeDesktopItem {
+@@ -38,7 +40,7 @@ let
+       comment = "Code Editing. Redefined.";
+       genericName = "Text Editor";
+       exec = "${executableName} %F";
+-      icon = "code";
++      icon = "vs${executableName}";
+       startupNotify = true;
+       startupWMClass = shortName;
+       categories = [ "Utility" "TextEditor" "Development" "IDE" ];
+@@ -47,7 +49,7 @@ let
+       actions.new-empty-window = {
+         name = "New Empty Window";
+         exec = "${executableName} --new-window %F";
+-        icon = "code";
++        icon = "vs${executableName}";
+       };
+     };
+ 
+@@ -57,7 +59,7 @@ let
+       comment = "Code Editing. Redefined.";
+       genericName = "Text Editor";
+       exec = executableName + " --open-url %U";
+-      icon = "code";
++      icon = "vs${executableName}";
+       startupNotify = true;
+       categories = [ "Utility" "TextEditor" "Development" "IDE" ];
+       mimeTypes = [ "x-scheme-handler/vscode" ];
+@@ -66,14 +68,14 @@ let
+     };
+ 
+     buildInputs = [ libsecret libXScrnSaver libxshmfence ]
+-      ++ lib.optionals (!stdenv.isDarwin) ([ at-spi2-atk ] ++ atomEnv.packages);
++      ++ lib.optionals (!stdenv.isDarwin) ([ at-spi2-atk libkrb5 ] ++ atomEnv.packages);
+ 
+-    runtimeDependencies = lib.optionals stdenv.isLinux [ (lib.getLib systemd) fontconfig.lib libdbusmenu wayland ];
++    runtimeDependencies = lib.optionals stdenv.isLinux [ (lib.getLib systemd) fontconfig.lib libdbusmenu wayland libsecret ];
+ 
+     nativeBuildInputs = [ unzip ]
+       ++ lib.optionals stdenv.isLinux [
+         autoPatchelfHook
+-        nodePackages.asar
++        asar
+         # override doesn't preserve splicing https://github.com/NixOS/nixpkgs/issues/132651
+         (buildPackages.wrapGAppsHook.override { inherit (buildPackages) makeWrapper; })
+       ];
+@@ -98,8 +100,9 @@ let
+       ln -s "$desktopItem/share/applications/${executableName}.desktop" "$out/share/applications/${executableName}.desktop"
+       ln -s "$urlHandlerDesktopItem/share/applications/${executableName}-url-handler.desktop" "$out/share/applications/${executableName}-url-handler.desktop"
+ 
++      # These are named vscode.png, vscode-insiders.png, etc to match the name in upstream *.deb packages.
+       mkdir -p "$out/share/pixmaps"
+-      cp "$out/lib/vscode/resources/app/resources/linux/code.png" "$out/share/pixmaps/code.png"
++      cp "$out/lib/vscode/resources/app/resources/linux/code.png" "$out/share/pixmaps/vs${executableName}.png"
+ 
+       # Override the previously determined VSCODE_PATH with the one we know to be correct
+       sed -i "/ELECTRON=/iVSCODE_PATH='$out/lib/vscode'" "$out/bin/${executableName}"
+@@ -151,6 +154,10 @@ let
+       chmod +x ${vscodeRipgrep}
+     '');
+ 
++    postFixup = lib.optionalString stdenv.isLinux ''
++      patchelf --add-needed ${libglvnd}/lib/libGLESv2.so.2 $out/lib/vscode/${executableName}
++    '';
++
+     inherit meta;
+   };
+ 
+diff --git a/pkgs/applications/editors/vscode/update-vscode.sh b/pkgs/applications/editors/vscode/update-vscode.sh
+index 67ec7a21b346..d1df522f4024 100755
+--- a/pkgs/applications/editors/vscode/update-vscode.sh
++++ b/pkgs/applications/editors/vscode/update-vscode.sh
+@@ -19,9 +19,22 @@ fi
+ VSCODE_VER=$(curl --fail --silent https://api.github.com/repos/Microsoft/vscode/releases/latest | jq --raw-output .tag_name)
+ sed -i "s/version = \".*\"/version = \"${VSCODE_VER}\"/" "$ROOT/vscode.nix"
+ 
++TEMP_FOLDER=$(mktemp -d)
++
+ VSCODE_X64_LINUX_URL="https://update.code.visualstudio.com/${VSCODE_VER}/linux-x64/stable"
+-VSCODE_X64_LINUX_SHA256=$(nix-prefetch-url ${VSCODE_X64_LINUX_URL})
+-sed -i "s/x86_64-linux = \".\{52\}\"/x86_64-linux = \"${VSCODE_X64_LINUX_SHA256}\"/" "$ROOT/vscode.nix"
++
++# Split output by newlines into Bash array
++readarray -t VSCODE_X64_LINUX <<< $(nix-prefetch-url --print-path ${VSCODE_X64_LINUX_URL})
++
++sed -i "s/x86_64-linux = \".\{52\}\"/x86_64-linux = \"${VSCODE_X64_LINUX[0]}\"/" "$ROOT/vscode.nix"
++
++tar xf ${VSCODE_X64_LINUX[1]} -C $TEMP_FOLDER
++VSCODE_COMMIT=$(jq --raw-output .commit $TEMP_FOLDER/VSCode-linux-x64/resources/app/product.json)
++sed -i "s/rev = \".\{40\}\"/rev = \"${VSCODE_COMMIT}\"/" "$ROOT/vscode.nix"
++
++SERVER_X64_LINUX_URL="https://update.code.visualstudio.com/commit:${VSCODE_COMMIT}/server-linux-x64/stable"
++SERVER_X64_LINUX_SHA256=$(nix-prefetch-url ${SERVER_X64_LINUX_URL})
++sed -i "s/sha256 = \".\{51,52\}\"/sha256 = \"${SERVER_X64_LINUX_SHA256}\"/" "$ROOT/vscode.nix"
+ 
+ VSCODE_X64_DARWIN_URL="https://update.code.visualstudio.com/${VSCODE_VER}/darwin/stable"
+ VSCODE_X64_DARWIN_SHA256=$(nix-prefetch-url ${VSCODE_X64_DARWIN_URL})
+diff --git a/pkgs/applications/editors/vscode/update-vscodium.sh b/pkgs/applications/editors/vscode/update-vscodium.sh
+index bfb171e395cb..c7d9c1068b14 100755
+--- a/pkgs/applications/editors/vscode/update-vscodium.sh
++++ b/pkgs/applications/editors/vscode/update-vscodium.sh
+@@ -36,3 +36,5 @@ update_vscodium $VSCODIUM_VER darwin-x64 x86_64-darwin zip
+ update_vscodium $VSCODIUM_VER linux-arm64 aarch64-linux tar.gz
+ 
+ update_vscodium $VSCODIUM_VER darwin-arm64 aarch64-darwin zip
++
++update_vscodium $VSCODIUM_VER linux-armhf armv7l-linux tar.gz
+diff --git a/pkgs/applications/editors/vscode/vscode.nix b/pkgs/applications/editors/vscode/vscode.nix
+index da716255d230..71f02cae846b 100644
+--- a/pkgs/applications/editors/vscode/vscode.nix
++++ b/pkgs/applications/editors/vscode/vscode.nix
+@@ -1,5 +1,16 @@
+-{ stdenv, lib, callPackage, fetchurl
++{ stdenv
++, lib
++, callPackage
++, fetchurl
++, nixosTests
++, srcOnly
+ , isInsiders ? false
++# sourceExecutableName is the name of the binary in the source archive over
++# which we have no control and it is needed to run the insider version as
++# documented in https://nixos.wiki/wiki/Visual_Studio_Code#Insiders_Build
++# On MacOS the insider binary is still called code instead of code-insiders as
++# of 2023-08-06.
++, sourceExecutableName ? "code" + lib.optionalString (isInsiders && stdenv.isLinux) "-insiders"
+ , commandLineArgs ? ""
+ , useVSCodeRipgrep ? stdenv.isDarwin
+ }:
+@@ -19,23 +30,26 @@ let
+   archive_fmt = if stdenv.isDarwin then "zip" else "tar.gz";
+ 
+   sha256 = {
+-    x86_64-linux = "0kir1grd150gb7im6yx2l16hi43wwsi8q3dlpgah4m7na064xgyd";
+-    x86_64-darwin = "1fw73483ja4zav8xd0j03ygib5zbviy3kd02jzmgbbbsac5li96m";
+-    aarch64-linux = "1w0dxpvrj06m1d15q45xi4sl4g3fk0nf04vh2ar956lg67dqj7i6";
+-    aarch64-darwin = "0i5vj3km6wkdc2mrks2rjbqbn1isg4l4ss6zs7qfra3zcj62bkc2";
+-    armv7l-linux = "1jx8cz43ac35as414mxsj9abpkr4a7v10fg1msjy2ykcrzv9v3dr";
++    x86_64-linux = "1gqpsgg6fsfssn03213sn31qcb5xnfnn3hd5g8j2mxfd0dyjgyir";
++    x86_64-darwin = "0h0mj3vdnwcdxk9cnss4v8mmcfhm1yknm1al8c2047wjsj8w4jmm";
++    aarch64-linux = "0qrph1a0cbr7sqx0qv4v05himsphlpwd1lgyliwqxzl8yxka8nwv";
++    aarch64-darwin = "0mjqy08v0idck7a05w8rinfccg7vn50z6b0jrvp2m5q2122c0rcc";
++    armv7l-linux = "1gp29rzc2iyl7vw2hlfjn5770mfpa6n9vc3f776msdxwrsia6xg9";
+   }.${system} or throwSystem;
+ in
+   callPackage ./generic.nix rec {
+     # Please backport all compatible updates to the stable release.
+     # This is important for the extension ecosystem.
+-    version = "1.78.2";
+-    pname = "vscode";
++    version = "1.82.0";
++    pname = "vscode" + lib.optionalString isInsiders "-insiders";
++
++    # This is used for VS Code - Remote SSH test
++    rev = "8b617bd08fd9e3fc94d14adb8d358b56e3f72314";
+ 
+     executableName = "code" + lib.optionalString isInsiders "-insiders";
+     longName = "Visual Studio Code" + lib.optionalString isInsiders " - Insiders";
+     shortName = "Code" + lib.optionalString isInsiders " - Insiders";
+-    inherit commandLineArgs useVSCodeRipgrep;
++    inherit commandLineArgs useVSCodeRipgrep sourceExecutableName;
+ 
+     src = fetchurl {
+       name = "VSCode_${version}_${plat}.${archive_fmt}";
+@@ -48,6 +62,18 @@ in
+ 
+     sourceRoot = "";
+ 
++    # As tests run without networking, we need to download this for the Remote SSH server
++    vscodeServer = srcOnly {
++      name = "vscode-server-${rev}.tar.gz";
++      src = fetchurl {
++        name = "vscode-server-${rev}.tar.gz";
++        url = "https://update.code.visualstudio.com/commit:${rev}/server-linux-x64/stable";
++        sha256 = "192af63q9nklgsai71bss2bisc4wip1gbzmlpdvcjpi1hkspab2v";
++      };
++    };
++
++    tests = { inherit (nixosTests) vscode-remote-ssh; };
++
+     updateScript = ./update-vscode.sh;
+ 
+     # Editing the `code` binary within the app bundle causes the bundle's signature
+@@ -71,7 +97,7 @@ in
+       homepage = "https://code.visualstudio.com/";
+       downloadPage = "https://code.visualstudio.com/Updates";
+       license = licenses.unfree;
+-      maintainers = with maintainers; [ eadwu synthetica maxeaubrey bobby285271 ];
++      maintainers = with maintainers; [ eadwu synthetica amaxine bobby285271 Enzime ];
+       platforms = [ "x86_64-linux" "x86_64-darwin" "aarch64-darwin" "aarch64-linux" "armv7l-linux" ];
+     };
+   }
+diff --git a/pkgs/applications/editors/vscode/vscodium.nix b/pkgs/applications/editors/vscode/vscodium.nix
+index 6d9ac6566372..ad245ba05d9a 100644
+--- a/pkgs/applications/editors/vscode/vscodium.nix
++++ b/pkgs/applications/editors/vscode/vscodium.nix
+@@ -15,20 +15,21 @@ let
+   archive_fmt = if stdenv.isDarwin then "zip" else "tar.gz";
+ 
+   sha256 = {
+-    x86_64-linux = "0ymgy0xisfxqrrmwpy0ga2rhlzhxqq39ppjfawxaf0dfdnkhgkgr";
+-    x86_64-darwin = "1q5fg7cm8d4iwvx8b589aqby5vw1b66y85dxgrq6sapz9cg2pvhz";
+-    aarch64-linux = "13vdqbhap9qd96y5n0immlwr61v8f7yvbwc9m0qas06f30b71f3z";
+-    aarch64-darwin = "01dc7hv13ngr0xv2cmd2likmdc2gz0jbmgashmkm12gdrjp4q968";
++    x86_64-linux = "152vr796sa1gq62zp3grcr3ywg4b4z233cvwm3s2jhi2nzra26vq";
++    x86_64-darwin = "0zk4nf8zyj6vq7yqnidjqgidrj1nq7rri9y2d4aay44kanm3v03f";
++    aarch64-linux = "0bprcnd93h13x5d2hzfgpa9yyda3x0zi3w0rfwhi2rbyzlr7vzhf";
++    aarch64-darwin = "0rwdknqdhgf3fby1i0gz6hha1vnxfk2dwrpn75g0ra21m11b5b4g";
++    armv7l-linux = "0ck2bxhy3k239ici3y2xsc8kwa8bsfn8ywh1p4lh2dkc91liisnq";
+   }.${system} or throwSystem;
+ 
+-  sourceRoot = if stdenv.isDarwin then "" else ".";
++  sourceRoot = lib.optionalString (!stdenv.isDarwin) ".";
+ in
+   callPackage ./generic.nix rec {
+     inherit sourceRoot commandLineArgs useVSCodeRipgrep;
+ 
+     # Please backport all compatible updates to the stable release.
+     # This is important for the extension ecosystem.
+-    version = "1.78.2.23132";
++    version = "1.82.1.23255";
+     pname = "vscodium";
+ 
+     executableName = "codium";
+@@ -60,7 +61,7 @@ in
+       downloadPage = "https://github.com/VSCodium/vscodium/releases";
+       license = licenses.mit;
+       sourceProvenance = with sourceTypes; [ binaryNativeCode ];
+-      maintainers = with maintainers; [ synthetica turion bobby285271 ];
++      maintainers = with maintainers; [ synthetica bobby285271 ludovicopiero ];
+       mainProgram = "codium";
+       platforms = [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" "armv7l-linux" ];
+     };
+diff --git a/pkgs/applications/editors/vscode/with-extensions.nix b/pkgs/applications/editors/vscode/with-extensions.nix
+index 7cd5b4e267d6..bbe5fec19d91 100644
+--- a/pkgs/applications/editors/vscode/with-extensions.nix
++++ b/pkgs/applications/editors/vscode/with-extensions.nix
+@@ -83,7 +83,7 @@ runCommand "${wrappedPkgName}-with-extensions-${wrappedPkgVersion}" {
+   mkdir -p "$out/share/applications"
+   mkdir -p "$out/share/pixmaps"
+ 
+-  ln -sT "${vscode}/share/pixmaps/code.png" "$out/share/pixmaps/code.png"
++  ln -sT "${vscode}/share/pixmaps/vs${executableName}.png" "$out/share/pixmaps/vs${executableName}.png"
+   ln -sT "${vscode}/share/applications/${executableName}.desktop" "$out/share/applications/${executableName}.desktop"
+   ln -sT "${vscode}/share/applications/${executableName}-url-handler.desktop" "$out/share/applications/${executableName}-url-handler.desktop"
+   makeWrapper "${vscode}/bin/${executableName}" "$out/bin/${executableName}" ${extensionsFlag}
+diff --git a/pkgs/applications/graphics/nomacs/default.nix b/pkgs/applications/graphics/nomacs/default.nix
+index 7c909de9f84c..aa479247e93a 100644
+--- a/pkgs/applications/graphics/nomacs/default.nix
++++ b/pkgs/applications/graphics/nomacs/default.nix
+@@ -16,6 +16,10 @@
+ , libraw
+ , libtiff
+ , quazip
++
++, config
++, cudaSupport ? config.cudaSupport
++, cudatoolkit
+ }:
+ 
+ mkDerivation rec {
+@@ -43,7 +47,8 @@ mkDerivation rec {
+   '';
+ 
+   nativeBuildInputs = [cmake
+-                       pkg-config];
++                       pkg-config]
++    ++ lib.optional cudaSupport [cudatoolkit];
+ 
+   buildInputs = [qtbase
+                  qttools
+diff --git a/pkgs/applications/networking/browsers/firefox/wrapper.nix b/pkgs/applications/networking/browsers/firefox/wrapper.nix
+index 6b08a891ec69..176d4ed96d75 100644
+--- a/pkgs/applications/networking/browsers/firefox/wrapper.nix
++++ b/pkgs/applications/networking/browsers/firefox/wrapper.nix
+@@ -5,7 +5,7 @@
+ ## various stuff that can be plugged in
+ , ffmpeg_5, xorg, alsa-lib, libpulseaudio, libcanberra-gtk3, libglvnd, libnotify, opensc
+ , gnome/*.gnome-shell*/
+-, browserpass, gnome-browser-connector, uget-integrator, plasma5Packages, bukubrow, web-eid-app, pipewire
++, browserpass, gnome-browser-connector, uget-integrator, plasma5Packages, bukubrow, web-eid-app, pipewire, firefoxpwa
+ , tridactyl-native
+ , fx_cast_bridge
+ , udev
+@@ -70,6 +70,7 @@ let
+           ++ lib.optional (cfg.enableGnomeExtensions or false) gnome-browser-connector
+           ++ lib.optional (cfg.enableUgetIntegrator or false) uget-integrator
+           ++ lib.optional (cfg.enablePlasmaBrowserIntegration or false) plasma5Packages.plasma-browser-integration
++          ++ lib.optional (cfg.enableFirefoxPwa or false) firefoxpwa.unwrapped
+           ++ lib.optional (cfg.enableFXCastBridge or false) fx_cast_bridge
+           ++ extraNativeMessagingHosts
+         ;
+@@ -231,7 +232,6 @@ let
+       nativeBuildInputs = [ makeWrapper lndir jq ];
+       buildInputs = [ browser.gtk3 ];
+ 
+-
+       buildCommand = ''
+         if [ ! -x "${browser}/bin/${applicationName}" ]
+         then
+@@ -393,6 +393,12 @@ let
+         #   END EXTRA PREF CHANGES  #
+         #                           #
+         #############################
++        ${lib.optionalString (cfg.enableFirefoxPwa or false) ''
++          # firefoxpwa needs to be in PATH too to have the generated .desktop entries working
++          makeWrapper ${firefoxpwa.fhs}/bin/firefoxpwa $out/bin/firefoxpwa \
++          --prefix LD_LIBRARY_PATH ':' "$libs" \
++          --suffix-each GTK_PATH ':' "$gtk_modules"
++        ''}
+       '';
+ 
+       preferLocalBuild = true;
+diff --git a/pkgs/applications/office/libreoffice/default.nix b/pkgs/applications/office/libreoffice/default.nix
+index 25e8f18998e2..94f60d489f09 100644
+--- a/pkgs/applications/office/libreoffice/default.nix
++++ b/pkgs/applications/office/libreoffice/default.nix
+@@ -365,7 +365,12 @@ in
+       sed -i '/gb_LinkTarget_LDFLAGS/{ n; /rpath-link/d;}' solenv/gbuild/platform/unxgcc.mk
+ 
+       find -name "*.cmd" -exec sed -i s,/lib:/usr/lib,, {} \;
+-    '';
++    ''
++
++	+ (if builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "alderlake" "znver3" ] then
++	''
++		sed -e '/CPPUNIT_TEST(testDubiousArrayFormulasFODS);/d' -i './sc/qa/unit/functions_array.cxx'
++	'' else "");
+ 
+   makeFlags = [ "SHELL=${bash}/bin/bash" ];
+ 
+diff --git a/pkgs/applications/science/math/mathematica/generic.nix b/pkgs/applications/science/math/mathematica/generic.nix
+index f8e6555d7632..7cd699e58e3c 100644
+--- a/pkgs/applications/science/math/mathematica/generic.nix
++++ b/pkgs/applications/science/math/mathematica/generic.nix
+@@ -125,8 +125,9 @@ in stdenv.mkDerivation {
+     "--set USE_WOLFRAM_LD_LIBRARY_PATH 1"
+     # Fix xkeyboard config path for Qt
+     "--set QT_XKB_CONFIG_ROOT ${xkeyboard_config}/share/X11/xkb"
+-    # wayland isn't supported
+-    "--set QT_QPA_PLATFORM xcb"
++    # if wayland isn't supported we fail over to xcb
++    # see https://github.com/qt/qtbase/blob/35d0f012ee9b95e8cf3563a41d710ff3c023d841/src/gui/kernel/qguiapplication.cpp#L1218
++    "--set QT_QPA_PLATFORM wayland;xcb"
+   ] ++ lib.optionals cudaSupport [
+     "--set CUDA_PATH ${cudaEnv}"
+     "--set NVIDIA_DRIVER_LIBRARY_PATH ${addOpenGLRunpath.driverLink}/lib/libnvidia-tls.so"
+diff --git a/pkgs/applications/science/math/mathematica/versions.nix b/pkgs/applications/science/math/mathematica/versions.nix
+index 5fd879b13338..2bcce6c58c3d 100644
+--- a/pkgs/applications/science/math/mathematica/versions.nix
++++ b/pkgs/applications/science/math/mathematica/versions.nix
+@@ -7,6 +7,20 @@
+  */
+ 
+ let versions = [
++  {
++    version = "13.3.0";
++    lang = "en";
++    language = "English";
++    sha256 = "sha256-24MC0O+kBUe3TrwXUb+7QZt8tQHvWVIT8F9B6Ih+4k8=";
++    installer = "Mathematica_13.3.0_LINUX.sh";
++  }
++  {
++    version = "13.3.0";
++    lang = "en";
++    language = "English";
++    sha256 = "sha256-91bw7+4ht+7g+eF32BNYf77yEQWyuPffisj4kB63pcI=";
++    installer = "Mathematica_13.3.0_BNDL_LINUX.sh";
++  }
+   {
+     version = "13.2.1";
+     lang = "en";
+diff --git a/pkgs/build-support/cc-wrapper/default.nix b/pkgs/build-support/cc-wrapper/default.nix
+index 982b49d27fe6..67beaf4bb67e 100644
+--- a/pkgs/build-support/cc-wrapper/default.nix
++++ b/pkgs/build-support/cc-wrapper/default.nix
+@@ -116,6 +116,7 @@ let
+         cooperlake     = versionAtLeast ccVersion "10.0";
+         tigerlake      = versionAtLeast ccVersion "10.0";
+         knm            = versionAtLeast ccVersion "8.0";
++        alderlake      = versionAtLeast ccVersion "12.0";
+         # AMD
+         znver1         = versionAtLeast ccVersion "6.0";
+         znver2         = versionAtLeast ccVersion "9.0";
+@@ -127,6 +128,7 @@ let
+         icelake-client = versionAtLeast ccVersion "7.0";
+         icelake-server = versionAtLeast ccVersion "7.0";
+         knm            = versionAtLeast ccVersion "7.0";
++        alderlake      = versionAtLeast ccVersion "16.0";
+         # AMD
+         znver1         = versionAtLeast ccVersion "4.0";
+         znver2         = versionAtLeast ccVersion "9.0";
+diff --git a/pkgs/development/haskell-modules/default.nix b/pkgs/development/haskell-modules/default.nix
+index 7bc1fa0f7e83..43b6120677c2 100644
+--- a/pkgs/development/haskell-modules/default.nix
++++ b/pkgs/development/haskell-modules/default.nix
+@@ -25,7 +25,10 @@ let
+     (configurationArm { inherit pkgs haskellLib; })
+   ] ++ lib.optionals stdenv.hostPlatform.isDarwin [
+     (configurationDarwin { inherit pkgs haskellLib; })
+-  ];
++  ]
++  # override for alderlake
++  ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake")
++  	[( self: super: { cryptonite = haskellLib.dontCheck super.cryptonite; } )];
+ 
+   extensions = lib.composeManyExtensions ([
+     nonHackagePackages
+diff --git a/pkgs/development/haskell-modules/hackage-packages.nix b/pkgs/development/haskell-modules/hackage-packages.nix
+index 5fdf4925a1ad..f56ff00a7544 100644
+--- a/pkgs/development/haskell-modules/hackage-packages.nix
++++ b/pkgs/development/haskell-modules/hackage-packages.nix
+@@ -72734,7 +72734,7 @@ self: {
+   "cryptonite" = callPackage
+     ({ mkDerivation, base, basement, bytestring, deepseq, gauge
+      , ghc-prim, integer-gmp, memory, random, tasty, tasty-hunit
+-     , tasty-kat, tasty-quickcheck
++     , tasty-kat, tasty-quickcheck, stdenv
+      }:
+      mkDerivation {
+        pname = "cryptonite";
+@@ -72749,6 +72749,7 @@ self: {
+        benchmarkHaskellDepends = [
+          base bytestring deepseq gauge memory random
+        ];
++       configureFlags = if stdenv.hostPlatform.avx2Support then [ "--ghc-option=-optc-mno-avx2" ] else [];
+        description = "Cryptography Primitives sink";
+        license = lib.licenses.bsd3;
+      }) {};
+diff --git a/pkgs/development/libraries/fflas-ffpack/default.nix b/pkgs/development/libraries/fflas-ffpack/default.nix
+index 7dadbcb39502..2ad651bac8e7 100644
+--- a/pkgs/development/libraries/fflas-ffpack/default.nix
++++ b/pkgs/development/libraries/fflas-ffpack/default.nix
+@@ -46,7 +46,7 @@ stdenv.mkDerivation rec {
+     "--${if stdenv.hostPlatform.fmaSupport    then "enable" else "disable"}-fma"
+     "--${if stdenv.hostPlatform.fma4Support   then "enable" else "disable"}-fma4"
+   ];
+-  doCheck = true;
++  doCheck = stdenv.hostPlatform.gcc.arch or "" != "silvermont";
+ 
+   meta = with lib; {
+     broken = stdenv.isDarwin;
+diff --git a/pkgs/development/libraries/gdal/default.nix b/pkgs/development/libraries/gdal/default.nix
+index 189c6f3a41a6..a27e96351056 100644
+--- a/pkgs/development/libraries/gdal/default.nix
++++ b/pkgs/development/libraries/gdal/default.nix
+@@ -198,6 +198,8 @@ stdenv.mkDerivation rec {
+     "test_rda_download_queue"
+   ] ++ lib.optionals (lib.versionOlder proj.version "8") [
+     "test_ogr_parquet_write_crs_without_id_in_datum_ensemble_members"
++  ] ++ lib.optionals (builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "alderlake" "znver3" ]) [
++    "test_jp2openjpeg_22"
+   ];
+   postCheck = ''
+     popd # ../autotest
+diff --git a/pkgs/development/libraries/glm/default.nix b/pkgs/development/libraries/glm/default.nix
+index 8af09dcd6f6e..029bddbb97fe 100644
+--- a/pkgs/development/libraries/glm/default.nix
++++ b/pkgs/development/libraries/glm/default.nix
+@@ -37,7 +37,7 @@ stdenv.mkDerivation rec {
+     "-DGLM_TEST_ENABLE=${if doCheck then "ON" else "OFF"}"
+   ];
+ 
+-  doCheck = true;
++  doCheck = stdenv.hostPlatform.gcc.arch or "" != "alderlake";
+ 
+   installPhase = ''
+     runHook preInstall
+diff --git a/pkgs/development/libraries/linbox/default.nix b/pkgs/development/libraries/linbox/default.nix
+index 0f650e7474ff..477f00680619 100644
+--- a/pkgs/development/libraries/linbox/default.nix
++++ b/pkgs/development/libraries/linbox/default.nix
+@@ -52,7 +52,7 @@ stdenv.mkDerivation rec {
+     "--enable-sage"
+   ];
+ 
+-  doCheck = true;
++  doCheck = stdenv.hostPlatform.gcc.arch or "" != "silvermont";
+ 
+   enableParallelBuilding = true;
+ 
+diff --git a/pkgs/development/libraries/mlt/qt-5.nix b/pkgs/development/libraries/mlt/qt-5.nix
+index b7a881548d38..4ecddc44113d 100644
+--- a/pkgs/development/libraries/mlt/qt-5.nix
++++ b/pkgs/development/libraries/mlt/qt-5.nix
+@@ -23,6 +23,9 @@
+ , rubberband
+ , mkDerivation
+ , which
++, config
++, cudaSupport ? config.cudaSupport
++, cudaPackages ? { }
+ }:
+ 
+ mkDerivation rec {
+@@ -55,9 +58,9 @@ mkDerivation rec {
+     ladspa-sdk
+     ladspaPlugins
+     rubberband
+-  ];
++  ] ++ lib.optionals cudaSupport [ cudaPackages.cuda_cudart ];
+ 
+-  nativeBuildInputs = [ cmake which pkg-config ];
++  nativeBuildInputs = [ cmake which pkg-config ] ++ lib.optionals cudaSupport [ cudaPackages.cuda_nvcc ];
+ 
+   outputs = [ "out" "dev" ];
+ 
+diff --git a/pkgs/development/libraries/opencolorio/default.nix b/pkgs/development/libraries/opencolorio/default.nix
+index 3d8a5588043f..83a24df02338 100644
+--- a/pkgs/development/libraries/opencolorio/default.nix
++++ b/pkgs/development/libraries/opencolorio/default.nix
+@@ -82,7 +82,7 @@ stdenv.mkDerivation rec {
+     ++ lib.optional (!buildApps) "-DOCIO_BUILD_APPS=OFF";
+ 
+   # precision issues on non-x86
+-  doCheck = stdenv.isx86_64;
++  doCheck = stdenv.isx86_64 && (!builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "alderlake" "znver3" ]);
+ 
+   meta = with lib; {
+     homepage = "https://opencolorio.org";
+diff --git a/pkgs/development/libraries/openexr/3.nix b/pkgs/development/libraries/openexr/3.nix
+index 243d8830565d..241603f5cc7a 100644
+--- a/pkgs/development/libraries/openexr/3.nix
++++ b/pkgs/development/libraries/openexr/3.nix
+@@ -20,6 +20,10 @@ stdenv.mkDerivation rec {
+ 
+   outputs = [ "bin" "dev" "out" "doc" ];
+ 
++  patches = [] ++ lib.optionals
++    (builtins.elem (stdenv.hostPlatform.gcc.arch or "") [ "broadwell" "alderlake" "znver2" "znver3" ])
++    [ ./fix_nan_compare.patch ];
++
+   # tests are determined to use /var/tmp on unix
+   postPatch = ''
+     cat <(find . -name tmpDir.h) <(echo src/test/OpenEXRCoreTest/main.cpp) | while read -r f ; do
+diff --git a/pkgs/development/libraries/openexr/fix_nan_compare.patch b/pkgs/development/libraries/openexr/fix_nan_compare.patch
+new file mode 100644
+index 000000000000..90beeed4b139
+--- /dev/null
++++ b/pkgs/development/libraries/openexr/fix_nan_compare.patch
+@@ -0,0 +1,13 @@
++diff --git a/src/test/OpenEXRTest/testOptimizedInterleavePatterns.cpp b/src/test/OpenEXRTest/testOptimizedInterleavePatterns.cpp
++index b1e92cab..0d2bd93f 100644
++--- a/src/test/OpenEXRTest/testOptimizedInterleavePatterns.cpp
+++++ b/src/test/OpenEXRTest/testOptimizedInterleavePatterns.cpp
++@@ -221,7 +221,7 @@ bool compare(const FrameBuffer& asRead,
++                     writtenHalf=half(i.slice().fillValue);
++                 }
++ 
++-                if (writtenHalf.bits()!=readHalf.bits())
+++                if (!(writtenHalf.bits() == readHalf.bits() || (writtenHalf.isNan() && readHalf.isNan())))
++                 {
++                     if (nonfatal)
++                     {
+diff --git a/pkgs/development/libraries/thrift/default.nix b/pkgs/development/libraries/thrift/default.nix
+index fd6b21a94f72..2444f7539d36 100644
+--- a/pkgs/development/libraries/thrift/default.nix
++++ b/pkgs/development/libraries/thrift/default.nix
+@@ -112,7 +112,7 @@ stdenv.mkDerivation rec {
+     "StressTest"
+     "StressTestConcurrent"
+     "StressTestNonBlocking"
+-  ];
++  ] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake") [ "TInterruptTest" ];
+ 
+   doCheck = !static;
+ 
+diff --git a/pkgs/development/libraries/webkitgtk/default.nix b/pkgs/development/libraries/webkitgtk/default.nix
+index 1db2f4ce6d8c..ad2416d19511 100644
+--- a/pkgs/development/libraries/webkitgtk/default.nix
++++ b/pkgs/development/libraries/webkitgtk/default.nix
+@@ -66,6 +66,7 @@
+ , withLibsecret ? true
+ , systemdSupport ? lib.meta.availableOn stdenv.hostPlatform systemd
+ , testers
++, enableUnifiedBuilds ? null
+ }:
+ 
+ stdenv.mkDerivation (finalAttrs: {
+@@ -218,6 +219,8 @@ stdenv.mkDerivation (finalAttrs: {
+     "-DUSE_GTK4=ON"
+   ] ++ lib.optionals (!systemdSupport) [
+     "-DENABLE_JOURNALD_LOG=OFF"
++  ] ++ lib.optionals (enableUnifiedBuilds != null) [
++    "-DENABLE_UNIFIED_BUILDS=${cmakeBool enableUnifiedBuilds}"
+   ];
+ 
+   postPatch = ''
+diff --git a/pkgs/development/python-modules/aiohttp/default.nix b/pkgs/development/python-modules/aiohttp/default.nix
+index e64648eb402d..2d61b4ae29bb 100644
+--- a/pkgs/development/python-modules/aiohttp/default.nix
++++ b/pkgs/development/python-modules/aiohttp/default.nix
+@@ -96,7 +96,10 @@ buildPythonPackage rec {
+   ] ++ lib.optionals stdenv.isDarwin [
+     "test_addresses"  # https://github.com/aio-libs/aiohttp/issues/3572, remove >= v4.0.0
+     "test_close"
+-  ];
++  ]
++  # issue https://github.com/NixOS/nixpkgs/issues/236552
++  ++ lib.optionals (builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "broadwell" "alderlake" ])
++    [ "test_web_sendfile_functional" ];
+ 
+   disabledTestPaths = [
+     "test_proxy_functional.py" # FIXME package proxy.py
+diff --git a/pkgs/development/python-modules/debugpy/default.nix b/pkgs/development/python-modules/debugpy/default.nix
+index 58bdec7ebc61..71353b4b464f 100644
+--- a/pkgs/development/python-modules/debugpy/default.nix
++++ b/pkgs/development/python-modules/debugpy/default.nix
+@@ -116,7 +116,7 @@ buildPythonPackage rec {
+   disabledTests = [
+     # https://github.com/microsoft/debugpy/issues/1241
+     "test_flask_breakpoint_multiproc"
+-  ];
++  ] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or "" == "alderlake") [ "test_attach_pid_client" ];
+ 
+   pythonImportsCheck = [
+     "debugpy"
+diff --git a/pkgs/development/python-modules/hypothesis/default.nix b/pkgs/development/python-modules/hypothesis/default.nix
+index bfa2ca0dc87e..011c8f707ac3 100644
+--- a/pkgs/development/python-modules/hypothesis/default.nix
++++ b/pkgs/development/python-modules/hypothesis/default.nix
+@@ -17,9 +17,10 @@
+ , tzdata
+ # Used to break internal dependency loop.
+ , enableDocumentation ? true
++, stdenv
+ }:
+ 
+-buildPythonPackage rec {
++buildPythonPackage (rec {
+   pname = "hypothesis";
+   version = "6.68.2";
+   outputs = [ "out" ] ++ lib.optional enableDocumentation "doc";
+@@ -94,3 +95,5 @@ buildPythonPackage rec {
+     maintainers = with maintainers; [ SuperSandro2000 ];
+   };
+ }
++// (if (stdenv.hostPlatform.gcc.arch or "" == "alderlake") then
++  { disabledTests = [ "test_initialize_rule_populate_bundle" ]; } else {}))
+diff --git a/pkgs/development/python-modules/influxdb/default.nix b/pkgs/development/python-modules/influxdb/default.nix
+index a44a2e300429..08c99a8dbbf1 100644
+--- a/pkgs/development/python-modules/influxdb/default.nix
++++ b/pkgs/development/python-modules/influxdb/default.nix
+@@ -12,6 +12,7 @@
+ , requests
+ , requests-mock
+ , six
++, stdenv
+ }:
+ 
+ buildPythonPackage rec {
+@@ -50,6 +51,7 @@ buildPythonPackage rec {
+     # Reponse is not empty but `s = '孝'` and the JSON decoder chokes on that
+     "test_query_with_empty_result"
+   ];
++  doCheck = !builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "alderlake" "znver3" ];
+ 
+   pythonImportsCheck = [ "influxdb" ];
+ 
+diff --git a/pkgs/development/python-modules/phonopy/default.nix b/pkgs/development/python-modules/phonopy/default.nix
+index 6345c3848f64..9007c3eec672 100644
+--- a/pkgs/development/python-modules/phonopy/default.nix
++++ b/pkgs/development/python-modules/phonopy/default.nix
+@@ -13,14 +13,14 @@
+ 
+ buildPythonPackage rec {
+   pname = "phonopy";
+-  version = "2.17.1";
++  version = "2.20.0";
+   format = "setuptools";
+ 
+   disabled = pythonOlder "3.7";
+ 
+   src = fetchPypi {
+     inherit pname version;
+-    hash = "sha256-t+1i1S8UVd0s9/Fda0H2kaouDDBVS+x6G40Meb2rLYc=";
++    hash = "sha256-peL50b1u+tBRxt/U2SloRvS9LTeMXEjrF5F3ZWhJmZ4=";
+   };
+ 
+   propagatedBuildInputs = [
+diff --git a/pkgs/development/python-modules/scipy/disable-failed-tests.patch b/pkgs/development/python-modules/scipy/disable-failed-tests.patch
+new file mode 100644
+index 000000000000..8f1a2a5b14e8
+--- /dev/null
++++ b/pkgs/development/python-modules/scipy/disable-failed-tests.patch
+@@ -0,0 +1,79 @@
++diff --color -ur /var/cache/nix/nix-build-python3.10-scipy-1.11.1.drv-0/source/scipy/optimize/tests/test_optimize.py source/scipy/optimize/tests/test_optimize.py
++--- /var/cache/nix/nix-build-python3.10-scipy-1.11.1.drv-0/source/scipy/optimize/tests/test_optimize.py	1980-01-02 08:00:00.000000000 +0800
+++++ source/scipy/optimize/tests/test_optimize.py	2023-08-29 12:30:51.928840728 +0800
++@@ -2804,75 +2804,6 @@
++ eb_data = setup_test_equal_bounds()
++ 
++ 
++-# This test is about handling fixed variables, not the accuracy of the solvers
++-@pytest.mark.xfail_on_32bit("Failures due to floating point issues, not logic")
++-@pytest.mark.parametrize('method', eb_data["methods"])
++-@pytest.mark.parametrize('kwds', eb_data["kwds"])
++-@pytest.mark.parametrize('bound_type', eb_data["bound_types"])
++-@pytest.mark.parametrize('constraints', eb_data["constraints"])
++-@pytest.mark.parametrize('callback', eb_data["callbacks"])
++-def test_equal_bounds(method, kwds, bound_type, constraints, callback):
++-    """
++-    Tests that minimizers still work if (bounds.lb == bounds.ub).any()
++-    gh12502 - Divide by zero in Jacobian numerical differentiation when
++-    equality bounds constraints are used
++-    """
++-    # GH-15051; slightly more skips than necessary; hopefully fixed by GH-14882
++-    if (platform.machine() == 'aarch64' and method == "TNC"
++-            and kwds["jac"] is False and callback is not None):
++-        pytest.skip('Tolerance violation on aarch')
++-
++-    lb, ub = eb_data["lb"], eb_data["ub"]
++-    x0, i_eb = eb_data["x0"], eb_data["i_eb"]
++-
++-    test_constraints, reference_constraints = constraints
++-    if test_constraints and not method == 'SLSQP':
++-        pytest.skip('Only SLSQP supports nonlinear constraints')
++-    # reference constraints always have analytical jacobian
++-    # if test constraints are not the same, we'll need finite differences
++-    fd_needed = (test_constraints != reference_constraints)
++-
++-    bounds = bound_type(lb, ub)  # old- or new-style
++-
++-    kwds.update({"x0": x0, "method": method, "bounds": bounds,
++-                 "constraints": test_constraints, "callback": callback})
++-    res = optimize.minimize(**kwds)
++-
++-    expected = optimize.minimize(optimize.rosen, x0, method=method,
++-                                 jac=optimize.rosen_der, bounds=bounds,
++-                                 constraints=reference_constraints)
++-
++-    # compare the output of a solution with FD vs that of an analytic grad
++-    assert res.success
++-    assert_allclose(res.fun, expected.fun, rtol=1e-6)
++-    assert_allclose(res.x, expected.x, rtol=5e-4)
++-
++-    if fd_needed or kwds['jac'] is False:
++-        expected.jac[i_eb] = np.nan
++-    assert res.jac.shape[0] == 4
++-    assert_allclose(res.jac[i_eb], expected.jac[i_eb], rtol=1e-6)
++-
++-    if not (kwds['jac'] or test_constraints or isinstance(bounds, Bounds)):
++-        # compare the output to an equivalent FD minimization that doesn't
++-        # need factorization
++-        def fun(x):
++-            new_x = np.array([np.nan, 2, np.nan, -1])
++-            new_x[[0, 2]] = x
++-            return optimize.rosen(new_x)
++-
++-        fd_res = optimize.minimize(fun,
++-                                   x0[[0, 2]],
++-                                   method=method,
++-                                   bounds=bounds[::2])
++-        assert_allclose(res.fun, fd_res.fun)
++-        # TODO this test should really be equivalent to factorized version
++-        # above, down to res.nfev. However, testing found that when TNC is
++-        # called with or without a callback the output is different. The two
++-        # should be the same! This indicates that the TNC callback may be
++-        # mutating something when it should't.
++-        assert_allclose(res.x[[0, 2]], fd_res.x, rtol=2e-6)
++-
++-
++ @pytest.mark.parametrize('method', eb_data["methods"])
++ def test_all_bounds_equal(method):
++     # this only tests methods that have parameters factored out when lb==ub
+diff --git a/pkgs/os-specific/linux/firmware/fwupd/default.nix b/pkgs/os-specific/linux/firmware/fwupd/default.nix
+index 6ad4928cd8d0..fe61654a0b14 100644
+--- a/pkgs/os-specific/linux/firmware/fwupd/default.nix
++++ b/pkgs/os-specific/linux/firmware/fwupd/default.nix
+@@ -239,7 +239,8 @@ stdenv.mkDerivation (finalAttrs: {
+   # TODO: wrapGAppsHook wraps efi capsule even though it is not ELF
+   dontWrapGApps = true;
+ 
+-  doCheck = true;
++  doCheck = !(builtins.elem (stdenv.hostPlatform.gcc.arch or "")
++    [ "alderlake" "sandybridge" "silvermont" "znver2" "znver3" ]);
+ 
+   # Environment variables
+ 
+diff --git a/pkgs/servers/nosql/redis/default.nix b/pkgs/servers/nosql/redis/default.nix
+index c530a60cb828..679dec900779 100644
+--- a/pkgs/servers/nosql/redis/default.nix
++++ b/pkgs/servers/nosql/redis/default.nix
+@@ -43,7 +43,7 @@ stdenv.mkDerivation rec {
+   env.NIX_CFLAGS_COMPILE = toString (lib.optionals stdenv.cc.isClang [ "-std=c11" ]);
+ 
+   # darwin currently lacks a pure `pgrep` which is extensively used here
+-  doCheck = !stdenv.isDarwin;
++  doCheck = !stdenv.isDarwin && !(stdenv.hostPlatform.gcc.arch or "" == "alderlake");
+   nativeCheckInputs = [ which tcl ps ] ++ lib.optionals stdenv.hostPlatform.isStatic [ getconf ];
+   checkPhase = ''
+     runHook preCheck
+diff --git a/pkgs/servers/search/meilisearch/default.nix b/pkgs/servers/search/meilisearch/default.nix
+index 9870d743af1b..49db6ebd737a 100644
+--- a/pkgs/servers/search/meilisearch/default.nix
++++ b/pkgs/servers/search/meilisearch/default.nix
+@@ -11,7 +11,7 @@
+ 
+ let version = "1.1.1";
+ in
+-rustPlatform.buildRustPackage {
++rustPlatform.buildRustPackage rec {
+   pname = "meilisearch";
+   inherit version;
+ 
+@@ -27,7 +27,7 @@ rustPlatform.buildRustPackage {
+   ];
+ 
+   cargoLock = {
+-    lockFile = ./Cargo.lock;
++    lockFile = "${src}/Cargo.lock";
+     outputHashes = {
+       "actix-web-static-files-3.0.5" = "sha256-2BN0RzLhdykvN3ceRLkaKwSZtel2DBqZ+uz4Qut+nII=";
+       "heed-0.12.5" = "sha256-atkKiK8rzqji47tJvUzbIXMw8U1uddHkHakPuEUvmFg=";
+diff --git a/pkgs/tools/graphics/vips/default.nix b/pkgs/tools/graphics/vips/default.nix
+index 9c4099783e0c..7669cd16ea12 100644
+--- a/pkgs/tools/graphics/vips/default.nix
++++ b/pkgs/tools/graphics/vips/default.nix
+@@ -39,7 +39,7 @@
+ 
+ stdenv.mkDerivation rec {
+   pname = "vips";
+-  version = "8.14.2";
++  version = "8.14.5";
+ 
+   outputs = [ "bin" "out" "man" "dev" ] ++ lib.optionals (!stdenv.isDarwin) [ "devdoc" ];
+ 
+@@ -47,7 +47,7 @@ stdenv.mkDerivation rec {
+     owner = "libvips";
+     repo = "libvips";
+     rev = "v${version}";
+-    hash = "sha256-QUWZ11t2JEJBdpNuIY2uRiSL/hffRbV0SV5HowxWaME=";
++    hash = "sha256-fG3DTP+3pO7sbqR/H9egJHU3cLKPU4Jad6qxcQ9evNw=";
+     # Remove unicode file names which leads to different checksums on HFS+
+     # vs. other filesystems because of unicode normalisation.
+     postFetch = ''
+diff --git a/pkgs/tools/networking/firefoxpwa/default.nix b/pkgs/tools/networking/firefoxpwa/default.nix
+new file mode 100644
+index 000000000000..31007cd25762
+--- /dev/null
++++ b/pkgs/tools/networking/firefoxpwa/default.nix
+@@ -0,0 +1,100 @@
++{ stdenv
++, rustPlatform
++, fetchFromGitHub
++, openssl
++, symlinkJoin
++, buildFHSUserEnv
++, pkg-config
++, installShellFiles
++, bintools
++, lib
++}:
++let
++  version = "2.7.3";
++  dir = "native";
++  source = fetchFromGitHub {
++    owner = "filips123";
++    repo = "PWAsForFirefox";
++    rev = "v${version}";
++    hash = "sha256-G1szjwQwlidtUaJZb1KdlkSXfgTIM26ZVj4Fn5VEZgQ=";
++    sparseCheckout = [ dir ];
++  };
++  pname = "firefoxpwa";
++
++  unwrapped = rustPlatform.buildRustPackage {
++    inherit version;
++    pname = "${pname}-unwrapped";
++
++    src = "${source}/${dir}";
++    cargoLock = {
++      lockFile = "${unwrapped.src}/Cargo.lock";
++      outputHashes = {
++        "data-url-0.3.0" = "sha256-SDOOwwvZrX4i04NElBJe5NRS9MXCgRVhBz7L4G8B4m8=";
++        "mime-0.4.0-a.0" = "sha256-LjM7LH6rL3moCKxVsA+RUL9lfnvY31IrqHa9pDIAZNE=";
++        "web_app_manifest-0.0.0" = "sha256-G+kRN8AEmAY1TxykhLmgoX8TG8y2lrv7SCRJlNy0QzA=";
++      };
++    };
++
++    nativeBuildInputs = [ pkg-config installShellFiles bintools ];
++    buildInputs = [ openssl ];
++
++    # cannot be postPatch otherwise cargo complains in cargoSetupPostPatchHook
++    # thinks Cargo.lock is out of date
++    # instead upstream did not want to update version field in Cargo.lock
++    # https://github.com/NixOS/nixpkgs/pull/215905#discussion_r1149660722
++    # so we have to do it manually like they do in their GitHub Action
++    # https://github.com/filips123/PWAsForFirefox/blob/master/.github/workflows/native.yaml#L200
++    preConfigure = ''
++      sed -i 's;version = "0.0.0";version = "${version}";' Cargo.toml
++      sed -zi 's;name = "firefoxpwa"\nversion = "0.0.0";name = "firefoxpwa"\nversion = "${version}";' Cargo.lock
++      sed -i $'s;DISTRIBUTION_VERSION = \'0.0.0\';DISTRIBUTION_VERSION = \'${version}\';' userchrome/profile/chrome/pwa/chrome.jsm
++    '';
++
++    FFPWA_EXECUTABLES = ""; # .desktop entries generated without any store path references
++    FFPWA_SYSDATA = "${placeholder "out"}/share/firefoxpwa";
++    completions = "target/${stdenv.targetPlatform.config}/release/completions";
++
++    postInstall = ''
++      mv $out/bin/firefoxpwa $out/bin/.firefoxpwa-wrapped
++
++      # Manifest
++      sed -i "s!/usr/libexec!$out/bin!" manifests/linux.json
++      install -Dm644 manifests/linux.json $out/lib/mozilla/native-messaging-hosts/firefoxpwa.json
++
++      installShellCompletion --cmd firefoxpwa \
++        --bash $completions/firefoxpwa.bash \
++        --fish $completions/firefoxpwa.fish \
++        --zsh $completions/_firefoxpwa
++
++      # UserChrome
++      mkdir -p $out/share/firefoxpwa/userchrome/
++      cp -r userchrome/* "$out/share/firefoxpwa/userchrome"
++    '';
++  };
++
++  # firefoxpwa wants to run binaries downloaded into users' home dir
++  fhs = buildFHSUserEnv {
++    name = pname;
++    runScript = "${unwrapped}/bin/.firefoxpwa-wrapped";
++    targetPkgs = pkgs: with pkgs;[
++      dbus-glib
++      gtk3
++      alsaLib
++      xorg.libXtst
++      xorg.libX11
++    ];
++  };
++in
++(symlinkJoin {
++  name = "${pname}-${version}";
++  paths = [ fhs unwrapped ];
++}) // {
++  inherit unwrapped fhs pname version;
++  meta = with lib;{
++    description = "Tool to install, manage and use Progressive Web Apps (PWAs) in Mozilla Firefox";
++    homepage = "https://github.com/filips123/PWAsForFirefox";
++    maintainers = with maintainers;[ pasqui23 ];
++    license = licenses.mpl20;
++    platform = [ platforms.unix ];
++  };
++}
+\ No newline at end of file
+diff --git a/pkgs/tools/networking/frp/default.nix b/pkgs/tools/networking/frp/default.nix
+index 6b09adea63b6..a3817cc919c0 100644
+--- a/pkgs/tools/networking/frp/default.nix
++++ b/pkgs/tools/networking/frp/default.nix
+@@ -2,16 +2,16 @@
+ 
+ buildGoModule rec {
+   pname = "frp";
+-  version = "0.48.0";
++  version = "0.52.0";
+ 
+   src = fetchFromGitHub {
+     owner = "fatedier";
+     repo = pname;
+     rev = "v${version}";
+-    sha256 = "sha256-e9Qof+HxSJHzAUbLb+w5oWPTOslTPxnC8BVAmtMQGlE=";
++    sha256 = "sha256-8cpNKXEQI+3VaP1qwXTd5L9y0EKR2LfxrCU5i+K2ptY=";
+   };
+ 
+-  vendorHash = "sha256-DhzirX+AGe8dE62M0hiE5SlWK8HqhNN0MMk9i2Ntrs8=";
++  vendorHash = "sha256-4+qzaSdku6qSqF0eT45sJ1zxw/zXYhxhNgq3WwrBIY0=";
+ 
+   doCheck = false;
+ 
+diff --git a/pkgs/tools/typesetting/tex/texlive/tlpdb.nix b/pkgs/tools/typesetting/tex/texlive/tlpdb.nix
+index 2d932c76d1b2..db5d8aa9a9e3 100644
+--- a/pkgs/tools/typesetting/tex/texlive/tlpdb.nix
++++ b/pkgs/tools/typesetting/tex/texlive/tlpdb.nix
+@@ -6459,7 +6459,6 @@
+     "chicago-annote"
+     "chicagoa"
+     "chscite"
+-    "citation-style-language"
+     "citeall"
+     "citeref"
+     "collection-latex"
+diff --git a/pkgs/top-level/all-packages.nix b/pkgs/top-level/all-packages.nix
+index d2706fde43ca..e775a47333a6 100644
+--- a/pkgs/top-level/all-packages.nix
++++ b/pkgs/top-level/all-packages.nix
+@@ -19073,6 +19073,8 @@ with pkgs;
+ 
+   puppeteer-cli = callPackage ../tools/graphics/puppeteer-cli { };
+ 
++  firefoxpwa = callPackage ../tools/networking/firefoxpwa { };
++
+   pyrseas = callPackage ../development/tools/database/pyrseas { };
+ 
+   pycritty = with python3Packages; toPythonApplication pycritty;
