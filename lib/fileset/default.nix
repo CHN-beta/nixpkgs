@@ -11,6 +11,10 @@
   Basics:
   - [Implicit coercion from paths to file sets](#sec-fileset-path-coercion)
 
+  - [`lib.fileset.maybeMissing`](#function-library-lib.fileset.maybeMissing):
+
+    Create a file set from a path that may be missing.
+
   - [`lib.fileset.trace`](#function-library-lib.fileset.trace)/[`lib.fileset.traceVal`](#function-library-lib.fileset.trace):
 
     Pretty-print file sets for debugging.
@@ -105,6 +109,7 @@ let
     _difference
     _mirrorStorePath
     _fetchGitSubmodulesMinver
+    _emptyWithoutBase
     ;
 
   inherit (builtins)
@@ -147,6 +152,32 @@ let
     ;
 
 in {
+
+  /*
+    Create a file set from a path that may or may not exist:
+    - If the path does exist, the path is [coerced to a file set](#sec-fileset-path-coercion).
+    - If the path does not exist, a file set containing no files is returned.
+
+    Type:
+      maybeMissing :: Path -> FileSet
+
+    Example:
+      # All files in the current directory, but excluding main.o if it exists
+      difference ./. (maybeMissing ./main.o)
+  */
+  maybeMissing =
+    path:
+    if ! isPath path then
+      if isStringLike path then
+        throw ''
+          lib.fileset.maybeMissing: Argument ("${toString path}") is a string-like value, but it should be a path instead.''
+      else
+        throw ''
+          lib.fileset.maybeMissing: Argument is of type ${typeOf path}, but it should be a path instead.''
+    else if ! pathExists path then
+      _emptyWithoutBase
+    else
+      _singleton path;
 
   /*
     Incrementally evaluate and trace a file set in a pretty way.
@@ -573,6 +604,7 @@ in {
         ({
           name :: String,
           type :: String,
+          hasExt :: String -> Bool,
           ...
         } -> Bool)
         -> Path
@@ -583,7 +615,7 @@ in {
       fileFilter (file: file.name == "default.nix") ./.
 
       # Include all non-Nix files from the current directory
-      fileFilter (file: ! hasSuffix ".nix" file.name) ./.
+      fileFilter (file: ! file.hasExt "nix") ./.
 
       # Include all files that start with a "." in the current directory
       fileFilter (file: hasPrefix "." file.name) ./.
@@ -602,6 +634,12 @@ in {
 
       - `type` (String, one of `"regular"`, `"symlink"` or `"unknown"`): The type of the file.
         This matches result of calling [`builtins.readFileType`](https://nixos.org/manual/nix/stable/language/builtins.html#builtins-readFileType) on the file's path.
+
+      - `hasExt` (String -> Bool): Whether the file has a certain file extension.
+        `hasExt ext` is true only if `hasSuffix ".${ext}" name`.
+
+        This also means that e.g. for a file with name `.gitignore`,
+        `hasExt "gitignore"` is true.
 
       Other attributes may be added in the future.
     */
