@@ -222,7 +222,9 @@ buildPythonPackage rec {
     "test_binops"
     # These tests are unreliable on aarch64-darwin. See https://github.com/pandas-dev/pandas/issues/38921.
     "test_rolling"
-  ] ++ lib.optional stdenv.is32bit [
+  ] ++ lib.optional
+    (stdenv.is32bit || (builtins.elem stdenv.hostPlatform.gcc.arch or null [ "broadwell" "alderlake" "znver3" ]))
+  [
     # https://github.com/pandas-dev/pandas/issues/37398
     "test_rolling_var_numerical_issues"
   ];
