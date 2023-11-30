@@ -30,9 +30,6 @@
 , fmaSupport   ? stdenv.hostPlatform.fmaSupport
 # Darwin deps
 , Foundation, Security, cctools, llvmPackages_11
-
-, enableCcache ? config.enableCcache
-, ccacheStdenv ? null
 }:
 
 let
@@ -52,11 +49,10 @@ let
   # clang 7 fails to emit a symbol for
   # __ZN4llvm11SmallPtrSetIPKNS_10AllocaInstELj8EED1Ev in any of the
   # translation units, so the build fails at link time
-  stdenvNoCcache =
+  stdenv =
     if cudaSupport then cudaPackages.backendStdenv
     else if originalStdenv.isDarwin then llvmPackages_11.stdenv
     else originalStdenv;
-  stdenv = if enableCcache then ccacheStdenv.override { stdenv = stdenvNoCcache; } else stdenvNoCcache;
   inherit (cudaPackages) cudatoolkit nccl;
   # use compatible cuDNN (https://www.tensorflow.org/install/source#gpu)
   # cudaPackages.cudnn led to this:
