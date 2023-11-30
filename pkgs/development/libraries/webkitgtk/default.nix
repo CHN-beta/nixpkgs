@@ -66,7 +66,14 @@
 , withLibsecret ? true
 , systemdSupport ? lib.meta.availableOn stdenv.hostPlatform systemd
 , testers
+
+, config
+, enableCcache ? config.enableCcache
+, ccachStdenv ? null
 }:
+
+let originalStdenv = stdenv; in
+let stdenv = if enableCcache then ccachStdenv.override { stdenv = originalStdenv; } else originalStdenv; in
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "webkitgtk";
