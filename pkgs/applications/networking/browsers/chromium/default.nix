@@ -21,8 +21,8 @@
 , pkgsBuildTarget
 , pkgsBuildBuild
 , pkgs
-, enableCcache ? false
-, ccacheStdenv ? pkgs.stdenv
+, enableCcache ? config.enableCcache
+, ccacheStdenv ? null
 }:
 
 let
