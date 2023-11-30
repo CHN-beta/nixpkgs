@@ -69,11 +69,11 @@
 
 , config
 , enableCcache ? config.enableCcache
-, ccachStdenv ? null
+, ccacheStdenv ? null
 }:
 
 let originalStdenv = stdenv; in
-let stdenv = if enableCcache then ccachStdenv.override { stdenv = originalStdenv; } else originalStdenv; in
+let stdenv = if enableCcache then ccacheStdenv.override { stdenv = originalStdenv; } else originalStdenv; in
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "webkitgtk";
