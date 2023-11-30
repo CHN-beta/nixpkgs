@@ -21,6 +21,8 @@
 , pkgsBuildTarget
 , pkgsBuildBuild
 , pkgs
+, ccache ? false
+, ccacheStdenv ? pkgs.stdenv
 }:
 
 let
@@ -28,7 +30,8 @@ let
   # via `pkgsFooBar`, so a string (attrname) is the only way to have
   # a single point of control over the LLVM version used.
   llvmPackages_attrName = "llvmPackages_16";
-  stdenv = pkgs.${llvmPackages_attrName}.stdenv;
+  stdenv = if ccache then ccacheStdenv.override { inherit (pkgs.${llvmPackages_attrName}) stdenv; }
+    else pkgs.${llvmPackages_attrName}.stdenv;
 
   # Helper functions for changes that depend on specific versions:
   warnObsoleteVersionConditional = min-version: result:
