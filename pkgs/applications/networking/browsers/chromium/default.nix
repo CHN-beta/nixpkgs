@@ -54,7 +54,7 @@ let
     inherit stdenv llvmPackages_attrName upstream-info;
 
     mkChromiumDerivation = callPackage ./common.nix ({
-      inherit channel chromiumVersionAtLeast versionRange;
+      inherit channel chromiumVersionAtLeast versionRange enableCcache ccacheStdenv;
       inherit proprietaryCodecs
               cupsSupport pulseSupport ungoogled;
       gnChromium = buildPackages.gn.overrideAttrs (oldAttrs: {
