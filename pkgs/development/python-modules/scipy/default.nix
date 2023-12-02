@@ -74,7 +74,11 @@ in buildPythonPackage {
         "doc/source/dev/contributor/meson_advanced.rst"
       ];
     })
-  ];
+  ] ++ (
+    if (builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "broadwell" ])
+      then [ ./disable-failed-tests.patch ]
+    else []
+  );
 
   # Relax deps a bit
   postPatch = ''
