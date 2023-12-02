@@ -19880,7 +19880,7 @@ with pkgs;
 
   rizinPlugins = recurseIntoAttrs rizin.plugins;
 
-  cutter = libsForQt5.callPackage ../development/tools/analysis/rizin/cutter.nix { };
+  cutter = qt6.callPackage ../development/tools/analysis/rizin/cutter.nix { };
 
   cutterPlugins = recurseIntoAttrs cutter.plugins;
 
@@ -20091,7 +20091,9 @@ with pkgs;
 
   snowman = qt5.callPackage ../development/tools/analysis/snowman { };
 
-  sparse = callPackage ../development/tools/analysis/sparse { };
+  sparse = callPackage ../development/tools/analysis/sparse {
+    llvm = llvm_14;
+  };
 
   speedtest-cli = with python3Packages; toPythonApplication speedtest-cli;
 
@@ -21732,7 +21734,10 @@ with pkgs;
   gnatcoll-iconv = callPackage ../development/libraries/ada/gnatcoll/bindings.nix { component = "iconv"; };
   gnatcoll-lzma = callPackage ../development/libraries/ada/gnatcoll/bindings.nix { component = "lzma"; };
   gnatcoll-omp = callPackage ../development/libraries/ada/gnatcoll/bindings.nix { component = "omp"; };
-  gnatcoll-python3 = callPackage ../development/libraries/ada/gnatcoll/bindings.nix { component = "python3"; };
+  gnatcoll-python3 = callPackage ../development/libraries/ada/gnatcoll/bindings.nix {
+    component = "python3";
+    python3 = python39;
+  };
   gnatcoll-readline = callPackage ../development/libraries/ada/gnatcoll/bindings.nix { component = "readline"; };
   gnatcoll-syslog = callPackage ../development/libraries/ada/gnatcoll/bindings.nix { component = "syslog"; };
   gnatcoll-zlib = callPackage ../development/libraries/ada/gnatcoll/bindings.nix { component = "zlib"; };
@@ -28987,6 +28992,9 @@ with pkgs;
 
   zenmonitor = callPackage ../os-specific/linux/zenmonitor { };
 
+  zfs_2_1 = callPackage ../os-specific/linux/zfs/2_1.nix {
+    configFile = "user";
+  };
   zfsStable = callPackage ../os-specific/linux/zfs/stable.nix {
     configFile = "user";
   };
@@ -31981,10 +31989,6 @@ with pkgs;
 
   fractal = callPackage ../applications/networking/instant-messengers/fractal { };
 
-  fractal-next = callPackage ../applications/networking/instant-messengers/fractal-next {
-    inherit (gst_all_1) gstreamer gst-plugins-base gst-plugins-bad;
-  };
-
   fragments = callPackage ../applications/networking/p2p/fragments { };
 
   freecad = libsForQt5.callPackage ../applications/graphics/freecad {
@@ -34033,7 +34037,7 @@ with pkgs;
 
   n8n = callPackage ../applications/networking/n8n { };
 
-  neomutt = callPackage ../applications/networking/mailreaders/neomutt { };
+  neomutt = darwin.apple_sdk_11_0.callPackage ../applications/networking/mailreaders/neomutt { };
 
   neosay = callPackage ../applications/networking/instant-messengers/neosay { };
 
@@ -38475,7 +38479,7 @@ with pkgs;
   teetertorture = callPackage ../games/teetertorture { };
 
   teeworlds = callPackage ../games/teeworlds {
-    inherit (darwin.apple_sdk.frameworks) Carbon Cocoa;
+    inherit (darwin.apple_sdk.frameworks) Cocoa;
   };
   teeworlds-server = teeworlds.override { buildClient = false; };
 
