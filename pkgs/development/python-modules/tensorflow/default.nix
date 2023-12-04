@@ -30,6 +30,7 @@
 , fmaSupport   ? stdenv.hostPlatform.fmaSupport
 # Darwin deps
 , Foundation, Security, cctools, llvmPackages_11
+, customBazelBuild ? null
 }:
 
 let
@@ -201,7 +202,8 @@ let
       runHook postInstall
     '';
   };
-  bazel-build = if stdenv.isDarwin then _bazel-build.overrideAttrs (prev: {
+  bazel-build = if customBazelBuild != null then customBazelBuild else
+    if stdenv.isDarwin then _bazel-build.overrideAttrs (prev: {
     bazelFlags = prev.bazelFlags ++ [
       "--override_repository=rules_cc=${rules_cc_darwin_patched}"
       "--override_repository=llvm-raw=${llvm-raw_darwin_patched}"
@@ -593,7 +595,7 @@ in buildPythonPackage {
   # Regression test for #77626 removed because not more `tensorflow.contrib`.
 
   passthru = {
-    inherit cudaPackages;
+    inherit cudaPackages bazel-build;
     deps = bazel-build.deps;
     libtensorflow = bazel-build.out;
   };
