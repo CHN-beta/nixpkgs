@@ -57,9 +57,6 @@
 , libgcrypt ? null # cupsSupport
 , systemdSupport ? lib.meta.availableOn stdenv.hostPlatform systemd
 , systemd
-
-, enableCcache
-, ccacheStdenv
 }:
 
 buildFun:
@@ -127,7 +124,7 @@ let
   # There currently isn't a (much) more concise way to get a stdenv
   # that uses lld as its linker without bootstrapping pkgsLLVM; see
   # https://github.com/NixOS/nixpkgs/issues/142901
-  buildPlatformLlvmStdenvNoCcache =
+  buildPlatformLlvmStdenv =
     let
       llvmPackages = pkgsBuildBuild.${llvmPackages_attrName};
     in
@@ -135,8 +132,6 @@ let
         (llvmPackages.stdenv.cc.override {
           inherit (llvmPackages) bintools;
         });
-  buildPlatformLlvmStdenv = if enableCcache then ccacheStdenv.override { stdenv = buildPlatformLlvmStdenvNoCcache; }
-    else buildPlatformLlvmStdenvNoCcache;
 
   chromiumRosettaStone = {
     cpu = platform:
@@ -426,7 +421,7 @@ let
       rtc_use_pipewire = true;
       # Disable PGO because the profile data requires a newer compiler version (LLVM 14 isn't sufficient):
       chrome_pgo_phase = 0;
-      clang_base_path = "${buildPlatformLlvmStdenv.cc}";
+      clang_base_path = "${pkgsBuildTarget.${llvmPackages_attrName}.stdenv.cc}";
       use_qt = false;
       # To fix the build as we don't provide libffi_pic.a
       # (ld.lld: error: unable to find library -l:libffi_pic.a):
