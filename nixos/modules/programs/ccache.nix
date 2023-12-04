@@ -63,7 +63,7 @@ in {
               export CCACHE_DIR="${cfg.cacheDir}"
               export CCACHE_UMASK=007
               export CCACHE_MAXSIZE=300G
-              CCACHE_SLOPPINESS=random_seed
+              CCACHE_SLOPPINESS=random_seed,time_macros
               if [ ! -d "$CCACHE_DIR" ]; then
                 echo "====="
                 echo "Directory '$CCACHE_DIR' does not exist"
