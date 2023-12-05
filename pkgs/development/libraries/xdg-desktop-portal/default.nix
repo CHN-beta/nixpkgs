@@ -72,7 +72,7 @@ stdenv.mkDerivation (finalAttrs: {
     pkg-config
     wrapGAppsHook
     xmlto
-  ];
+  ] ++ (if stdenv.hostPlatform.gcc.arch or null != null then finalAttrs.nativeCheckInputs else []);
 
   buildInputs = [
     flatpak
@@ -112,7 +112,7 @@ stdenv.mkDerivation (finalAttrs: {
     "-Dgeoclue=disabled"
   ];
 
-  doCheck = true;
+  doCheck = stdenv.hostPlatform.gcc.arch or null == null;
 
   preCheck = ''
     # For test_trash_file
