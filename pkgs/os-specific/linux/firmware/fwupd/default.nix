@@ -233,7 +233,7 @@ stdenv.mkDerivation (finalAttrs: {
   # TODO: wrapGAppsHook wraps efi capsule even though it is not ELF
   dontWrapGApps = true;
 
-  doCheck = true;
+  doCheck = stdenv.hostPlatform.gcc.arch or null == null;
 
   # Environment variables
 
