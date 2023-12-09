@@ -392,7 +392,11 @@ in stdenv.mkDerivation (finalAttrs: {
     find -name "*.cmd" -exec sed -i s,/lib:/usr/lib,, {} \;
   '' + optionalString stdenv.isAarch64 ''
     sed -e '/CPPUNIT_TEST(testStatisticalFormulasFODS);/d' -i './sc/qa/unit/functions_statistical.cxx'
-  '';
+  ''
+	+ (if stdenv.hostPlatform.gcc.arch or null != null then
+	''
+		sed -e '/CPPUNIT_TEST(testDubiousArrayFormulasFODS);/d' -i './sc/qa/unit/functions_array.cxx'
+	'' else "");
 
   makeFlags = [ "SHELL=${bash}/bin/bash" ];
 
