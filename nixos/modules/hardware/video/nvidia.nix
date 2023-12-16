@@ -546,7 +546,7 @@ in {
 
           # If requested enable modesetting via kernel parameter.
           kernelParams =
-            lib.optional (offloadCfg.enable || cfg.modesetting.enable) "nvidia-drm.modeset=1"
+            lib.optional cfg.modesetting.enable "nvidia-drm.modeset=1"
             ++ lib.optional cfg.powerManagement.enable "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
             ++ lib.optional cfg.open "nvidia.NVreg_OpenRmEnableUnsupportedGpus=1"
             ++ lib.optional (config.boot.kernelPackages.kernel.kernelAtLeast "6.2" && !ibtSupport) "ibt=off";
