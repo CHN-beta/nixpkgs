@@ -86,4 +86,6 @@ buildPythonPackage rec {
     license = licenses.mit;
     maintainers = with maintainers; [ fab ];
   };
+
+  enableParallelBuilding = false;
 }
