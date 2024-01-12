@@ -74,8 +74,7 @@ in buildPythonPackage rec {
   ++ lib.optionals python.hasDistutilsCxxPatch [
     ./numpy-distutils-C++.patch
   ]
-  ++ (if (builtins.elem (stdenv.hostPlatform.gcc.arch or "") [ "broadwell" "alderlake" "znver2" "znver3" ])
-    then [ ./disable-failed-test.patch ] else []);
+  ++ (if (stdenv.hostPlatform.gcc.arch or null) != null then [ ./disable-failed-test.patch ] else []);
 
   postPatch = ''
     # fails with multiple errors because we are not using the pinned setuptools version
