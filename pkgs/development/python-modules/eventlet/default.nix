@@ -41,7 +41,7 @@ buildPythonPackage rec {
 
   # libredirect is not available on darwin
   # tests hang on pypy indefinitely
-  doCheck = !stdenv.isDarwin && !isPyPy && stdenv.hostPlatform.gcc.arch or null != null;
+  doCheck = !stdenv.isDarwin && !isPyPy && stdenv.hostPlatform.gcc.arch or null == null;
 
   preCheck = lib.optionalString doCheck ''
     echo "nameserver 127.0.0.1" > resolv.conf
