@@ -116,6 +116,8 @@ buildPythonPackage rec {
   ] ++ lib.optionals (stdenv.hostPlatform.isi686) [
     "test_dump_option"
     "test_type1mm_inputs"
+  ] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or null != null) [
+    "test_alt_missing_glyph"
   ];
 
   passthru.tests = {
