@@ -75,9 +75,7 @@ in buildPythonPackage {
       ];
     })
   ] ++ (
-    if (builtins.elem stdenv.hostPlatform.gcc.arch or "" [ "broadwell" ])
-      then [ ./disable-failed-tests.patch ]
-    else []
+    if stdenv.hostPlatform.gcc.arch or null != null then [ ./disable-failed-tests.patch ] else []
   );
 
   # Relax deps a bit
