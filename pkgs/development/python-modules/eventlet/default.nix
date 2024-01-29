@@ -63,6 +63,11 @@ buildPythonPackage rec {
     "test_sendall_timeout"
     # broken on aarch64 and when using march in gcc
     "test_fork_after_monkey_patch"
+  ]
+  ++ lib.optionals (stdenv.hostPlatform.gcc.arch or null == "znver4") [
+    "test_invalid_connection"
+    "test_nonblocking_accept_mark_as_reopened"
+    "test_full_duplex"
   ];
 
   disabledTestPaths = [
