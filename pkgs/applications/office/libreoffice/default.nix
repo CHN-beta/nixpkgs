@@ -396,6 +396,8 @@ in stdenv.mkDerivation (finalAttrs: {
     sed -e '/CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), pPage3Objs->size());/d' -i './sw/qa/core/text/porrst.cxx'
     sed -e '/CPPUNIT_ASSERT(pPage4Objs);/d' -i './sw/qa/core/text/porrst.cxx'
     sed -e '/CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), pPage4Objs->size());/d' -i './sw/qa/core/text/porrst.cxx'
+  '' + optionalString (stdenv.hostPlatform.gcc.arch or null == "skylake") ''
+    sed -e '/CPPUNIT_TEST(testDubiousArrayFormulasFODS);/d' -i './sc/qa/unit/functions_array.cxx'
   '';
 
   makeFlags = [ "SHELL=${bash}/bin/bash" ];

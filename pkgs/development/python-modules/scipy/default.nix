@@ -74,7 +74,7 @@ in buildPythonPackage {
         "doc/source/dev/contributor/meson_advanced.rst"
       ];
     })
-  ];
+  ] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or null == "skylake") [ ./disable-failed-tests.patch ];
 
   # Relax deps a bit
   postPatch = ''

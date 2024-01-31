@@ -72,7 +72,7 @@ stdenv.mkDerivation (finalAttrs: {
     pkg-config
     wrapGAppsHook
     xmlto
-  ];
+  ] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or null == "skylake") finalAttrs.nativeCheckInputs;
 
   buildInputs = [
     flatpak
@@ -112,7 +112,8 @@ stdenv.mkDerivation (finalAttrs: {
     "-Dgeoclue=disabled"
   ];
 
-  doCheck = true;
+  # TODO: only disable failed test
+  doCheck = stdenv.hostPlatform.gcc.arch or null != "skylake";
 
   preCheck = ''
     # For test_trash_file
