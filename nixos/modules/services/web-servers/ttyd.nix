@@ -20,7 +20,8 @@ let
          ++ optionals cfg.enableSSL [ "--ssl-cert" cfg.certFile
                                       "--ssl-key" cfg.keyFile
                                       "--ssl-ca" cfg.caFile ]
-         ++ [ "--debug" (toString cfg.logLevel) ];
+         ++ [ "--debug" (toString cfg.logLevel) ]
+         ++ [ "--writable" ];
 
 in
 
