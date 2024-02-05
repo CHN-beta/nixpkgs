@@ -33,6 +33,7 @@ stdenv.mkDerivation rec {
     ./fix-memset-detection.patch
     # Implicit declaration of `closedir` and `opendir` cause dirent detection to fail with clang 16.
     ./fix-implicit-declarations.patch
+    ./fix-utf8-buffer-overflow.patch
   ] ++ lib.optionals (enableNLS && !stdenv.isCygwin) [ ./natspec-gentoo.patch.bz2 ];
 
   buildInputs = lib.optional enableNLS libnatspec
