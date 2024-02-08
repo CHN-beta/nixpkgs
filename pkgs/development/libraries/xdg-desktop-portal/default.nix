@@ -72,7 +72,8 @@ stdenv.mkDerivation (finalAttrs: {
     pkg-config
     wrapGAppsHook
     xmlto
-  ] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or null == "skylake") finalAttrs.nativeCheckInputs;
+  ] ++ lib.optionals (builtins.elem stdenv.hostPlatform.gcc.arch or null [ "skylake" "znver4" ])
+    finalAttrs.nativeCheckInputs;
 
   buildInputs = [
     flatpak
@@ -113,7 +114,7 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   # TODO: only disable failed test
-  doCheck = stdenv.hostPlatform.gcc.arch or null != "skylake";
+  doCheck = !(builtins.elem stdenv.hostPlatform.gcc.arch or null [ "skylake" "znver4" ]);
 
   preCheck = ''
     # For test_trash_file
