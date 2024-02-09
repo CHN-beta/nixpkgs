@@ -64,11 +64,13 @@ buildPythonPackage rec {
     # broken on aarch64 and when using march in gcc
     "test_fork_after_monkey_patch"
   ]
-  ++ lib.optionals (builtins.elem stdenv.hostPlatform.gcc.arch or null [ "skylake" "broadwell" "znver4" ]) [
-    "test_invalid_connection"
-    "test_nonblocking_accept_mark_as_reopened"
-    "test_full_duplex"
-  ];
+  ++ lib.optionals
+    (builtins.elem stdenv.hostPlatform.gcc.arch or null [ "sandybridge" "silvermont" "broadwell" "skylake" "znver4" ])
+    [
+      "test_invalid_connection"
+      "test_nonblocking_accept_mark_as_reopened"
+      "test_full_duplex"
+    ];
 
   disabledTestPaths = [
     # Tests are out-dated
