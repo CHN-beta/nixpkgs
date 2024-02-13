@@ -21329,7 +21329,10 @@ with pkgs;
 
   flatcc = callPackage ../development/libraries/flatcc { };
 
-  flint = callPackage ../development/libraries/flint { };
+  flint = callPackage ../development/libraries/flint {
+    blas = blas.override { blasProvider = openblas; };
+    lapack = lapack.override { lapackProvider = openblas; };
+  };
 
   flite = callPackage ../development/libraries/flite { };
 
