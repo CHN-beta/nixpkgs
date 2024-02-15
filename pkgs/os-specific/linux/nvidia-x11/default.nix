@@ -16,6 +16,12 @@ let
   selectHighestVersion = a: b: if lib.versionOlder a.version b.version
     then b
     else a;
+
+  # https://forums.developer.nvidia.com/t/linux-6-7-3-545-29-06-550-40-07-error-modpost-gpl-incompatible-module-nvidia-ko-uses-gpl-only-symbol-rcu-read-lock/280908/19
+  rcu_patch = fetchpatch {
+    url = "https://github.com/gentoo/gentoo/raw/c64caf53/x11-drivers/nvidia-drivers/files/nvidia-drivers-470.223.02-gpl-pfn_valid.patch";
+    hash = "sha256-eZiQQp2S/asE7MfGvfe6dA/kdCvek9SYa/FFGp24dVg=";
+  };
 in
 rec {
   mkDriver = generic;
@@ -36,15 +42,16 @@ rec {
   };
 
   latest = selectHighestVersion production (generic {
-    version = "545.29.02";
-    sha256_64bit = "sha256-RncPlaSjhvBFUCOzWdXSE3PAfRPCIrWAXyJMdLPKuIU=";
-    sha256_aarch64 = "sha256-Y2RDOuDtiIclr06gmLrPDfE5VFmFamXxiIIKtKAewro=";
-    openSha256 = "sha256-PukpOBtG5KvZKWYfJHVQO6SuToJUd/rkjpOlEi8pSmk=";
-    settingsSha256 = "sha256-zj173HCZJaxAbVV/A2sbJ9IPdT1+3yrwyxD+AQdkSD8=";
-    persistencedSha256 = "sha256-mmMi2pfwzI1WYOffMVdD0N1HfbswTGg7o57x9/IiyVU=";
+    version = "545.29.06";
+    sha256_64bit = "sha256-grxVZ2rdQ0FsFG5wxiTI3GrxbMBMcjhoDFajDgBFsXs=";
+    sha256_aarch64 = "sha256-o6ZSjM4gHcotFe+nhFTePPlXm0+RFf64dSIDt+RmeeQ=";
+    openSha256 = "sha256-h4CxaU7EYvBYVbbdjiixBhKf096LyatU6/V6CeY9NKE=";
+    settingsSha256 = "sha256-YBaKpRQWSdXG8Usev8s3GYHCPqL8PpJeF6gpa2droWY=";
+    persistencedSha256 = "sha256-AiYrrOgMagIixu3Ss2rePdoL24CKORFvzgZY3jlNbwM=";
 
-    patchFlags = [ "-p1" "-d" "kernel" ];
-    patches = [];
+    patches = [ rcu_patch ];
+
+    brokenOpen = kernel.kernelAtLeast "6.7";
   });
 
   beta = selectHighestVersion latest (generic {
@@ -79,6 +86,8 @@ rec {
     useSettings = false;
     usePersistenced = false;
     useFabricmanager = true;
+
+    patches = [ rcu_patch ];
   };
 
   # Update note:
@@ -93,8 +102,7 @@ rec {
     settingsSha256 = "sha256-r6DuIH/rnsCm/y51iRgPNi5/kz+EFMVABREdTjBneZ0=";
     persistencedSha256 = "sha256-e71fpPBBv8S/aoeXxBXkzKy5bsMMbv8y024cSLc8DYc=";
 
-    patchFlags = [ "-p1" "-d" "kernel" ];
-    patches = [];
+    patches = [ rcu_patch ];
   };
 
   # Last one supporting x86
