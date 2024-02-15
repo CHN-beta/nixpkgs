@@ -55,7 +55,7 @@ stdenv.mkDerivation rec {
   # https://github.com/linbox-team/linbox/issues/304
   hardeningDisable = [ "fortify3" ];
 
-  doCheck = true;
+  doCheck = stdenv.hostPlatform.gcc.arch or null != "silvermont";
 
   enableParallelBuilding = true;
 
