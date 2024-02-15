@@ -54,7 +54,7 @@ in
       };
 
       port = mkOption {
-        type = types.port;
+        type = types.oneOf [ types.port types.nonEmptyStr ];
         default = 3389;
         description = lib.mdDoc ''
           Specifies on which port the xrdp daemon listens.
@@ -111,6 +111,12 @@ in
 
   config = mkIf cfg.enable {
 
+    assertions =
+    [{
+      assertion = cfg.openFirewall -> (builtins.typeOf cfg.port == "int");
+      message = "xrdp.openFirewall is true, but xrdp.port is not an integer";
+    }];
+
     networking.firewall.allowedTCPPorts = mkIf cfg.openFirewall [ cfg.port ];
 
     # xrdp can run X11 program even if "services.xserver.enable = false"
@@ -155,7 +161,8 @@ in
           User = "xrdp";
           Group = "xrdp";
           PermissionsStartOnly = true;
-          ExecStart = "${cfg.package}/bin/xrdp --nodaemon --port ${toString cfg.port} --config ${cfg.confDir}/xrdp.ini";
+          ExecStart = "${cfg.package}/bin/xrdp --nodaemon --port '${toString cfg.port}' "
+            + "--config ${cfg.confDir}/xrdp.ini";
         };
       };
 
