@@ -103,7 +103,7 @@ stdenv.mkDerivation (finalAttrs: {
   # is compiled and compressed, which hides the store path.
   postFixup = "echo ${which} > $out/nix-support/undetected-runtime-dependencies";
 
-  doCheck = true;
+  doCheck = blas.implementation != "amd-blis";
   preCheck = "export HOME=$TMPDIR; export TZ=CET; bin/Rscript -e 'sessionInfo()'";
 
   enableParallelBuilding = true;
