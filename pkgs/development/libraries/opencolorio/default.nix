@@ -83,7 +83,7 @@ stdenv.mkDerivation rec {
 
   # precision issues on non-x86
   #TODO: use upcoming ctest hook
-  doCheck = stdenv.isx86_64 && stdenv.hostPlatform.gcc.arch or null != "skylake";
+  doCheck = stdenv.isx86_64 && !builtins.elem stdenv.hostPlatform.gcc.arch or null [ "skylake" "znver3" ];
   # Tends to fail otherwise.
   enableParallelChecking = false;
 

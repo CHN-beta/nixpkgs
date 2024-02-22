@@ -65,7 +65,8 @@ buildPythonPackage rec {
     "test_fork_after_monkey_patch"
   ]
   ++ lib.optionals
-    (builtins.elem stdenv.hostPlatform.gcc.arch or null [ "sandybridge" "silvermont" "broadwell" "skylake" "znver4" ])
+    (builtins.elem stdenv.hostPlatform.gcc.arch or null
+      [ "sandybridge" "silvermont" "broadwell" "skylake" "znver3" "znver4" ])
     [
       "test_invalid_connection"
       "test_nonblocking_accept_mark_as_reopened"

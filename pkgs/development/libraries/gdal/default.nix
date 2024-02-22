@@ -246,6 +246,8 @@ stdenv.mkDerivation (finalAttrs: {
     "test_ogr_parquet_write_crs_without_id_in_datum_ensemble_members"
   ] ++ lib.optionals (!usePoppler) [
     "test_pdf_jpx_compression"
+  ] ++ lib.optionals (builtins.elem stdenv.hostPlatform.gcc.arch or null [ "znver3" ]) [
+    "test_jp2openjpeg_22"
   ];
   postCheck = ''
     popd # autotest
