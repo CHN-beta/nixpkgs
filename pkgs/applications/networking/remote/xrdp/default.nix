@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, applyPatches, pkg-config, which, perl, autoconf, automake, libtool, openssl, systemd, pam, fuse, libjpeg, libopus, nasm, xorg }:
+{ lib, stdenv, fetchFromGitHub, applyPatches, pkg-config, which, perl, autoconf, automake, libtool, openssl, systemd, pam, fuse, libjpeg, libopus, nasm, xorg, optimizeForNvidia ? false }:
 
 let
   version = "0.9.23.1";
@@ -24,6 +24,8 @@ let
       rev = "v${version}";
       hash = "sha256-WI1KyJDQkmNHwweZMbNd2KUfawaieoGMDMQfeD12cZs=";
     };
+
+    patches = lib.optionals optimizeForNvidia [ ./xorgxrdp-nvidia.patch ];
 
     nativeBuildInputs = [ pkg-config autoconf automake which libtool nasm ];
 
