@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, applyPatches, pkg-config, which, perl, autoconf, automake, libtool, openssl, systemd, pam, fuse, libjpeg, libopus, nasm, xorg, optimizeForNvidia ? false }:
+{ lib, stdenv, fetchFromGitHub, applyPatches, pkg-config, which, perl, autoconf, automake, libtool, openssl, systemd, pam, fuse, libjpeg, libopus, nasm, xorg }:
 
 let
   version = "0.9.23.1";
@@ -18,15 +18,12 @@ let
     pname = "xorgxrdp";
     version = "0.9.19";
 
-    src = fetchFromGitHub
-    (
-      { owner = "neutrinolabs"; repo = "xorgxrdp"; }
-      // (
-        if optimizeForNvidia
-          then { rev = "v${version}"; hash = "sha256-WI1KyJDQkmNHwweZMbNd2KUfawaieoGMDMQfeD12cZs="; }
-          else { rev = "gfx_mainline_merge"; hash = "sha256-gs8y9ntEgCnFwFInB7vGHiOk0zLXwgL/qsPOAvYaHbY="; }
-      )
-    );
+    src = fetchFromGitHub {
+      owner = "neutrinolabs";
+      repo = "xorgxrdp";
+      rev = "v${version}";
+      hash = "sha256-WI1KyJDQkmNHwweZMbNd2KUfawaieoGMDMQfeD12cZs=";
+    };
 
     nativeBuildInputs = [ pkg-config autoconf automake which libtool nasm ];
 
@@ -44,8 +41,7 @@ let
 
     preConfigure = "./bootstrap";
 
-    configureFlags = [ "XRDP_CFLAGS=-I${patchedXrdpSrc}/common" ]
-      ++ lib.optionals optimizeForNvidia [ "CFLAGS=-DENCODE_COMPLETE=8" ];
+    configureFlags = [ "XRDP_CFLAGS=-I${patchedXrdpSrc}/common"  ];
 
     enableParallelBuilding = true;
   };
