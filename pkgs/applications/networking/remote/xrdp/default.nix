@@ -1,31 +1,42 @@
-{ lib, stdenv, fetchFromGitHub, applyPatches, pkg-config, which, perl, autoconf, automake, libtool, openssl, systemd, pam, fuse, libjpeg, libopus, nasm, xorg, optimizeForNvidia ? false }:
+{ lib, stdenv, fetchFromGitHub, applyPatches, pkg-config, which, perl, autoconf, automake, libtool, openssl, systemd, pam, fuse, libjpeg, libopus, nasm, xorg, nvidiaBusId ? null }:
 
 let
   version = "0.9.23.1";
   patchedXrdpSrc = applyPatches {
     patches = [ ./dynamic_config.patch ];
     name = "xrdp-patched-${version}";
-    src = fetchFromGitHub {
-      owner = "neutrinolabs";
-      repo = "xrdp";
-      rev = "v${version}";
-      fetchSubmodules = true;
-      hash = "sha256-fJKSEHB5X5QydKgRPjIMJzNaAy1EVJifHETSGmlJttQ=";
-    };
+    src = fetchFromGitHub
+    (
+      { owner = "neutrinolabs"; repo = "xrdp"; fetchSubmodules = true; }
+      // (
+        if nvidiaBusId == null then
+          { rev = "v${version}"; hash = "sha256-fJKSEHB5X5QydKgRPjIMJzNaAy1EVJifHETSGmlJttQ="; }
+        else
+        {
+          rev = "5ccabaf706cf860f692daae3927eeba4afbb8efb";
+          hash = "sha256-hJnO1AQ+bSN2QaD3vLJssvLF/jPicU6zBjvFzD7HafU=";
+        }
+      )
+    );
   };
 
   xorgxrdp = stdenv.mkDerivation rec {
     pname = "xorgxrdp";
     version = "0.9.19";
 
-    src = fetchFromGitHub {
-      owner = "neutrinolabs";
-      repo = "xorgxrdp";
-      rev = "v${version}";
-      hash = "sha256-WI1KyJDQkmNHwweZMbNd2KUfawaieoGMDMQfeD12cZs=";
-    };
-
-    patches = lib.optionals optimizeForNvidia [ ./xorgxrdp-nvidia.patch ];
+    src = fetchFromGitHub
+    (
+      { owner = "neutrinolabs"; repo = "xorgxrdp"; }
+      // (
+        if nvidiaBusId == null then
+          { rev = "v${version}"; hash = "sha256-fJKSEHB5X5QydKgRPjIMJzNaAy1EVJifHETSGmlJttQ="; }
+        else
+        {
+          rev = "3d30c7a6ad4f4a582efcb919966d8f1508aa2d31";
+          hash = "sha256-gs8y9ntEgCnFwFInB7vGHiOk0zLXwgL/qsPOAvYaHbY=";
+        }
+      )
+    );
 
     nativeBuildInputs = [ pkg-config autoconf automake which libtool nasm ];
 
@@ -39,7 +50,9 @@ let
       substituteInPlace configure.ac \
         --replace 'moduledir=`pkg-config xorg-server --variable=moduledir`' "moduledir=$out/lib/xorg/modules" \
         --replace 'sysconfdir="/etc"' "sysconfdir=$out/etc"
-    '';
+    '' + (lib.optionalString (nvidiaBusId != null) ''
+      sed -i 's|BusID ".*"|BusID "PCI:${nvidiaBusId}"|g' xrdpdev/xorg_nvidia.conf
+    '');
 
     preConfigure = "./bootstrap";
 
@@ -91,7 +104,7 @@ let
       param=-modulepath
       param=${xorgxrdp}/lib/xorg/modules,${xorg.xorgserver}/lib/xorg/modules
       param=-config
-      param=${xorgxrdp}/etc/X11/xrdp/xorg.conf
+      param=${xorgxrdp}/etc/X11/xrdp/xorg${lib.optionalString (nvidiaBusId != null) "_nvidia"}.conf
       param=-noreset
       param=-nolisten
       param=tcp
