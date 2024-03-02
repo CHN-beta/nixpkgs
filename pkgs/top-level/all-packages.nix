@@ -744,11 +744,6 @@ with pkgs;
     inherit (darwin) DarwinTools;
   };
 
-  rtthost = callPackage ../development/tools/rust/rtthost {
-    inherit (darwin.apple_sdk.frameworks) AppKit;
-    inherit (darwin) DarwinTools;
-  };
-
   mix2nix = callPackage ../development/tools/mix2nix {
     elixir = elixir_1_14;
   };
@@ -3230,8 +3225,6 @@ with pkgs;
 
   apfs-fuse = callPackage ../tools/filesystems/apfs-fuse { };
 
-  apfsprogs = callPackage ../tools/filesystems/apfsprogs { };
-
   api-linter = callPackage ../development/tools/api-linter { };
 
   apk-tools = callPackage ../tools/package-management/apk-tools {
@@ -5213,7 +5206,9 @@ with pkgs;
 
   easyabc = callPackage ../applications/audio/easyabc { };
 
-  easycrypt = callPackage ../applications/science/logic/easycrypt { };
+  easycrypt = callPackage ../applications/science/logic/easycrypt {
+    why3 = pkgs.why3.override { ideSupport = false; };
+  };
 
   easycrypt-runtest = callPackage ../applications/science/logic/easycrypt/runtest.nix { };
 
@@ -7972,7 +7967,7 @@ with pkgs;
 
   # The latest version used by elasticsearch, logstash, kibana and the the beats from elastic.
   # When updating make sure to update all plugins or they will break!
-  elk7Version = "7.17.10";
+  elk7Version = "7.17.16";
 
   elasticsearch7 = callPackage ../servers/search/elasticsearch/7.x.nix {
     util-linux = util-linuxMinimal;
@@ -14614,8 +14609,6 @@ with pkgs;
 
   wifish = callPackage ../tools/networking/wifish { };
 
-  wifite2 = callPackage ../tools/networking/wifite2 { };
-
   wimboot = callPackage ../tools/misc/wimboot { };
 
   wit-bindgen = callPackage ../tools/misc/wit-bindgen { };
@@ -16649,6 +16642,8 @@ with pkgs;
   llvm_15 = llvmPackages_15.llvm;
   llvm_16 = llvmPackages_16.llvm;
   llvm_17 = llvmPackages_17.llvm;
+
+  mlir_17 = llvmPackages_17.mlir;
 
   libllvm = llvmPackages.libllvm;
   llvm-manpages = llvmPackages.llvm-manpages;
@@ -21596,12 +21591,12 @@ with pkgs;
   };
 
   libgit2_1_6 = libgit2.overrideAttrs rec {
-    version = "1.6.4";
+    version = "1.6.5";
     src = fetchFromGitHub {
       owner = "libgit2";
       repo = "libgit2";
       rev = "v${version}";
-      hash = "sha256-lW3mokVKsbknVj2xsxEbeZH4IdKZ0aIgGutzenS0Eh0=";
+      hash = "sha256-2tgXnrB85dEfxu7giETqMuFxfm0RH5MicHZqO3ezGu0=";
     };
     patches = [ ];
   };
@@ -23691,7 +23686,7 @@ with pkgs;
     else if stdenv.hostPlatform.system == "riscv32-linux" then llvmPackages_14.libunwind
     else callPackage ../development/libraries/libunwind { };
 
-  libuv = callPackage ../development/libraries/libuv {
+  libuv = darwin.apple_sdk_11_0.callPackage ../development/libraries/libuv {
     inherit (darwin.apple_sdk.frameworks) ApplicationServices CoreServices;
   };
 
@@ -27497,6 +27492,7 @@ with pkgs;
 
   inherit (callPackages ../servers/web-apps/matomo {})
     matomo
+    matomo_5
     matomo-beta;
 
   axis2 = callPackage ../servers/http/tomcat/axis2 { };
@@ -28220,6 +28216,8 @@ with pkgs;
   linux_6_5_hardened = linuxKernel.kernels.linux_6_5_hardened;
   linuxPackages_6_6_hardened = linuxKernel.packages.linux_6_6_hardened;
   linux_6_6_hardened = linuxKernel.kernels.linux_6_6_hardened;
+  linuxPackages_6_7_hardened = linuxKernel.packages.linux_6_7_hardened;
+  linux_6_7_hardened = linuxKernel.kernels.linux_6_7_hardened;
 
   # GNU Linux-libre kernels
   linuxPackages-libre = linuxKernel.packages.linux_libre;
@@ -28229,7 +28227,9 @@ with pkgs;
 
   # zen-kernel
   linuxPackages_zen = linuxKernel.packages.linux_zen;
+  linux_zen = linuxPackages_zen.kernel;
   linuxPackages_lqx = linuxKernel.packages.linux_lqx;
+  linux_lqx = linuxPackages_lqx.kernel;
 
   # XanMod kernel
   linuxPackages_xanmod = linuxKernel.packages.linux_xanmod;
@@ -29462,8 +29462,6 @@ with pkgs;
   gruvbox-dark-icons-gtk = callPackage ../data/icons/gruvbox-dark-icons-gtk {
     inherit (plasma5Packages) breeze-icons;
   };
-
-  gruvbox-gtk-theme = callPackage ../data/themes/gruvbox-gtk-theme { };
 
   gubbi-font = callPackage ../data/fonts/gubbi { };
 
@@ -30970,8 +30968,6 @@ with pkgs;
 
   clipgrab = libsForQt5.callPackage ../applications/video/clipgrab { };
 
-  clipcat = callPackage ../applications/misc/clipcat { };
-
   clipmenu = callPackage ../applications/misc/clipmenu { };
 
   clipit = callPackage ../applications/misc/clipit { };
@@ -31998,7 +31994,7 @@ with pkgs;
   firefox-devedition-bin-unwrapped = callPackage ../applications/networking/browsers/firefox-bin {
     inherit (gnome) adwaita-icon-theme;
     channel = "developer-edition";
-    generated = import ../applications/networking/browsers/firefox-bin/devedition_sources.nix;
+    generated = import ../applications/networking/browsers/firefox-bin/developer-edition_sources.nix;
   };
 
   firefox-devedition-bin = res.wrapFirefox firefox-devedition-bin-unwrapped {

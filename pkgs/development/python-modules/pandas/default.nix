@@ -226,6 +226,14 @@ buildPythonPackage rec {
     [ "skylake" "broadwell" "znver3" ] ) [
     # https://github.com/pandas-dev/pandas/issues/37398
     "test_rolling_var_numerical_issues"
+  ] ++ lib.optional (builtins.elem stdenv.hostPlatform.gcc.arch or null [ "znver4" ]) [
+    "test_quantile_datetime"
+    "test_datelike_numeric_only"
+    "test_idxmin_idxmax_returns_int_types"
+    "test_iloc_setitem_multicolumn_to_datetime"
+    "test_combine_first_dt64"
+    "test_guess_datetime_format_with_parseable_formats"
+    "test_nsmallest_nlargest"
   ];
 
   # Tests have relative paths, and need to reference compiled C extensions
