@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, applyPatches, pkg-config, which, perl, autoconf, automake, libtool, openssl, systemd, pam, fuse, libjpeg, libopus, nasm, xorg, variant ? null, nvidiaBusId ? null, fetchgit, mesa, libdrm }:
+{ lib, stdenv, fetchFromGitHub, applyPatches, pkg-config, which, perl, autoconf, automake, libtool, openssl, systemd, pam, fuse, libjpeg, libopus, nasm, xorg, variant ? null, nvidiaBusId ? null, nvidiaPackage ? null, fetchgit, mesa, libdrm }:
 
 let
   version = "0.9.23.1";
@@ -84,7 +84,10 @@ let
 
     installFlags = [ "DESTDIR=$(out)" "prefix=" ];
 
-    postInstall = ''
+    postInstall =
+      let nvidiaModule = lib.optionalString (variant == "nvidia") ",${nvidiaPackage.bin}/lib/xorg/modules";
+      in
+    ''
       # remove generated keys (as non-deterministic)
       rm $out/etc/xrdp/{rsakeys.ini,key.pem,cert.pem}
 
@@ -103,7 +106,7 @@ let
       [Xorg]
       param=${xorg.xorgserver}/bin/Xorg
       param=-modulepath
-      param=${xorgxrdp}/lib/xorg/modules,${xorg.xorgserver}/lib/xorg/modules
+      param=${xorgxrdp}/lib/xorg/modules,${xorg.xorgserver}/lib/xorg/modules${nvidiaModule}
       param=-config
       param=${xorgxrdp}/etc/X11/xrdp/xorg${lib.optionalString (variant == "nvidia") "_nvidia"}.conf
       param=-noreset
