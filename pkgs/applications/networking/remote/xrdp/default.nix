@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, applyPatches, pkg-config, which, perl, autoconf, automake, libtool, openssl, systemd, pam, fuse, libjpeg, libopus, nasm, xorg, variant ? null, nvidiaBusId ? null, nvidiaPackage ? null, fetchgit, mesa, libdrm }:
+{ lib, stdenv, fetchFromGitHub, applyPatches, pkg-config, which, perl, autoconf, automake, libtool, openssl, systemd, pam, fuse, libjpeg, libopus, nasm, xorg, variant ? null, nvidiaBusId ? null, nvidiaPackage ? null, fetchgit, mesa, libdrm, fdk_aac, lame, pixman, x264, libepoxy, libglvnd }:
 
 let
   version = "0.9.23.1";
@@ -7,14 +7,20 @@ let
     name = "xrdp-patched-${version}";
     src = fetchFromGitHub
     (
-      { owner = "neutrinolabs"; repo = "xrdp"; fetchSubmodules = true; }
+      { repo = "xrdp"; fetchSubmodules = true; }
       // (
         if variant == "nvidia" then
         {
-          rev = "5ccabaf706cf860f692daae3927eeba4afbb8efb";
-          hash = "sha256-hJnO1AQ+bSN2QaD3vLJssvLF/jPicU6zBjvFzD7HafU=";
+          owner = "Nexarian";
+          rev = "f5103aa482f1b4f41a856adb1694929ed5b4936f";
+          hash = "sha256-jA3/zwjhBmmf6HnzDFLfVyt9qz6AomKDCxiWogIGwBo=";
         }
-        else { rev = "v${version}"; hash = "sha256-fJKSEHB5X5QydKgRPjIMJzNaAy1EVJifHETSGmlJttQ="; }
+        else
+        {
+          owner = "neutrinolabs";
+          rev = "v${version}";
+          hash = "sha256-fJKSEHB5X5QydKgRPjIMJzNaAy1EVJifHETSGmlJttQ=";
+        }
       )
     );
   };
@@ -25,14 +31,20 @@ let
 
     src = fetchFromGitHub
     (
-      { owner = "neutrinolabs"; repo = "xorgxrdp"; }
+      { repo = "xorgxrdp"; }
       // (
         if variant == "nvidia" then
         {
+          owner = "Nexarian";
           rev = "3d30c7a6ad4f4a582efcb919966d8f1508aa2d31";
           hash = "sha256-gs8y9ntEgCnFwFInB7vGHiOk0zLXwgL/qsPOAvYaHbY=";
         }
-        else { rev = "v${version}"; hash = "sha256-WI1KyJDQkmNHwweZMbNd2KUfawaieoGMDMQfeD12cZs="; }
+        else
+        {
+          owner = "neutrinolabs";
+          rev = "v${version}";
+          hash = "sha256-WI1KyJDQkmNHwweZMbNd2KUfawaieoGMDMQfeD12cZs=";
+        }
       )
     );
 
@@ -54,10 +66,11 @@ let
     '');
 
     preConfigure = "./bootstrap";
+    configureFlags = (lib.optionals (variant == "nvidia") [ "--with-simd" "--enable-lrandr" ])
+      ++ (lib.optionals (variant == "glamor") [ "--enable-glamor" ]);
 
     XRDP_CFLAGS = "-I${patchedXrdpSrc}/common"
       + lib.optionalString (variant == "glamor") " -I${libdrm.dev}/include/libdrm";
-    configureFlags = lib.optionals (variant == "glamor") [ "--enable-glamor" ];
 
     enableParallelBuilding = true;
   };
@@ -69,7 +82,8 @@ let
 
     nativeBuildInputs = [ pkg-config autoconf automake which libtool nasm perl ];
 
-    buildInputs = [ openssl systemd pam fuse libjpeg libopus xorg.libX11 xorg.libXfixes xorg.libXrandr ];
+    buildInputs = [ openssl systemd pam fuse libjpeg libopus xorg.libX11 xorg.libXfixes xorg.libXrandr ]
+      ++ (lib.optionals (variant == "nvidia") [ fdk_aac lame pixman x264 libepoxy.dev libglvnd.dev ]);
 
     postPatch =
       let file = "sesman${lib.optionalString (variant == "nvidia") "/sesexec"}/xauth.c";
@@ -80,7 +94,8 @@ let
       ./bootstrap
     '';
     dontDisableStatic = true;
-    configureFlags = [ "--with-systemdsystemunitdir=/var/empty" "--enable-ipv6" "--enable-jpeg" "--enable-fuse" "--enable-rfxcodec" "--enable-opus" "--enable-pam-config=unix" ];
+    configureFlags = [ "--with-systemdsystemunitdir=/var/empty" "--enable-ipv6" "--enable-jpeg" "--enable-fuse" "--enable-rfxcodec" "--enable-opus" "--enable-pam-config=unix" ]
+      ++ lib.optionals (variant == "nvidia") [ "--enable-pixman" "--enable-mp3lame" "--enable-nvenc" "--enable-sound" "--enable-fdkaac" "--enable-x264" ];
 
     installFlags = [ "DESTDIR=$(out)" "prefix=" ];
 
