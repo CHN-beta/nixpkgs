@@ -318,7 +318,7 @@ in
             wrappername="$out/bin/$exename"
             cat > "$wrappername" <<EOT
           #!/bin/sh
-          if [ -z "$SLURM_CONF" ]
+          if [ -z "\$SLURM_CONF" ]
           then
             SLURM_CONF="${cfg.etcSlurm}/slurm.conf" "$EXE" "\$@"
           else
