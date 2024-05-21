@@ -119,11 +119,11 @@ let
     in {
       after = [ "network.target" "mastodon-init-dirs.service" ]
         ++ lib.optional redisActuallyCreateLocally "redis-mastodon.service"
-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
+        ++ lib.optional true "postgresql.service"
         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
       requires = [ "mastodon-init-dirs.service" ]
         ++ lib.optional redisActuallyCreateLocally "redis-mastodon.service"
-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
+        ++ lib.optional true "postgresql.service"
         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
       description = "Mastodon sidekiq${jobClassLabel}";
       wantedBy = [ "mastodon.target" ];
@@ -151,11 +151,11 @@ let
         value = {
           after = [ "network.target" "mastodon-init-dirs.service" ]
             ++ lib.optional redisActuallyCreateLocally "redis-mastodon.service"
-            ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
+            ++ lib.optional true "postgresql.service"
             ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
           requires = [ "mastodon-init-dirs.service" ]
             ++ lib.optional redisActuallyCreateLocally "redis-mastodon.service"
-            ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
+            ++ lib.optional true "postgresql.service"
             ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
           wantedBy = [ "mastodon.target" "mastodon-streaming.target" ];
           description = "Mastodon streaming ${toString i}";
@@ -738,7 +738,7 @@ in {
     };
 
     systemd.services.mastodon-init-db = lib.mkIf cfg.automaticMigrations {
-      script = lib.optionalString (!databaseActuallyCreateLocally) ''
+      script = lib.optionalString (!true) ''
         umask 077
         export PGPASSWORD="$(cat '${cfg.database.passwordFile}')"
       '' + ''
@@ -759,11 +759,11 @@ in {
           echo "Migrating database (this might be a noop)"
           rails db:migrate
         fi
-      '' +  lib.optionalString (!databaseActuallyCreateLocally) ''
+      '' +  lib.optionalString (!true) ''
         unset PGPASSWORD
       '';
       path = [ cfg.package pkgs.postgresql ];
-      environment = env // lib.optionalAttrs (!databaseActuallyCreateLocally) {
+      environment = env // lib.optionalAttrs (!true) {
         PGHOST = cfg.database.host;
         PGPORT = toString cfg.database.port;
         PGDATABASE = cfg.database.name;
@@ -777,19 +777,19 @@ in {
         SystemCallFilter = [ ("~" + lib.concatStringsSep " " (systemCallsList ++ [ "@resources" ])) "@chown" "pipe" "pipe2" ];
       } // cfgService;
       after = [ "network.target" "mastodon-init-dirs.service" ]
-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service";
+        ++ lib.optional true "postgresql.service";
       requires = [ "mastodon-init-dirs.service" ]
-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service";
+        ++ lib.optional true "postgresql.service";
     };
 
     systemd.services.mastodon-web = {
       after = [ "network.target" "mastodon-init-dirs.service" ]
         ++ lib.optional redisActuallyCreateLocally "redis-mastodon.service"
-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
+        ++ lib.optional true "postgresql.service"
         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
       requires = [ "mastodon-init-dirs.service" ]
         ++ lib.optional redisActuallyCreateLocally "redis-mastodon.service"
-        ++ lib.optional databaseActuallyCreateLocally "postgresql.service"
+        ++ lib.optional true "postgresql.service"
         ++ lib.optional cfg.automaticMigrations "mastodon-init-db.service";
       wantedBy = [ "mastodon.target" ];
       description = "Mastodon web";
@@ -877,7 +877,7 @@ in {
         port = cfg.redis.port;
       })
     ]);
-    services.postgresql = lib.mkIf databaseActuallyCreateLocally {
+    services.postgresql = lib.mkIf false {
       enable = true;
       ensureUsers = [
         {

@@ -60,14 +60,18 @@ in {
     # target configuration
     (lib.mkIf (cfg.packageNames != []) {
       nixpkgs.overlays = [
-        (self: super: lib.genAttrs cfg.packageNames (pn: super.${pn}.override { stdenv = builtins.trace "with ccache: ${pn}" self.ccacheStdenv; }))
+        (self: super: lib.genAttrs cfg.packageNames (pn: super.${pn}.override { stdenv = builtins.trace "with ccache: ${pn}" self.ccacheStdenv; }))];})
 
+    (lib.mkIf cfg.enable {
+      nixpkgs.overlays = [
         (self: super: {
           ccacheWrapper = super.ccacheWrapper.override {
             extraConfig = ''
-              export CCACHE_COMPRESS=1
+              export CCACHE_NOCOMPRESS=true
               export CCACHE_DIR="${cfg.cacheDir}"
               export CCACHE_UMASK=007
+              export CCACHE_MAXSIZE=300G
+              export CCACHE_SLOPPINESS=random_seed,time_macros
               if [ ! -d "$CCACHE_DIR" ]; then
                 echo "====="
                 echo "Directory '$CCACHE_DIR' does not exist"
