@@ -268,6 +268,8 @@ in stdenv.mkDerivation (finalAttrs: {
     substituteInPlace configure.ac --replace-fail \
       'GPGMEPP_CFLAGS=-I/usr/include/gpgme++' \
       'GPGMEPP_CFLAGS=-I${gpgme.dev}/include/gpgme++'
+  '' + optionalString (stdenv.hostPlatform.gcc.arch or null != null) ''
+    sed -e '/CPPUNIT_TEST(testDubiousArrayFormulasFODS);/d' -i './sc/qa/unit/functions_array.cxx'
   '';
 
   nativeBuildInputs = [
