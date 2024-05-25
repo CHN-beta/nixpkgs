@@ -8,9 +8,6 @@
 , opencv4
 , pkg-config
 , stdenv
-, config
-, cudaSupport ? config.cudaSupport
-, cudaPackages
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -35,20 +32,20 @@ stdenv.mkDerivation (finalAttrs: {
     cmake
     libsForQt5.wrapQtAppsHook
     pkg-config
-  ] ++ lib.optional cudaSupport [ cudaPackages.cuda_nvcc ];
+  ];
 
   buildInputs = [
     exiv2
     libraw
     libtiff
-    opencv4
+    (lib.getOutput "cxxdev" opencv4)
   ] ++ (with libsForQt5; [
     qtbase
     qtimageformats
     qtsvg
     qttools
     quazip
-  ]) ++ lib.optional cudaSupport [ cudaPackages.cuda_cudart ];
+  ]);
 
   cmakeFlags = [
     (lib.cmakeBool "ENABLE_OPENCV" true)
