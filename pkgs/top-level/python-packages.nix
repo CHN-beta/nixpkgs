@@ -10018,6 +10018,8 @@ self: super: with self; {
 
   pyrogram = callPackage ../development/python-modules/pyrogram { };
 
+  pyrympro = callPackage ../development/python-modules/pyrympro { };
+
   pysabnzbd = callPackage ../development/python-modules/pysabnzbd { };
 
   pysbd = callPackage ../development/python-modules/pysbd { };
@@ -13617,10 +13619,6 @@ self: super: with self; {
 
   scikits-odes = callPackage ../development/python-modules/scikits-odes { };
 
-  scikits-samplerate = callPackage ../development/python-modules/scikits-samplerate {
-    inherit (pkgs) libsamplerate;
-  };
-
   scikit-tda = callPackage ../development/python-modules/scikit-tda { };
 
   scipy = callPackage ../development/python-modules/scipy { };
@@ -16827,6 +16825,8 @@ self: super: with self; {
   weasel = callPackage ../development/python-modules/weasel { };
 
   weasyprint = callPackage ../development/python-modules/weasyprint { };
+
+  weatherflow4py = callPackage ../development/python-modules/weatherflow4py { };
 
   weaviate-client = callPackage ../development/python-modules/weaviate-client { };
 
