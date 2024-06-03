@@ -1497,8 +1497,6 @@ with pkgs;
 
   abduco = callPackage ../tools/misc/abduco { };
 
-  ablog = callPackage ../applications/misc/ablog { };
-
   acct = callPackage ../tools/system/acct { };
 
   accuraterip-checksum = callPackage ../tools/audio/accuraterip-checksum { };
@@ -1822,8 +1820,6 @@ with pkgs;
   };
 
   gh-dash = callPackage ../tools/misc/gh-dash { };
-
-  gh-eco = callPackage ../tools/misc/gh-eco { };
 
   gh-markdown-preview = callPackage ../tools/misc/gh-markdown-preview { };
 
@@ -3486,8 +3482,6 @@ with pkgs;
 
   bazarr = callPackage ../servers/bazarr { };
 
-  bcachefs-tools = callPackage ../tools/filesystems/bcachefs-tools { };
-
   bisq-desktop = callPackage ../applications/blockchains/bisq-desktop {
     openjdk11 = openjdk11.override { enableJavaFX = true; };
   };
@@ -3927,8 +3921,6 @@ with pkgs;
   mdr = callPackage ../tools/misc/mdr { };
 
   mobilecoin-wallet = callPackage ../applications/misc/mobilecoin-wallet { };
-
-  mpdevil = callPackage ../applications/audio/mpdevil { };
 
   pacparser = callPackage ../tools/networking/pacparser { };
 
@@ -13472,7 +13464,7 @@ with pkgs;
 
   inherit (callPackages ../servers/teleport {
     inherit (darwin.apple_sdk.frameworks) CoreFoundation Security AppKit;
-  }) teleport_13 teleport_14 teleport_15 teleport;
+  }) teleport_14 teleport_15 teleport;
 
   telepresence = callPackage ../tools/networking/telepresence {
     pythonPackages = python3Packages;
@@ -16020,10 +16012,6 @@ with pkgs;
 
   gocover-cobertura = callPackage ../development/tools/gocover-cobertura { };
 
-  gobang = callPackage ../development/tools/database/gobang {
-    inherit (darwin.apple_sdk.frameworks) CoreFoundation Security SystemConfiguration;
-  };
-
   goblob = callPackage ../tools/security/goblob { };
 
   gogetdoc = callPackage ../development/tools/gogetdoc { };
@@ -16298,6 +16286,7 @@ with pkgs;
     choose = platform:
       /**/ if platform.isDarwin then 16
       else if platform.isFreeBSD then 16
+      else if platform.isOpenBSD then 18
       else if platform.isAndroid then 12
       else if platform.isLinux then 17
       else if platform.isWasm then 16
@@ -16545,8 +16534,6 @@ with pkgs;
   prqlc = callPackage ../development/tools/database/prqlc { };
 
   qbe = callPackage ../development/compilers/qbe { };
-
-  rasm = callPackage ../development/compilers/rasm { };
 
   replibyte = callPackage ../development/tools/database/replibyte {
     inherit (darwin.apple_sdk.frameworks) Security SystemConfiguration;
@@ -21035,6 +21022,7 @@ with pkgs;
       then targetPackages.darwin.iosSdkPkgs.libraries or darwin.iosSdkPkgs.libraries
       else targetPackages.darwin.LibsystemCross or (throw "don't yet have a `targetPackages.darwin.LibsystemCross for ${stdenv.targetPlatform.config}`")
     else if name == "fblibc" then targetPackages.freebsdCross.libc or freebsdCross.libc
+    else if name == "oblibc" then targetPackages.openbsdCross.libc or openbsdCross.libc
     else if name == "nblibc" then targetPackages.netbsdCross.libc or netbsdCross.libc
     else if name == "wasilibc" then targetPackages.wasilibc or wasilibc
     else if name == "relibc" then targetPackages.relibc or relibc
@@ -25855,7 +25843,7 @@ with pkgs;
   leafnode1 = callPackage ../servers/news/leafnode/1.nix { };
 
   lemmy-server = callPackage ../servers/web-apps/lemmy/server.nix {
-    inherit (darwin.apple_sdk.frameworks) Security;
+    inherit (darwin.apple_sdk.frameworks) Security SystemConfiguration;
   };
 
   lemmy-ui = callPackage ../servers/web-apps/lemmy/ui.nix {
@@ -29677,8 +29665,6 @@ with pkgs;
   artha = callPackage ../applications/misc/artha { };
 
   atlassian-cli = callPackage ../applications/office/atlassian-cli { };
-
-  pulsar = callPackage ../applications/editors/pulsar { };
 
   asap = callPackage ../tools/audio/asap { };
 
@@ -35457,6 +35443,8 @@ with pkgs;
 
   webcord = callPackage ../by-name/we/webcord/package.nix { electron = electron_30; };
 
+  webcord-vencord = callPackage ../by-name/we/webcord-vencord/package.nix { electron = electron_29; };
+
   webex = callPackage ../applications/networking/instant-messengers/webex { };
 
   webmacs = libsForQt5.callPackage ../applications/networking/browsers/webmacs {
@@ -40794,6 +40782,11 @@ with pkgs;
 
   netbsd = callPackage ../os-specific/bsd/netbsd { };
   netbsdCross = callPackage ../os-specific/bsd/netbsd {
+    stdenv = crossLibcStdenv;
+  };
+
+  openbsd = callPackage ../os-specific/bsd/openbsd { };
+  openbsdCross = callPackage ../os-specific/bsd/openbsd {
     stdenv = crossLibcStdenv;
   };
 
