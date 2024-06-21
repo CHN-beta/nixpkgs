@@ -130,7 +130,7 @@ buildPythonPackage {
     "hyp2f1_test_case47"
     "hyp2f1_test_case3"
     "test_uint64_max"
-  ];
+  ] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or null != null) [ "test_equal_bounds" ];
 
   doCheck = !(stdenv.isx86_64 && stdenv.isDarwin);
 

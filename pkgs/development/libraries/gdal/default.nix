@@ -265,8 +265,6 @@ stdenv.mkDerivation (finalAttrs: {
     # failing with PROJ 9.3.1
     # https://github.com/OSGeo/gdal/issues/8908
     "test_osr_esri_28"
-  ] ++ lib.optionals (!stdenv.isx86_64) [
-    # likely precision-related expecting x87 behaviour
     "test_jp2openjpeg_22"
   ] ++ lib.optionals stdenv.isDarwin [
     # flaky on macos

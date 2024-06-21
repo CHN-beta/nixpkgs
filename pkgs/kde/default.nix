@@ -76,6 +76,9 @@
       phonon-vlc = self.callPackage ./misc/phonon-vlc {};
       polkit-qt-1 = self.callPackage ./misc/polkit-qt-1 {};
       pulseaudio-qt = self.callPackage ./misc/pulseaudio-qt {};
+
+      # Convenient for users to install various tools provided by kde
+      kdeGear = gear;
     }
   );
 in
