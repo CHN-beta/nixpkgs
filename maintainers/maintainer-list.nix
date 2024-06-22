@@ -4260,6 +4260,12 @@
     github = "d4ilyrun";
     githubId = 34611103;
   };
+  d4rkstar = {
+    name = "Bruno Salzano";
+    email = "d4rkstar@gmail.com";
+    github = "d4rkstar";
+    githubId = 4957015;
+  };
   dadada = {
     name = "dadada";
     email = "dadada@dadada.li";
@@ -8228,7 +8234,7 @@
     name = "Akshat Agarwal";
   };
   hummeltech = {
-    email = "hummeltech2024@gmail.com";
+    email = "hummeltech@sherpaguru.com";
     github = "hummeltech";
     githubId = 6109326;
     name = "David Hummel";
@@ -13629,6 +13635,12 @@
     githubId = 3856390;
     email = "mschwaig+nixpkgs@eml.cc";
   };
+  msciabarra = {
+    email = "msciabarra@apache.org";
+    github = "sciabarracom";
+    githubId = 30654959;
+    name = "Michele Sciabarra";
+  };
   msiedlarek = {
     email = "mikolaj@siedlarek.pl";
     github = "msiedlarek";
@@ -13873,6 +13885,12 @@
     github = "nalbyuites";
     githubId = 1009523;
     name = "Ashijit Pramanik";
+  };
+  Name = {
+    name = "Name";
+    email = "lasagna@garfunkles.space";
+    github = "namescode";
+    githubId = 86119896;
   };
   name-snrl = {
     github = "name-snrl";
@@ -15386,6 +15404,12 @@
     githubId = 920910;
     name = "peelz";
   };
+  peigongdsd = {
+    email = "peigong2013@outlook.com";
+    github = "peigongdsd";
+    githubId = 51317171;
+    name = "Peilin Lee";
+  };
   pelme = {
     email = "andreas@pelme.se";
     github = "pelme";
@@ -16717,6 +16741,12 @@
     github = "redfish64";
     githubId = 1922770;
     name = "Tim Engler";
+  };
+  redhawk = {
+    email = "redhawk76767676@gmail.com";
+    github = "Redhawk18";
+    githubId = 77415970;
+    name = "Redhawk";
   };
   redvers = {
     email = "red@infect.me";
@@ -19614,12 +19644,6 @@
     github = "tckmn";
     githubId = 2389333;
     name = "Andy Tockman";
-  };
-  tcmal = {
-    email = "me@aria.rip";
-    github = "tcmal";
-    githubId = 4183876;
-    name = "Aria Shrimpton";
   };
   teatwig = {
     email = "nix@teatwig.net";
