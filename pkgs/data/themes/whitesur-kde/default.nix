@@ -9,13 +9,13 @@
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "whitesur-kde";
-  version = "unstable-2023-10-06";
+  version = "unstable-2024-06-25";
 
   src = fetchFromGitHub {
     owner = "vinceliuice";
     repo = finalAttrs.pname;
-    rev = "2b4bcc76168bd8a4a7601188e177fa0ab485cdc8";
-    hash = "sha256-+Iooj8a7zfLhEWnjLEVoe/ebD9Vew5HZdz0wpWVZxA8=";
+    rev = "6705b5e2631128fda3af5baa475b276bb2780899";
+    hash = "sha256-fsf6jApgF5NJSpP73cWJaFtCvWaRtF93DclV62Bu+xc=";
   };
 
   # Propagate sddm theme dependencies to user env otherwise sddm does
@@ -46,7 +46,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     name= ./install.sh
 
     mkdir -p $out/share/sddm/themes
-    cp -a sddm/WhiteSur $out/share/sddm/themes/
+    cp -a sddm/WhiteSur-6.0 $out/share/sddm/themes/WhiteSur
 
     runHook postInstall
   '';

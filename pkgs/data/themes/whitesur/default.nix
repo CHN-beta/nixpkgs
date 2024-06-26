@@ -39,14 +39,14 @@ lib.checkListOfEnum "${pname}: panel opacity" [ "default" "30" "45" "60" "75" ] 
 lib.checkListOfEnum "${pname}: panel size" [ "default" "smaller" "bigger" ] (single panelSize)
 
 stdenv.mkDerivation rec {
-  pname = "whitesur-gtk-theme";
-  version = "2024-05-01";
+  inherit pname;
+  version = "2024-06-21";
 
   src = fetchFromGitHub {
     owner = "vinceliuice";
     repo = pname;
-    rev = version;
-    sha256 = "sha256-NgmFQtgVJvVXJjZUXt/BIx1hdzjHfVmmwXUCDZZD7+g=";
+    rev = "453e281225611bbee41e3d70bffacb97fa2f580e";
+    sha256 = "sha256-L3prygtR9rzpQ3dO158690QJoA7A6r/irqWeQWiSJ1s=";
   };
 
   nativeBuildInputs = [
