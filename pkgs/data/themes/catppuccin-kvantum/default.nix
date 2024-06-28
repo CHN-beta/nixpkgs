@@ -2,29 +2,29 @@
   lib,
   stdenvNoCC,
   fetchFromGitHub,
-  accent ? "Blue",
-  variant ? "Frappe",
+  accent ? "blue",
+  variant ? "frappe",
 }: let
   pname = "catppuccin-kvantum";
 in
-  lib.checkListOfEnum "${pname}: theme accent" ["Blue" "Flamingo" "Green" "Lavender" "Maroon" "Mauve" "Peach" "Pink" "Red" "Rosewater" "Sapphire" "Sky" "Teal" "Yellow"] [accent]
-  lib.checkListOfEnum "${pname}: color variant" ["Latte" "Frappe" "Macchiato" "Mocha"] [variant]
+  lib.checkListOfEnum "${pname}: theme accent" ["blue" "flamingo" "green" "lavender" "maroon" "mauve" "peach" "pink" "red" "rosewater" "sapphire" "sky" "teal" "yellow"] [accent]
+  lib.checkListOfEnum "${pname}: color variant" ["latte" "frappe" "macchiato" "mocha"] [variant]
 
   stdenvNoCC.mkDerivation {
     inherit pname;
-    version = "unstable-2022-07-04";
+    version = "unstable-2024-06-19";
 
     src = fetchFromGitHub {
       owner = "catppuccin";
       repo = "Kvantum";
-      rev = "d1e174c85311de9715aefc1eba4b8efd6b2730fc";
-      sha256 = "sha256-IrHo8pnR3u90bq12m7FEXucUF79+iub3I9vgH5h86Lk=";
+      rev = "c8538166447e595d3ebcd508699a8fed2d24d75f";
+      sha256 = "sha256-Ubj+dydyS36QotO7YAnZFnMANogscDwZ0ryIsQg0L48=";
     };
 
     installPhase = ''
       runHook preInstall
       mkdir -p $out/share/Kvantum
-      cp -a src/Catppuccin-${variant}-${accent} $out/share/Kvantum
+      cp -a $src/themes/catppuccin-${variant}-${accent} $out/share/Kvantum
       runHook postInstall
     '';
 
