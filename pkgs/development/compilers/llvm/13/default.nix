@@ -174,6 +174,9 @@ in let
     #   python3 = pkgs.python3;  # don't use python-boot
     # });
 
+    # Wrapper for standalone command line utilities
+    clang-tools = callPackage ../common/clang-tools { };
+
     # pick clang appropriate for package set we are targeting
     clang =
       /**/ if stdenv.targetPlatform.libc == null then tools.clangNoLibc
@@ -391,14 +394,14 @@ in let
       patches = [
         (substitute {
           src = ../common/libcxxabi/wasm.patch;
-          replacements = [
+          substitutions = [
             "--replace-fail" "/cmake/" "/llvm/cmake/"
           ];
         })
       ] ++ lib.optionals stdenv.hostPlatform.isMusl [
         (substitute {
           src = ../common/libcxx/libcxx-0001-musl-hacks.patch;
-          replacements = [
+          substitutions = [
             "--replace-fail" "/include/" "/libcxx/include/"
           ];
         })

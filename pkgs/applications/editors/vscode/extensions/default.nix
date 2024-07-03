@@ -754,6 +754,23 @@ let
         };
       };
 
+      bradgashler.htmltagwrap = buildVscodeMarketplaceExtension {
+        mktplcRef = {
+          publisher = "bradgashler";
+          name = "htmltagwrap";
+          version = "1.0.0";
+          hash = "sha256-WOMfwxyeDLoSwF0xz9tbntDVrUWycJ4bW0rZjfLSzgM=";
+        };
+        meta = {
+          changelog = "https://github.com/bgashler1/vscode-htmltagwrap/blob/master/CHANGELOG.md";
+          description = "VSCode extension for wrapping a text selection in HTML tags";
+          downloadPage = "https://marketplace.visualstudio.com/items?itemName=bradgashler.htmltagwrap";
+          homepage = "https://github.com/bgashler1/vscode-htmltagwrap";
+          license = lib.licenses.mit;
+          maintainers = [ lib.maintainers.superherointj ];
+        };
+      };
+
       bradlc.vscode-tailwindcss = buildVscodeMarketplaceExtension {
         mktplcRef = {
           name = "vscode-tailwindcss";
@@ -1156,6 +1173,23 @@ let
         };
       };
 
+      danielsanmedium.dscodegpt = buildVscodeMarketplaceExtension {
+        mktplcRef = {
+          publisher = "DanielSanMedium";
+          name = "dscodegpt";
+          version = "3.4.10";
+          hash = "sha256-zjaM9YME0wfBOwhJTacnQbQvw35QL5NvXIBAx5d/bjI=";
+        };
+        meta = {
+          changelog = "https://marketplace.visualstudio.com/items/DanielSanMedium.dscodegpt/changelog";
+          description = "Easily connect to AI providers using their official APIs in VSCode";
+          downloadPage = "https://marketplace.visualstudio.com/items?itemName=DanielSanMedium.dscodegpt";
+          homepage = "https://codegpt.co";
+          license = lib.licenses.unfree;
+          maintainers = [ lib.maintainers.onny ];
+        };
+      };
+
       daohong-emilio.yash = buildVscodeMarketplaceExtension {
         mktplcRef = {
           publisher = "daohong-emilio";
@@ -1506,8 +1540,8 @@ let
           # semver scheme, contrary to preview versions which are listed on
           # the VSCode Marketplace and use a calver scheme. We should avoid
           # using preview versions, because they expire after two weeks.
-          version = "14.9.0";
-          hash = "sha256-Z6KeIUw1SLZ4tUgs7sU9IJO/6diozPxQuTbXr6DayHA=";
+          version = "15.1.0";
+          hash = "sha256-xGgm/WNJDIh/Bs11fLYwHQ9ULiZBWbKw4QYl/l4KYJ4=";
         };
         meta = {
           changelog = "https://marketplace.visualstudio.com/items/eamodio.gitlens/changelog";
@@ -2516,6 +2550,22 @@ let
 
       jebbs.plantuml = callPackage ./jebbs.plantuml { };
 
+      jeff-hykin.better-nix-syntax = buildVscodeMarketplaceExtension {
+        mktplcRef = {
+          publisher = "jeff-hykin";
+          name = "better-nix-syntax";
+          version = "1.1.5";
+          hash = "sha256-9V+ziWk9V4LyQiVNSC6DniJDun+EvcK30ykPjyNsvp0=";
+        };
+        meta = {
+          description = "Visual Studio Code extension providing Nix Syntax highlighting";
+          downloadPage = "https://marketplace.visualstudio.com/items?itemName=jeff-hykin.better-nix-syntax";
+          homepage = "https://github.com/jeff-hykin/better-nix-syntax";
+          license = lib.licenses.mit;
+          maintainers = [ lib.maintainers.superherointj ];
+        };
+      };
+
       jellyedwards.gitsweep = buildVscodeMarketplaceExtension {
         mktplcRef = {
           publisher = "jellyedwards";
@@ -2721,7 +2771,7 @@ let
             description = "CloudFormation Linter IDE integration, autocompletion, and documentation";
             homepage = "https://github.com/aws-cloudformation/cfn-lint-visual-studio-code";
             license = lib.licenses.asl20;
-            maintainers = [ lib.maintainers.wolfangaukang ];
+            maintainers = [ ];
           };
         };
 
@@ -2767,6 +2817,21 @@ let
           homepage = "https://github.com/lapo-luchini/vscode-asn1js";
           maintainers = with lib.maintainers; [ katexochen ];
           license = lib.licenses.isc;
+        };
+      };
+
+      leonardssh.vscord = buildVscodeMarketplaceExtension {
+        mktplcRef = {
+          name = "vscord";
+          publisher = "leonardssh";
+          version = "5.2.12";
+          hash = "sha256-WGDEizYG6UAqe1jnhvjfFouXDA9Yr5P+BjxPahAIsTE=";
+        };
+        meta = {
+          description = "Highly customizable Discord Rich Presence extension for Visual Studio Code";
+          downloadPage = "https://marketplace.visualstudio.com/items?itemName=leonardssh.vscord";
+          homepage = "https://github.com/leonardssh/vscord";
+          license = lib.licenses.mit;
         };
       };
 
@@ -3021,8 +3086,8 @@ let
         mktplcRef = {
           name = "compare-folders";
           publisher = "moshfeu";
-          version = "0.24.2";
-          hash = "sha256-EiGuYRMN8bXq+Cya38U+dCX2W0wzIeP0yb39WBJaX1U=";
+          version = "0.24.3";
+          hash = "sha256-eaumF2BIqEYoyL7LQ0Wx3+gkkFGpWKQoN3AisI8wTQY=";
         };
 
         meta = {
@@ -3962,6 +4027,31 @@ let
         };
       };
 
+      sdras.night-owl = buildVscodeMarketplaceExtension rec {
+        mktplcRef = {
+          name = "night-owl";
+          publisher = "sdras";
+          version = "2.0.1";
+          hash = "sha256-AqfcVV9GYZ+GLgusXfij9z4WzrU9cCHp3sdZb0i6HzE=";
+        };
+        meta = {
+          changelog = "https://github.com/sdras/night-owl-vscode-theme/blob/main/CHANGELOG.md#${
+            builtins.replaceStrings [ "." ] [ "" ] mktplcRef.version
+          }";
+          description = "A Visual Studio Code theme named Light Owl for daytime usage";
+          longDescription = ''
+            A VS Code theme for the night owls out there. Now introducing
+            Light Owl theme for daytime usage. Decisions were based
+            on meaningful contrast for reading comprehension and for
+            optimal razzle dazzle.
+          '';
+          downloadPage = "https://marketplace.visualstudio.com/items?itemName=sdras.night-owl";
+          homepage = "https://github.com/sdras/night-owl-vscode-theme";
+          license = lib.licenses.mit;
+          maintainers = [ lib.maintainers.pladypus ];
+        };
+      };
+
       seatonjiang.gitmoji-vscode = buildVscodeMarketplaceExtension {
         mktplcRef = {
           publisher = "seatonjiang";
@@ -4706,7 +4796,7 @@ let
         };
         meta = {
           license = lib.licenses.mit;
-          maintainers = [ lib.maintainers.wolfangaukang ];
+          maintainers = [ ];
         };
       };
 

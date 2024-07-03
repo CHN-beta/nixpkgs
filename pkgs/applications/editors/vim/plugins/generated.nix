@@ -9676,18 +9676,6 @@ final: prev:
     meta.homepage = "https://github.com/mfukar/robotframework-vim/";
   };
 
-  rocks-nvim = buildNeovimPlugin {
-    pname = "rocks.nvim";
-    version = "2024-06-19";
-    src = fetchFromGitHub {
-      owner = "nvim-neorocks";
-      repo = "rocks.nvim";
-      rev = "6737e01a76eaaae06d11b45c8b5b774fa97c283b";
-      sha256 = "0vl6rm3rv1730iw3bwzrwjsgr1hw5h4ksdgpir5spd3vqj7i97lz";
-    };
-    meta.homepage = "https://github.com/nvim-neorocks/rocks.nvim/";
-  };
-
   ron-vim = buildVimPlugin {
     pname = "ron.vim";
     version = "2022-08-19";
@@ -10159,14 +10147,14 @@ final: prev:
 
   specs-nvim = buildVimPlugin {
     pname = "specs.nvim";
-    version = "2022-09-20";
+    version = "2024-05-19";
     src = fetchFromGitHub {
-      owner = "edluffy";
+      owner = "cxwx";
       repo = "specs.nvim";
-      rev = "2743e412bbe21c9d73954c403d01e8de7377890d";
-      sha256 = "1ycqvxrn13bfimf9k03bmm1baml8gyq5lxqjxh1fya44s2bg714r";
+      rev = "dd82496f538b688cedf98429f89fef47ecb0625e";
+      sha256 = "0427fx6iw3i2y9ny3sz1na32bxcj8i93dbm93ckxf3bii8zqjs0s";
     };
-    meta.homepage = "https://github.com/edluffy/specs.nvim/";
+    meta.homepage = "https://github.com/cxwx/specs.nvim/";
   };
 
   spellsitter-nvim = buildVimPlugin {
@@ -10892,6 +10880,18 @@ final: prev:
       sha256 = "0aii4vy97zyh2fpdkawwdanwd7sd0751ih5yznjcwn8cvrv74wl5";
     };
     meta.homepage = "https://github.com/Marskey/telescope-sg/";
+  };
+
+  telescope-smart-history-nvim = buildVimPlugin {
+    pname = "telescope-smart-history.nvim";
+    version = "2022-12-15";
+    src = fetchFromGitHub {
+      owner = "nvim-telescope";
+      repo = "telescope-smart-history.nvim";
+      rev = "81a4cceaa54d65d5f7c7c26178ee63b634d3e26d";
+      sha256 = "sha256-riBl0vSkRtM9Gtw/FNSKodSmqgGUpDnH7d5w+uU4ReQ=";
+    };
+    meta.homepage = "https://github.com/nvim-telescope/telescope-smart-history.nvim/";
   };
 
   telescope-symbols-nvim = buildVimPlugin {
@@ -17513,6 +17513,18 @@ final: prev:
       sha256 = "1wpn6gfw1r89232d779lz8wy19asrribindlcsaikrsqvml3a0hr";
     };
     meta.homepage = "https://github.com/jhradilek/vim-snippets/";
+  };
+
+  Preview-nvim = buildVimPlugin {
+    pname = "Preview.nvim";
+    version = "2024-06-01";
+    src = fetchFromGitHub {
+      owner = "henriklovhaug";
+      repo = "Preview.nvim";
+      rev = "388882f3bfd09bcb0d5b4ab3d0fa5bc2dacbbc2e";
+      sha256 = "sha256-Tnl2TkLY9QXk/5qX2LcX5G2aq/sysH6BnD2YqXlneIU=";
+    };
+    meta.homepage = "https://github.com/henriklovhaug/Preview.nvim/";
   };
 
 

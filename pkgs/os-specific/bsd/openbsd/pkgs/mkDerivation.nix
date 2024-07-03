@@ -2,7 +2,8 @@
   lib,
   stdenv,
   stdenvNoCC,
-  stdenvNoLibc,
+  crossLibcStdenv,
+  stdenvLibcMinimal,
   runCommand,
   rsync,
   source,
@@ -10,6 +11,8 @@
   openbsdSetupHook,
   makeMinimal,
   install,
+  tsort,
+  lorder,
 }:
 
 lib.makeOverridable (
@@ -19,7 +22,9 @@ lib.makeOverridable (
       if attrs.noCC or false then
         stdenvNoCC
       else if attrs.noLibc or false then
-        stdenvNoLibc
+        crossLibcStdenv
+      else if attrs.libcMinimal or false then
+        stdenvLibcMinimal
       else
         stdenv;
   in
@@ -46,14 +51,11 @@ lib.makeOverridable (
         openbsdSetupHook
         makeMinimal
         install
+        tsort
+        lorder
       ];
 
       HOST_SH = stdenv'.shell;
-
-      makeFlags = [
-        "STRIP=-s" # flag to install, not command
-        "-B"
-      ];
 
       MACHINE_ARCH =
         {
@@ -85,9 +87,6 @@ lib.makeOverridable (
     // lib.optionalAttrs stdenv'.hasCC {
       # TODO should CC wrapper set this?
       CPP = "${stdenv'.cc.targetPrefix}cpp";
-
-      # Since STRIP below is the flag
-      STRIPBIN = "${stdenv'.cc.bintools.targetPrefix}strip";
     }
     // lib.optionalAttrs (attrs.headersOnly or false) {
       installPhase = "includesPhase";

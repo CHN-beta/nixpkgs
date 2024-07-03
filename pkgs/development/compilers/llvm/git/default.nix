@@ -20,9 +20,9 @@
 # LLVM release information; specify one of these but not both:
 , gitRelease ? {
     version = "19.0.0-git";
-    rev = "78ee473784e5ef6f0b19ce4cb111fb6e4d23c6b2";
-    rev-version = "19.0.0-unstable-2024-06-12";
-    sha256 = "sha256-oLVMwWjo6Nt8ZsTnDTfoiM5U0+1lVIc1NO+4qBNYlzs=";
+    rev = "9b9405621bcc55b74d2177c960c21f62cc95e6fd";
+    rev-version = "19.0.0-unstable-2024-06-30";
+    sha256 = "sha256-Tlk+caav7e7H6bha8YQyOl+x2iNk9iH7xKpHQkWQyJ4=";
 }
   # i.e.:
   # {
@@ -180,6 +180,9 @@ in let
       enableManpages = true;
       python3 = pkgs.python3;  # don't use python-boot
     });
+
+    # Wrapper for standalone command line utilities
+    clang-tools = callPackage ../common/clang-tools { };
 
     # pick clang appropriate for package set we are targeting
     clang =
