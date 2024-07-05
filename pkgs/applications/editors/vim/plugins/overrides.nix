@@ -25,7 +25,6 @@
 , fzf
 , gawk
 , git
-, gnome
 , himalaya
 , htop
 , jq
@@ -58,6 +57,7 @@
 , xorg
 , xxd
 , zathura
+, zenity
 , zsh
 , # codeium-nvim dependencies
   codeium
@@ -408,12 +408,12 @@
 
   codesnap-nvim =
     let
-      version = "1.3.1";
+      version = "1.4.0";
       src = fetchFromGitHub {
         owner = "mistricky";
         repo = "codesnap.nvim";
         rev = "refs/tags/v${version}";
-        hash = "sha256-nS/bAWsBQ1L4M9437Yp6FdmHoogzalKlLIAXnRZyMp0=";
+        hash = "sha256-fBeojxvi++3ShqxvFQ5/sv8WbpVrN7+XRPZWWrbpEL4=";
       };
       codesnap-lib = rustPlatform.buildRustPackage {
         pname = "codesnap-lib";
@@ -421,7 +421,7 @@
 
         sourceRoot = "${src.name}/generator";
 
-        cargoHash = "sha256-FTQl5WIGEf+RQKYJ4BbIE3cCeN+NYUp7VXIrpxB05tU=";
+        cargoHash = "sha256-lDy+FUph4CognY0oN7qhFsbnoC3gxguwq5YVtsiP1lo=";
 
         nativeBuildInputs = [
           pkg-config
@@ -1614,7 +1614,7 @@
 
   vCoolor-vim = super.vCoolor-vim.overrideAttrs {
     # on linux can use either Zenity or Yad.
-    propagatedBuildInputs = [ gnome.zenity ];
+    propagatedBuildInputs = [ zenity ];
     meta = {
       description = "Simple color selector/picker plugin";
       license = lib.licenses.publicDomain;

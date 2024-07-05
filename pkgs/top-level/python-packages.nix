@@ -491,6 +491,8 @@ self: super: with self; {
 
   alarmdecoder = callPackage ../development/python-modules/alarmdecoder { };
 
+  albucore = callPackage ../development/python-modules/albucore { };
+
   albumentations = callPackage ../development/python-modules/albumentations { };
 
   ale-py = callPackage ../development/python-modules/ale-py { };
@@ -2973,6 +2975,8 @@ self: super: with self; {
 
   deltachat2 = callPackage ../development/python-modules/deltachat2 { };
 
+  deltalake = callPackage ../development/python-modules/deltalake { };
+
   deluge-client = callPackage ../development/python-modules/deluge-client { };
 
   demes = callPackage ../development/python-modules/demes { };
@@ -3320,8 +3324,6 @@ self: super: with self; {
   django-mdeditor = callPackage ../development/python-modules/django-mdeditor { };
 
   django-mptt = callPackage ../development/python-modules/django-mptt { };
-
-  django-mysql = callPackage ../development/python-modules/django-mysql { };
 
   django-ninja = callPackage ../development/python-modules/django-ninja { };
 
@@ -4177,8 +4179,6 @@ self: super: with self; {
 
   fastentrypoints = callPackage ../development/python-modules/fastentrypoints { };
 
-  faster-fifo = callPackage ../development/python-modules/faster-fifo { };
-
   faster-whisper = callPackage ../development/python-modules/faster-whisper { };
 
   fastimport = callPackage ../development/python-modules/fastimport { };
@@ -4470,6 +4470,8 @@ self: super: with self; {
   flit = callPackage ../development/python-modules/flit { };
 
   flit-core = callPackage ../development/python-modules/flit-core { };
+
+  flit-gettext = callPackage ../development/python-modules/flit-gettext { };
 
   flit-scm = callPackage ../development/python-modules/flit-scm { };
 
@@ -9091,6 +9093,8 @@ self: super: with self; {
 
   plugp100 = callPackage ../development/python-modules/plugp100 {};
 
+  python-hcl2 = callPackage ../development/python-modules/python-hcl2 { };
+
   python-ndn = callPackage ../development/python-modules/python-ndn { };
 
   python-nvd3 = callPackage ../development/python-modules/python-nvd3 { };
@@ -12779,7 +12783,9 @@ self: super: with self; {
 
   pytorch-lightning = callPackage ../development/python-modules/pytorch-lightning { };
 
-  pytorch-metric-learning = callPackage ../development/python-modules/pytorch-metric-learning { };
+  pytorch-metric-learning = callPackage ../development/python-modules/pytorch-metric-learning {
+    inherit (pkgs.config) cudaSupport;
+  };
 
   pytorch-msssim = callPackage ../development/python-modules/pytorch-msssim { };
 
@@ -13911,7 +13917,9 @@ self: super: with self; {
 
   sentinels = callPackage ../development/python-modules/sentinels { };
 
-  sentry-sdk = callPackage ../development/python-modules/sentry-sdk { };
+  sentry-sdk_1 = callPackage ../development/python-modules/sentry-sdk/1.nix { };
+  sentry-sdk_2 = callPackage ../development/python-modules/sentry-sdk/default.nix { };
+  sentry-sdk = sentry-sdk_1;
 
   sepaxml = callPackage ../development/python-modules/sepaxml { };
 
