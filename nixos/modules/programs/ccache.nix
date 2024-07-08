@@ -72,6 +72,8 @@ in {
               export CCACHE_UMASK=007
               export CCACHE_MAXSIZE=300G
               export CCACHE_SLOPPINESS=random_seed,time_macros
+              export CCACHE_NOHASHDIR=true
+              export CCACHE_BASEDIR="$NIX_BUILD_TOP"
               if [ ! -d "$CCACHE_DIR" ]; then
                 echo "====="
                 echo "Directory '$CCACHE_DIR' does not exist"

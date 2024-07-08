@@ -20,6 +20,9 @@
 , commandLineArgs ? ""
 , pkgsBuildBuild
 , pkgs
+
+, enableCcache ? config.enableCcache or false
+, ccacheStdenv ? null
 }:
 
 let
@@ -49,6 +52,7 @@ let
       inherit channel chromiumVersionAtLeast versionRange;
       inherit proprietaryCodecs
               cupsSupport pulseSupport ungoogled;
+      inherit enableCcache ccacheStdenv;
       gnChromium = buildPackages.gn.overrideAttrs (oldAttrs: {
         inherit (upstream-info.deps.gn) version;
         src = fetchgit {

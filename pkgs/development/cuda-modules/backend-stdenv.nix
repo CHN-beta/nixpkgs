@@ -5,11 +5,17 @@
   pkgs,
   stdenv,
   stdenvAdapters,
+
+  config,
+  enableCcache ? config.enableCcache, # or false,
+  ccacheStdenv ? null,
 }:
 
 let
   gccMajorVersion = nvccCompatibilities.${cudaVersion}.gccMaxMajorVersion;
-  cudaStdenv = stdenvAdapters.useLibsFrom stdenv pkgs."gcc${gccMajorVersion}Stdenv";
+  originalStdenv = pkgs."gcc${gccMajorVersion}Stdenv";
+  stdenvWithCcache = if enableCcache then ccacheStdenv.override { stdenv = originalStdenv; } else originalStdenv;
+  cudaStdenv = stdenvAdapters.useLibsFrom stdenv stdenvWithCcache;
   passthruExtra = {
     # cudaPackages.backendStdenv.nixpkgsCompatibleLibstdcxx has been removed,
     # if you need it you're likely doing something wrong. There has been a
