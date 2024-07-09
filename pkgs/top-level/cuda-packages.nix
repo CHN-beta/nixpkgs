@@ -28,8 +28,6 @@
   pkgs,
   config,
   __attrsFailEvaluation ? true,
-
-  ccacheStdenv ? null
 }:
 let
   inherit (lib)
@@ -68,7 +66,7 @@ let
     # when linked with other C++ libraries.
     # E.g. for cudaPackages_11_8 we use gcc11 with gcc12's libstdc++
     # Cf. https://github.com/NixOS/nixpkgs/pull/218265 for context
-    backendStdenv = final.callPackage ../development/cuda-modules/backend-stdenv.nix { inherit config ccacheStdenv; };
+    backendStdenv = final.callPackage ../development/cuda-modules/backend-stdenv.nix { };
 
     # Loose packages
 
