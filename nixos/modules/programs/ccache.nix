@@ -70,7 +70,7 @@ in {
               export CCACHE_NOCOMPRESS=true
               export CCACHE_DIR="${cfg.cacheDir}"
               export CCACHE_UMASK=007
-              export CCACHE_MAXSIZE=300G
+              export CCACHE_MAXSIZE=100G
               export CCACHE_SLOPPINESS=random_seed,time_macros
               export CCACHE_NOHASHDIR=true
               export CCACHE_BASEDIR="$NIX_BUILD_TOP"
