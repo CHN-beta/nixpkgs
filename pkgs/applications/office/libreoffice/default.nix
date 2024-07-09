@@ -140,9 +140,16 @@
 , qttools ? null
 , solid ? null
 , sonnet ? null
+
+, config
+, enableCcache ? config.enableCcache # or false
+, ccacheStdenv
 }:
 
 assert builtins.elem variant [ "fresh" "still" ];
+
+let originalStdenv = stdenv; in
+let stdenv = if enableCcache then ccacheStdenv.override { stdenv = originalStdenv; } else originalStdenv; in
 
 let
   inherit (lib)
