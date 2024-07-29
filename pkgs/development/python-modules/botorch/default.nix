@@ -12,29 +12,27 @@
   torch,
   scipy,
   pytestCheckHook,
-  pythonRelaxDepsHook,
 }:
 
 buildPythonPackage rec {
   pname = "botorch";
-  version = "0.11.0";
+  version = "0.11.1";
   format = "pyproject";
 
   src = fetchFromGitHub {
     owner = "pytorch";
     repo = pname;
     rev = "refs/tags/v${version}";
-    hash = "sha256-eL0buwqrGt4qcwdzCwD85IyiWjAFuP1n8aUb2pvvIKw=";
+    hash = "sha256-YX/G46U09y/VZuWZhKY8zU0Y+bf0NKumzSGYUWvrq/0=";
   };
 
-  nativeBuildInputs = [
-    pythonRelaxDepsHook
+  build-system = [
     setuptools
     setuptools-scm
     wheel
   ];
 
-  propagatedBuildInputs = [
+  dependenciess = [
     gpytorch
     linear-operator
     multipledispatch
@@ -43,9 +41,13 @@ buildPythonPackage rec {
     torch
   ];
 
-  pythonRelaxDeps = [ "linear-operator" ];
+  pythonRelaxDeps = [
+    "gpytorch"
+    "linear-operator"
+  ];
 
-  checkInputs = [ pytestCheckHook ];
+  nativeCheckInputs = [ pytestCheckHook ];
+
   pythonImportsCheck = [ "botorch" ];
 
   meta = with lib; {

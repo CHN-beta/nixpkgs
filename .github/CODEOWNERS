@@ -14,7 +14,7 @@
 # CI
 /.github/workflows @NixOS/Security @Mic92 @zowoq
 /.github/workflows/check-nix-format.yml @infinisil
-/ci @infinisil
+/ci @infinisil @NixOS/Security
 
 # Develompent support
 /.editorconfig @Mic92 @zowoq
@@ -107,6 +107,9 @@ nixos/modules/installer/tools/nix-fallback-paths.nix  @raitobezarius
 
 # NixOS QEMU virtualisation
 /nixos/virtualisation/qemu-vm.nix           @raitobezarius
+
+# ACME
+/nixos/modules/security/acme                @arianvp @flokli @aanderse # no merge permission: @m1cr0man @emilazy
 
 # Systemd
 /nixos/modules/system/boot/systemd.nix      @NixOS/systemd
@@ -301,7 +304,11 @@ pkgs/development/python-modules/buildcatrust/ @ajs124 @lukegb @mweinelt
 /pkgs/build-support/make-hardcode-gsettings-patch @jtojnar
 
 # Cinnamon
-/pkgs/desktops/cinnamon @mkg20001
+/pkgs/by-name/ci/cinnamon-*    @mkg20001
+/pkgs/by-name/cj/cjs           @mkg20001
+/pkgs/by-name/mu/muffin        @mkg20001
+/pkgs/by-name/ne/nemo          @mkg20001
+/pkgs/by-name/ne/nemo-*        @mkg20001
 
 # nim
 /pkgs/development/compilers/nim   @ehmry
@@ -367,7 +374,6 @@ nixos/tests/lxd/                        @adamcstephens
 pkgs/by-name/in/incus/                  @adamcstephens
 pkgs/by-name/lx/lxc*                    @adamcstephens
 pkgs/by-name/lx/lxd*                    @adamcstephens
-pkgs/os-specific/linux/lxc/             @adamcstephens
 
 # ExpidusOS, Flutter
 /pkgs/development/compilers/flutter @RossComputerGuy

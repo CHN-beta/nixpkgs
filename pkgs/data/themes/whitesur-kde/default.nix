@@ -7,13 +7,13 @@
 , gitUpdater
 }:
 
-stdenvNoCC.mkDerivation (finalAttrs: {
+stdenvNoCC.mkDerivation {
   pname = "whitesur-kde";
   version = "unstable-2024-06-25";
 
   src = fetchFromGitHub {
     owner = "vinceliuice";
-    repo = finalAttrs.pname;
+    repo = "whitesur-kde";
     rev = "6705b5e2631128fda3af5baa475b276bb2780899";
     hash = "sha256-fsf6jApgF5NJSpP73cWJaFtCvWaRtF93DclV62Bu+xc=";
   };
@@ -60,4 +60,4 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     platforms = platforms.all;
     maintainers = [ maintainers.romildo ];
   };
-})
+}

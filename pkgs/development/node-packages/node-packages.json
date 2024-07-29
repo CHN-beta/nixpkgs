@@ -12,7 +12,6 @@
 , "@tailwindcss/line-clamp"
 , "@tailwindcss/typography"
 , "@uppy/companion"
-, "@vue/cli"
 , {"@webassemblyjs/cli": "1.11.1"}
 , {"@webassemblyjs/repl": "1.11.1"}
 , "@webassemblyjs/wasm-strip"
@@ -20,7 +19,6 @@
 , {"@webassemblyjs/wast-refmt": "1.11.1"}
 , "alex"
 , "audiosprite"
-, "autoprefixer"
 , "aws-cdk"
 , "awesome-lint"
 , "bower"
@@ -109,7 +107,6 @@
 , "ganache"
 , "gatsby-cli"
 , "@gitbeaker/cli"
-, "grammarly-languageserver"
 , "graphql"
 , "graphql-cli"
 , "graphql-language-service-cli"
@@ -148,7 +145,6 @@
 , "localtunnel"
 , "lodash"
 , "lua-fmt"
-, "lv_font_conv"
 , "madoko"
 , "mastodon-bot"
 , "mathjax"
@@ -249,8 +245,6 @@
 , "tsun"
 , "ts-node"
 , "ttf2eot"
-, "typescript-language-server"
-, "undollar"
 , "unified-language-server"
 , "vega-cli"
 , "vega-lite"
@@ -263,7 +257,6 @@
 , "webpack-dev-server"
 , "copy-webpack-plugin"
 , "webtorrent-cli"
-, "wrangler"
 , "wring"
 , "@yaegassy/coc-nginx"
 , "yalc"

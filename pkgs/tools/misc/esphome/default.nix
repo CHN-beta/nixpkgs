@@ -19,21 +19,20 @@ let
 in
 python.pkgs.buildPythonApplication rec {
   pname = "esphome";
-  version = "2024.6.4";
+  version = "2024.7.2";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = pname;
     repo = pname;
     rev = "refs/tags/${version}";
-    hash = "sha256-Wdq6sduIjvvLZAumYGmlm3QDaSKqmg/rssQNjdxQuaA=";
+    hash = "sha256-DnXPCcbDwWN+jve2YIeQ3dlugamAc6AR2/7c68bpct8=";
   };
 
   nativeBuildInputs = with python.pkgs; [
     setuptools
     argcomplete
     installShellFiles
-    pythonRelaxDepsHook
   ];
 
   pythonRelaxDeps = true;

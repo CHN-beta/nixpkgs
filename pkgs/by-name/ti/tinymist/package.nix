@@ -16,13 +16,13 @@ rustPlatform.buildRustPackage rec {
   pname = "tinymist";
   # Please update the corresponding vscode extension when updating
   # this derivation.
-  version = "0.11.12";
+  version = "0.11.16";
 
   src = fetchFromGitHub {
     owner = "Myriad-Dreamin";
     repo = "tinymist";
     rev = "refs/tags/v${version}";
-    hash = "sha256-hqTVfEKaAG18JpUZajm0XaoX6kw26aE37T/kfoNNxk8=";
+    hash = "sha256-5UNgjK4636XXjUaq2XqYs1a7vY1b+0OGZbI0xajSVcc=";
   };
 
   cargoLock = {
@@ -51,6 +51,9 @@ rustPlatform.buildRustPackage rec {
 
   checkFlags = [
     "--skip=e2e"
+    # Fails because of missing `creation_timestamp` field
+    # https://github.com/NixOS/nixpkgs/pull/328756#issuecomment-2241322796
+    "--skip=test_config_update"
   ];
 
   passthru = {

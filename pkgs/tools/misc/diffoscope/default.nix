@@ -148,6 +148,7 @@ python.pkgs.buildPythonApplication rec {
   # > FAILED tests/comparators/test_macho_decompiler.py::test_radare2_diff - AssertionError
   #
   # We filter automatically all packages for the host platform (some dependencies are not supported on Darwin, aarch64, etc.).
+  # Packages which are marked broken for a platform are not automatically filtered to avoid accidentally removing them without noticing it.
   pythonPath = lib.filter (lib.meta.availableOn stdenv.hostPlatform) ([
     acl
     binutils-unwrapped-all-targets
@@ -266,6 +267,8 @@ python.pkgs.buildPythonApplication rec {
 
     # Fails because it fails to determine llvm version
     "test_item3_deflate_llvm_bitcode"
+    # Fails ever since an update to imagemagick
+    "test_has_visuals"
   ] ++ lib.optionals stdenv.isDarwin [
     # Disable flaky tests on Darwin
     "test_non_unicode_filename"

@@ -46,16 +46,12 @@ let
     ++ optionals metalSupport [ MetalKit ];
 
    cudaBuildInputs = with cudaPackages; [
-    cuda_cccl.dev # <nv/target>
+    cuda_cccl # <nv/target>
 
     # A temporary hack for reducing the closure size, remove once cudaPackages
     # have stopped using lndir: https://github.com/NixOS/nixpkgs/issues/271792
-    cuda_cudart.dev
-    cuda_cudart.lib
-    cuda_cudart.static
-    libcublas.dev
-    libcublas.lib
-    libcublas.static
+    cuda_cudart
+    libcublas
   ];
 
   rocmBuildInputs = with rocmPackages; [
@@ -71,13 +67,13 @@ let
 in
 effectiveStdenv.mkDerivation (finalAttrs: {
   pname = "llama-cpp";
-  version = "3260";
+  version = "3403";
 
   src = fetchFromGitHub {
     owner = "ggerganov";
     repo = "llama.cpp";
     rev = "refs/tags/b${finalAttrs.version}";
-    hash = "sha256-0KVwSzxfGinpv5KkDCgF2J+1ijDv87PlDrC+ldscP6s=";
+    hash = "sha256-+WWJyEt04ZUC/vh9ZReLek851iOZJYoGc49XJyRPkVE=";
     leaveDotGit = true;
     postFetch = ''
       git -C "$out" rev-parse --short HEAD > $out/COMMIT

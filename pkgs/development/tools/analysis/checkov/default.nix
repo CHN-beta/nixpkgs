@@ -6,14 +6,14 @@
 
 python3.pkgs.buildPythonApplication rec {
   pname = "checkov";
-  version = "3.2.168";
+  version = "3.2.208";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "bridgecrewio";
     repo = "checkov";
     rev = "refs/tags/${version}";
-    hash = "sha256-hyOnYXk88btH9SdEoBQovZxJqEfy5yClakGyua/Px80=";
+    hash = "sha256-bCaqwgFG/bHy9nWYKqiGMoeXvE9bTc5QZmtp3rDOkUk=";
   };
 
   patches = [ ./flake8-compat-5.x.patch ];
@@ -33,6 +33,7 @@ python3.pkgs.buildPythonApplication rec {
     "packaging"
     "pycep-parser"
     "rustworkx"
+    "schema"
     "termcolor"
     "urllib3"
   ];
@@ -44,10 +45,6 @@ python3.pkgs.buildPythonApplication rec {
 
   build-system = with python3.pkgs; [
     setuptools-scm
-  ];
-
-  nativeBuildInputs = with python3.pkgs; [
-    pythonRelaxDepsHook
   ];
 
   dependencies = with python3.pkgs; [
