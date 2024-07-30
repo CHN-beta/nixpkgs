@@ -73,7 +73,7 @@ buildPythonPackage rec {
   disabledTests = [
     #  BaseExceptionGroup: unhandled errors in a TaskGroup (1 sub-exception)
     "test_awatch_interrupt_raise"
-  ];
+  ] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or null != null) [ "test_ignore_permission_denied" ];
 
   pythonImportsCheck = [ "watchfiles" ];
 
