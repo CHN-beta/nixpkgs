@@ -5,7 +5,7 @@ let
   user = config.users.users.vaultwarden.name;
   group = config.users.groups.vaultwarden.name;
 
-  StateDirectory = if lib.versionOlder config.system.stateVersion "24.11" then "bitwarden_rs" else "vaultwarden";
+  StateDirectory = "vaultwarden";
 
   # Convert name from camel case (e.g. disable2FARemember) to upper case snake case (e.g. DISABLE_2FA_REMEMBER).
   nameToEnvVar = name:
