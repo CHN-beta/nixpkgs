@@ -756,7 +756,7 @@ in
 
       boot.loader.grub.extraPrepareConfig =
         concatStrings (mapAttrsToList (n: v: ''
-          ${pkgs.coreutils}/bin/install -Dp "${v}" "/boot/"${escapeShellArg n}
+          ${pkgs.coreutils}/bin/install -Dp "${v}" "${efi.efiSysMountPoint}/"${escapeShellArg n}
         '') config.boot.loader.grub.extraFiles);
 
       assertions = [
