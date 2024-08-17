@@ -145,7 +145,7 @@
 , sonnet ? null
 
 , config
-, enableCcache ? config.enableCcache # or false
+, enableCcache ? config.enableCcache or false
 , ccacheStdenv
 }:
 
