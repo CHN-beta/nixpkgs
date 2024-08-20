@@ -98,10 +98,12 @@ let
   '';
 
   withMysql = text:
+    # TODO: --host should be configurable
     withConfigFile ''
       query () {
         local result=$(${config.services.mysql.package}/bin/mysql \
           --user=${cfg.database.user} \
+          --host=127.0.0.1 \
           --password=$db_pass \
           --database=${cfg.database.name} \
           --silent \
