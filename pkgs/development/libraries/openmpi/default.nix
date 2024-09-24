@@ -36,6 +36,7 @@
   # note that opempi fails to build with AVX disabled, meaning that everything
   # up to AVX is enabled by default.
   avxOptions ? { },
+  enableSubstitute ? stdenv.isLinux
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -217,7 +218,7 @@ stdenv.mkDerivation (finalAttrs: {
           # we currently don't perform these substitutions on other platforms,
           # until a Darwin user will care enough about this cross platform
           # related substitution.
-          lib.optionalString stdenv.isLinux ''
+          lib.optionalString enableSubstitute ''
             substituteInPlace "''${!outputDev}/share/openmpi/${part1}${part2}-wrapper-data.txt" \
               --replace-fail \
                 compiler=${lib.elemAt wrapperDataSubstitutions.${part2} 0} \
