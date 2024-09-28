@@ -439,7 +439,7 @@ in {
         secrets:
           peertube: '$(cat ${cfg.secrets.secretsFile})'
         ''}
-        ${lib.optionalString ((!cfg.database.createLocally) && (cfg.database.passwordFile != null)) ''
+        ${lib.optionalString (cfg.database.passwordFile != null) ''
         database:
           password: '$(cat ${cfg.database.passwordFile})'
         ''}
