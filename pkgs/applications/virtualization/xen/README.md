@@ -15,17 +15,18 @@
   </a>
 </p>
 
-# Xen Hypervisor <a href="https://xenproject.org/"><img src="https://downloads.xenproject.org/Branding/Mascots/Xen-Fu-Panda-2000px.png" width="48px" align="top" alt="Xen Fu Panda"></a>
+# Xen Project Hypervisor <a href="https://xenproject.org/"><img src="https://downloads.xenproject.org/Branding/Mascots/Xen-Fu-Panda-2000px.png" width="48px" align="top" alt="Xen Fu Panda"></a>
 
-This directory includes the build recipes for the [Xen Hypervisor](https://xenproject.org/).
+This directory includes the build recipes for the [Xen Project Hypervisor](https://xenproject.org/).
 
-Some other notable packages that compose the Xen Ecosystem include:
+Some other notable packages that compose the Xen Project Ecosystem include:
 
 - `ocamlPackages.xenstore`: Mirage's `oxenstore` implementation.
 - `ocamlPackages.vchan`: Mirage's `xen-vchan` implementation.
 - `ocamlPackages.xenstore-tool`: XAPI's `oxenstore` utilities.
 - `xen-guest-agent`: Guest drivers for UNIX domUs.
 - `win-pvdrivers`: Guest drivers for Windows domUs.
+- `xtf`: The Xen Test Framework.
 
 ## Updating
 
@@ -100,6 +101,8 @@ open a PR fixing the script, and update Xen manually:
    ```
 
    Change the value of `xenToEvaluate` to evaluate all relevant Xen packages.
+1. Run `xtf --all --host` as root when booted into the Xen update, and make
+   sure no tests fail.
 1. Clean up your changes and commit them, making sure to follow the
    [Nixpkgs Contribution Guidelines](../../../../CONTRIBUTING.md).
 1. Open a PR and await a review from the current maintainers.

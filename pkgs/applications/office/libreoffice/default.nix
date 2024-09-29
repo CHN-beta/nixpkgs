@@ -118,6 +118,7 @@
 , amiri
 , caladea
 , carlito
+, culmus
 , dejavu_fonts
 , rubik
 , liberation-sans-narrow
@@ -126,6 +127,10 @@
 , libertine-g
 , noto-fonts
 , noto-fonts-cjk-sans
+, rhino
+, lp_solve
+, xmlsec
+, libcmis
 # The rest are used only in passthru, for the wrapper
 , kauth ? null
 , kcompletion ? null
@@ -138,6 +143,7 @@
 , kxmlgui ? null
 , phonon ? null
 , qtdeclarative ? null
+, qtmultimedia ? null
 , qtquickcontrols ? null
 , qtsvg ? null
 , qttools ? null
@@ -159,13 +165,14 @@ let
     flatten flip
     concatMapStrings concatStringsSep
     getDev getLib
-    optionals optionalAttrs optionalString;
+    optionals optionalString;
 
   fontsConf = makeFontsConf {
     fontDirectories = [
       amiri
       caladea
       carlito
+      culmus
       dejavu_fonts
       rubik
       liberation-sans-narrow
@@ -218,6 +225,7 @@ let
     name = "libreoffice-kde-dependencies-${version}";
     paths = flatten (map (e: [ (getDev e) (getLib e) ]) [
       qtbase
+      qtmultimedia
       qtx11extras
       kconfig
       kcoreaddons
@@ -256,29 +264,24 @@ in stdenv.mkDerivation (finalAttrs: {
   patches = [
     # Skip some broken tests:
     # - tdf160386 does not fall back to a CJK font properly for some reason
-    # - the remaining tests have notes in the patch
+    # - the remaining tests have notes in the patches
     # FIXME: get rid of this ASAP
     ./skip-broken-tests.patch
+    (./skip-broken-tests- + variant + ".patch")
+
+    # Don't detect Qt paths from qmake, so our patched-in onese are used
+    ./dont-detect-qt-paths-from-qmake.patch
+
+    # Revert part of https://github.com/LibreOffice/core/commit/6f60670877208612b5ea320b3677480ef6508abb that broke zlib linking
+    ./readd-explicit-zlib-link.patch
+  ] ++ lib.optionals (lib.versionOlder version "24.8") [
     (fetchpatch2 {
       name = "icu74-compat.patch";
       url = "https://gitlab.archlinux.org/archlinux/packaging/packages/libreoffice-fresh/-/raw/main/libreoffice-7.5.8.2-icu-74-compatibility.patch?ref_type=heads.patch";
       hash = "sha256-OGBPIVQj8JTYlkKywt4QpH7ULAzKmet5jTLztGpIS0Y=";
     })
-  ] ++ lib.optionals (variant == "still") [
-    # Remove build config to reduce the amount of `-dev` outputs in the
-    # runtime closure. This behavior was introduced by upstream in commit
-    # cbfac11330882c7d0a817b6c37a08b2ace2b66f4
-    ./0001-Strip-away-BUILDCONFIG.patch
-    # See above
-    ./skip-broken-tests-still.patch
-  ] ++ lib.optionals (variant == "fresh" || variant == "collabora") [
-    # Revert part of https://github.com/LibreOffice/core/commit/6f60670877208612b5ea320b3677480ef6508abb that broke zlib linking
-    ./readd-explicit-zlib-link.patch
-    # See above
-    ./skip-broken-tests-fresh.patch
   ] ++ lib.optionals (variant == "collabora") [
     ./fix-unpack-collabora.patch
-    ./skip-broken-tests-collabora.patch
   ];
 
   postPatch = ''
@@ -361,6 +364,7 @@ in stdenv.mkDerivation (finalAttrs: {
     libargon2
     libatomic_ops
     libcdr
+    libcmis
     libe-book
     libepoxy
     libepubgen
@@ -387,6 +391,7 @@ in stdenv.mkDerivation (finalAttrs: {
     libxslt
     libzmf
     libwebp
+    lp_solve
     mdds
     mythes
     ncurses
@@ -405,6 +410,7 @@ in stdenv.mkDerivation (finalAttrs: {
     unzip
     util-linux
     which
+    xmlsec
     zip
     zlib
   ] ++ optionals kdeIntegration [
@@ -464,18 +470,6 @@ in stdenv.mkDerivation (finalAttrs: {
     "--enable-release-build"
     "--enable-epm"
     "--with-ant-home=${getLib ant}/lib/ant"
-    "--with-system-cairo"
-    "--with-system-libs"
-    "--with-system-headers"
-    "--with-system-openssl"
-    "--with-system-libabw"
-    "--with-system-liblangtag"
-    "--without-system-libcmis"
-    "--with-system-libwps"
-    "--with-system-mdds"
-    "--with-system-openldap"
-    "--with-system-coinmp"
-    "--with-system-postgresql"
 
     # Without these, configure does not finish
     "--without-junit"
@@ -494,12 +488,28 @@ in stdenv.mkDerivation (finalAttrs: {
     (lib.withFeature withFonts "fonts")
     "--without-doxygen"
 
-    # TODO: package these as system libraries
     "--with-system-beanshell"
-    "--without-system-hsqldb"
+    "--with-system-cairo"
+    "--with-system-coinmp"
+    "--with-system-headers"
+    "--with-system-libabw"
+    "--with-system-libcmis"
+    "--with-system-libepubgen"
+    "--with-system-libetonyek"
+    "--with-system-liblangtag"
+    "--with-system-libs"
+    "--with-system-libwps"
+    "--with-system-lpsolve"
+    "--with-system-mdds"
+    "--with-system-openldap"
+    "--with-system-openssl"
+    "--with-system-orcus"
+    "--with-system-postgresql"
+    "--with-system-xmlsec"
+
+    # TODO: package these as system libraries
     "--without-system-altlinuxhyph"
     "--without-system-frozen"
-    "--without-system-lpsolve"
     "--without-system-libfreehand"
     "--without-system-libmspub"
     "--without-system-libnumbertext"
@@ -509,20 +519,26 @@ in stdenv.mkDerivation (finalAttrs: {
     "--without-system-dragonbox"
     "--without-system-libfixmath"
 
+    # requires an oddly specific, old version
+    "--without-system-hsqldb"
+
+    # searches hardcoded paths that are wrong
+    "--without-system-zxing"
+
     # is packaged but headers can't be found because there is no pkg-config file
     "--without-system-zxcvbn"
-
-    "--with-system-orcus"
-    "--with-system-libepubgen"
-    "--with-system-libetonyek"
-    "--without-system-xmlsec"
-    "--without-system-zxing"
   ] ++ optionals kdeIntegration [
     "--enable-kf${qtMajor}"
     "--enable-qt${qtMajor}"
   ] ++ optionals (kdeIntegration && qtMajor == "5") [
     "--enable-gtk3-kde5"
-  ];
+  ] ++ (if variant == "fresh" then [
+    "--with-system-rhino"
+    "--with-rhino-jar=${rhino}/share/java/js.jar"
+  ] else [
+    # our Rhino is too new for older versions
+    "--without-system-rhino"
+  ]);
 
 
   env = {
@@ -553,8 +569,9 @@ in stdenv.mkDerivation (finalAttrs: {
   ];
 
   postInstall = optionalString (variant != "collabora") ''
-    mkdir -p $out/share/icons
+    mkdir -p $out/{include,share/icons}
 
+    cp -r include/LibreOfficeKit $out/include/
     cp -r sysui/desktop/icons/hicolor $out/share/icons
 
     # Rename icons for consistency
@@ -606,6 +623,7 @@ in stdenv.mkDerivation (finalAttrs: {
       ki18n
       knotifications
       qtdeclarative
+      qtmultimedia
       qtquickcontrols
       qtwayland
       solid
@@ -626,6 +644,7 @@ in stdenv.mkDerivation (finalAttrs: {
       phonon
       qtbase
       qtdeclarative
+      qtmultimedia
       qtsvg
       qttools
       qtwayland

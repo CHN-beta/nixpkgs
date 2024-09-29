@@ -18,13 +18,13 @@ rustPlatform.buildRustPackage rec {
   pname = "tinymist";
   # Please update the corresponding vscode extension when updating
   # this derivation.
-  version = "0.11.19";
+  version = "0.11.20";
 
   src = fetchFromGitHub {
     owner = "Myriad-Dreamin";
     repo = "tinymist";
     rev = "refs/tags/v${version}";
-    hash = "sha256-ejumGfG98l3N3mA7UX86GYa46hIwxjEB2/jvAW9rv0I=";
+    hash = "sha256-wmXFMLLMjMFRuWX9AFk+gJz/4t0+DiOBrvcTx+LQ+tI=";
   };
 
   cargoLock = {
@@ -44,7 +44,7 @@ rustPlatform.buildRustPackage rec {
       openssl
       zlib
     ]
-    ++ lib.optionals stdenv.isDarwin [
+    ++ lib.optionals stdenv.hostPlatform.isDarwin [
       darwin.apple_sdk_11_0.frameworks.CoreFoundation
       darwin.apple_sdk_11_0.frameworks.CoreServices
       darwin.apple_sdk_11_0.frameworks.Security

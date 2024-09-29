@@ -16,13 +16,13 @@
 
 python3Packages.buildPythonApplication rec {
   pname = "nwg-panel";
-  version = "0.9.37";
+  version = "0.9.39";
 
   src = fetchFromGitHub {
     owner = "nwg-piotr";
     repo = "nwg-panel";
     rev = "refs/tags/v${version}";
-    hash = "sha256-CKufaOAh7wH2ECN+zsPk4PQNYuewT2BzTci8nt8EhlU=";
+    hash = "sha256-uXhhtE91BqYdTQjavOU5p0JoprFZTGCcxQr66iJixu4=";
   };
 
   # No tests

@@ -6,16 +6,16 @@
 
 buildGoModule rec {
   pname = "nuclei";
-  version = "3.3.1";
+  version = "3.3.3";
 
   src = fetchFromGitHub {
     owner = "projectdiscovery";
     repo = "nuclei";
     rev = "refs/tags/v${version}";
-    hash = "sha256-pUctan5p3jxrj2/98nzibZQAL2EK8R5jnD/hjVgxSzQ=";
+    hash = "sha256-Cbw/80WjdoxNzf/XvU4sHNeSnriww8cSGGVVF0pCi8Y=";
   };
 
-  vendorHash = "sha256-sJkkgh7F5Hgj9K6m7OTQbamkcS3uS78jK9HdLYeypIU=";
+  vendorHash = "sha256-jVt7KiUsUHASG7TVWV9G26Qe+H7Qf/kBz/sTwlh5Pc8=";
 
   subPackages = [ "cmd/nuclei/" ];
 
