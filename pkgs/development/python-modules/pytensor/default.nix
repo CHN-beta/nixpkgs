@@ -22,7 +22,6 @@
   numba,
   pytest-mock,
   pytestCheckHook,
-  pythonOlder,
   tensorflow-probability,
 
   nix-update-script,
@@ -30,16 +29,14 @@
 
 buildPythonPackage rec {
   pname = "pytensor";
-  version = "2.25.3";
+  version = "2.25.6";
   pyproject = true;
-
-  disabled = pythonOlder "3.10";
 
   src = fetchFromGitHub {
     owner = "pymc-devs";
     repo = "pytensor";
     rev = "refs/tags/rel-${version}";
-    hash = "sha256-m0Fngbvt/N95/1moc8PW1KU/yfRE/NC+1d0Ste7V8HU=";
+    hash = "sha256-6emtX0tNqVqKyKXnwxvAwCyM3TRJ2MNClPNg0tVxBU8=";
   };
 
   pythonRelaxDeps = [

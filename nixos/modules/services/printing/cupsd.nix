@@ -184,8 +184,8 @@ in
         type = types.bool;
         default = false;
         description = ''
-          Whether to open the firewall for TCP/UDP ports specified in
-          listenAdrresses option.
+          Whether to open the firewall for TCP ports specified in
+          listenAddresses option.
         '';
       };
 
@@ -347,7 +347,7 @@ in
     services.dbus.packages = [ cups.out ] ++ optional polkitEnabled cups-pk-helper;
     services.udev.packages = cfg.drivers;
 
-    # Allow asswordless printer admin for members of wheel group
+    # Allow passwordless printer admin for members of wheel group
     security.polkit.extraConfig = mkIf polkitEnabled ''
       polkit.addRule(function(action, subject) {
           if (action.id == "org.opensuse.cupspkhelper.mechanism.all-edit" &&
@@ -493,7 +493,6 @@ in
       listenPorts = parsePorts cfg.listenAddresses;
     in mkIf cfg.openFirewall {
       allowedTCPPorts = listenPorts;
-      allowedUDPPorts = listenPorts;
     };
 
   };

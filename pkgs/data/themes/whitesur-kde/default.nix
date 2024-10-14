@@ -1,57 +1,59 @@
 { lib
 , stdenvNoCC
 , fetchFromGitHub
-, kdeclarative
-, plasma-framework
-, plasma-workspace
-, gitUpdater
+, plasma-desktop
+, qtsvg
+, unstableGitUpdater
 }:
 
 stdenvNoCC.mkDerivation {
   pname = "whitesur-kde";
-  version = "unstable-2024-06-25";
+  version = "2022-05-01-unstable-2024-09-26";
 
   src = fetchFromGitHub {
     owner = "vinceliuice";
     repo = "whitesur-kde";
-    rev = "6705b5e2631128fda3af5baa475b276bb2780899";
-    hash = "sha256-fsf6jApgF5NJSpP73cWJaFtCvWaRtF93DclV62Bu+xc=";
+    rev = "8cbb617049ad79ecff63eb62770d360b73fed656";
+    hash = "sha256-uNRO/r8kJByS4BDq0jXth+y0rg3GtGsbXoNLOZHpuNU=";
   };
 
   # Propagate sddm theme dependencies to user env otherwise sddm does
   # not find them. Putting them in buildInputs is not enough.
   propagatedUserEnvPkgs = [
-    kdeclarative.bin
-    plasma-framework
-    plasma-workspace
+    plasma-desktop
+    qtsvg
   ];
 
   postPatch = ''
-    patchShebangs install.sh
+    patchShebangs install.sh sddm/install.sh
 
     substituteInPlace install.sh \
-      --replace '$HOME/.config' $out/share \
-      --replace '$HOME/.local' $out \
-      --replace '"$HOME"/.Xresources' $out/doc/.Xresources
+      --replace-fail '[ "$UID" -eq "$ROOT_UID" ]' true \
+      --replace-fail /usr $out \
+      --replace-fail '"$HOME"/.Xresources' $out/doc/.Xresources
+
+    substituteInPlace sddm/install.sh \
+      --replace-fail '[ "$UID" -eq "$ROOT_UID" ]' true \
+      --replace-fail /usr $out \
+      --replace-fail 'REO_DIR="$(cd $(dirname $0) && pwd)"' 'REO_DIR=sddm'
 
     substituteInPlace sddm/*/Main.qml \
-      --replace /usr $out
+      --replace-fail /usr $out
   '';
 
   installPhase = ''
     runHook preInstall
 
     mkdir -p $out/doc
-
     name= ./install.sh
 
     mkdir -p $out/share/sddm/themes
-    cp -a sddm/WhiteSur-6.0 $out/share/sddm/themes/WhiteSur
+    sddm/install.sh
 
     runHook postInstall
   '';
 
-  passthru.updateScript = gitUpdater { };
+  passthru.updateScript = unstableGitUpdater { };
 
   meta = with lib; {
     description = "MacOS big sur like theme for KDE Plasma desktop";
