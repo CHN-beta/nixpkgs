@@ -323,10 +323,10 @@ let
         "test-runner-run"
         "test-runner-watch-mode"
         "test-watch-mode-files_watcher"
+        "test-os"
       ] ++ lib.optionals stdenv.buildPlatform.isDarwin [
         # Disable tests that don’t work under macOS sandbox.
         "test-macos-app-sandbox"
-        "test-os"
         "test-os-process-priority"
       ] ++ lib.optionals (stdenv.buildPlatform.isDarwin && stdenv.buildPlatform.isx86_64) [
         # These tests fail on x86_64-darwin (even without sandbox).
