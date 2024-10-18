@@ -5848,6 +5848,12 @@
     githubId = 6872940;
     name = "Dennis Værum";
   };
+  dvcorreia = {
+    email = "dv_correia@hotmail.com";
+    name = "Diogo Correia";
+    github = "dvcorreia";
+    githubId = 20357938;
+  };
   dvn0 = {
     email = "git@dvn.me";
     github = "dvn0";
@@ -8394,6 +8400,13 @@
     github = "haslersn";
     githubId = 33969028;
     name = "Sebastian Hasler";
+  };
+  hasnep = {
+    name = "Hannes";
+    email = "h@nnes.dev";
+    matrix = "@hasnep:matrix.org";
+    github = "Hasnep";
+    githubId = 25184102;
   };
   hausken = {
     name = "Hausken";
@@ -22652,6 +22665,13 @@
     github = "vonixxx";
     githubId = 144771550;
     name = "Luca Uricariu";
+  };
+  voronind = {
+    email = "hi@voronind.com";
+    name = "Dmitry Voronin";
+    github = "voronind-com";
+    githubId = 22127600;
+    keys = [ { fingerprint = "3241 FDAD 82A7 E22D 4279  F405 913F 3267 9278 2E1C"; } ];
   };
   votava = {
     email = "votava@gmail.com";

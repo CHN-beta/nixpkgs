@@ -2,7 +2,6 @@
   lib,
   fetchFromGitHub,
   xorg,
-  libsForQt5,
   wrapQtAppsHook,
   python3,
 }:
@@ -23,13 +22,11 @@ python3.pkgs.buildPythonApplication rec {
   nativeBuildInputs = [ wrapQtAppsHook ];
 
   propagatedBuildInputs = with python3.pkgs; [
-    pyqt5
     pyqt6
     argcomplete
     pyyaml
     darkdetect
     xorg.libxcb
-    libsForQt5.qtbase
   ];
 
   postPatch = ''
