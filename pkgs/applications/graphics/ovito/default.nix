@@ -1,4 +1,5 @@
-{ lib
+{ mkDerivation
+, lib
 , stdenv
 , fetchFromGitLab
 , cmake
@@ -16,23 +17,21 @@
 , qtsvg
 , qttools
 , VideoDecodeAcceleration
-, wrapQtAppsHook
 }:
 
-stdenv.mkDerivation rec {
+mkDerivation rec {
   pname = "ovito";
-  version = "3.11.0";
+  version = "3.7.11";
 
   src = fetchFromGitLab {
     owner = "stuko";
     repo = "ovito";
     rev = "v${version}";
-    hash = "sha256-egiA6z1e8ZS7i4CIVjsCKJP1wQSRpmSKitoVTszu0Mc=";
+    hash = "sha256-Z3uwjOYJ7di/LLllbzdKjzUE7m119i03bA8dJPqhxWA=";
   };
 
   nativeBuildInputs = [
     cmake
-    wrapQtAppsHook
   ];
 
   buildInputs = [
@@ -58,10 +57,7 @@ stdenv.mkDerivation rec {
     mainProgram = "ovito";
     homepage = "https://ovito.org";
     license = with licenses;  [ gpl3Only mit ];
-    maintainers = with maintainers; [
-      twhitehead
-      chn
-    ];
+    maintainers = with maintainers; [ twhitehead ];
     broken = stdenv.hostPlatform.isDarwin; # clang-11: error: no such file or directory: '$-DOVITO_COPYRIGHT_NOTICE=...
   };
 }
