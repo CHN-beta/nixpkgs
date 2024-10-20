@@ -37,8 +37,6 @@ buildPythonPackage rec {
 
   pythonImportsCheck = [ "zarr" ];
 
-  disabledTests = [ "test_encode_decode_array_dtype_shape_v3" ];
-
   meta = with lib; {
     description = "Implementation of chunked, compressed, N-dimensional arrays for Python";
     homepage = "https://github.com/zarr-developers/zarr";
