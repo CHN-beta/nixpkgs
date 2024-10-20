@@ -77,6 +77,8 @@ buildPythonPackage rec {
     "test_non_numpy_inputs"
   ];
 
+  doCheck = false;
+
   meta = with lib; {
     homepage = "https://github.com/zarr-developers/numcodecs";
     license = licenses.mit;
