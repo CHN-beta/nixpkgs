@@ -328,6 +328,8 @@ let
         "test-macos-app-sandbox"
         "test-os"
         "test-os-process-priority"
+      ] ++ lib.optionals (builtins.elem stdenv.buildPlatform.gcc.arch or null [ "znver2" "silvermont" "sandybridge" ]) [
+        "test-os"
       ] ++ lib.optionals (stdenv.buildPlatform.isDarwin && stdenv.buildPlatform.isx86_64) [
         # These tests fail on x86_64-darwin (even without sandbox).
         # TODO: revisit at a later date.
