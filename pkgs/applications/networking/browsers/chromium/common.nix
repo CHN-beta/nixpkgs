@@ -56,10 +56,14 @@
 , libgcrypt ? null # cupsSupport
 , systemdSupport ? lib.meta.availableOn stdenv.hostPlatform systemd
 , systemd
+
+, enableCcache ? false
+, ccacheStdenv ? null
 }:
 
 buildFun:
-
+let originalStdenv = stdenv;
+in let stdenv = if enableCcache then ccacheStdenv.override { stdenv = originalStdenv; } else originalStdenv; in
 let
   python3WithPackages = python3.pythonOnBuildForHost.withPackages(ps: with ps; [
     ply jinja2 setuptools
@@ -121,7 +125,7 @@ let
   # There currently isn't a (much) more concise way to get a stdenv
   # that uses lld as its linker without bootstrapping pkgsLLVM; see
   # https://github.com/NixOS/nixpkgs/issues/142901
-  buildPlatformLlvmStdenv =
+  originalBuildPlatformLlvmStdenv =
     let
       llvmPackages = pkgsBuildBuild.rustc.llvmPackages;
     in
@@ -129,6 +133,9 @@ let
         (llvmPackages.stdenv.cc.override {
           inherit (llvmPackages) bintools;
         });
+  buildPlatformLlvmStdenv =
+    if enableCcache then ccacheStdenv.override { stdenv = originalBuildPlatformLlvmStdenv; }
+    else originalBuildPlatformLlvmStdenv;
 
   chromiumRosettaStone = {
     cpu = platform:

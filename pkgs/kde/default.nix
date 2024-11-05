@@ -92,6 +92,9 @@ let
         koi = self.callPackage ./third-party/koi { };
         krohnkite = self.callPackage ./third-party/krohnkite { };
         kzones = self.callPackage ./third-party/kzones { };
+
+        # Convenient for users to install various tools provided by kde
+        kdeGear = gear;
       }
     );
 in

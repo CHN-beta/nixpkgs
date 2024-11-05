@@ -134,5 +134,11 @@ with lib;
         Enable recommended proxy settings.
       '';
     };
+
+    recommendedProxySettingsNoHost = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''recommendedProxySettingsNoHost'';
+    };
   };
 }
