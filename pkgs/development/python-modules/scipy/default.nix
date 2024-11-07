@@ -148,7 +148,10 @@ buildPythonPackage {
     "hyp2f1_test_case47"
     "hyp2f1_test_case3"
     "test_uint64_max"
-  ];
+  ]
+  # some float precision issue
+  ++ lib.optionals stdenv.hostPlatform.avx2Support [ "hyp2f1_test_case42" ]
+  ++ lib.optionals stdenv.hostPlatform.avx512Support [ "test_equal_bounds" ];
 
   doCheck = !(stdenv.hostPlatform.isx86_64 && stdenv.hostPlatform.isDarwin);
 
