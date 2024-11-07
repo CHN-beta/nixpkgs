@@ -332,6 +332,10 @@ let
         "test-fs-readv"
         "test-fs-readv-sync"
         "test-vm-memleak"
+      ] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or null != null) [
+        # failed if set priority to nix daemon
+        # also failed if use `nix build`, but not fail when use `nix-build`, not sure why
+        "test-os"
       ])}"
     ];
 
