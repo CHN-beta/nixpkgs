@@ -406,8 +406,8 @@ let
         mktplcRef = {
           name = "vscode-neovim";
           publisher = "asvetliakov";
-          version = "1.18.13";
-          hash = "sha256-FFgleWhzFaAE0UdKQ6lZsszBtJ46UZ3bfx1V3SopDNc=";
+          version = "1.18.14";
+          hash = "sha256-Db49bLX0QLr7fS7ZUyeWOustN63LpaJ6IBTKMqAz8uc=";
         };
         meta = {
           changelog = "https://marketplace.visualstudio.com/items/asvetliakov.vscode-neovim/changelog";
@@ -1072,7 +1072,7 @@ let
           }
           // sources.${stdenv.system};
         nativeBuildInputs = lib.optionals stdenv.hostPlatform.isLinux [ autoPatchelfHook ];
-        buildInputs = [ stdenv.cc.cc.lib ];
+        buildInputs = [ (lib.getLib stdenv.cc.cc) ];
         meta = {
           description = "Open-source autopilot for software development - bring the power of ChatGPT to your IDE";
           downloadPage = "https://marketplace.visualstudio.com/items?itemName=Continue.continue";
@@ -1349,7 +1349,7 @@ let
 
         buildInputs = [
           zlib
-          stdenv.cc.cc.lib
+          (lib.getLib stdenv.cc.cc)
         ];
 
         postInstall = ''
@@ -3245,7 +3245,7 @@ let
           // sources.${stdenv.system};
         nativeBuildInputs = lib.optionals stdenv.hostPlatform.isLinux [ autoPatchelfHook ];
         buildInputs = [
-          stdenv.cc.cc.lib
+          (lib.getLib stdenv.cc.cc)
           zlib
         ];
         meta = {
