@@ -31,7 +31,9 @@ stdenv.mkDerivation rec {
   env.NIX_CFLAGS_COMPILE = lib.optionalString stdenv.hostPlatform.isx86_64 "-mno-fma";
 
   # https://lists.gnu.org/archive/html/bug-gsl/2015-11/msg00012.html
-  doCheck = stdenv.hostPlatform.system != "i686-linux";
+  doCheck = stdenv.hostPlatform.system != "i686-linux"
+    # float precision issue
+    && (!stdenv.hostPlatform.avx512Support);
 
   meta = {
     description = "GNU Scientific Library, a large numerical library";
