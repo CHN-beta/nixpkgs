@@ -82,6 +82,7 @@ stdenv.mkDerivation rec {
         # https://gitlab.com/inkscape/lib2geom/-/issues/63
         "elliptical-arc-test"
       ]
+      ++ lib.optionals (stdenv.hostPlatform.gcc.arch or null != null) [ "elliptical-arc-test" ]
       ++ lib.optionals stdenv.hostPlatform.isMusl [
         # Fails due to rounding differences
         # https://gitlab.com/inkscape/lib2geom/-/issues/70
