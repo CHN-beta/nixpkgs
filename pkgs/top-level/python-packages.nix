@@ -6458,7 +6458,7 @@ self: super: with self; {
 
   jaxlib-build = callPackage ../development/python-modules/jaxlib rec {
     # Some platforms don't have `cudaSupport` defined, hence the need for 'or false'.
-    inherit (pkgs.config) cudaSupport;
+    cudaSupport = false;
     IOKit = pkgs.darwin.apple_sdk_11_0.IOKit;
   };
 
