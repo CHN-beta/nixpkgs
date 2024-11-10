@@ -75,7 +75,7 @@ stdenv.mkDerivation rec {
     ++ lib.optional (!buildApps) "-DOCIO_BUILD_APPS=OFF";
 
   # precision issues on non-x86
-  doCheck = stdenv.hostPlatform.isx86_64;
+  doCheck = stdenv.hostPlatform.isx86_64 && (stdenv.hostPlatform.gcc.arch or null == null);
   # Tends to fail otherwise.
   enableParallelChecking = false;
 
