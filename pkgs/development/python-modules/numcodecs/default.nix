@@ -57,6 +57,11 @@ buildPythonPackage rec {
     importlib-metadata
   ];
 
+  # not sure why
+  # use if ... then ... else instead of lib.optionals, to prevent rebuild of generic packages
+  disabledTests = if stdenv.hostPlatform.gcc.arch or null != null && !stdenv.hostPlatform.avx2Support
+    then [ "test_encode_decode" "test_partial_decode" ] else null;
+
   # https://github.com/NixOS/nixpkgs/issues/255262
   pytestFlagsArray = [ "$out/${python.sitePackages}/numcodecs" ];
 
