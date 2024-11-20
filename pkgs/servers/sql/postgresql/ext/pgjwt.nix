@@ -1,6 +1,6 @@
-{ lib, stdenv, fetchFromGitHub, postgresql, unstableGitUpdater, nixosTests, postgresqlTestExtension }:
+{ lib, stdenv, fetchFromGitHub, postgresql, unstableGitUpdater, nixosTests, postgresqlTestExtension, buildPostgresqlExtension }:
 
-stdenv.mkDerivation (finalAttrs: {
+buildPostgresqlExtension (finalAttrs: {
   pname = "pgjwt";
   version = "0-unstable-2023-03-02";
 
@@ -11,16 +11,10 @@ stdenv.mkDerivation (finalAttrs: {
     sha256 = "sha256-nDZEDf5+sFc1HDcG2eBNQj+kGcdAYRXJseKi9oww+JU=";
   };
 
-  dontBuild = true;
-  installPhase = ''
-    mkdir -p $out/share/postgresql/extension
-    cp pg*sql *.control $out/share/postgresql/extension
-  '';
-
   passthru.updateScript = unstableGitUpdater { };
 
-  passthru.tests = {
-    inherit (nixosTests) pgjwt;
+  passthru.tests = lib.recurseIntoAttrs {
+    pgjwt = nixosTests.postgresql.pgjwt.passthru.override postgresql;
 
     extension = postgresqlTestExtension {
       inherit (finalAttrs) finalPackage;

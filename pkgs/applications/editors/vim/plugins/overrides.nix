@@ -173,7 +173,7 @@ in
         pname = "avante-nvim-lib";
         inherit (oldAttrs) version src;
 
-        cargoHash = "sha256-X8JqUoPjm9emJjmwCh7+0bfdtPXLwOg6IRfQHaYlH90=";
+        cargoHash = "sha256-HPObCCaGMFu+7+zK9sg7hFlTb1CNQ9AV6V1r0WKRSZo=";
 
         nativeBuildInputs = [
           pkg-config
@@ -1532,6 +1532,13 @@ in
     dependencies = with self; [ ultisnips ];
   };
 
+  neoconf-nvim = super.neoconf-nvim.overrideAttrs {
+    dependencies = with self; [ nvim-lspconfig ];
+
+    doInstallCheck = true;
+    nvimRequireCheck = "neoconf";
+  };
+
   neogit = super.neogit.overrideAttrs {
     dependencies = with self; [ plenary-nvim ];
     nvimRequireCheck = "neogit";
@@ -2259,6 +2266,16 @@ in
 
   telescope-z-nvim = super.telescope-z-nvim.overrideAttrs {
     dependencies = with self; [ telescope-nvim ];
+  };
+
+  quarto-nvim = super.quarto-nvim.overrideAttrs {
+    dependencies = with self; [
+      nvim-lspconfig
+      otter-nvim
+    ];
+
+    nvimRequireCheck = "quarto";
+    doInstallCheck = true;
   };
 
   telescope-zoxide = super.telescope-zoxide.overrideAttrs {

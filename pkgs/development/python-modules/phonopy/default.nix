@@ -31,7 +31,14 @@ buildPythonPackage rec {
     hash = "sha256-MabBtEOyM82R0NbdVaY+2f9GT8rT44xjOi/o38GSRp8=";
   };
 
-  nativeBuildInputs = [ setuptools scikit-build-core nanobind setuptools-scm ninja cmake ];
+  nativeBuildInputs = [
+    setuptools
+    scikit-build-core
+    nanobind
+    setuptools-scm
+    ninja
+    cmake
+  ];
   dontUseCmakeConfigure = true;
 
   propagatedBuildInputs = [
