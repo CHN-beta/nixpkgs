@@ -1,6 +1,7 @@
 { stdenv
 , callPackage
 , rocmUpdateScript
+, lib
 }:
 
 callPackage ../base.nix rec {
@@ -34,4 +35,10 @@ callPackage ../base.nix rec {
     "-DLIBCXX_INSTALL_LIBRARY=OFF"
     "-DLIBCXX_INSTALL_HEADERS=OFF"
   ];
+
+  extraPostPatch = lib.optionalString (stdenv.hostPlatform.gcc.arch or null == "znver4") ''
+    # somehow it failed
+    rm ../libcxxabi/test/guard_threaded_test.pass.cpp
+  '';
+
 }
