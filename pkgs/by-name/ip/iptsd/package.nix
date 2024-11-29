@@ -16,13 +16,13 @@
 
 stdenv.mkDerivation rec {
   pname = "iptsd";
-  version = "3";
+  version = "2";
 
   src = fetchFromGitHub {
     owner = "linux-surface";
-    repo = "iptsd";
-    rev = "refs/tags/v${version}";
-    hash = "sha256-3z3A9qywmsSW1tlJ6LePC5wudM/FITTAFyuPkbHlid0=";
+    repo = pname;
+    rev = "v${version}";
+    hash = "sha256-zTXTyDgSa1akViDZlYLtJk1yCREGCSJKxzF+HZAWx0c=";
   };
 
   nativeBuildInputs = [
@@ -47,12 +47,13 @@ stdenv.mkDerivation rec {
   # Original installs udev rules and service config into global paths
   postPatch = ''
     substituteInPlace etc/meson.build \
-      --replace-fail "install_dir: unitdir" "install_dir: '$out/etc/systemd/system'" \
-      --replace-fail "install_dir: rulesdir" "install_dir: '$out/etc/udev/rules.d'"
-    substituteInPlace etc/scripts/iptsd-find-service \
-      --replace-fail "systemd-escape" "${lib.getExe' systemd "systemd-escape"}"
+      --replace "install_dir: unitdir" "install_dir: '$out/etc/systemd/system'" \
+      --replace "install_dir: rulesdir" "install_dir: '$out/etc/udev/rules.d'"
+    substituteInPlace etc/systemd/iptsd-find-service \
+      --replace "iptsd-find-hidraw" "$out/bin/iptsd-find-hidraw" \
+      --replace "systemd-escape" "${lib.getExe' systemd "systemd-escape"}"
     substituteInPlace etc/udev/50-iptsd.rules.in \
-      --replace-fail "/bin/systemd-escape" "${lib.getExe' systemd "systemd-escape"}"
+      --replace "/bin/systemd-escape" "${lib.getExe' systemd "systemd-escape"}"
   '';
 
   mesonFlags = [
