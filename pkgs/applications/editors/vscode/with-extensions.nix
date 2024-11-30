@@ -1,5 +1,7 @@
 { lib, stdenv, runCommand, buildEnv, vscode, vscode-utils, makeWrapper, writeTextFile
-, vscodeExtensions ? [] }:
+, vscodeExtensions ? []
+, extraFlags ? ""
+}:
 
 /*
   `vscodeExtensions`
@@ -58,8 +60,7 @@ let
   };
 
   extensionsFlag = ''
-    --add-flags "--extensions-dir ${combinedExtensionsDrv}/share/vscode/extensions"
-  '';
+    --add-flags "--extensions-dir ${combinedExtensionsDrv}/share/vscode/extensions" '' + extraFlags;
 in
 
 runCommand "${wrappedPkgName}-with-extensions-${wrappedPkgVersion}" {
