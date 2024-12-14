@@ -27,7 +27,7 @@
   libGL,
   libxcrypt,
   libxml2,
-  llvm_18,
+  llvm_16,
   lsof,
   lz4,
   xz,
@@ -56,7 +56,7 @@
 
 stdenv.mkDerivation rec {
   pname = "root";
-  version = "6.34.00-rc1";
+  version = "6.32.08";
 
   passthru = {
     tests = import ./tests { inherit callPackage; };
@@ -64,7 +64,7 @@ stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "https://root.cern.ch/download/root_v${version}.source.tar.gz";
-    sha256 = "1fx6nyv3drcb16a36np7h3vmjlm937j6y9vxkv0sny0grrxcj9lw";
+    hash = "sha256-Ka1JRact/xoAnDJqZbb6XuJHhJiCMlHTzvhqLL63eyc=";
   };
 
   clad_src = fetchgit {
@@ -94,7 +94,7 @@ stdenv.mkDerivation rec {
       lapack
       libxcrypt
       libxml2
-      llvm_18
+      llvm_16
       lz4
       xz
       gsl
@@ -123,7 +123,7 @@ stdenv.mkDerivation rec {
       libGL
     ];
 
-  patches = [ ./c++23.patch ];
+  patches = [ ./sw_vers.patch ];
 
   preConfigure =
     ''
@@ -135,15 +135,17 @@ stdenv.mkDerivation rec {
       substituteInPlace cmake/modules/SearchInstalledSoftware.cmake \
         --replace-fail 'set(lcgpackages ' '#set(lcgpackages '
 
+      # We have to bypass the connection check, because it would disable clad.
+      # This should probably be fixed upstream with a flag to disable the
+      # connectivity check!
+      substituteInPlace CMakeLists.txt \
+        --replace-fail 'if(clad AND NO_CONNECTION)' 'if(FALSE)'
       # Make sure that clad is not downloaded when building
       substituteInPlace interpreter/cling/tools/plugins/clad/CMakeLists.txt \
         --replace-fail 'UPDATE_COMMAND ""' 'SOURCE_DIR ${clad_src} DOWNLOAD_COMMAND "" UPDATE_COMMAND ""'
       # Make sure that clad is finding the right llvm version
       substituteInPlace interpreter/cling/tools/plugins/clad/CMakeLists.txt \
-        --replace-fail '-DLLVM_DIR=''${LLVM_BINARY_DIR}' '-DLLVM_DIR=${llvm_18.dev}/lib/cmake/llvm'
-
-      substituteInPlace cmake/modules/CheckCompiler.cmake \
-        --replace-fail 'if(NOT CMAKE_CXX_STANDARD MATCHES "17|20")' 'if(FALSE)'
+        --replace-fail '-DLLVM_DIR=''${LLVM_BINARY_DIR}' '-DLLVM_DIR=${llvm_16.dev}/lib/cmake/llvm'
 
       substituteInPlace interpreter/llvm-project/clang/tools/driver/CMakeLists.txt \
         --replace-fail 'add_clang_symlink(''${link} clang)' ""
@@ -156,7 +158,6 @@ stdenv.mkDerivation rec {
         -e '1iset(nlohmann_json_DIR "${nlohmann_json}/lib/cmake/nlohmann_json/")'
 
       patchShebangs build/unix/
-      patchShebangs cmake/unix/
     ''
     + lib.optionalString stdenv.hostPlatform.isDarwin ''
       # Eliminate impure reference to /System/Library/PrivateFrameworks
@@ -184,8 +185,6 @@ stdenv.mkDerivation rec {
       "-Dpgsql=OFF"
       "-Dsqlite=OFF"
       "-Dvdt=OFF"
-      "-DNO_CONNECTION=ON"
-      "-DCMAKE_CXX_STANDARD=23"
     ]
     ++ lib.optional (
       (!stdenv.hostPlatform.isDarwin) && (stdenv.cc.libc != null)
