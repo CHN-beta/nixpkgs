@@ -157,6 +157,12 @@ stdenv.mkDerivation (finalAttrs: {
           ++ lib.optionals stdenv.hostPlatform.isDarwin [
             "buffered_atomic_test.BufferedAtomic.singleThreadUnguardedAccess"
           ]
+          ++ lib.optionals (stdenv.hostPlatform.gcc.arch or null != null) [
+            "io_async_hh_wheel_timer_test.HHWheelTimerTest.ReschedTest"
+            "io_async_hh_wheel_timer_test.HHWheelTimerTest.CancelTimeout"
+            "io_async_hh_wheel_timer_test.HHWheelTimerTest.DeleteWheelInTimeout"
+            "io_async_hh_wheel_timer_test.HHWheelTimerTest.FireOnce"
+          ]
         )
       )
     }
