@@ -22,8 +22,8 @@ let
     # Valgrind on musl does not hook malloc calls properly, resulting in errors `Invalid free() / delete / delete[] / realloc()`
     # https://bugs.kde.org/show_bug.cgi?id=435441
     && !stdenv.hostPlatform.isMusl
-    # error on tigerlake
-    && stdenv.hostPlatform.gcc.arch != "tigerlake"
+    # error on tigerlake and cascadelake
+    && !builtins.elem (stdenv.hostPlatform.gcc.arch or null) [ "tigerlake" "cascadelake" ]
   ;
 in stdenv.mkDerivation rec {
   pname = "libpsl";
