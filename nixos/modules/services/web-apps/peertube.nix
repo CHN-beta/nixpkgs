@@ -429,7 +429,7 @@ in {
 
       environment = env;
 
-      path = with pkgs; [ nodejs_18 yarn ffmpeg-headless openssl ];
+      path = with pkgs; [ nodejs_18 yarn ffmpeg_6-headless openssl ];
 
       script = ''
         umask 077
@@ -843,7 +843,7 @@ in {
           home = cfg.package;
         };
       })
-      (lib.attrsets.setAttrByPath [ cfg.user "packages" ] [ peertubeEnv pkgs.nodejs_18 pkgs.yarn pkgs.ffmpeg-headless ])
+      (lib.attrsets.setAttrByPath [ cfg.user "packages" ] [ peertubeEnv pkgs.nodejs_18 pkgs.yarn pkgs.ffmpeg_6-headless ])
       (lib.mkIf cfg.redis.enableUnixSocket {${config.services.peertube.user}.extraGroups = [ "redis-peertube" ];})
     ];
 
