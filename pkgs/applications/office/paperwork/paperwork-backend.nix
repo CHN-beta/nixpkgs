@@ -23,6 +23,7 @@
 , libreoffice
 , unittestCheckHook
 , setuptools-scm
+, stdenv
 }:
 
 buildPythonPackage rec {
@@ -82,6 +83,8 @@ buildPythonPackage rec {
   preCheck = ''
     export HOME=$TMPDIR
   '';
+
+  doCheck = stdenv.hostPlatform.gcc.arch or null == null;
 
   meta = with lib; {
     description = "Backend part of Paperwork (Python API, no UI)";

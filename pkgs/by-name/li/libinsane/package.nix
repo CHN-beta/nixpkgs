@@ -34,7 +34,7 @@ stdenv.mkDerivation rec {
 
   buildInputs = [ sane-backends glib ];
 
-  nativeCheckInputs = [ cunit valgrind ];
+  nativeCheckInputs = [ cunit ] ++ lib.optional (stdenv.hostPlatform.gcc.arch or null == null) valgrind;
 
   doCheck = true;
 
