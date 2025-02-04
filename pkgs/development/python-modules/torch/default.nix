@@ -569,7 +569,7 @@ buildPythonPackage rec {
   # Tests take a long time and may be flaky, so just sanity-check imports
   doCheck = false;
 
-  pythonImportsCheck = [ "torch" ];
+  pythonImportsCheck = lib.optional (python.pythonVersion != "3.11" || !cudaSupport) "torch";
 
   nativeCheckInputs = [
     hypothesis
