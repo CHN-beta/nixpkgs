@@ -4994,6 +4994,8 @@ self: super: with self; {
 
   gcovr = callPackage ../development/python-modules/gcovr { };
 
+  gcp-storage-emulator = callPackage ../development/python-modules/gcp-storage-emulator { };
+
   gcsa = callPackage ../development/python-modules/gcsa { };
 
   gcsfs = callPackage ../development/python-modules/gcsfs { };

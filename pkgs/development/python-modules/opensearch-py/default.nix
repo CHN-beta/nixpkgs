@@ -2,6 +2,7 @@
   lib,
   buildPythonPackage,
   fetchFromGitHub,
+  stdenv,
 
   # build-system
   setuptools,
@@ -74,7 +75,8 @@ buildPythonPackage rec {
     # finds our ca-bundle, but expects something else (/path/to/clientcert/dir or None)
     "test_ca_certs_ssl_cert_dir"
     "test_no_ca_certs"
-  ];
+  ] ++ lib.optionals (stdenv.hostPlatform.gcc.arch or null != null)
+    [ "test_basicauth_in_request_session" "test_callable_in_request_session" ];
 
   meta = {
     description = "Python low-level client for OpenSearch";
