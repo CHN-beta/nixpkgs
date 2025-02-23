@@ -80584,7 +80584,7 @@ self: {
   "crypton" = callPackage
     ({ mkDerivation, base, basement, bytestring, deepseq, gauge
      , ghc-prim, integer-gmp, memory, random, tasty, tasty-hunit
-     , tasty-kat, tasty-quickcheck, stdenv
+     , tasty-kat, tasty-quickcheck
      }:
      mkDerivation {
        pname = "crypton";
@@ -80601,7 +80601,6 @@ self: {
        ];
        description = "Cryptography Primitives sink";
        license = lib.licenses.bsd3;
-       configureFlags = if stdenv.hostPlatform.avx2Support then [ "--ghc-option=-optc-mno-avx2" ] else [];
      }) {};
 
   "crypton_1_0_1" = callPackage
@@ -80769,7 +80768,7 @@ self: {
   "cryptonite" = callPackage
     ({ mkDerivation, base, basement, bytestring, deepseq, gauge
      , ghc-prim, integer-gmp, memory, random, tasty, tasty-hunit
-     , tasty-kat, tasty-quickcheck, stdenv
+     , tasty-kat, tasty-quickcheck
      }:
      mkDerivation {
        pname = "cryptonite";
@@ -80786,7 +80785,6 @@ self: {
        ];
        description = "Cryptography Primitives sink";
        license = lib.licenses.bsd3;
-       configureFlags = if stdenv.hostPlatform.avx2Support then [ "--ghc-option=-optc-mno-avx2" ] else [];
      }) {};
 
   "cryptonite-cd" = callPackage
