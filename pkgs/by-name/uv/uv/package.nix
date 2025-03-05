@@ -4,6 +4,9 @@
   rustPlatform,
   fetchFromGitHub,
 
+  # buildInputs
+  rust-jemalloc-sys,
+
   # nativeBuildInputs
   cmake,
   installShellFiles,
@@ -17,17 +20,21 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "uv";
-  version = "0.5.31";
+  version = "0.6.3";
 
   src = fetchFromGitHub {
     owner = "astral-sh";
     repo = "uv";
     tag = version;
-    hash = "sha256-Gxn/fBXPoehLkKN1PAg31sL/eMxqQMk1+oineuAO17g=";
+    hash = "sha256-eT+pCw5azFhUS9ChOsJm7zXKAr/PeJeakBcoGolL+lI=";
   };
 
   useFetchCargoVendor = true;
-  cargoHash = "sha256-dop61TB9w2r+our4DiKzPvw9lI07cx9bT0Ujtvhko1E=";
+  cargoHash = "sha256-tCbNMV2r05bIo/xa1TmzocL8ccJyVCDKV735epPxd24=";
+
+  buildInputs = [
+    rust-jemalloc-sys
+  ];
 
   nativeBuildInputs = [
     cmake
@@ -45,7 +52,7 @@ rustPlatform.buildRustPackage rec {
   # Tests require python3
   doCheck = false;
 
-  postInstall =
+  postInstall = lib.optionalString (stdenv.hostPlatform.emulatorAvailable buildPackages) (
     let
       emulator = stdenv.hostPlatform.emulator buildPackages;
     in
@@ -54,7 +61,8 @@ rustPlatform.buildRustPackage rec {
         --bash <(${emulator} $out/bin/uv generate-shell-completion bash) \
         --fish <(${emulator} $out/bin/uv generate-shell-completion fish) \
         --zsh <(${emulator} $out/bin/uv generate-shell-completion zsh)
-    '';
+    ''
+  );
 
   nativeInstallCheckInputs = [
     versionCheckHook
