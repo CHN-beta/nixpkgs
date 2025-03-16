@@ -340040,7 +340040,7 @@ self: {
        license = lib.licenses.bsd3;
        hydraPlatforms = lib.platforms.none;
        mainProgram = "wstunnel";
-       maintainers = [ lib.maintainers.gebner ];
+       maintainers = [ ];
      }) {};
 
   "wtk" = callPackage

@@ -684,6 +684,8 @@ let
 
     ### H ###
 
+    h1 = callPackage ../development/ocaml-modules/h1 { };
+
     h2 = callPackage ../development/ocaml-modules/h2 { };
 
     h2-eio = callPackage ../development/ocaml-modules/h2/eio.nix { };
@@ -1206,6 +1208,8 @@ let
 
     mirage-logs = callPackage ../development/ocaml-modules/mirage-logs { };
 
+    mirage-mtime = callPackage ../development/ocaml-modules/mirage-mtime { };
+
     mirage-nat = callPackage ../development/ocaml-modules/mirage-nat { };
 
     mirage-net = callPackage ../development/ocaml-modules/mirage-net { };
@@ -1223,6 +1227,8 @@ let
     mirage-random-test = callPackage ../development/ocaml-modules/mirage-random-test { };
 
     mirage-runtime = callPackage ../development/ocaml-modules/mirage/runtime.nix { };
+
+    mirage-sleep = callPackage ../development/ocaml-modules/mirage-sleep { };
 
     mirage-time = callPackage ../development/ocaml-modules/mirage-time { };
 
@@ -1867,7 +1873,7 @@ let
     ### T ###
 
     taglib = callPackage ../development/ocaml-modules/taglib {
-      inherit (pkgs) taglib;
+      inherit (pkgs) taglib_1;
     };
 
     tar = callPackage ../development/ocaml-modules/tar { };
