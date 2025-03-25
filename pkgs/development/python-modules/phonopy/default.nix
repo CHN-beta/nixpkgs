@@ -25,14 +25,14 @@
 
 buildPythonPackage rec {
   pname = "phonopy";
-  version = "2.37.0";
+  version = "2.37.1";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "phonopy";
     repo = "phonopy";
     tag = "v${version}";
-    hash = "sha256-Asrgf4sTriEOv4Vovejshl5HXAYQEckxbHvZ7GmSQgg=";
+    hash = "sha256-+4ZrU/SgDgto62y9O1CA5TOSdMiz+DuDCQQiaJG7QL4=";
   };
 
   build-system = [
