@@ -21,11 +21,11 @@
 
 stdenv.mkDerivation rec {
   pname = "survex";
-  version = "1.4.15";
+  version = "1.4.16";
 
   src = fetchurl {
     url = "https://survex.com/software/${version}/${pname}-${version}.tar.gz";
-    hash = "sha256-8RuVHVugJmTP3CBYXzxxZGe5GYGUxJrlkzxXFRakkWI=";
+    hash = "sha256-kiRXld0FwXU2zPgMPSR/KQSdoZFLTvd9Y/n97/YJlcA=";
   };
 
   nativeBuildInputs = [
@@ -56,9 +56,15 @@ stdenv.mkDerivation rec {
       libX11
     ];
 
+  strictDeps = true;
+
   postPatch = ''
     patchShebangs .
   '';
+
+  configureFlags = [
+    "WX_CONFIG=${lib.getExe' (lib.getDev wxGTK32) "wx-config"}"
+  ];
 
   enableParallelBuilding = true;
   doCheck = (!stdenv.hostPlatform.isDarwin); # times out

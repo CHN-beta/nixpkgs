@@ -2,6 +2,7 @@
   lib,
   buildPythonPackage,
   fetchFromGitHub,
+  nix-update-script,
 
   # build-system
   pdm-backend,
@@ -36,14 +37,14 @@
 
 buildPythonPackage rec {
   pname = "langchain-community";
-  version = "0.3.19";
+  version = "0.3.20";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "langchain-ai";
     repo = "langchain";
     tag = "langchain-community==${version}";
-    hash = "sha256-U7L60GyxRQL9ze22Wy7g6ZdI/IFyAtUe1bRCconv6pg=";
+    hash = "sha256-6YLy7G1kZIqHAGMUIQoGCfDO2ZuVgNEtpkOI1o8eFvc=";
   };
 
   sourceRoot = "${src.name}/libs/community";
@@ -56,7 +57,10 @@ buildPythonPackage rec {
   ];
 
   pythonRelaxDeps = [
-    "langchain" # Can fail during updates where building sees the old langchain
+    # Each component release requests the exact latest langchain and -core.
+    # That prevents us from updating individul components.
+    "langchain"
+    "langchain-core"
     "numpy"
     "pydantic-settings"
     "tenacity"
@@ -98,12 +102,6 @@ buildPythonPackage rec {
 
   pytestFlagsArray = [ "tests/unit_tests" ];
 
-  passthru = {
-    inherit (langchain-core) updateScript;
-    # updates the wrong fetcher rev attribute
-    skipBulkUpdate = true;
-  };
-
   __darwinAllowLocalNetworking = true;
 
   disabledTests = [
@@ -123,6 +121,18 @@ buildPythonPackage rec {
     # Fails due to the lack of blockbuster
     "test_group_dependencies"
   ];
+
+  disabledTestPaths = [
+    # ValueError: Received unsupported arguments {'strict': None}
+    "tests/unit_tests/chat_models/test_cloudflare_workersai.py"
+  ];
+
+  passthru.updateScript = nix-update-script {
+    extraArgs = [
+      "--version-regex"
+      "^langchain-community==(.*)"
+    ];
+  };
 
   meta = {
     changelog = "https://github.com/langchain-ai/langchain/releases/tag/langchain-community==${version}";
