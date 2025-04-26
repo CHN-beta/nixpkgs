@@ -13,13 +13,13 @@
 }:
 
 let
-  version = "1.10.2";
+  version = "1.10.3";
 
   src = fetchFromGitHub {
     owner = "hedgedoc";
     repo = "hedgedoc";
     tag = version;
-    hash = "sha256-WDLcBnqhoKt6E41CzumOZg/5qvKFccN6gwirLTcwWYo=";
+    hash = "sha256-hXcPcGj+efvRVt3cHQc9KttE0/DOD9Bul6f3cY4ofgs=";
   };
 
   # we cannot use fetchYarnDeps because that doesn't support yarn 2/berry lockfiles
@@ -44,7 +44,7 @@ let
     '';
 
     outputHashMode = "recursive";
-    outputHash = "sha256-u/t2uvQ9oJnfjkSoPGjGsESWIsQHWvj9GP08aD6RkJk=";
+    outputHash = "sha256-KTUj1O2AA1qTQOqTbGBPLHAgiG5sG832Na8qLvEccmc=";
   };
 
 in
@@ -56,6 +56,7 @@ stdenv.mkDerivation {
     makeBinaryWrapper
     (python3.withPackages (ps: with ps; [ setuptools ])) # required to build sqlite3 bindings
     yarn
+    writableTmpDirAsHomeHook # A writable home directory is required for yarn
   ];
 
   buildInputs = [
@@ -67,7 +68,6 @@ stdenv.mkDerivation {
   buildPhase = ''
     runHook preBuild
 
-    export HOME=$(mktemp -d)
     yarn config set enableTelemetry 0
     yarn config set cacheFolder ${offlineCache}
     export npm_config_nodedir=${nodejs} # prevent node-gyp from downloading headers

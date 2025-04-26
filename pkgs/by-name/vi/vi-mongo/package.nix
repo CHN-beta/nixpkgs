@@ -8,13 +8,13 @@
 
 buildGoModule rec {
   pname = "vi-mongo";
-  version = "0.1.22";
+  version = "0.1.24";
 
   src = fetchFromGitHub {
     owner = "kopecmaciej";
     repo = "vi-mongo";
     tag = "v${version}";
-    hash = "sha256-OKeflsr823Z9KBgymJG2Z9C4OFxdbW8LzVCWLahMJ0s=";
+    hash = "sha256-L4LbVeH8Fgz7RD0tcyyKpP7+/aTvn1zfl+RpsWwiSfA=";
   };
 
   vendorHash = "sha256-rKXrmK0ns3FB6EGyCJ2nYrCUsQ7yPm8dmzJioiVzHIc=";
@@ -26,7 +26,7 @@ buildGoModule rec {
   ];
 
   nativeInstallCheckInputs = [ versionCheckHook ];
-  versionCheckProgramArg = [ "--version" ];
+  versionCheckProgramArg = "--version";
   doInstallCheck = true;
 
   passthru.updateScript = nix-update-script { };
