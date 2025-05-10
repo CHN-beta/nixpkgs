@@ -390,6 +390,8 @@ let
             (isDerivation x && x ? meta.timeout);
       };
       timeout = int;
+      knownVulnerabilities = listOf str;
+      badPlatforms = platforms;
 
       # Needed for Hydra to expose channel tarballs:
       # https://github.com/NixOS/hydra/blob/53335323ae79ca1a42643f58e520b376898ce641/doc/manual/src/jobs.md#meta-fields
@@ -397,7 +399,6 @@ let
 
       # Weirder stuff that doesn't appear in the documentation?
       maxSilent = int;
-      knownVulnerabilities = listOf str;
       name = str;
       version = str;
       tag = str;
@@ -410,7 +411,10 @@ let
       isFcitxEngine = bool;
       isIbusEngine = bool;
       isGutenprint = bool;
-      badPlatforms = platforms;
+
+      # Used for the original location of the maintainer and team attributes to assist with pings.
+      maintainersPosition = any;
+      teamsPosition = any;
     };
 
   checkMetaAttr =
@@ -589,10 +593,23 @@ let
         )
       ] ++ optional (hasOutput "man") "man";
     }
+    // {
+      # CI scripts look at these to determine pings.
+      maintainersPosition = builtins.unsafeGetAttrPos "maintainers" (attrs.meta or { });
+      teamsPosition = builtins.unsafeGetAttrPos "teams" (attrs.meta or { });
+    }
     // attrs.meta or { }
     # Fill `meta.position` to identify the source location of the package.
     // optionalAttrs (pos != null) {
       position = pos.file + ":" + toString pos.line;
+    }
+    // {
+      # Maintainers should be inclusive of teams.
+      # Note that there may be external consumers of this API (repology, for instance) -
+      # if you add a new maintainer or team attribute please ensure that this expectation is still met.
+      maintainers =
+        attrs.meta.maintainers or [ ]
+        ++ concatMap (team: team.members or [ ]) attrs.meta.teams or [ ];
     }
     // {
       # Expose the result of the checks for everyone to see.

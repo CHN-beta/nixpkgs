@@ -26,7 +26,7 @@ let
 in
 python.pkgs.buildPythonApplication rec {
   pname = "weblate";
-  version = "5.11";
+  version = "5.11.3";
 
   pyproject = true;
 
@@ -39,7 +39,7 @@ python.pkgs.buildPythonApplication rec {
     owner = "WeblateOrg";
     repo = "weblate";
     tag = "weblate-${version}";
-    hash = "sha256-A1XnXr97DhAZpDlttsMTBjOgdSO/bEN5jfOgZrzcxQo=";
+    hash = "sha256-FdiM6pvJhJHxJUDy17qb122fA4g0ffk6NEdvzLjKBeA=";
   };
 
   patches = [
@@ -152,12 +152,6 @@ python.pkgs.buildPythonApplication rec {
     postgres = with python.pkgs; [ psycopg ];
   };
 
-  pythonRelaxDeps = [
-    "celery"
-    "rapidfuzz"
-    "weblate-schemas"
-  ];
-
   # We don't just use wrapGAppsNoGuiHook because we need to expose GI_TYPELIB_PATH
   GI_TYPELIB_PATH = lib.makeSearchPathOutput "out" "lib/girepository-1.0" [
     pango
@@ -180,7 +174,7 @@ python.pkgs.buildPythonApplication rec {
   meta = {
     description = "Web based translation tool with tight version control integration";
     homepage = "https://weblate.org/";
-    changelog = "https://github.com/WeblateOrg/weblate/releases/tag/weblate-${version}";
+    changelog = "https://github.com/WeblateOrg/weblate/releases/tag/${src.tag}";
     license = with lib.licenses; [
       gpl3Plus
       mit
