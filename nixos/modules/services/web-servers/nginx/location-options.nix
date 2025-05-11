@@ -150,6 +150,13 @@ with lib;
       '';
     };
 
+    recommendedProxySettingsNoHost = mkOption {
+      type = types.bool;
+      default = config.services.nginx.recommendedProxySettingsNoHost;
+      defaultText = literalExpression "config.services.nginx.recommendedProxySettingsNoHost";
+      description = ''recommendedProxySettingsNoHost'';
+    };
+
     recommendedUwsgiSettings = mkOption {
       type = types.bool;
       default = config.services.nginx.recommendedUwsgiSettings;

@@ -270,6 +270,18 @@ let
               include ${recommendedProxyConfig};
             ''}
 
+            ${optionalString cfg.recommendedProxySettingsNoHost ''
+              proxy_redirect          off;
+              proxy_connect_timeout   ${cfg.proxyTimeout};
+              proxy_send_timeout      ${cfg.proxyTimeout};
+              proxy_read_timeout      ${cfg.proxyTimeout};
+              proxy_http_version      1.1;
+              # don't let clients close the keep-alive connection to upstream. See the nginx blog for details:
+              # https://www.nginx.com/blog/avoiding-top-10-nginx-configuration-mistakes/#no-keepalives
+              proxy_set_header        "Connection" "";
+              include ${recommendedProxyConfigNoHost};
+            ''}
+
             ${optionalString cfg.recommendedUwsgiSettings ''
               uwsgi_connect_timeout   ${cfg.uwsgiTimeout};
               uwsgi_send_timeout      ${cfg.uwsgiTimeout};
@@ -656,6 +668,12 @@ in
         description = ''
           Whether to enable recommended proxy settings if a vhost does not specify the option manually.
         '';
+      };
+
+      recommendedProxySettingsNoHost = mkOption {
+        default = false;
+        type = types.bool;
+        description = ''recommendedProxySettingsNoHost'';
       };
 
       proxyTimeout = mkOption {
