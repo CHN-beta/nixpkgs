@@ -8,6 +8,7 @@
   makeWrapper,
   writeTextFile,
   vscodeExtensions ? [ ],
+  extraFlags ? "",
 }:
 
 /*
@@ -68,7 +69,7 @@ let
 
   extensionsFlag = ''
     --add-flags "--extensions-dir ${combinedExtensionsDrv}/share/vscode/extensions"
-  '';
+  '' + extraFlags;
 in
 
 runCommand "${wrappedPkgName}-with-extensions-${wrappedPkgVersion}"

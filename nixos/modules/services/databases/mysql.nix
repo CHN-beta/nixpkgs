@@ -611,10 +611,10 @@ in
           then
               # While MariaDB comes with a 'mysql' super user account since 10.4.x, MySQL does not
               # Since we don't want to run this service as 'root' we need to ensure the account exists on first run
-              ( echo "CREATE USER IF NOT EXISTS '${cfg.user}'@'localhost' IDENTIFIED WITH ${
+              ( echo "CREATE USER IF NOT EXISTS '${cfg.user}' IDENTIFIED WITH ${
                 if isMariaDB then "unix_socket" else "auth_socket"
               };"
-                echo "GRANT ALL PRIVILEGES ON *.* TO '${cfg.user}'@'localhost' WITH GRANT OPTION;"
+                echo "GRANT ALL PRIVILEGES ON *.* TO '${cfg.user}' WITH GRANT OPTION;"
               ) | ${cfg.package}/bin/mysql -u ${superUser} -N
 
               ${lib.concatMapStrings (database: ''
