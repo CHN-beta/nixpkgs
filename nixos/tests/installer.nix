@@ -632,6 +632,7 @@ let
       grubUseEfi ? false,
       enableOCR ? false,
       meta ? { },
+      passthru ? { },
       testSpecialisationConfig ? false,
       testFlakeSwitch ? false,
       testByAttrSwitch ? false,
@@ -644,7 +645,7 @@ let
       isEfi = bootLoader == "systemd-boot" || (bootLoader == "grub" && grubUseEfi);
     in
     makeTest {
-      inherit enableOCR;
+      inherit enableOCR passthru;
       name = "installer-" + name;
       meta = {
         # put global maintainers here, individuals go into makeInstallerTest fkt call
@@ -681,7 +682,7 @@ let
         {
           # The configuration of the system used to run "nixos-install".
           installer =
-            { config, ... }:
+            { config, pkgs, ... }:
             {
               imports = [
                 commonConfig
@@ -739,6 +740,11 @@ let
                   unionfs-fuse
                   xorg.lndir
                   shellcheck-minimal
+
+                  # Only the out output is included here, which is what is
+                  # required to build the NixOS udev rules
+                  # See the comment in services/hardware/udev.nix
+                  systemdMinimal.out
 
                   # add curl so that rather than seeing the test attempt to download
                   # curl's tarball, we see what it's trying to download
@@ -1104,10 +1110,12 @@ in
 
   # The (almost) simplest partitioning scheme: a swap partition and
   # one big filesystem partition.
-  simple = makeInstallerTest "simple" simple-test-config;
-  lix-simple = makeInstallerTest "simple" simple-test-config // {
-    selectNixPackage = pkgs: pkgs.lix;
-  };
+  simple = makeInstallerTest "simple" (
+    simple-test-config
+    // {
+      passthru.override = args: makeInstallerTest "simple" simple-test-config // args;
+    }
+  );
 
   switchToFlake = makeInstallerTest "switch-to-flake" simple-test-config-flake;
 
