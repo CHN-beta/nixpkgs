@@ -678,12 +678,12 @@ in
           ''}
 
           ${lib.concatMapStrings (user: ''
-            ( echo "CREATE USER IF NOT EXISTS '${user.name}'@'localhost' IDENTIFIED WITH ${
+            ( echo "CREATE USER IF NOT EXISTS '${user.name}' IDENTIFIED WITH ${
               if isMariaDB then "unix_socket" else "auth_socket"
             };"
               ${lib.concatStringsSep "\n" (
                 lib.mapAttrsToList (database: permission: ''
-                  echo "GRANT ${permission} ON ${database} TO '${user.name}'@'localhost';"
+                  echo "GRANT ${permission} ON ${database} TO '${user.name}';"
                 '') user.ensurePermissions
               )}
             ) | ${cfg.package}/bin/mysql -N
