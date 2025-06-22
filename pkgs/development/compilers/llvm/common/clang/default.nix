@@ -201,6 +201,8 @@ stdenv.mkDerivation (
       "python"
     ];
 
+    separateDebugInfo = stdenv.buildPlatform.is64bit; # OOMs on 32 bit
+
     postInstall =
       ''
         ln -sv $out/bin/clang $out/bin/cpp
@@ -299,9 +301,12 @@ stdenv.mkDerivation (
         ++ lib.optional (
           (lib.versionOlder release_version "15") || !(targetPlatform.isx86_64 || targetPlatform.isAarch64)
         ) "zerocallusedregs"
+        ++ lib.optional (lib.versionOlder release_version "15") "strictflexarrays1"
+        ++ lib.optional (lib.versionOlder release_version "16") "strictflexarrays3"
         ++ (finalAttrs.passthru.hardeningUnsupportedFlags or [ ]);
     };
 
+    requiredSystemFeatures = [ "big-parallel" ];
     meta = llvm_meta // {
       homepage = "https://clang.llvm.org/";
       description = "C language family frontend for LLVM";

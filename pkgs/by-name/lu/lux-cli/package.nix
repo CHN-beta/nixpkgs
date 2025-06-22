@@ -1,44 +1,34 @@
 {
+  fetchFromGitHub,
   gnupg,
   gpgme,
   installShellFiles,
   lib,
   libgit2,
   libgpg-error,
-  lua51Packages,
-  lua52Packages,
-  lua53Packages,
-  lua54Packages,
   luajit,
   makeWrapper,
   nix,
   openssl,
   pkg-config,
   rustPlatform,
-  symlinkJoin,
   versionCheckHook,
 }:
-let
-  lux-lua-bundle = symlinkJoin {
-    name = "lux-lua-bundle";
-    paths = [
-      lua51Packages.lux-lua
-      lua52Packages.lux-lua
-      lua53Packages.lux-lua
-      lua54Packages.lux-lua
-    ];
-  };
-in
 rustPlatform.buildRustPackage rec {
   pname = "lux-cli";
 
-  version = "0.3.14";
+  version = "0.7.1";
 
-  src = lua52Packages.lux-lua.src;
+  src = fetchFromGitHub {
+    owner = "nvim-neorocks";
+    repo = "lux";
+    tag = "v0.7.1";
+    hash = "sha256-x5Bs/Zq0gfJAC3VFKG1hCg95IZ0qpgf8kBfFccP5HgU=";
+  };
 
   buildAndTestSubdir = "lux-cli";
   useFetchCargoVendor = true;
-  cargoHash = lua52Packages.lux-lua.cargoHash;
+  cargoHash = "sha256-lGQToe1nM6tjcoxYy94wiGMevm3/B7MD6NOIX61GpMA=";
 
   nativeInstallCheckInputs = [
     versionCheckHook
@@ -80,12 +70,6 @@ rustPlatform.buildRustPackage rec {
     cargo xtask dist-completions
   '';
 
-  postFixup = ''
-    # Instruct Lux to search for the lux-specific shared libraries in the lux-lua bundle
-    # (temporary solution, until https://github.com/nvim-neorocks/lux/issues/655 is implemented)
-    wrapProgram $out/bin/lx --set LUX_LIB_DIR "${lux-lua-bundle}"
-  '';
-
   meta = {
     description = "Luxurious package manager for Lua";
     longDescription = ''
@@ -95,7 +79,7 @@ rustPlatform.buildRustPackage rec {
     '';
     homepage = "https://nvim-neorocks.github.io/";
     changelog = "https://github.com/nvim-neorocks/lux/blob/${src.tag}/CHANGELOG.md";
-    license = lib.licenses.mit;
+    license = lib.licenses.lgpl3Plus;
     maintainers = with lib.maintainers; [
       mrcjkb
     ];

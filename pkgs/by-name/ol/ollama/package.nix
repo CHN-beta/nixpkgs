@@ -14,9 +14,9 @@
   clblast,
   libdrm,
   rocmPackages,
-  rocmGpuTargets ? rocmPackages.clr.gpuTargets or [ ],
+  rocmGpuTargets ? rocmPackages.clr.localGpuTargets or (rocmPackages.clr.gpuTargets or [ ]),
   cudaPackages,
-  cudaArches ? cudaPackages.cudaFlags.realArches or [ ],
+  cudaArches ? cudaPackages.flags.realArches or [ ],
   autoAddDriverRunpath,
 
   # passthru
@@ -117,17 +117,17 @@ in
 goBuild (finalAttrs: {
   pname = "ollama";
   # don't forget to invalidate all hashes each update
-  version = "0.6.7";
+  version = "0.9.1";
 
   src = fetchFromGitHub {
     owner = "ollama";
     repo = "ollama";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-GRqvaD/tAPI9cVlVu+HmRTv5zr7oCHdSlKoFfSLJ4r4=";
+    hash = "sha256-6ha8aGRljb/uN+CtPpZDpcAVmpZccCq/1TSCQ5FVL8E=";
     fetchSubmodules = true;
   };
 
-  vendorHash = "sha256-t7+GLNC6mRcXq9ErxN6gGki5WWWoEcMfzRVjta4fddA=";
+  vendorHash = "sha256-svJt7Cuy+auVd8II3+JaAefiZcG88QyDgjWPnpoxfts=";
 
   env =
     lib.optionalAttrs enableRocm {
@@ -136,12 +136,6 @@ goBuild (finalAttrs: {
       HIP_PATH = rocmPath;
       CFLAGS = "-Wno-c++17-extensions -I${rocmPath}/include";
       CXXFLAGS = "-Wno-c++17-extensions -I${rocmPath}/include";
-    }
-    // lib.optionalAttrs (enableRocm && (rocmPackages.clr.localGpuTargets or false)) {
-
-      # If rocm CLR is set to build for an exact set of targets reuse that target list,
-      # otherwise let ollama use its builtin defaults
-      HIP_ARCHS = lib.concatStringsSep ";" rocmPackages.clr.localGpuTargets;
     }
     // lib.optionalAttrs enableCuda { CUDA_PATH = cudaPath; };
 

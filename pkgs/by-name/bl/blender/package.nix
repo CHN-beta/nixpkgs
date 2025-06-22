@@ -2,6 +2,7 @@
   SDL,
   addDriverRunpath,
   alembic,
+  apple-sdk_15,
   blender,
   boost,
   brotli,
@@ -59,7 +60,7 @@
   openjpeg,
   openpgl,
   opensubdiv,
-  openvdb_11,
+  openvdb,
   openxr-loader,
   pkg-config,
   potrace,
@@ -133,8 +134,8 @@ stdenv'.mkDerivation (finalAttrs: {
                   '${lib.getLib brotli}/lib/libbrotlidec.dylib'
     '')
     + (lib.optionalString hipSupport ''
-      substituteInPlace extern/hipew/src/hipew.c --replace '"/opt/rocm/hip/lib/libamdhip64.so"' '"${rocmPackages.clr}/lib/libamdhip64.so"'
-      substituteInPlace extern/hipew/src/hipew.c --replace '"opt/rocm/hip/bin"' '"${rocmPackages.clr}/bin"'
+      substituteInPlace extern/hipew/src/hipew.c --replace-fail '"/opt/rocm/hip/lib/libamdhip64.so.${lib.versions.major rocmPackages.clr.version}"' '"${rocmPackages.clr}/lib/libamdhip64.so"'
+      substituteInPlace extern/hipew/src/hipew.c --replace-fail '"opt/rocm/hip/bin"' '"${rocmPackages.clr}/bin"'
     '');
 
   env.NIX_CFLAGS_COMPILE = "-I${python3}/include/${python3.libPrefix}";
@@ -252,7 +253,7 @@ stdenv'.mkDerivation (finalAttrs: {
       openjpeg
       openpgl
       (opensubdiv.override { inherit cudaSupport; })
-      openvdb_11
+      openvdb
       potrace
       pugixml
       python3
@@ -279,6 +280,9 @@ stdenv'.mkDerivation (finalAttrs: {
       else
         [
           SDL
+          # blender chooses Metal features based on runtime system version
+          # lets use the latest SDK and let Blender handle falling back on older systems.
+          apple-sdk_15
           brotli
           llvmPackages.openmp
           sse2neon
@@ -430,7 +434,6 @@ stdenv'.mkDerivation (finalAttrs: {
       "x86_64-linux"
       "aarch64-darwin"
     ];
-    broken = stdenv.hostPlatform.isDarwin; # fails due to too-old SDK, using newer SDK fails to compile
     maintainers = with lib.maintainers; [
       amarshall
       veprbl

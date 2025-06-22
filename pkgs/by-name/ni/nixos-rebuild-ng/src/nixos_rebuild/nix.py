@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import textwrap
+import uuid
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from importlib.resources import files
@@ -9,7 +10,6 @@ from pathlib import Path
 from string import Template
 from subprocess import PIPE, CalledProcessError
 from typing import Final, Literal
-from uuid import uuid4
 
 from . import tmpdir
 from .constants import WITH_NIX_2_18
@@ -41,11 +41,10 @@ SWITCH_TO_CONFIGURATION_CMD_PREFIX: Final = [
     "--no-ask-password",
     "--pipe",
     "--quiet",
-    "--same-dir",
     "--service-type=exec",
     "--unit=nixos-rebuild-switch-to-configuration",
 ]
-logger = logging.getLogger(__name__)
+logger: Final = logging.getLogger(__name__)
 
 
 def build(
@@ -107,7 +106,7 @@ def build_remote(
             "--attr",
             build_attr.to_attr(attr),
             "--add-root",
-            tmpdir.TMPDIR_PATH / uuid4().hex,
+            tmpdir.TMPDIR_PATH / uuid.uuid4().hex,
             *dict_to_flags(instantiate_flags),
         ],
         stdout=PIPE,
@@ -127,7 +126,7 @@ def build_remote(
                 "--realise",
                 drv,
                 "--add-root",
-                remote_tmpdir / uuid4().hex,
+                remote_tmpdir / uuid.uuid4().hex,
                 *dict_to_flags(realise_flags),
             ],
             remote=build_host,

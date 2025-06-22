@@ -15,11 +15,11 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "gnome-shell-extensions";
-  version = "47.4";
+  version = "48.2";
 
   src = fetchurl {
     url = "mirror://gnome/sources/gnome-shell-extensions/${lib.versions.major finalAttrs.version}/gnome-shell-extensions-${finalAttrs.version}.tar.xz";
-    hash = "sha256-VDN57FsNBCAO5iofa6JAcWoJ11rQrd3bIFvjjOgpP1g=";
+    hash = "sha256-6Sh+hjSJ5fpqLFWuW+ocqRCuQBbe6zQXNiZ4sEqR7P8=";
   };
 
   patches = [

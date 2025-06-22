@@ -247,6 +247,8 @@ makeScopeWithSplicing' {
 
         qcsxcad = callPackage ../development/libraries/science/electronics/qcsxcad { };
 
+        qcustomplot = callPackage ../development/libraries/qcustomplot { };
+
         qjson = callPackage ../development/libraries/qjson { };
 
         qmltermwidget = callPackage ../development/libraries/qmltermwidget { };
@@ -324,8 +326,6 @@ makeScopeWithSplicing' {
         xp-pen-g430-driver = callPackage ../os-specific/linux/xp-pen-drivers/g430 { };
 
         xwaylandvideobridge = callPackage ../tools/wayland/xwaylandvideobridge { };
-
-        yuview = callPackage ../applications/video/yuview { };
       }
     ))
   );

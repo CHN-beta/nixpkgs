@@ -12,7 +12,6 @@
   which,
   cmake,
   ninja,
-  xmlstarlet,
   libproxy,
   xorg,
   zstd,
@@ -51,7 +50,6 @@
   libxml2,
   libxslt,
   openssl,
-  pcre,
   pcre2,
   sqlite,
   udev,
@@ -82,7 +80,6 @@
   libinput,
   # options
   qttranslations ? null,
-  fetchpatch,
 }:
 
 let
@@ -110,7 +107,6 @@ stdenv.mkDerivation rec {
       libjpeg
       libpng
       pcre2
-      pcre
       zstd
       libb2
       md4c
@@ -182,7 +178,6 @@ stdenv.mkDerivation rec {
     pkg-config
     which
     cmake
-    xmlstarlet
     ninja
   ] ++ lib.optionals stdenv.hostPlatform.isDarwin [ moveBuildTree ];
 

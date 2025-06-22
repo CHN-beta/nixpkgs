@@ -88,9 +88,9 @@ with haskellLib;
   extensions = doDistribute self.extensions_0_1_0_3;
   doctest = doDistribute self.doctest_0_24_0;
   ghc-syntax-highlighter = doDistribute self.ghc-syntax-highlighter_0_0_13_0;
-  ghc-lib = doDistribute self.ghc-lib_9_12_2_20250320;
+  ghc-lib = doDistribute self.ghc-lib_9_12_2_20250421;
   ghc-exactprint = doDistribute self.ghc-exactprint_1_12_0_0;
-  ghc-lib-parser = doDistribute self.ghc-lib-parser_9_12_2_20250320;
+  ghc-lib-parser = doDistribute self.ghc-lib-parser_9_12_2_20250421;
   ghc-lib-parser-ex = doDistribute self.ghc-lib-parser-ex_9_12_0_0;
   hlint = doDistribute self.hlint_3_10;
   fourmolu = doDistribute self.fourmolu_0_18_0_0;
@@ -147,17 +147,6 @@ with haskellLib;
     ];
   }) super.doctest_0_24_0;
 
-  # https://github.com/typeable/generic-arbitrary/issues/18
-  generic-arbitrary = overrideCabal (drv: {
-    patches = drv.patches or [ ] ++ [
-      (pkgs.fetchpatch {
-        name = "hellwolf:fix-recursive-test-hidding-unit";
-        url = "https://github.com/typeable/generic-arbitrary/commit/133b80be93e6744f21e0e5ed4180a24c589f92e4.patch";
-        sha256 = "sha256-z9EVcD1uNAYUOVTwmCCnrEFFOvFB7lD94Y6BwGVwVRQ=";
-      })
-    ];
-  }) super.generic-arbitrary;
-
   # https://gitlab.haskell.org/ghc/ghc/-/issues/25930
   generic-lens = dontCheck super.generic-lens;
 
@@ -172,6 +161,13 @@ with haskellLib;
 
   # https://github.com/sjakobi/newtype-generics/pull/28/files
   newtype-generics = warnAfterVersion "0.6.2" (doJailbreak super.newtype-generics);
+
+  # Test failure because of GHC bug:
+  #   https://gitlab.haskell.org/ghc/ghc/-/issues/25937
+  #   https://github.com/sol/interpolate/issues/20
+  interpolate =
+    assert super.ghc.version == "9.12.2";
+    dontCheck super.interpolate;
 
   #
   # Multiple issues
@@ -204,4 +200,7 @@ with haskellLib;
       }
     )
   );
+
+  # Allow Cabal 3.14
+  hpack = doDistribute self.hpack_0_38_0;
 }

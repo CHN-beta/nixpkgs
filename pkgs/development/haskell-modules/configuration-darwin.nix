@@ -62,7 +62,6 @@ self: super:
 
     # issues finding libcharset.h without libiconv in buildInputs on darwin.
     with-utf8 = addExtraLibrary pkgs.libiconv super.with-utf8;
-    with-utf8_1_1_0_0 = addExtraLibrary pkgs.libiconv super.with-utf8_1_1_0_0;
 
     git-annex = overrideCabal (drv: {
       # We can't use testFlags since git-annex side steps the Cabal test mechanism
@@ -117,6 +116,10 @@ self: super:
 
     # https://github.com/haskell-foundation/foundation/pull/412
     foundation = dontCheck super.foundation;
+
+    # Test suite attempts to create illegal paths on HFS+
+    # https://github.com/fpco/haskell-filesystem/issues/37
+    system-fileio = dontCheck super.system-fileio;
 
     llvm-hs = overrideCabal (oldAttrs: {
       # One test fails on darwin.
@@ -330,6 +333,10 @@ self: super:
     servant-auth-server = dontCheck super.servant-auth-server;
 
     sysinfo = dontCheck super.sysinfo;
+
+    network = super.network.overrideAttrs (drv: {
+      __darwinAllowLocalNetworking = true;
+    });
 
   }
   // lib.optionalAttrs pkgs.stdenv.hostPlatform.isAarch64 {

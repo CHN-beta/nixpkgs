@@ -441,6 +441,10 @@ let
         };
       };
 
+      rocm-bandwidth-test = self.callPackage ./rocm-bandwidth-test {
+        rocmPackages = self;
+      };
+
       rocm-tests = self.callPackage ./rocm-tests {
         rocmPackages = self;
       };
@@ -456,18 +460,15 @@ let
 
       miopengemm = throw ''
         'miopengemm' has been deprecated.
-        It is still available for some time as part of rocmPackages_5.
       ''; # Added 2024-3-3
 
       miopen-opencl = throw ''
         'miopen-opencl' has been deprecated.
-        It is still available for some time as part of rocmPackages_5.
       ''; # Added 2024-3-3
 
       mivisionx-opencl = throw ''
         'mivisionx-opencl' has been deprecated.
         Other versions of mivisionx are still available.
-        It is also still available for some time as part of rocmPackages_5.
       ''; # Added 2024-3-24
     }
   );

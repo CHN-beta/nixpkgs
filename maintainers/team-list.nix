@@ -63,7 +63,6 @@ with lib.maintainers;
     shortName = "apm employees";
     # Edits to this list should only be done by an already existing member.
     members = [
-      wolfgangwalther
       DutchGerman
     ];
   };
@@ -843,6 +842,7 @@ with lib.maintainers;
       Gabriella439
       curran
       lf-
+      jkachmar
     ];
     scope = "Group registry for packages maintained by Mercury";
     shortName = "Mercury Employees";
@@ -868,6 +868,7 @@ with lib.maintainers;
       qyriad
       _9999years
       lf-
+      alois31
     ];
     scope = "Maintain the Lix package manager inside of Nixpkgs.";
     shortName = "Lix ecosystem";
@@ -912,11 +913,21 @@ with lib.maintainers;
   ngi = {
     members = [
       eljamm
+      ethancedwards8
       fricklerhandwerk
+      OPNA2608
+      prince213
       wegank
     ];
     scope = "Maintain NGI-supported software.";
     shortName = "NGI";
+  };
+
+  nixos-rebuild = {
+    members = [ thiagokokada ];
+    scope = "Maintain nixos-rebuild(-ng).";
+    shortName = "nixos-rebuild";
+    enableFeatureFreezePing = true;
   };
 
   node = {
@@ -1118,9 +1129,17 @@ with lib.maintainers;
   };
 
   sdl = {
-    members = [ ];
-    scope = "Maintain SDL libraries.";
+    members = [
+      evythedemon
+      grimmauld
+      jansol
+      marcin-serwin
+      pbsds
+    ];
+    githubTeams = [ "SDL" ];
+    scope = "Maintain core SDL libraries.";
     shortName = "SDL";
+    enableFeatureFreezePing = true;
   };
 
   sphinx = {
@@ -1182,7 +1201,12 @@ with lib.maintainers;
   };
 
   systemd = {
-    members = [ ];
+    members = [
+      flokli
+      arianvp
+      elvishjerricco
+      aanderse
+    ];
     githubTeams = [ "systemd" ];
     scope = "Maintain systemd for NixOS.";
     shortName = "systemd";

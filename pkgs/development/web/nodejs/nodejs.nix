@@ -25,7 +25,6 @@
   jq,
   curl,
   common-updater-scripts,
-  nix,
   runtimeShell,
   gnupg,
   installShellFiles,
@@ -437,6 +436,9 @@ let
                 "test-fs-readv-sync"
                 "test-vm-memleak"
               ]
+              ++ lib.optional (
+                stdenv.buildPlatform.isDarwin && stdenv.buildPlatform.isx86_64 && majorVersion == "20"
+              ) "test-tick-processor-arguments" # flaky
             )
           }"
         ];
@@ -477,7 +479,7 @@ let
           ''}
 
           # install the missing headers for node-gyp
-          # TODO: add dev output and use propagatedBuildInputs instead of copying headers.
+          # TODO: use propagatedBuildInputs instead of copying headers.
           cp -r ${lib.concatStringsSep " " copyLibHeaders} $out/include/node
 
           # assemble a static v8 library and put it in the 'libv8' output
@@ -508,6 +510,9 @@ let
           Libs: -L$libv8/lib -lv8 -pthread -licui18n -licuuc
           Cflags: -I$libv8/include
           EOF
+        ''
+        + lib.optionalString (stdenv.hostPlatform == stdenv.buildPlatform) ''
+          cp -r $out/include $dev/include
         '';
 
       passthru.tests = {
@@ -520,13 +525,13 @@ let
       passthru.updateScript = import ./update.nix {
         inherit
           writeScript
-          coreutils
-          gnugrep
-          jq
-          curl
           common-updater-scripts
+          coreutils
+          curl
+          fetchurl
+          gnugrep
           gnupg
-          nix
+          jq
           runtimeShell
           ;
         inherit lib;

@@ -1,26 +1,56 @@
 # THIS IS A GENERATED FILE.  DO NOT EDIT!
 {
   lib,
+  bdftopcf,
   font-alias,
   font-util,
   gccmakedep,
+  imake,
   libpciaccess,
   libpthread-stubs,
+  libxcvt,
+  lndir,
   luit,
+  makedepend,
   pixman,
+  sessreg,
+  util-macros,
+  xbitmaps,
+  xcb-proto,
+  xkeyboard-config,
+  xorg-cf-files,
+  xorg-docs,
+  xorgproto,
+  xorg-sgml-doctools,
+  xtrans,
 }:
 
 self: with self; {
 
   inherit
+    bdftopcf
     gccmakedep
+    imake
     libpciaccess
+    libxcvt
+    lndir
     luit
+    makedepend
     pixman
+    sessreg
+    xbitmaps
+    xorgproto
+    xtrans
     ;
   fontalias = font-alias;
   fontutil = font-util;
   libpthreadstubs = libpthread-stubs;
+  utilmacros = util-macros;
+  xcbproto = xcb-proto;
+  xkeyboardconfig = xkeyboard-config;
+  xorgcffiles = xorg-cf-files;
+  xorgdocs = xorg-docs;
+  xorgsgmldoctools = xorg-sgml-doctools;
 
   # THIS IS A GENERATED FILE.  DO NOT EDIT!
   appres = callPackage (
@@ -52,38 +82,6 @@ self: with self; {
         xorgproto
         libXt
       ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [ ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  bdftopcf = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      xorgproto,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "bdftopcf";
-      version = "1.1.2";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/util/bdftopcf-1.1.2.tar.xz";
-        sha256 = "0fjjn1z0cbsmhxkms93w73j2jbzf9f3xgbnjvnisl3rk0icvwq5w";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [ pkg-config ];
-      buildInputs = [ xorgproto ];
       passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
       meta = {
         pkgConfigModules = [ ];
@@ -1726,38 +1724,6 @@ self: with self; {
   ) { };
 
   # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  imake = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      xorgproto,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "imake";
-      version = "1.0.10";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/util/imake-1.0.10.tar.xz";
-        sha256 = "1xgcsamfij22ggc4p8anvvihwyf4adg6gjdd6v7m9cypm37cppkm";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [ pkg-config ];
-      buildInputs = [ xorgproto ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [ ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
   libAppleWM = callPackage (
     {
       stdenv,
@@ -2464,11 +2430,11 @@ self: with self; {
     }:
     stdenv.mkDerivation (finalAttrs: {
       pname = "libXft";
-      version = "2.3.8";
+      version = "2.3.9";
       builder = ./builder.sh;
       src = fetchurl {
-        url = "mirror://xorg/individual/lib/libXft-2.3.8.tar.xz";
-        sha256 = "0jfxqsqhjl2b2ll6b7x21mj02hxp5znkhjvbxw5a9h6lq95kr32y";
+        url = "mirror://xorg/individual/lib/libXft-2.3.9.tar.xz";
+        sha256 = "1xbn77zqjzx2zdzqcsbf8pvivlqplnciifxk6lk97mjyjiw5p8k0";
       };
       hardeningDisable = [
         "bindnow"
@@ -3278,43 +3244,6 @@ self: with self; {
   ) { };
 
   # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  libxcvt = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      meson,
-      ninja,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "libxcvt";
-      version = "0.1.3";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/lib/libxcvt-0.1.3.tar.xz";
-        sha256 = "009f8kr53cv7lzsg4507cgnk9vxyrm8lgnnn6vx7vpk7hy59jad9";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [
-        pkg-config
-        meson
-        ninja
-      ];
-      buildInputs = [ ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [ ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
   libxkbfile = callPackage (
     {
       stdenv,
@@ -3423,69 +3352,6 @@ self: with self; {
   ) { };
 
   # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  lndir = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      xorgproto,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "lndir";
-      version = "1.0.5";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/util/lndir-1.0.5.tar.xz";
-        sha256 = "1nsd23kz6iqxfcis3432zq01i54n98b94m2gcsay1k3mamx5fr9v";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [ pkg-config ];
-      buildInputs = [ xorgproto ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [ ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  makedepend = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "makedepend";
-      version = "1.0.9";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/util/makedepend-1.0.9.tar.xz";
-        sha256 = "1m1dg32z22fw9shg0wsxw7dvdcnfm16gq9qxpkfxixpzb6vdxl4j";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [ pkg-config ];
-      buildInputs = [ ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [ ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
   mkfontscale = callPackage (
     {
       stdenv,
@@ -3563,38 +3429,6 @@ self: with self; {
         libXmu
         libXt
       ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [ ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  sessreg = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      xorgproto,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "sessreg";
-      version = "1.1.3";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/app/sessreg-1.1.3.tar.xz";
-        sha256 = "1hmc9wsfgl2wmy0kccwa4brxbv02w5wiz5hrz72dsz87x1fwsah2";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [ pkg-config ];
-      buildInputs = [ xorgproto ];
       passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
       meta = {
         pkgConfigModules = [ ];
@@ -3766,37 +3600,6 @@ self: with self; {
   ) { };
 
   # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  utilmacros = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "util-macros";
-      version = "1.20.2";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/util/util-macros-1.20.2.tar.xz";
-        sha256 = "13ifr0dabci130xk04kp9bq16g9kbyzf8x1mgdyjsrsglbmnkhls";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [ pkg-config ];
-      buildInputs = [ ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [ "xorg-macros" ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
   viewres = callPackage (
     {
       stdenv,
@@ -3961,37 +3764,6 @@ self: with self; {
   ) { };
 
   # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  xbitmaps = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "xbitmaps";
-      version = "1.1.3";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/data/xbitmaps-1.1.3.tar.xz";
-        sha256 = "0yhgrllia3lbqx9b21w31w4sppx1a9ggrk62hrys2ckqi1aasv5d";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [ pkg-config ];
-      buildInputs = [ ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [ "xbitmaps" ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
   xcalc = callPackage (
     {
       stdenv,
@@ -4030,41 +3802,6 @@ self: with self; {
       passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
       meta = {
         pkgConfigModules = [ ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  xcbproto = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      python3,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "xcb-proto";
-      version = "1.17.0";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/proto/xcb-proto-1.17.0.tar.xz";
-        sha256 = "130lc8jx43s83496nc8jn47zixjcp4abgsz69pvrjiqg279aq6rc";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [
-        pkg-config
-        python3
-      ];
-      buildInputs = [ ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [ "xcb-proto" ];
         platforms = lib.platforms.unix;
       };
     })
@@ -7409,37 +7146,6 @@ self: with self; {
   ) { };
 
   # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  xkeyboardconfig = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "xkeyboard-config";
-      version = "2.44";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/data/xkeyboard-config/xkeyboard-config-2.44.tar.xz";
-        sha256 = "0aillh6pmx5ji5jbqviq007vvg69ahz5832rz941s0xvxqzc7ljl";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [ pkg-config ];
-      buildInputs = [ ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [ ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
   xkill = callPackage (
     {
       stdenv,
@@ -7790,144 +7496,6 @@ self: with self; {
   ) { };
 
   # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  xorgcffiles = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "xorg-cf-files";
-      version = "1.0.8";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/util/xorg-cf-files-1.0.8.tar.xz";
-        sha256 = "1f8primgb6qw3zy7plbsj4a1kdhdqb04xpdys520zaygxxfra23l";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [ pkg-config ];
-      buildInputs = [ ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [ ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  xorgdocs = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "xorg-docs";
-      version = "1.7.3";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/doc/xorg-docs-1.7.3.tar.xz";
-        sha256 = "1vyxpjcv8z5r5f5iza726ahzzwdapbbkxzv1b6w5izyrnppg58i8";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [ pkg-config ];
-      buildInputs = [ ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [ ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  xorgproto = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      libXt,
-      python3,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "xorgproto";
-      version = "2024.1";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/proto/xorgproto-2024.1.tar.xz";
-        sha256 = "0nfbbi4j130m2gxzp20hp642xizbbl68jpbzahiq8nw183yja8ip";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [
-        pkg-config
-        python3
-      ];
-      buildInputs = [ libXt ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [
-          "applewmproto"
-          "bigreqsproto"
-          "compositeproto"
-          "damageproto"
-          "dmxproto"
-          "dpmsproto"
-          "dri2proto"
-          "dri3proto"
-          "evieproto"
-          "fixesproto"
-          "fontcacheproto"
-          "fontsproto"
-          "glproto"
-          "inputproto"
-          "kbproto"
-          "lg3dproto"
-          "presentproto"
-          "printproto"
-          "randrproto"
-          "recordproto"
-          "renderproto"
-          "resourceproto"
-          "scrnsaverproto"
-          "trapproto"
-          "videoproto"
-          "windowswmproto"
-          "xcalibrateproto"
-          "xcmiscproto"
-          "xextproto"
-          "xf86bigfontproto"
-          "xf86dgaproto"
-          "xf86driproto"
-          "xf86miscproto"
-          "xf86rushproto"
-          "xf86vidmodeproto"
-          "xineramaproto"
-          "xproto"
-          "xproxymngproto"
-          "xwaylandproto"
-        ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
   xorgserver = callPackage (
     {
       stdenv,
@@ -7980,37 +7548,6 @@ self: with self; {
       passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
       meta = {
         pkgConfigModules = [ "xorg-server" ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  xorgsgmldoctools = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "xorg-sgml-doctools";
-      version = "1.12.1";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/doc/xorg-sgml-doctools-1.12.1.tar.xz";
-        sha256 = "0vvdnl1x82mr2phcq9z6dg94mas56zdmbm6lmkaqjkkbf3058p8a";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [ pkg-config ];
-      buildInputs = [ ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [ "xorg-sgml-doctools" ];
         platforms = lib.platforms.unix;
       };
     })
@@ -8369,37 +7906,6 @@ self: with self; {
       passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
       meta = {
         pkgConfigModules = [ ];
-        platforms = lib.platforms.unix;
-      };
-    })
-  ) { };
-
-  # THIS IS A GENERATED FILE.  DO NOT EDIT!
-  xtrans = callPackage (
-    {
-      stdenv,
-      pkg-config,
-      fetchurl,
-      testers,
-    }:
-    stdenv.mkDerivation (finalAttrs: {
-      pname = "xtrans";
-      version = "1.6.0";
-      builder = ./builder.sh;
-      src = fetchurl {
-        url = "mirror://xorg/individual/lib/xtrans-1.6.0.tar.xz";
-        sha256 = "14ly6m6ww8rl45fdmlf58m0l1ihfji936ncx7lbiligjdcbfmbzs";
-      };
-      hardeningDisable = [
-        "bindnow"
-        "relro"
-      ];
-      strictDeps = true;
-      nativeBuildInputs = [ pkg-config ];
-      buildInputs = [ ];
-      passthru.tests.pkg-config = testers.testMetaPkgConfig finalAttrs.finalPackage;
-      meta = {
-        pkgConfigModules = [ "xtrans" ];
         platforms = lib.platforms.unix;
       };
     })

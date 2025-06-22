@@ -9,20 +9,20 @@
 
 let
   pname = "surrealdb-migrations";
-  version = "2.2.1";
+  version = "2.3.0";
 in
-rustPlatform.buildRustPackage rec {
+rustPlatform.buildRustPackage {
   inherit pname version;
 
   src = fetchFromGitHub {
     owner = "Odonno";
-    repo = pname;
+    repo = "surrealdb-migrations";
     rev = "v${version}";
-    hash = "sha256-MeHNBtzl2bNJFGKtM1o9mGnX0vbmnpUPc18ecqG6J+8=";
+    hash = "sha256-BCShTHZSeahJclOHcWh7etl0FajhFs4/RVVszFZdOV8=";
   };
 
   useFetchCargoVendor = true;
-  cargoHash = "sha256-l59RbKohfPsAp/70UaT/bhy5Z4orVf7fuJgU+0fuyk4=";
+  cargoHash = "sha256-fV7yHRiqcM4l9i3tnoMawEQxd9fqbcZYZkeTITy310g=";
 
   # Error: No such file or directory (os error 2)
   # failures:

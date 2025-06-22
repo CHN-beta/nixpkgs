@@ -9,6 +9,11 @@ with lib;
 
 let
   cfg = config.services.nextcloud;
+
+  overridePackage = cfg.package.override {
+    inherit (config.security.pki) caBundle;
+  };
+
   fpm = config.services.phpfpm.pools.nextcloud;
 
   jsonFormat = pkgs.formats.json { };
@@ -51,13 +56,13 @@ let
   };
 
   webroot =
-    pkgs.runCommand "${cfg.package.name or "nextcloud"}-with-apps"
+    pkgs.runCommand "${overridePackage.name or "nextcloud"}-with-apps"
       {
         preferLocalBuild = true;
       }
       ''
         mkdir $out
-        ln -sfv "${cfg.package}"/* "$out"
+        ln -sfv "${overridePackage}"/* "$out"
         ${concatStrings (
           mapAttrsToList (
             name: store:
@@ -116,7 +121,8 @@ let
     ++ (lib.optional (cfg.config.objectstore.s3.enable) "s3_secret:${cfg.config.objectstore.s3.secretFile}")
     ++ (lib.optional (
       cfg.config.objectstore.s3.sseCKeyFile != null
-    ) "s3_sse_c_key:${cfg.config.objectstore.s3.sseCKeyFile}");
+    ) "s3_sse_c_key:${cfg.config.objectstore.s3.sseCKeyFile}")
+    ++ (lib.optional (cfg.secretFile != null) "secret_file:${cfg.secretFile}");
 
   requiresRuntimeSystemdCredentials = (lib.length runtimeSystemdCredentials) != 0;
 
@@ -184,18 +190,9 @@ let
   mysqlLocal = cfg.database.createLocally && cfg.config.dbtype == "mysql";
   pgsqlLocal = cfg.database.createLocally && cfg.config.dbtype == "pgsql";
 
-  nextcloudGreaterOrEqualThan = versionAtLeast cfg.package.version;
-  nextcloudOlderThan = versionOlder cfg.package.version;
-
-  # https://github.com/nextcloud/documentation/pull/11179
-  ocmProviderIsNotAStaticDirAnymore =
-    nextcloudGreaterOrEqualThan "27.1.2"
-    || (nextcloudOlderThan "27.0.0" && nextcloudGreaterOrEqualThan "26.0.8");
-
   overrideConfig =
     let
       c = cfg.config;
-      requiresReadSecretFunction = c.dbpassFile != null || c.objectstore.s3.enable;
       objectstoreConfig =
         let
           s3 = c.objectstore.s3;
@@ -232,7 +229,7 @@ let
     in
     pkgs.writeText "nextcloud-config.php" ''
       <?php
-      ${optionalString requiresReadSecretFunction ''
+      ${optionalString requiresRuntimeSystemdCredentials ''
         function nix_read_secret($credential_name) {
           $credentials_directory = getenv("CREDENTIALS_DIRECTORY");
           if (!$credentials_directory) {
@@ -253,7 +250,19 @@ let
           }
 
           return trim(file_get_contents($credential_path));
-        }''}
+        }
+
+        function nix_read_secret_and_decode_json_file($credential_name) {
+          $decoded = json_decode(nix_read_secret($credential_name), true);
+
+          if (json_last_error() !== JSON_ERROR_NONE) {
+            error_log(sprintf("Cannot decode %s, because: %s", $file, json_last_error_msg()));
+            exit(1);
+          }
+
+          return $decoded;
+        }
+      ''}
       function nix_decode_json_file($file, $error) {
         if (!file_exists($file)) {
           throw new \RuntimeException(sprintf($error, $file));
@@ -287,10 +296,7 @@ let
       ));
 
       ${optionalString (cfg.secretFile != null) ''
-        $CONFIG = array_replace_recursive($CONFIG, nix_decode_json_file(
-          "${cfg.secretFile}",
-          "Cannot start Nextcloud, secrets file %s set by NixOS doesn't exist!"
-        ));
+        $CONFIG = array_replace_recursive($CONFIG, nix_read_secret_and_decode_json_file('secret_file'));
       ''}
     '';
 in
@@ -1019,12 +1025,12 @@ in
           If you have an existing installation with a custom table prefix, make sure it is
           set correctly in `config.php` and remove the option from your NixOS config.
         '')
-        ++ (optional (versionOlder cfg.package.version "26") (upgradeWarning 25 "23.05"))
-        ++ (optional (versionOlder cfg.package.version "27") (upgradeWarning 26 "23.11"))
-        ++ (optional (versionOlder cfg.package.version "28") (upgradeWarning 27 "24.05"))
-        ++ (optional (versionOlder cfg.package.version "29") (upgradeWarning 28 "24.11"))
-        ++ (optional (versionOlder cfg.package.version "30") (upgradeWarning 29 "24.11"))
-        ++ (optional (versionOlder cfg.package.version "31") (upgradeWarning 30 "25.05"));
+        ++ (optional (versionOlder overridePackage.version "26") (upgradeWarning 25 "23.05"))
+        ++ (optional (versionOlder overridePackage.version "27") (upgradeWarning 26 "23.11"))
+        ++ (optional (versionOlder overridePackage.version "28") (upgradeWarning 27 "24.05"))
+        ++ (optional (versionOlder overridePackage.version "29") (upgradeWarning 28 "24.11"))
+        ++ (optional (versionOlder overridePackage.version "30") (upgradeWarning 29 "24.11"))
+        ++ (optional (versionOlder overridePackage.version "31") (upgradeWarning 30 "25.05"));
 
       services.nextcloud.package =
         with pkgs;
@@ -1221,7 +1227,7 @@ in
             ] ++ runtimeSystemdCredentials;
             # On Nextcloud ≥ 26, it is not necessary to patch the database files to prevent
             # an automatic creation of the database user.
-            environment.NC_setup_create_db_user = lib.mkIf (nextcloudGreaterOrEqualThan "26") "false";
+            environment.NC_setup_create_db_user = "false";
           };
         nextcloud-cron = {
           after = [ "nextcloud-setup.service" ];
@@ -1377,6 +1383,8 @@ in
             datadirectory = lib.mkDefault "${datadir}/data";
             trusted_domains = [ cfg.hostName ];
             "upgrade.disable-web" = true;
+            # NixOS already provides its own integrity check and the nix store is read-only, therefore Nextcloud does not need to do its own integrity checks.
+            "integrity.check.disabled" = true;
           })
           (lib.mkIf cfg.configureRedis {
             "memcache.distributed" = ''\OC\Memcache\Redis'';
@@ -1441,9 +1449,7 @@ in
             priority = 500;
             extraConfig = ''
               # legacy support (i.e. static files and directories in cfg.package)
-              rewrite ^/(?!index|remote|public|cron|core\/ajax\/update|status|ocs\/v[12]|updater\/.+|oc[s${
-                optionalString (!ocmProviderIsNotAStaticDirAnymore) "m"
-              }]-provider\/.+|.+\/richdocumentscode\/proxy) /index.php$request_uri;
+              rewrite ^/(?!index|remote|public|cron|core\/ajax\/update|status|ocs\/v[12]|updater\/.+|ocs-provider\/.+|.+\/richdocumentscode\/proxy) /index.php$request_uri;
               include ${config.services.nginx.package}/conf/fastcgi.conf;
               fastcgi_split_path_info ^(.+?\.php)(\\/.*)$;
               set $path_info $fastcgi_path_info;
@@ -1471,13 +1477,10 @@ in
                 default_type application/wasm;
               }
             '';
-          "~ ^\\/(?:updater|ocs-provider${
-            optionalString (!ocmProviderIsNotAStaticDirAnymore) "|ocm-provider"
-          })(?:$|\\/)".extraConfig =
-            ''
-              try_files $uri/ =404;
-              index index.php;
-            '';
+          "~ ^\\/(?:updater|ocs-provider)(?:$|\\/)".extraConfig = ''
+            try_files $uri/ =404;
+            index index.php;
+          '';
           "/remote" = {
             priority = 1500;
             extraConfig = ''

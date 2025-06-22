@@ -11,17 +11,17 @@
 }:
 rustPlatform.buildRustPackage rec {
   pname = "surrealdb";
-  version = "2.3.1";
+  version = "2.3.4";
 
   src = fetchFromGitHub {
     owner = "surrealdb";
     repo = "surrealdb";
     tag = "v${version}";
-    hash = "sha256-cseTLVs3LXksajOq9TULUbofwG/kp29sgulZ83QUXYk=";
+    hash = "sha256-TGFnX9Hcm9h+9qbXdCSdACe7I+Vs9DqZZhko1lWCFbU=";
   };
 
   useFetchCargoVendor = true;
-  cargoHash = "sha256-y5hzOGTJeOZ1JjJNsxo80KL1DnWL87DU1M1yxiOkeb0=";
+  cargoHash = "sha256-Q90PHGB8d0EUc018EsT8GbGad0OcD0BY/s5WtarHPBs=";
 
   # error: linker `aarch64-linux-gnu-gcc` not found
   postPatch = ''

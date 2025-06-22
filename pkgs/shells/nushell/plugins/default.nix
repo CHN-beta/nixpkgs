@@ -21,6 +21,8 @@ lib.makeScope newScope (
       nushell_plugin_dbus = self.dbus;
     };
     skim = callPackage ./skim.nix { };
+    semver = callPackage ./semver.nix { };
+    hcl = callPackage ./hcl.nix { };
   }
   // lib.optionalAttrs config.allowAliases {
     regex = throw "`nu_plugin_regex` is no longer compatible with the current Nushell release.";

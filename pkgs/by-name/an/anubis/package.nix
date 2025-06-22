@@ -1,31 +1,40 @@
 {
   lib,
   buildGoModule,
-  buildNpmPackage,
   fetchFromGitHub,
-  nix-update-script,
+  nixosTests,
   stdenv,
+  buildNpmPackage,
 
   esbuild,
   brotli,
   zstd,
 }:
-let
+
+buildGoModule (finalAttrs: {
   pname = "anubis";
-  version = "1.17.1";
+  version = "1.19.1";
 
   src = fetchFromGitHub {
     owner = "TecharoHQ";
     repo = "anubis";
-    tag = "v${version}";
-    hash = "sha256-8b2rVVuxhsY0+5IZvzMm7ki3HGbJAnUUoAqpD1PuqZ4=";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-aWdkPNwTD+ooaE0PazcOaama7k1a8n5pRxr8X6wm4zs=";
   };
 
-  anubisXess = buildNpmPackage {
-    inherit version src;
-    pname = "${pname}-xess";
+  vendorHash = "sha256-wJOGYOWFKep2IFzX+Hia9m1jPG+Rskg8Np9WfEc+TUY=";
 
-    npmDepsHash = "sha256-jiLrqn0jenug2ff/mqhOIfc7f+CsQja5g2K9n+W1kVM=";
+  nativeBuildInputs = [
+    esbuild
+    brotli
+    zstd
+  ];
+
+  xess = buildNpmPackage {
+    pname = "anubis-xess";
+    inherit (finalAttrs) version src;
+
+    npmDepsHash = "sha256-wI8XCUGq3aI20B++RAT3lc/nBrDMEmE9+810lewzXa0=";
 
     buildPhase = ''
       runHook preBuild
@@ -35,60 +44,46 @@ let
 
     installPhase = ''
       runHook preInstall
-      mkdir -p $out
-      cp xess.min.css $out
+      install -Dm644 xess.min.css $out/xess.min.css
       runHook postInstall
     '';
   };
-in
-buildGoModule (finalAttrs: {
-  inherit pname version src;
 
-  vendorHash = "sha256-v9GsTUzBYfjh6/ETBbFpN5dqMzMaOz8w39Xz1omaPJE=";
+  subPackages = [ "cmd/anubis" ];
 
-  nativeBuildInputs = [
-    esbuild
-    brotli
-    zstd
-  ];
-
-  subPackages = [
-    "cmd/anubis"
-  ];
-
-  ldflags =
-    [
-      "-s"
-      "-w"
-      "-X=github.com/TecharoHQ/anubis.Version=v${finalAttrs.version}"
-    ]
-    ++ lib.optionals stdenv.hostPlatform.isLinux [
-      "-extldflags=-static"
-    ];
+  ldflags = [
+    "-s"
+    "-w"
+    "-X=github.com/TecharoHQ/anubis.Version=v${finalAttrs.version}"
+  ] ++ lib.optionals stdenv.hostPlatform.isLinux [ "-extldflags=-static" ];
 
   postPatch = ''
     patchShebangs ./web/build.sh
   '';
 
   preBuild = ''
-    go generate ./... && ./web/build.sh && cp -r ${anubisXess}/xess.min.css ./xess
+    go generate ./... && ./web/build.sh && cp -r ${finalAttrs.xess}/xess.min.css ./xess
   '';
 
   preCheck = ''
     export DONT_USE_NETWORK=1
   '';
 
-  passthru.updateScript = nix-update-script { };
+  passthru.tests = { inherit (nixosTests) anubis; };
+  passthru.updateScript = ./update.sh;
 
   meta = {
     description = "Weighs the soul of incoming HTTP requests using proof-of-work to stop AI crawlers";
-    homepage = "https://github.com/TecharoHQ/anubis/";
+    homepage = "https://anubis.techaro.lol/";
+    downloadPage = "https://github.com/TecharoHQ/anubis";
     changelog = "https://github.com/TecharoHQ/anubis/releases/tag/v${finalAttrs.version}";
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [
       knightpp
       soopyc
       ryand56
+      sigmasquadron
+      defelo
     ];
     mainProgram = "anubis";
   };

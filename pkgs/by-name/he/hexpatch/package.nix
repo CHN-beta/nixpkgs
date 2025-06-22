@@ -10,17 +10,17 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "hexpatch";
-  version = "1.11.1";
+  version = "1.12.1";
 
   src = fetchFromGitHub {
     owner = "Etto48";
     repo = "HexPatch";
     tag = "v${version}";
-    hash = "sha256-/wPRCqHvRiH8snD6D9qyk7YdbchOi0BUz/kI5EitOls=";
+    hash = "sha256-Fkje+wyYJIeCJGUHRMQubCm/OlQAeRPKXFtCnUSzPiQ=";
   };
 
   useFetchCargoVendor = true;
-  cargoHash = "sha256-bJaL2ni0ei9LeeMdt5Zo68ECbzrBtvAZULjHOLcnacY=";
+  cargoHash = "sha256-TTIZEzufOE7m0PtiKKBQjY0fNVabC3oG2b06AyhPxq0=";
 
   nativeBuildInputs = [
     cmake

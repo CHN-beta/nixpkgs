@@ -13,7 +13,7 @@
   freetype,
   curl,
   libglvnd,
-  webkitgtk_4_0,
+  webkitgtk_4_1,
   pcre2,
   libsysprof-capture,
   util-linuxMinimal,
@@ -34,13 +34,13 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "juce";
-  version = "8.0.7";
+  version = "8.0.8";
 
   src = fetchFromGitHub {
     owner = "juce-framework";
     repo = "juce";
     tag = finalAttrs.version;
-    hash = "sha256-nl4pUSkUKqpMoehzq0MS5pjHpYDkrFpUsY8BwpQObCM=";
+    hash = "sha256-kp3rMaHWBbEh4UaRMxcLo/DiSJV942OY+LYxh6W7dFc=";
   };
 
   patches = [
@@ -71,7 +71,7 @@ stdenv.mkDerivation (finalAttrs: {
     ++ lib.optionals stdenv.hostPlatform.isLinux [
       alsa-lib # libasound.so
       libglvnd # libGL.so
-      webkitgtk_4_0 # webkit2gtk-4.0
+      webkitgtk_4_1 # webkit2gtk-4.0
       util-linuxMinimal
       libselinux
       libsepol
