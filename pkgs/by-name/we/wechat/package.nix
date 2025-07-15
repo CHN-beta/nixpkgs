@@ -27,11 +27,12 @@ let
 
   sources =
     let
+      # https://dldir1.qq.com/weixin/mac/mac-release.xml
       any-darwin = {
-        version = "4.0.5.24";
+        version = "4.0.6.17-29381";
         src = fetchurl {
-          url = "https://web.archive.org/web/20250608064358if_/https://dldir1v6.qq.com/weixin/Universal/Mac/WeChatMac.dmg";
-          hash = "sha256-ieixBgYhZ5jU3TWCV7BXKFBidJ1bbabXBHTkrpNcGDI=";
+          url = "https://dldir1v6.qq.com/weixin/Universal/Mac/xWeChatMac_universal_4.0.6.17_29381.dmg";
+          hash = "sha256-Fv5UYZ5+WfHvs+V3yiLSQitj++3WU+0GJsnIdlwB+TE=";
         };
       };
     in

@@ -3,10 +3,11 @@
   stdenv,
   fetchFromGitHub,
   rustPlatform,
+  buildPackages,
   installShellFiles,
-  testers,
+  writableTmpDirAsHomeHook,
+  versionCheckHook,
   nix-update-script,
-  dprint,
 }:
 
 rustPlatform.buildRustPackage (finalAttrs: {
@@ -26,9 +27,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   useFetchCargoVendor = true;
   cargoHash = "sha256-OnrsuVK1gEDweldq+P8lDkkrHjklsG8MRpM0wqWsdlM=";
 
-  nativeBuildInputs = lib.optionals (stdenv.buildPlatform.canExecute stdenv.hostPlatform) [
-    installShellFiles
-  ];
+  nativeBuildInputs = [ installShellFiles ];
 
   cargoBuildFlags = [
     "--package=dprint"
@@ -51,27 +50,32 @@ rustPlatform.buildRustPackage (finalAttrs: {
   ];
 
   postInstall =
+    let
+      dprint =
+        if stdenv.buildPlatform.canExecute stdenv.hostPlatform then
+          "$out/bin/dprint"
+        else
+          lib.getExe buildPackages.dprint;
+    in
     ''
       rm "$out/bin/test-process-plugin"
-    ''
-    + lib.optionalString (stdenv.buildPlatform.canExecute stdenv.hostPlatform) ''
       export DPRINT_CACHE_DIR="$(mktemp -d)"
       installShellCompletion --cmd dprint \
-        --bash <($out/bin/dprint completions bash) \
-        --zsh <($out/bin/dprint completions zsh) \
-        --fish <($out/bin/dprint completions fish)
+        --bash <(${dprint} completions bash) \
+        --zsh <(${dprint} completions zsh) \
+        --fish <(${dprint} completions fish)
     '';
 
+  nativeInstallCheckInputs = [
+    writableTmpDirAsHomeHook
+    versionCheckHook
+  ];
+  doInstallCheck = true;
+  versionCheckProgram = "${placeholder "out"}/bin/dprint";
+  versionCheckProgramArg = "--version";
+  versionCheckKeepEnvironment = [ "HOME" ];
+
   passthru = {
-    tests.version = testers.testVersion {
-      inherit (finalAttrs) version;
-
-      package = dprint;
-      command = ''
-        DPRINT_CACHE_DIR="$(mktemp --directory)" dprint --version
-      '';
-    };
-
     updateScript = nix-update-script { };
   };
 

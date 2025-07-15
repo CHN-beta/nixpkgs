@@ -2,6 +2,13 @@ name: Lint
 
 on:
   workflow_call:
+    inputs:
+      mergedSha:
+        required: true
+        type: string
+      targetSha:
+        required: true
+        type: string
 
 permissions: {}
 
@@ -19,9 +26,10 @@ jobs:
       - name: Check if the PR can be merged and checkout the merge commit
         uses: ./.github/actions/get-merge-commit
         with:
+          mergedSha: ${{ inputs.mergedSha }}
           merged-as-untrusted: true
 
-      - uses: cachix/install-nix-action@17fe5fb4a23ad6cbbe47d6b3f359611ad276644c # v31
+      - uses: cachix/install-nix-action@f0fe604f8a612776892427721526b4c7cfb23aba # v31
         with:
           extra_nix_config: sandbox = true
 
@@ -50,9 +58,10 @@ jobs:
       - name: Check if the PR can be merged and checkout the merge commit
         uses: ./.github/actions/get-merge-commit
         with:
+          mergedSha: ${{ inputs.mergedSha }}
           merged-as-untrusted: true
 
-      - uses: cachix/install-nix-action@17fe5fb4a23ad6cbbe47d6b3f359611ad276644c # v31
+      - uses: cachix/install-nix-action@f0fe604f8a612776892427721526b4c7cfb23aba # v31
         with:
           extra_nix_config: sandbox = true
 
@@ -72,10 +81,12 @@ jobs:
       - name: Check if the PR can be merged and checkout merged and target commits
         uses: ./.github/actions/get-merge-commit
         with:
+          mergedSha: ${{ inputs.mergedSha }}
           merged-as-untrusted: true
+          targetSha: ${{ inputs.targetSha }}
           target-as-trusted: true
 
-      - uses: cachix/install-nix-action@17fe5fb4a23ad6cbbe47d6b3f359611ad276644c # v31
+      - uses: cachix/install-nix-action@f0fe604f8a612776892427721526b4c7cfb23aba # v31
         with:
           extra_nix_config: sandbox = true
 
