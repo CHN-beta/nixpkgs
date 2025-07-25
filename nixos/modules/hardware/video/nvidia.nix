@@ -282,6 +282,12 @@ in
         It also drastically increases the time the driver needs to clock down after load
       '';
 
+      disableOpenglMemoryReuse = lib.mkEnableOption ''
+        disable OpenGL memory reuse, 
+        by setting `GLVidHeapReuseRatio` to `0` for all applications in NVIDIA application profiles.
+        This is useful to work around issues with excessive video memory usage under wayland.
+      '';
+
       package = lib.mkOption {
         default =
           config.boot.kernelPackages.nvidiaPackages."${if cfg.datacenter.enable then "dc" else "stable"}";
@@ -464,6 +470,11 @@ in
               assertion = cfg.dynamicBoost.enable -> lib.versionAtLeast nvidia_x11.version "510.39.01";
               message = "NVIDIA's Dynamic Boost feature only exists on versions >= 510.39.01";
             }
+
+            {
+              assertion = cfg.disableOpenglMemoryReuse -> lib.versionAtLeast nvidia_x11.version "565.77";
+              message = "GLVidHeapReuseRatio is only supported on versions >= 565.77";
+            }
           ];
 
           # If Optimus/PRIME is enabled, we:
@@ -557,6 +568,13 @@ in
           environment.etc = {
             "nvidia/nvidia-application-profiles-rc" = lib.mkIf nvidia_x11.useProfiles {
               source = "${nvidia_x11.bin}/share/nvidia/nvidia-application-profiles-rc";
+            };
+
+            "nvidia/nvidia-application-profiles-rc.d/vram" = lib.mkIf cfg.disableOpenglMemoryReuse {
+              source = pkgs.writeText "save-vram" (builtins.toJSON {
+                rules = [{ pattern = { feature = "true"; matches = ""; }; profile = "save-vram"; }];
+                profiles = [{ name = "save-vram"; settings = [{ key = "GLVidHeapReuseRatio"; value = 0; }]; }];
+              });
             };
 
             # 'nvidia_x11' installs it's files to /run/opengl-driver/...
