@@ -11,7 +11,7 @@
 
 python3Packages.buildPythonApplication rec {
   pname = "openapi-python-client";
-  version = "0.25.2";
+  version = "0.26.0";
   pyproject = true;
 
   src = fetchFromGitHub {
@@ -19,16 +19,15 @@ python3Packages.buildPythonApplication rec {
     owner = "openapi-generators";
     repo = "openapi-python-client";
     tag = "v${version}";
-    hash = "sha256-B+GVv1Q/OwbtHDMGNYkPkZgvHqncrAkdvZ6ECwhIbLE=";
+    hash = "sha256-kDULsu9mGxMu23kczVadwXLchYJiATJ2j6qU/8AKOSo=";
   };
 
-  nativeBuildInputs =
-    [
-      installShellFiles
-    ]
-    ++ lib.optionals stdenv.hostPlatform.isDarwin [
-      darwin.ps
-    ];
+  nativeBuildInputs = [
+    installShellFiles
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [
+    darwin.ps
+  ];
 
   build-system = with python3Packages; [
     hatchling

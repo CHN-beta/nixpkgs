@@ -6,17 +6,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "lintspec";
-  version = "0.6.1";
+  version = "0.7.1";
 
   src = fetchFromGitHub {
     owner = "beeb";
     repo = "lintspec";
     tag = "v${version}";
-    hash = "sha256-pZ9fq8bVZs7ihWeYyM4vDthpASXFS0U9b/F8NVkvHTA=";
+    hash = "sha256-TMiUOrDsKXi+d/CbJauo2FT9WEWnztMYqrZZHpS8i7M=";
   };
 
-  useFetchCargoVendor = true;
-  cargoHash = "sha256-eZct2zpnh07Fazd34rUcAxAWfMJYkwq8nWNfpG8gFak=";
+  cargoHash = "sha256-K8zx+dW6RXcbX2ZqNdfnv7WjbvjA8ZdJBitdDOi8hxE=";
 
   meta = {
     description = "Blazingly fast linter for NatSpec comments in Solidity code";

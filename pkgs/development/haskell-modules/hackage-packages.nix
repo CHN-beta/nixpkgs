@@ -1490,7 +1490,6 @@ self: {
       blaze-html,
       boxes,
       bytestring,
-      Cabal,
       case-insensitive,
       containers,
       data-hash,
@@ -1499,9 +1498,13 @@ self: {
       dlist,
       edit-distance,
       emacs,
+      enummapset,
       equivalence,
       exceptions,
+      filelock,
+      filemanip,
       filepath,
+      generic-data,
       ghc-compact,
       gitrev,
       happy,
@@ -1510,16 +1513,19 @@ self: {
       monad-control,
       mtl,
       murmur-hash,
+      nonempty-containers,
       parallel,
       peano,
       pqueue,
       pretty,
       process,
+      process-extras,
       regex-tdfa,
       split,
       stm,
       STMonadTrans,
       strict,
+      template-haskell,
       text,
       time,
       transformers,
@@ -1531,20 +1537,11 @@ self: {
     }:
     mkDerivation {
       pname = "Agda";
-      version = "2.7.0.1";
-      sha256 = "13pn0mbxyfy04fcdl68l2m36b40hwk8iwpkqdfad3xsf9l5ddxil";
-      revision = "2";
-      editedCabalFile = "1v1nfzn3dxvdzrc7310jl29vf4yp40hhnkkbw6d9y8n14grn7lrp";
+      version = "2.8.0";
+      sha256 = "184vjq260zf5w9c8nz11nbhpsvq3a1yxp7mhaz7synlaww3ik146";
       isLibrary = true;
       isExecutable = true;
       enableSeparateDataOutput = true;
-      setupHaskellDepends = [
-        base
-        Cabal
-        directory
-        filepath
-        process
-      ];
       libraryHaskellDepends = [
         aeson
         ansi-terminal
@@ -1562,9 +1559,13 @@ self: {
         directory
         dlist
         edit-distance
+        enummapset
         equivalence
         exceptions
+        filelock
+        filemanip
         filepath
+        generic-data
         ghc-compact
         gitrev
         hashable
@@ -1572,16 +1573,19 @@ self: {
         monad-control
         mtl
         murmur-hash
+        nonempty-containers
         parallel
         peano
         pqueue
         pretty
         process
+        process-extras
         regex-tdfa
         split
         stm
         STMonadTrans
         strict
+        template-haskell
         text
         time
         transformers
@@ -1597,9 +1601,13 @@ self: {
       ];
       executableHaskellDepends = [
         base
+        bytestring
         directory
+        filelock
         filepath
+        gitrev
         process
+        template-haskell
       ];
       executableToolDepends = [ emacs ];
       description = "A dependently typed functional programming language and proof assistant";
@@ -5768,104 +5776,6 @@ self: {
         opencv_video = null;
       };
 
-  "Cabal_3_2_1_0" = callPackage (
-    {
-      mkDerivation,
-      array,
-      base,
-      base-compat,
-      base-orphans,
-      binary,
-      bytestring,
-      containers,
-      deepseq,
-      Diff,
-      directory,
-      filepath,
-      integer-logarithms,
-      mtl,
-      optparse-applicative,
-      parsec,
-      pretty,
-      process,
-      QuickCheck,
-      stm,
-      tagged,
-      tar,
-      tasty,
-      tasty-golden,
-      tasty-hunit,
-      tasty-quickcheck,
-      temporary,
-      text,
-      time,
-      transformers,
-      tree-diff,
-      unix,
-    }:
-    mkDerivation {
-      pname = "Cabal";
-      version = "3.2.1.0";
-      sha256 = "1xfn9q6jnbp3jc6swn4hapa83f5m66pjz8fqbqmffydagf36fkzy";
-      revision = "1";
-      editedCabalFile = "07brbxkjlf1yqs9bjdwcwq1gx853kh600qnrf6bnya92q1p0fhw7";
-      setupHaskellDepends = [
-        mtl
-        parsec
-      ];
-      libraryHaskellDepends = [
-        array
-        base
-        binary
-        bytestring
-        containers
-        deepseq
-        directory
-        filepath
-        mtl
-        parsec
-        pretty
-        process
-        text
-        time
-        transformers
-        unix
-      ];
-      testHaskellDepends = [
-        array
-        base
-        base-compat
-        base-orphans
-        binary
-        bytestring
-        containers
-        deepseq
-        Diff
-        directory
-        filepath
-        integer-logarithms
-        optparse-applicative
-        pretty
-        process
-        QuickCheck
-        stm
-        tagged
-        tar
-        tasty
-        tasty-golden
-        tasty-hunit
-        tasty-quickcheck
-        temporary
-        text
-        tree-diff
-      ];
-      doCheck = false;
-      description = "A framework for packaging Haskell software";
-      license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-    }
-  ) { };
-
   "Cabal_3_10_3_0" = callPackage (
     {
       mkDerivation,
@@ -7005,10 +6915,8 @@ self: {
     }:
     mkDerivation {
       pname = "ChasingBottoms";
-      version = "1.3.1.15";
-      sha256 = "0if8h6xq10y1xa90cwmx2jkxjn9628rzs8y6fsjmpjdcvcyr5wnj";
-      revision = "2";
-      editedCabalFile = "11h7gfnlxfrfpvax74lbdwaz8jazy833q6mzrgs9p8cyj6q69ibn";
+      version = "1.3.1.16";
+      sha256 = "08zg018arf4qvp970dcnf0nyaqp7wkp5ba2dhck3v4l49k5cax9m";
       libraryHaskellDepends = [
         base
         containers
@@ -8107,6 +8015,31 @@ self: {
       hydraPlatforms = lib.platforms.none;
       mainProgram = "conscript";
       broken = true;
+    }
+  ) { };
+
+  "ConsoleAsk" = callPackage (
+    {
+      mkDerivation,
+      base,
+      lens,
+      parsec,
+      regex-tdfa,
+      text,
+    }:
+    mkDerivation {
+      pname = "ConsoleAsk";
+      version = "0.1.0.1";
+      sha256 = "0mbrvaqdxfx7vfcqy6rbva0ml6a7a2yklgzh3vx008yaavzw4hy6";
+      libraryHaskellDepends = [
+        base
+        lens
+        parsec
+        regex-tdfa
+        text
+      ];
+      description = "Simple CLI user input library";
+      license = lib.licenses.mit;
     }
   ) { };
 
@@ -20460,8 +20393,8 @@ self: {
       pname = "HStringTemplate";
       version = "0.8.8";
       sha256 = "1n8ci0kzjcgnqh4dfpqwlh7mnlzyiqiqc6hc0zr65p0balbg8zbi";
-      revision = "8";
-      editedCabalFile = "12mlncv6xfn68m28m3jc8bq9yipc7y38rly49y9srl8ml6yi8a49";
+      revision = "9";
+      editedCabalFile = "1pfn0g6zchygdp3y2laj67ni81iyq57kwj7wpf5z4g0dfg286abp";
       libraryHaskellDepends = [
         array
         base
@@ -20676,8 +20609,8 @@ self: {
       pname = "HTTP";
       version = "4000.4.1";
       sha256 = "0lyl5lpkk51xn3dfndh8ksgvwcdsviyigmsnp3d28lbpxkpxhcfz";
-      revision = "5";
-      editedCabalFile = "1jqdhmg4rlpvbx77v8108pdjkrcbpxapm1rqkqqlgdyjs8xs1bbm";
+      revision = "6";
+      editedCabalFile = "0piw36hhsjndc9rmcahscrawfk38iapgz2qwfl13n85wnfhwcdmd";
       libraryHaskellDepends = [
         array
         base
@@ -22336,10 +22269,8 @@ self: {
     }:
     mkDerivation {
       pname = "HaskellNet";
-      version = "0.6.1.2";
-      sha256 = "0yd0n6c9favb6kv37flz2cn9wz5kapx3iqljq2h7l6qvx6kd92v5";
-      revision = "1";
-      editedCabalFile = "1j5g09v40rvsk4crfjabs0mma5nlwsbzbny25803bc6805jh9058";
+      version = "0.6.2";
+      sha256 = "134gmv5b4f02f24m86ql256dssdvkgqjp2cw36p6958ydbdsx6s4";
       libraryHaskellDepends = [
         array
         base
@@ -22356,8 +22287,6 @@ self: {
       ];
       description = "Client support for POP3, SMTP, and IMAP";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -22394,7 +22323,6 @@ self: {
       ];
       description = "Helpers to connect to SSL/TLS mail servers with HaskellNet";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "HaskellNet-SSL-example";
     }
   ) { };
@@ -23978,8 +23906,8 @@ self: {
     }:
     mkDerivation {
       pname = "HsSyck";
-      version = "0.53";
-      sha256 = "17r4jwnkjinmzpw9m2crjwccdyv9wmpljnv1ldgljkr9p9mb5ywf";
+      version = "0.55";
+      sha256 = "1ccm9r40898kfgkrnwz0ybcdps83li9wk565fm37gdpsvmi19faf";
       enableSeparateDataOutput = true;
       libraryHaskellDepends = [
         base
@@ -24096,6 +24024,8 @@ self: {
       pname = "HsYAML";
       version = "0.2.1.5";
       sha256 = "13av46629msknp1spmcczgd2hpsyj0ca590vpiy7df8l6cfwjyk5";
+      revision = "1";
+      editedCabalFile = "1l5ig8a1c13rwcx530li93p0kkxcsjpjyr303v19z6n8zmdvnz6a";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -24700,6 +24630,8 @@ self: {
       pname = "IPv6DB";
       version = "0.3.3.4";
       sha256 = "1mkf2fqlg2n9q3l3p8rxdcmb7k281lz37x6hiry1wvxbn92d4pja";
+      revision = "1";
+      editedCabalFile = "18wx26x4nyyywbl7inwna68kmxs8sbyckmrhdz4png9gn7ix4sr0";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -25753,8 +25685,8 @@ self: {
     }:
     mkDerivation {
       pname = "JuicyCairo";
-      version = "0.1.0.0";
-      sha256 = "06vw57wf73cwrcg7ycbqhgiz7zpb58pvzvgr2widdv75d9iq4nkk";
+      version = "0.1.0.1";
+      sha256 = "1qfyj46vyb6knll8dclfbh6kvi68lmfpdvk0qgh5i28rl2qihwq8";
       libraryHaskellDepends = [
         base
         cairo-image
@@ -25977,6 +25909,44 @@ self: {
         JuicyPixels
       ];
       description = "Efficiently scale, crop, flip images with JuicyPixels";
+      license = lib.licenses.bsd3;
+    }
+  ) { };
+
+  "JuicyPixels-jpeg-turbo" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      jpeg-turbo,
+      JuicyPixels,
+      tasty,
+      tasty-discover,
+      tasty-hunit,
+      vector,
+    }:
+    mkDerivation {
+      pname = "JuicyPixels-jpeg-turbo";
+      version = "0.1.0.0";
+      sha256 = "0q0w1a8nigdhvqi7i9bkrllaivc24rsa639q03hmcrjkr8g112d0";
+      libraryHaskellDepends = [
+        base
+        bytestring
+        jpeg-turbo
+        JuicyPixels
+        vector
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        jpeg-turbo
+        JuicyPixels
+        tasty
+        tasty-discover
+        tasty-hunit
+      ];
+      testToolDepends = [ tasty-discover ];
+      description = "JuicyPixels wrappers for libjpeg-turbo";
       license = lib.licenses.bsd3;
     }
   ) { };
@@ -26777,6 +26747,8 @@ self: {
       pname = "LPFP";
       version = "1.1.5";
       sha256 = "11mlcd1pq2vb0kwjm2z6304qslvmdcfdbly37yr27zhn860zfzz2";
+      revision = "2";
+      editedCabalFile = "1530y0rmj3gwhk0ghpaf0977wz0n2pq86dfcb401y0ala7f4z167";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -29646,10 +29618,13 @@ self: {
   "MicroHs" = callPackage (
     {
       mkDerivation,
+      array,
       base,
+      bytestring,
       deepseq,
       directory,
       filepath,
+      ghc-internal,
       ghc-prim,
       haskeline,
       process,
@@ -29658,16 +29633,19 @@ self: {
     }:
     mkDerivation {
       pname = "MicroHs";
-      version = "0.11.4.0";
-      sha256 = "1whrxvr1nzh5vl7k540gs9abqghh64kqlnfffw0cabl4hsnw4vw2";
+      version = "0.13.0.0";
+      sha256 = "02wl86ql8xcp9w7vlhvh0m95am6ssmw8fzkbs597qlhpwp91ax3w";
       isLibrary = false;
       isExecutable = true;
       enableSeparateDataOutput = true;
       executableHaskellDepends = [
+        array
         base
+        bytestring
         deepseq
         directory
         filepath
+        ghc-internal
         ghc-prim
         haskeline
         process
@@ -29676,6 +29654,7 @@ self: {
       ];
       description = "A small compiler for Haskell";
       license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
       mainProgram = "mhs";
     }
   ) { };
@@ -31672,6 +31651,48 @@ self: {
       ];
       description = "NanoID generator";
       license = lib.licenses.bsd3;
+      mainProgram = "nanoid";
+    }
+  ) { };
+
+  "NanoID_3_4_1_1" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      bytestring-encodings,
+      cereal,
+      extra,
+      mwc-random,
+      optparse-applicative,
+      text,
+    }:
+    mkDerivation {
+      pname = "NanoID";
+      version = "3.4.1.1";
+      sha256 = "1dfl5vj6fwxwrhgx11vzxij2p19q3kqri130fxgw2l6ajlckyh8x";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        cereal
+        extra
+        mwc-random
+        text
+      ];
+      executableHaskellDepends = [
+        base
+        bytestring
+        bytestring-encodings
+        mwc-random
+        optparse-applicative
+      ];
+      description = "NanoID generator";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
       mainProgram = "nanoid";
     }
   ) { };
@@ -34884,8 +34905,8 @@ self: {
     }:
     mkDerivation {
       pname = "PenroseKiteDart";
-      version = "1.2.1";
-      sha256 = "0dzp261z231j0vwl727qa8vgzbi8dgc9vr462wlwdpzs8a18jdxf";
+      version = "1.4.3";
+      sha256 = "1nrp9cr7jxjvplkfgp4lxh3rvzf1pms8bm7kwhc4w4fzmpy3p3p1";
       libraryHaskellDepends = [
         base
         containers
@@ -36362,7 +36383,7 @@ self: {
     }
   ) { };
 
-  "QuickCheck_2_15_0_1" = callPackage (
+  "QuickCheck_2_16_0_0" = callPackage (
     {
       mkDerivation,
       base,
@@ -36376,10 +36397,8 @@ self: {
     }:
     mkDerivation {
       pname = "QuickCheck";
-      version = "2.15.0.1";
-      sha256 = "0zvfydg44ibs1br522rzvdlxj9mpz0h62js1hay1sj5gvdnj3cm3";
-      revision = "1";
-      editedCabalFile = "0cgfp4s51cjphsn9cls6rndisvqmi94vn95xan9g1yz6p5xk7z8c";
+      version = "2.16.0.0";
+      sha256 = "1h02m26hvhfcs82rrfmfznwh4vj799gn55kysmv3sr8ixak3ymhb";
       libraryHaskellDepends = [
         base
         containers
@@ -45846,7 +45865,8 @@ self: {
       badPlatforms = [
         "i686-linux"
         "armv7l-linux"
-      ] ++ lib.platforms.darwin;
+      ]
+      ++ lib.platforms.darwin;
     }
   ) { };
 
@@ -46622,8 +46642,8 @@ self: {
     { mkDerivation }:
     mkDerivation {
       pname = "Win32";
-      version = "2.14.1.0";
-      sha256 = "00sqx9vpkp56nblks3fq7v4bn6lig3cp4w504wjfz03dgwhh7xwy";
+      version = "2.14.2.1";
+      sha256 = "0583vy22b89z4zdgg52ayga46mw8qmj0lw7qm99q6wggnjgmmlb9";
       description = "A binding to Windows Win32 API";
       license = lib.licenses.bsd3;
       platforms = lib.platforms.windows;
@@ -47342,6 +47362,8 @@ self: {
           pname = "X11";
           version = "1.10.3";
           sha256 = "0hnj2q310a6s0h479hq8jsmywymvxdjxg13zw46mmdndynwd2jnq";
+          revision = "1";
+          editedCabalFile = "005g8q56bxc2w0cf2xgydqfs1r07bf17syv5smffvfx36h8gw78d";
           libraryHaskellDepends = [
             base
             data-default-class
@@ -49274,8 +49296,8 @@ self: {
     }:
     mkDerivation {
       pname = "ac-library-hs";
-      version = "1.4.0.0";
-      sha256 = "0ygk977hw4967ravh5wbsfdaasr9wdad7z3c4d0ahfi5p4pvpdyh";
+      version = "1.5.2.0";
+      sha256 = "028781j64wv42j9i2gmgccmlakyjchpxqk13rk5n59xavlyv7yw9";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -49284,6 +49306,7 @@ self: {
         bytestring
         primitive
         random
+        transformers
         vector
         vector-algorithms
         wide-word
@@ -49294,6 +49317,7 @@ self: {
         bytestring
         primitive
         random
+        transformers
         vector
         vector-algorithms
         wide-word
@@ -49338,7 +49362,9 @@ self: {
       ];
       description = "Data structures and algorithms";
       license = lib.licenses.cc0;
+      hydraPlatforms = lib.platforms.none;
       mainProgram = "example-lazy-segtree";
+      broken = true;
     }
   ) { };
 
@@ -52206,8 +52232,8 @@ self: {
       pname = "active";
       version = "0.2.1";
       sha256 = "150kwir36aj9q219qi80mlqd0vxm4941dh6x4xp58rbd5a3mhmv1";
-      revision = "4";
-      editedCabalFile = "0s5aiyskly1j4wd4hs2c52bdawx9340pgdx0378xvivixd48cd8x";
+      revision = "5";
+      editedCabalFile = "0wxl3pfdz4krx7lg1rckvmjkm2hj5vlwx3kyzzfrpsfhc9zq7f1g";
       libraryHaskellDepends = [
         base
         lens
@@ -52650,9 +52676,7 @@ self: {
       ];
       description = "Convert adblock config files to privoxy format";
       license = lib.licenses.gpl3Only;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "adblock2privoxy";
-      broken = true;
     }
   ) { };
 
@@ -53451,121 +53475,6 @@ self: {
     }
   ) { };
 
-  "aeson_1_5_6_0" = callPackage (
-    {
-      mkDerivation,
-      attoparsec,
-      base,
-      base-compat,
-      base-compat-batteries,
-      base-orphans,
-      base16-bytestring,
-      bytestring,
-      containers,
-      data-fix,
-      deepseq,
-      Diff,
-      directory,
-      dlist,
-      filepath,
-      generic-deriving,
-      ghc-prim,
-      hashable,
-      hashable-time,
-      integer-logarithms,
-      primitive,
-      QuickCheck,
-      quickcheck-instances,
-      scientific,
-      strict,
-      tagged,
-      tasty,
-      tasty-golden,
-      tasty-hunit,
-      tasty-quickcheck,
-      template-haskell,
-      text,
-      th-abstraction,
-      these,
-      time,
-      time-compat,
-      unordered-containers,
-      uuid-types,
-      vector,
-    }:
-    mkDerivation {
-      pname = "aeson";
-      version = "1.5.6.0";
-      sha256 = "1s5z4bgb5150h6a4cjf5vh8dmyrn6ilh29gh05999v6jwd5w6q83";
-      revision = "7";
-      editedCabalFile = "1qbsyy605hlfh7wfj3q33yx0xmb4n81z6h0y99x7khyxmy0plqbf";
-      libraryHaskellDepends = [
-        attoparsec
-        base
-        base-compat-batteries
-        bytestring
-        containers
-        data-fix
-        deepseq
-        dlist
-        ghc-prim
-        hashable
-        primitive
-        scientific
-        strict
-        tagged
-        template-haskell
-        text
-        th-abstraction
-        these
-        time
-        time-compat
-        unordered-containers
-        uuid-types
-        vector
-      ];
-      testHaskellDepends = [
-        attoparsec
-        base
-        base-compat
-        base-orphans
-        base16-bytestring
-        bytestring
-        containers
-        data-fix
-        Diff
-        directory
-        dlist
-        filepath
-        generic-deriving
-        ghc-prim
-        hashable
-        hashable-time
-        integer-logarithms
-        QuickCheck
-        quickcheck-instances
-        scientific
-        strict
-        tagged
-        tasty
-        tasty-golden
-        tasty-hunit
-        tasty-quickcheck
-        template-haskell
-        text
-        these
-        time
-        time-compat
-        unordered-containers
-        uuid-types
-        vector
-      ];
-      description = "Fast JSON parsing and encoding";
-      license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-    }
-  ) { };
-
   "aeson" = callPackage (
     {
       mkDerivation,
@@ -53620,8 +53529,8 @@ self: {
       pname = "aeson";
       version = "2.2.3.0";
       sha256 = "1akbrh8iz47f0ai30yabg1n4vcf1fx0a9gzj45fx0si553s5r8ns";
-      revision = "3";
-      editedCabalFile = "16sajjm1fqrjjgdy651ff7hyj89di7ys9wk4qnm9h6nnpbr5krb1";
+      revision = "4";
+      editedCabalFile = "0yw5kahz82kls4svn0qssckvx143k73h5nqg0z1d4s7ibqww4j3x";
       libraryHaskellDepends = [
         base
         bytestring
@@ -56383,8 +56292,8 @@ self: {
     }:
     mkDerivation {
       pname = "aftovolio";
-      version = "0.7.1.0";
-      sha256 = "1yzjgiw9g7rh480s47f8q2lfxhwh76f0nsm2ch15av9vnpp4yad6";
+      version = "0.8.0.0";
+      sha256 = "0zs12c4ajqjszmxawh4adn1wwad3ix5pwmfybmbs98xwjvmbw9ni";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -59360,8 +59269,8 @@ self: {
       pname = "align-audio";
       version = "0.0.0.1";
       sha256 = "1r1660igj6bmzhccw30vj0wsz7jjkd5k0vbr4nrcbpcwkxllshnb";
-      revision = "1";
-      editedCabalFile = "1cqxzanhz71lgivffxddq95ay0vaxfpjl3b0zpzbcw3filfkqihy";
+      revision = "3";
+      editedCabalFile = "1j50cp7i77dplkd3g7nnyn9xgcr8r8d4lh6nh9xcnjfkn8p6g539";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -60096,8 +60005,8 @@ self: {
       pname = "alsa-pcm";
       version = "0.6.1.1";
       sha256 = "1mllr9nbm3qb837zgvd6mrpr6f8i272wflv0a45rrpsq50zgcj33";
-      revision = "1";
-      editedCabalFile = "1bq0rmawwn7xaqny6gvp0qh0pggqcxr9b64346fm4a8fsq71a6wi";
+      revision = "2";
+      editedCabalFile = "0mnzlggfhs8vlznbmcchp2qlzijh6vl0hrvl3919vzk1zqw75gzp";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -69783,8 +69692,8 @@ self: {
     }:
     mkDerivation {
       pname = "amazonka-mtl";
-      version = "0.1.1.1";
-      sha256 = "19rcmfq5ly92jm96w5770286kihd5gsdc45rmpbkhm71xl2aa0pq";
+      version = "0.1.1.3";
+      sha256 = "06ng492c6r0zwyjyr0h6b665sp6v17i245svdsag3ha8ni303hka";
       libraryHaskellDepends = [
         amazonka
         amazonka-core
@@ -72111,8 +72020,6 @@ self: {
       ];
       description = "Provides conduits to upload data to S3 using the Multipart API";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -75173,6 +75080,7 @@ self: {
       amqp,
       base,
       bytestring,
+      data-default,
       exceptions,
       monad-loops,
       mtl,
@@ -75181,8 +75089,8 @@ self: {
     }:
     mkDerivation {
       pname = "amqp-worker";
-      version = "2.0.0";
-      sha256 = "0jnyrd7xmk66qi5kkmjc8r57zck064yfkrmgddnw288qzcq5051d";
+      version = "2.0.1";
+      sha256 = "12pj1as0j0rm3ps0qqgp9zzrm2sdh17402yk2ig71d11ymk3gla7";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -75190,6 +75098,7 @@ self: {
         amqp
         base
         bytestring
+        data-default
         exceptions
         monad-loops
         mtl
@@ -75201,6 +75110,7 @@ self: {
         amqp
         base
         bytestring
+        data-default
         exceptions
         monad-loops
         mtl
@@ -75212,6 +75122,7 @@ self: {
         amqp
         base
         bytestring
+        data-default
         exceptions
         monad-loops
         mtl
@@ -75270,8 +75181,8 @@ self: {
     }:
     mkDerivation {
       pname = "anagrep";
-      version = "0.1.0.0";
-      sha256 = "1pqp3q8pr2j0v1ra83glfbbclq6yd6vns0q9q8i9r4kd7lrd2vrm";
+      version = "0.1.0.1";
+      sha256 = "0dzwa681si9j1xq4rcwpsnzg10r76gll2lxl62ll5bsy8309ykgc";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -75302,9 +75213,7 @@ self: {
       ];
       description = "Find strings with permutations (anagrams) that match a regular expression";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "anagrep";
-      broken = true;
     }
   ) { };
 
@@ -75621,8 +75530,8 @@ self: {
     }:
     mkDerivation {
       pname = "android-activity";
-      version = "0.2.0.1";
-      sha256 = "1pb250zsmh9z7h8wcqnqhbvhhdwwhmrwj8qr1w8053pxylsr5npn";
+      version = "0.2.0.2";
+      sha256 = "1l82k9if392682wr31b6g74wv25qwl5cgxwcmhnrp4lm8w0n428d";
       libraryHaskellDepends = [
         base
         data-default
@@ -76527,30 +76436,6 @@ self: {
     }
   ) { };
 
-  "ansi-terminal_1_0_2" = callPackage (
-    {
-      mkDerivation,
-      ansi-terminal-types,
-      base,
-      colour,
-    }:
-    mkDerivation {
-      pname = "ansi-terminal";
-      version = "1.0.2";
-      sha256 = "0d6qm3ph6drim7g81yx46nmgspxsf4nnr2d91fa0fy3cyv5idra6";
-      isLibrary = true;
-      isExecutable = true;
-      libraryHaskellDepends = [
-        ansi-terminal-types
-        base
-        colour
-      ];
-      description = "Simple ANSI terminal support";
-      license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-    }
-  ) { };
-
   "ansi-terminal" = callPackage (
     {
       mkDerivation,
@@ -76603,8 +76488,8 @@ self: {
       pname = "ansi-terminal-game";
       version = "1.9.3.0";
       sha256 = "1yy7hzdcawdmwl8wqzabbamzjdg260xbwryj0hdjn7b0n6qlqymk";
-      revision = "2";
-      editedCabalFile = "1gjaa3kj05v5zyjn27y17w05nx018bx28znj7r0al0c6267n0la8";
+      revision = "3";
+      editedCabalFile = "0m4df8a2p18j29zsgffnyf69hjkyam3rg3xc4zvmxafidj877ykk";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -76653,28 +76538,6 @@ self: {
       testToolDepends = [ hspec-discover ];
       description = "cross-platform library for terminal games";
       license = lib.licenses.gpl3Only;
-    }
-  ) { };
-
-  "ansi-terminal-types_0_11_5" = callPackage (
-    {
-      mkDerivation,
-      base,
-      colour,
-    }:
-    mkDerivation {
-      pname = "ansi-terminal-types";
-      version = "0.11.5";
-      sha256 = "1lgxnhnzgk4mwlnh8zdgx8w8pa4q4n140mvd1880acgli41j6yxz";
-      revision = "1";
-      editedCabalFile = "02mhl78kmjfa0h22khcjdaaxyvanv717rb2mi3l0jiawv7gl117p";
-      libraryHaskellDepends = [
-        base
-        colour
-      ];
-      description = "Types and functions used to represent SGR aspects";
-      license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -78044,8 +77907,8 @@ self: {
     }:
     mkDerivation {
       pname = "aoc";
-      version = "0.1.0.1";
-      sha256 = "1rw92ndc2mqlxg9jdpf9k62mmcgq383zx5y34x9qhgddnqav1wwq";
+      version = "0.2.0.0";
+      sha256 = "0hamr2sqw00njwg4sdir81fmsgc29ic21m0rzqnrfmd5jgdmg27h";
       libraryHaskellDepends = [
         base
         containers
@@ -78055,8 +77918,6 @@ self: {
       ];
       description = "Utility functions commonly used while solving Advent of Code puzzles";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -78481,8 +78342,10 @@ self: {
     }:
     mkDerivation {
       pname = "apecs-stm";
-      version = "0.2";
-      sha256 = "03r20w5q6c8z4cv8z60v66hd9w831g3qsa6n5m96mdwi6vjxh1nl";
+      version = "0.1.5";
+      sha256 = "10zfmc1zgmw5fkrrcs0mnsb2h44b0zfn2y7w1ld47skvmz580dxp";
+      revision = "1";
+      editedCabalFile = "01rhwqs69bx09p2nqp9c01jhcqnfdfiisw6kck9gjq0h68j2rdib";
       libraryHaskellDepends = [
         apecs
         base
@@ -80678,101 +80541,6 @@ self: {
     }
   ) { };
 
-  "apply-refact_0_9_3_0" = callPackage (
-    {
-      mkDerivation,
-      base,
-      containers,
-      directory,
-      extra,
-      filemanip,
-      filepath,
-      ghc,
-      ghc-boot-th,
-      ghc-exactprint,
-      optparse-applicative,
-      process,
-      refact,
-      silently,
-      syb,
-      tasty,
-      tasty-expected-failure,
-      tasty-golden,
-      transformers,
-      uniplate,
-      unix-compat,
-    }:
-    mkDerivation {
-      pname = "apply-refact";
-      version = "0.9.3.0";
-      sha256 = "1sn5g71sx8xa4ggyk49m661iip6zrzl65vb87l16l31kf79bbm7w";
-      revision = "1";
-      editedCabalFile = "0hgdjm6ydfc29d922h1cpwrch61r5qchzrw21dz80kdry53qxl5q";
-      isLibrary = true;
-      isExecutable = true;
-      libraryHaskellDepends = [
-        base
-        containers
-        directory
-        extra
-        filemanip
-        ghc
-        ghc-boot-th
-        ghc-exactprint
-        process
-        refact
-        syb
-        transformers
-        uniplate
-        unix-compat
-      ];
-      executableHaskellDepends = [
-        base
-        containers
-        directory
-        extra
-        filemanip
-        filepath
-        ghc
-        ghc-boot-th
-        ghc-exactprint
-        optparse-applicative
-        process
-        refact
-        syb
-        transformers
-        uniplate
-        unix-compat
-      ];
-      testHaskellDepends = [
-        base
-        containers
-        directory
-        extra
-        filemanip
-        filepath
-        ghc
-        ghc-boot-th
-        ghc-exactprint
-        optparse-applicative
-        process
-        refact
-        silently
-        syb
-        tasty
-        tasty-expected-failure
-        tasty-golden
-        transformers
-        uniplate
-        unix-compat
-      ];
-      description = "Perform refactorings specified by the refact library";
-      license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      mainProgram = "refactor";
-    }
-  ) { };
-
   "apply-refact" = callPackage (
     {
       mkDerivation,
@@ -81045,8 +80813,8 @@ self: {
       pname = "apportionment";
       version = "0.0.0.4";
       sha256 = "12b4jlh3k3da1w5lw8z83qgvn0ys85xwvdqylm5kwfi2i1i72256";
-      revision = "1";
-      editedCabalFile = "051cznvkni4gl0715q9mxi07p39xq3vzlnzmaazrxvh74nnzlcqf";
+      revision = "2";
+      editedCabalFile = "1gzq435d00362qfywy8x2lf52rizwgz2ka2nw3kij3mr47v9na7a";
       libraryHaskellDepends = [
         base
         containers
@@ -83373,8 +83141,8 @@ self: {
       pname = "arithmoi";
       version = "0.13.1.0";
       sha256 = "0ka0sqkrkqrln6ci8fxzls9r5bhwii48xc39bbapdqbn4sc2c5bf";
-      revision = "1";
-      editedCabalFile = "1q36pbxsz3vcig7gjr0m38bn5d34az2cjkhcag4n2ra86zdqrnvv";
+      revision = "2";
+      editedCabalFile = "1q81krc6qgg495qqlnh7kbzg2fk57amgiqa5xmxwhxrhlffjsk3d";
       configureFlags = [ "-f-llvm" ];
       libraryHaskellDepends = [
         array
@@ -84540,8 +84308,8 @@ self: {
       pname = "ascii-char";
       version = "1.0.1.0";
       sha256 = "1fls3yw3gs36hwqp32pn7mfibkspx5a80k32wybzc3hfp4qyymlv";
-      revision = "2";
-      editedCabalFile = "1x0ci7j3bdlrrza78n53xw4y1dl4py3gqrym0lb6l9w5n7l138gs";
+      revision = "3";
+      editedCabalFile = "1csxiyqipf38pkcnbr63yv2zm8399mvdmj4qkvh2s3b465nrd7wh";
       libraryHaskellDepends = [
         base
         hashable
@@ -85001,6 +84769,62 @@ self: {
       description = "Conduit for encoding ByteString into Ascii85";
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { };
+
+  "ascii85x" = callPackage (
+    {
+      mkDerivation,
+      array,
+      attoparsec,
+      base,
+      bytestring,
+      hedgehog,
+      JuicyPixels,
+      optparse-applicative,
+      text,
+      vector,
+    }:
+    mkDerivation {
+      pname = "ascii85x";
+      version = "0.2.4.1";
+      sha256 = "1jr0qqcyx173gy5izz99z5s3v9a78ks48g7am4lfab7py3k0xri3";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        array
+        attoparsec
+        base
+        bytestring
+        JuicyPixels
+        text
+        vector
+      ];
+      executableHaskellDepends = [
+        array
+        attoparsec
+        base
+        bytestring
+        JuicyPixels
+        optparse-applicative
+        text
+        vector
+      ];
+      testHaskellDepends = [
+        array
+        attoparsec
+        base
+        bytestring
+        hedgehog
+        JuicyPixels
+        text
+        vector
+      ];
+      description = "Displays TI-85 variable files as text";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "ascii85x";
       broken = true;
     }
   ) { };
@@ -87476,6 +87300,53 @@ self: {
     }
   ) { };
 
+  "atomic-css" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      casing,
+      containers,
+      effectful-core,
+      file-embed,
+      html-entities,
+      http-types,
+      skeletest,
+      text,
+    }:
+    mkDerivation {
+      pname = "atomic-css";
+      version = "0.1.0";
+      sha256 = "088j3fmzvwrwrc4fk851788fw696aw972bi73p7jqrpj3idvh9lf";
+      libraryHaskellDepends = [
+        base
+        bytestring
+        casing
+        containers
+        effectful-core
+        file-embed
+        html-entities
+        http-types
+        text
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        casing
+        containers
+        effectful-core
+        file-embed
+        html-entities
+        http-types
+        skeletest
+        text
+      ];
+      description = "Type-safe, composable CSS utility functions. Inspired by Tailwindcss and Elm-UI";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "atomic-file-ops" = callPackage (
     {
       mkDerivation,
@@ -88740,8 +88611,8 @@ self: {
     }:
     mkDerivation {
       pname = "attoparsec-framer";
-      version = "0.1.0.9";
-      sha256 = "0kh54qdzjqa7lxd8s679b3my5nsy55rwqwd84nblmfczi73bjc0p";
+      version = "0.1.0.10";
+      sha256 = "1ziskifj6mly9ywsag8395ladwscrwzjpn628nbmn29x28zq0n61";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -88840,6 +88711,109 @@ self: {
       ];
       description = "Parsing of ISO 8601 dates, originally from aeson";
       license = lib.licenses.bsd3;
+    }
+  ) { };
+
+  "attoparsec-isotropic" = callPackage (
+    {
+      mkDerivation,
+      array,
+      base,
+      bytestring,
+      case-insensitive,
+      containers,
+      deepseq,
+      directory,
+      fail,
+      filepath,
+      ghc-prim,
+      haddock-use-refs,
+      http-types,
+      parsec,
+      QuickCheck,
+      quickcheck-unicode,
+      scientific,
+      semigroups,
+      tagged,
+      tasty,
+      tasty-bench,
+      tasty-quickcheck,
+      text,
+      trace-embrace,
+      transformers,
+      unordered-containers,
+      vector,
+    }:
+    mkDerivation {
+      pname = "attoparsec-isotropic";
+      version = "0.14.5";
+      sha256 = "1bvxy2gydz3kv0fbhp77bwk75l73kz7qc4aa7wlldga90f8y3vhj";
+      libraryHaskellDepends = [
+        array
+        base
+        bytestring
+        containers
+        deepseq
+        fail
+        ghc-prim
+        haddock-use-refs
+        scientific
+        semigroups
+        tagged
+        text
+        trace-embrace
+        transformers
+      ];
+      testHaskellDepends = [
+        array
+        base
+        bytestring
+        containers
+        deepseq
+        fail
+        haddock-use-refs
+        http-types
+        QuickCheck
+        quickcheck-unicode
+        scientific
+        semigroups
+        tagged
+        tasty
+        tasty-bench
+        tasty-quickcheck
+        text
+        trace-embrace
+        transformers
+        vector
+      ];
+      benchmarkHaskellDepends = [
+        array
+        base
+        bytestring
+        case-insensitive
+        containers
+        deepseq
+        directory
+        fail
+        filepath
+        ghc-prim
+        haddock-use-refs
+        http-types
+        parsec
+        scientific
+        semigroups
+        tagged
+        tasty-bench
+        text
+        trace-embrace
+        transformers
+        unordered-containers
+        vector
+      ];
+      doHaddock = false;
+      description = "right-to-left parser backward compatible with attoparsec";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -89229,6 +89203,8 @@ self: {
       pname = "audacity";
       version = "0.0.2.2";
       sha256 = "1glvk4mkq8j48s0xm86xb1l3xrb6m3cijcckdm48zq3pz7yg3hd8";
+      revision = "1";
+      editedCabalFile = "1zijgx43yd713czj9r5b2yv26dii4d4i6ar9n0l1c9zqaqv7vh6p";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -90000,6 +89976,96 @@ self: {
     }
   ) { };
 
+  "autodocodec_0_5_0_0" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      containers,
+      dlist,
+      doctest,
+      hashable,
+      mtl,
+      scientific,
+      text,
+      time,
+      unordered-containers,
+      validity,
+      validity-scientific,
+      vector,
+    }:
+    mkDerivation {
+      pname = "autodocodec";
+      version = "0.5.0.0";
+      sha256 = "172z14rfrl7jn0cwsbspyzb884szrmvq1rixd2b8ymc8d278l049";
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        containers
+        dlist
+        hashable
+        mtl
+        scientific
+        text
+        time
+        unordered-containers
+        validity
+        validity-scientific
+        vector
+      ];
+      testHaskellDepends = [
+        base
+        doctest
+      ];
+      description = "Self-documenting encoder and decoder";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
+  "autodocodec-exact" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      aeson-pretty,
+      autodocodec,
+      base,
+      bytestring,
+      containers,
+      mtl,
+      pretty-show,
+      scientific,
+      text,
+      unordered-containers,
+      vector,
+    }:
+    mkDerivation {
+      pname = "autodocodec-exact";
+      version = "0.0.0.1";
+      sha256 = "07ljrfxhkrl7k33nhg51m30334yvjp7jrix6hlwzgfqgr4nsbdas";
+      libraryHaskellDepends = [
+        aeson
+        aeson-pretty
+        autodocodec
+        base
+        bytestring
+        containers
+        mtl
+        pretty-show
+        scientific
+        text
+        unordered-containers
+        vector
+      ];
+      description = "Exact decoder for autodocodec";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { };
+
   "autodocodec-nix" = callPackage (
     {
       mkDerivation,
@@ -90170,6 +90236,40 @@ self: {
     }
   ) { };
 
+  "autodocodec-servant-multipart_0_0_0_2" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      autodocodec,
+      base,
+      bytestring,
+      servant-multipart,
+      servant-multipart-api,
+      text,
+      unordered-containers,
+      vector,
+    }:
+    mkDerivation {
+      pname = "autodocodec-servant-multipart";
+      version = "0.0.0.2";
+      sha256 = "0zdghkqmrr2d4lj71c3qh62bqvc5frhid8s8zkh3hwkkla7a1ld4";
+      libraryHaskellDepends = [
+        aeson
+        autodocodec
+        base
+        bytestring
+        servant-multipart
+        servant-multipart-api
+        text
+        unordered-containers
+        vector
+      ];
+      description = "Autodocodec interpreters for Servant Multipart";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "autodocodec-swagger2" = callPackage (
     {
       mkDerivation,
@@ -90240,6 +90340,46 @@ self: {
     }
   ) { };
 
+  "autodocodec-yaml_0_4_0_2" = callPackage (
+    {
+      mkDerivation,
+      autodocodec,
+      autodocodec-schema,
+      base,
+      bytestring,
+      containers,
+      path,
+      path-io,
+      safe-coloured-text,
+      scientific,
+      text,
+      vector,
+      yaml,
+    }:
+    mkDerivation {
+      pname = "autodocodec-yaml";
+      version = "0.4.0.2";
+      sha256 = "17ll6bb0qs7nm9s2kf1b2zn67kjv5lwcrs2igllk5vlsajk4difl";
+      libraryHaskellDepends = [
+        autodocodec
+        autodocodec-schema
+        base
+        bytestring
+        containers
+        path
+        path-io
+        safe-coloured-text
+        scientific
+        text
+        vector
+        yaml
+      ];
+      description = "Autodocodec interpreters for yaml";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "autoexporter" = callPackage (
     {
       mkDerivation,
@@ -90250,8 +90390,8 @@ self: {
     }:
     mkDerivation {
       pname = "autoexporter";
-      version = "2.0.0.13";
-      sha256 = "1ws7jp78h3w135w09zx9pmd23kbhfqb2k4mrhpwj661d55ppzsph";
+      version = "2.0.0.15";
+      sha256 = "0jx5vih8fjfy4xamiw38z9ycq27fmqdx0yjidbqgfc3js5rhhcki";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -91707,6 +91847,44 @@ self: {
       ];
       description = "Amazon Web Services (AWS) for Haskell";
       license = lib.licenses.bsd3;
+    }
+  ) { };
+
+  "aws-academy-grade-exporter" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      cassava,
+      optparse-applicative,
+      postgresql-simple,
+      req,
+      text,
+      vector,
+    }:
+    mkDerivation {
+      pname = "aws-academy-grade-exporter";
+      version = "0.1.0.0";
+      sha256 = "1wh0sz2x4kfh97yi3811r3vg2qf6i6zp2hyifzz1jy1nra93b6av";
+      isLibrary = false;
+      isExecutable = true;
+      executableHaskellDepends = [
+        aeson
+        base
+        bytestring
+        cassava
+        optparse-applicative
+        postgresql-simple
+        req
+        text
+        vector
+      ];
+      description = "Export grades from AWS Academy to different formats";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "aws-academy-grade-exporter";
+      broken = true;
     }
   ) { };
 
@@ -93538,8 +93716,8 @@ self: {
     }:
     mkDerivation {
       pname = "aws-spend-summary";
-      version = "0.2.0.2";
-      sha256 = "0zp9bdrhxl4z8fyjqcilndpj6qw5scs1byh1fzj8v9r4zzg59zsg";
+      version = "0.3.0.0";
+      sha256 = "0lnwlvjqjs4hxqfblrhgqjq6309c466hlnamryprgd3l8nhnpak3";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -95227,7 +95405,6 @@ self: {
       microlens,
       microlens-th,
       mwc-random,
-      primitive,
       reflection,
       time,
       transformers,
@@ -95236,14 +95413,13 @@ self: {
     }:
     mkDerivation {
       pname = "backprop";
-      version = "0.2.6.5";
-      sha256 = "0rc6dsf0zasl9vah8kv61qk2z7s644lzsrmkd7fwxwj1480kb482";
+      version = "0.2.7.2";
+      sha256 = "1v7r2gr18kcrcf12dmjpg2cqg1lanpqfpjwbqqnm1sbibvf467w7";
       libraryHaskellDepends = [
         base
         containers
         deepseq
         microlens
-        primitive
         reflection
         transformers
         vector
@@ -96028,8 +96204,8 @@ self: {
       pname = "ban-instance";
       version = "0.1.0.1";
       sha256 = "0504qsjbqbrdf9avfrhs290baszc9dickx7wknbyxwrzpzzbpggk";
-      revision = "4";
-      editedCabalFile = "1ip2abbxnj2cwc3b0l88s0014zakx4g84ifnnaqq8rg6mcn5ppik";
+      revision = "5";
+      editedCabalFile = "1a0xh0kfdpqgppaisb0hlm4k40gssbxh5jjz2j2l8xn2bnmv95cb";
       libraryHaskellDepends = [
         base
         template-haskell
@@ -96915,8 +97091,8 @@ self: {
       pname = "base16";
       version = "1.0";
       sha256 = "1plwc4yrkvd5j6y09fjvyzhr05mzhzwz6z41fyb60y0bj5j66dl6";
-      revision = "2";
-      editedCabalFile = "1dcb8m73xj2dfb8xbz731l91nm2jz532v971rsfm0kkid5ap9bvl";
+      revision = "3";
+      editedCabalFile = "16c3jahmfzbb7i8grimxkb38ygga27vaz3zvc6jmc63sg514p1ln";
       libraryHaskellDepends = [
         base
         bytestring
@@ -97043,8 +97219,8 @@ self: {
       pname = "base32";
       version = "0.4";
       sha256 = "1m08m51d49lfs5rfc5kjj0g19xq53c2ldngcykld6a4ma0fqdrws";
-      revision = "1";
-      editedCabalFile = "080i61y2mzahrkvj27llybgc4g0kwf53j552y8g5pcpl45dshgvh";
+      revision = "2";
+      editedCabalFile = "0a12j7rgk8niaqn7s40rlxl5ipsp1cpqpq4nkgraws7wdm77pfyd";
       libraryHaskellDepends = [
         base
         bytestring
@@ -97461,6 +97637,8 @@ self: {
       pname = "base64-bytes";
       version = "0.1.1.1";
       sha256 = "0gvh2yg7mqwrswcq5p0h35bifsvm18cdvsjzazz37yrwan0i31vs";
+      revision = "1";
+      editedCabalFile = "17kl1813wdqbh6hjrm7npm2w65d0ir4bpbklggr4bxzxabwbsg2c";
       libraryHaskellDepends = [
         base
         byte-order
@@ -97490,8 +97668,6 @@ self: {
       ];
       description = "Base64 encoding of byte sequences";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -97561,8 +97737,8 @@ self: {
       pname = "base64-bytestring-type";
       version = "1.0.1";
       sha256 = "03kq4rjj6by02rf3hg815jfdqpdk0xygm5f46r2pn8mb99yd01zn";
-      revision = "21";
-      editedCabalFile = "1y3j1lkqlqw8l4p0g8s3iac0gd84nz3pqccrzfj7n23fp19zr1q3";
+      revision = "22";
+      editedCabalFile = "0a5640qjbd3f96v9sf6r1laqpqk83xh073qlq75174kcg5zi4rxa";
       libraryHaskellDepends = [
         aeson
         base
@@ -98672,8 +98848,8 @@ self: {
       pname = "battleship-combinatorics";
       version = "0.0.1";
       sha256 = "0pr1vcq69ndkln5jd6kxd0gn8jvc8n7aiqanxsrqnjpx4kkixph4";
-      revision = "2";
-      editedCabalFile = "0z2zqmdv5icamkfhpjnjnf88r21151k3pcqij6x0885m8s1y840p";
+      revision = "3";
+      editedCabalFile = "1q84kx54d3qq00fckwypzqdxgqi0am4kh88qh21pb4kh4hbalxmz";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -99649,8 +99825,8 @@ self: {
     }:
     mkDerivation {
       pname = "beam-automigrate";
-      version = "0.1.6.0";
-      sha256 = "09pq0i3zb68ad20qznvf4kqf3y3zz0pjfi84g87rxay6y4sj6vi1";
+      version = "0.1.7.0";
+      sha256 = "019b0kykdjqmf2xcj11pi2s67ssy2al882nsj5aq2h1mq6c7bx63";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -99750,8 +99926,8 @@ self: {
     }:
     mkDerivation {
       pname = "beam-core";
-      version = "0.10.3.1";
-      sha256 = "0n3fyjhcljd44ri7z3kb1sd3izv047v82m9n7597r7sbipv8cysc";
+      version = "0.10.4.0";
+      sha256 = "1zxqyxxyid186s86lfw0sq030jckh83j3rwj6ibx4wg3flslk515";
       libraryHaskellDepends = [
         aeson
         base
@@ -99898,6 +100074,66 @@ self: {
       ];
       description = "SQL DDL support and migrations support library for Beam";
       license = lib.licenses.mit;
+    }
+  ) { };
+
+  "beam-migrate_0_5_3_2" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      beam-core,
+      bytestring,
+      containers,
+      deepseq,
+      dependent-map,
+      dependent-sum,
+      free,
+      hashable,
+      haskell-src-exts,
+      microlens,
+      mtl,
+      parallel,
+      pqueue,
+      pretty,
+      scientific,
+      text,
+      time,
+      unordered-containers,
+      uuid-types,
+      vector,
+    }:
+    mkDerivation {
+      pname = "beam-migrate";
+      version = "0.5.3.2";
+      sha256 = "05cz2gh9r00dr6knigq9v7zcdmpk2b19z0pg79wimkcxa2fblb5z";
+      libraryHaskellDepends = [
+        aeson
+        base
+        beam-core
+        bytestring
+        containers
+        deepseq
+        dependent-map
+        dependent-sum
+        free
+        hashable
+        haskell-src-exts
+        microlens
+        mtl
+        parallel
+        pqueue
+        pretty
+        scientific
+        text
+        time
+        unordered-containers
+        uuid-types
+        vector
+      ];
+      description = "SQL DDL support and migrations support library for Beam";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -100058,6 +100294,90 @@ self: {
     }
   ) { };
 
+  "beam-postgres_0_5_4_3" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      attoparsec,
+      base,
+      beam-core,
+      beam-migrate,
+      bytestring,
+      case-insensitive,
+      conduit,
+      free,
+      hashable,
+      hedgehog,
+      lifted-base,
+      monad-control,
+      mtl,
+      network-uri,
+      postgresql-libpq,
+      postgresql-simple,
+      scientific,
+      tagged,
+      tasty,
+      tasty-hunit,
+      testcontainers,
+      text,
+      time,
+      transformers-base,
+      unordered-containers,
+      uuid,
+      uuid-types,
+      vector,
+    }:
+    mkDerivation {
+      pname = "beam-postgres";
+      version = "0.5.4.3";
+      sha256 = "0v2m4cyq5cnxzwrr93m2v04zkh7fwvy1nwg7dajnpqc09kp70yzr";
+      libraryHaskellDepends = [
+        aeson
+        attoparsec
+        base
+        beam-core
+        beam-migrate
+        bytestring
+        case-insensitive
+        conduit
+        free
+        hashable
+        lifted-base
+        monad-control
+        mtl
+        network-uri
+        postgresql-libpq
+        postgresql-simple
+        scientific
+        tagged
+        text
+        time
+        transformers-base
+        unordered-containers
+        uuid-types
+        vector
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        beam-core
+        beam-migrate
+        bytestring
+        hedgehog
+        postgresql-simple
+        tasty
+        tasty-hunit
+        testcontainers
+        text
+        uuid
+        vector
+      ];
+      description = "Connection layer between beam and postgres";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "beam-sqlite" = callPackage (
     {
       mkDerivation,
@@ -100118,6 +100438,72 @@ self: {
       ];
       description = "Beam driver for SQLite";
       license = lib.licenses.mit;
+    }
+  ) { };
+
+  "beam-sqlite_0_5_4_1" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      attoparsec,
+      base,
+      beam-core,
+      beam-migrate,
+      bytestring,
+      direct-sqlite,
+      dlist,
+      free,
+      hashable,
+      monad-control,
+      mtl,
+      network-uri,
+      scientific,
+      sqlite-simple,
+      tasty,
+      tasty-expected-failure,
+      tasty-hunit,
+      text,
+      time,
+      transformers-base,
+    }:
+    mkDerivation {
+      pname = "beam-sqlite";
+      version = "0.5.4.1";
+      sha256 = "1f5yjsx7zfbfbxs3xd64rwn2m3vjffrbdn5xadhm1axhghi6srki";
+      libraryHaskellDepends = [
+        aeson
+        attoparsec
+        base
+        beam-core
+        beam-migrate
+        bytestring
+        direct-sqlite
+        dlist
+        free
+        hashable
+        monad-control
+        mtl
+        network-uri
+        scientific
+        sqlite-simple
+        text
+        time
+        transformers-base
+      ];
+      testHaskellDepends = [
+        base
+        beam-core
+        beam-migrate
+        sqlite-simple
+        tasty
+        tasty-expected-failure
+        tasty-hunit
+        text
+        time
+      ];
+      description = "Beam driver for SQLite";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -100350,8 +100736,8 @@ self: {
     }:
     mkDerivation {
       pname = "bech32";
-      version = "1.1.8";
-      sha256 = "0y9k93c5rxh0wjdyz4f1qpp6kljdbsrmy5appp4aqvwq2nqz9aas";
+      version = "1.1.9";
+      sha256 = "0l3h4c1aqjqrlxdc4gq409dwly61i7k2d7g3gz0gya9nf39xc3f4";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -100408,8 +100794,8 @@ self: {
     }:
     mkDerivation {
       pname = "bech32-th";
-      version = "1.1.8";
-      sha256 = "0dg79llv3rrakhskzpbs1qdwjn8i1whn1fn3xqkd9scmwh26a2n2";
+      version = "1.1.9";
+      sha256 = "0bc3wx5np17lb1y4s843f8m65687ainiv8biqfhfg7i2gfsc60cs";
       libraryHaskellDepends = [
         base
         bech32
@@ -101143,6 +101529,86 @@ self: {
     }
   ) { };
 
+  "benign" = callPackage (
+    {
+      mkDerivation,
+      async,
+      base,
+      containers,
+      deepseq,
+      stm,
+      transformers,
+    }:
+    mkDerivation {
+      pname = "benign";
+      version = "0.1.0";
+      sha256 = "0fxi5dhjmwj4sswsnps0v51s59cd4pmh7znd56014lwj3fjq0qwd";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        async
+        base
+        containers
+        deepseq
+        stm
+        transformers
+      ];
+      executableHaskellDepends = [
+        async
+        base
+        containers
+        deepseq
+        stm
+        transformers
+      ];
+      description = "A library for benign effects";
+      license = lib.licenses.mit;
+      mainProgram = "simple-print";
+    }
+  ) { };
+
+  "benign-katip" = callPackage (
+    {
+      mkDerivation,
+      base,
+      benign,
+      katip,
+    }:
+    mkDerivation {
+      pname = "benign-katip";
+      version = "0.1.0";
+      sha256 = "1k1mi1kmj1frc10i90sxy1i3y46d76cn6868k37dv6h6m0arj3jk";
+      libraryHaskellDepends = [
+        base
+        benign
+        katip
+      ];
+      description = "A Benign backend for the Katip library";
+      license = lib.licenses.mit;
+    }
+  ) { };
+
+  "benign-timestats" = callPackage (
+    {
+      mkDerivation,
+      base,
+      benign,
+      timestats,
+    }:
+    mkDerivation {
+      pname = "benign-timestats";
+      version = "0.1.0";
+      sha256 = "11yc5p3crb79jinhs0i01q5y5bjjmc7yli0c6ywmjdm1ix2i6fi7";
+      libraryHaskellDepends = [
+        base
+        benign
+        timestats
+      ];
+      description = "A Benign backend for the Timestats library";
+      license = lib.licenses.mit;
+    }
+  ) { };
+
   "benri-hspec" = callPackage (
     {
       mkDerivation,
@@ -101418,8 +101884,8 @@ self: {
     }:
     mkDerivation {
       pname = "betacode";
-      version = "0.1.0.1";
-      sha256 = "1l1yg2h7s1sr7cvw7zdl5w0m17sfsd1a7q3lv58ill4q95mhc5ja";
+      version = "0.1.0.3";
+      sha256 = "1fmabhsnly0zmaqx519hfhyr02s31b27lwjn1m5wkpy9jcqgqj6w";
       libraryHaskellDepends = [
         attoparsec
         base
@@ -101701,8 +102167,8 @@ self: {
       pname = "bhoogle";
       version = "0.1.4.4";
       sha256 = "1z19h0jgnipj16rqbrflcjnqaslafq9bvwkyg8q0il76q7s4wyxa";
-      revision = "1";
-      editedCabalFile = "182j2bc4cqddzv5vd2fkkyx2qs9ya7vg9r234xr5gyp35waln1i9";
+      revision = "2";
+      editedCabalFile = "1kpzvlzydrfqjhmpjirb51xhnwircdcnmhbn82nvnvm5s4h0pajd";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -103306,6 +103772,8 @@ self: {
       pname = "binary-parsers";
       version = "0.2.4.0";
       sha256 = "1jmr9djkp9ndysly8g1najzy38xhjpflri5jkwlyfnd2vk9x74yi";
+      revision = "1";
+      editedCabalFile = "02qc6vlm50l3k5zpz0893kwywr36n3vnjrabgica1iwqrqdvya1x";
       libraryHaskellDepends = [
         base
         binary
@@ -103352,8 +103820,6 @@ self: {
       ];
       description = "Extends binary with parsec/attoparsec style parsing combinators";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -106475,7 +106941,6 @@ self: {
       ];
       description = "A small tool that clears cookies (and more)";
       license = lib.licenses.gpl3Only;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "bisc";
     }
   ) { };
@@ -107693,7 +108158,6 @@ self: {
       ];
       description = "Provides consistent low-level types used commonly among Bitcoin implementations";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -109645,8 +110109,8 @@ self: {
     }:
     mkDerivation {
       pname = "blaze-builder";
-      version = "0.4.2.3";
-      sha256 = "0fvh8sfhnkpwbl4l9ysxhsi26jj1mvfkqgh3mfnl4wvb4ds1hab6";
+      version = "0.4.3";
+      sha256 = "1vkzpi48dycxvwxv0rcpzcgn12dqlngmivsszxrmlfixdyznlr02";
       libraryHaskellDepends = [
         base
         bytestring
@@ -110561,8 +111025,8 @@ self: {
     }:
     mkDerivation {
       pname = "blockfrost-api";
-      version = "0.12.2.0";
-      sha256 = "04w745ws2nf90yix2idd6shahqfi7mwx83j4divjrkfb57pd8v6p";
+      version = "0.13.0.0";
+      sha256 = "0nghxnx9kjwk2frzsy0zrskvn3yffy7xp2fa70hl25bsc4sa2zar";
       libraryHaskellDepends = [
         aeson
         base
@@ -110624,8 +111088,8 @@ self: {
     }:
     mkDerivation {
       pname = "blockfrost-client";
-      version = "0.9.2.0";
-      sha256 = "04q48afris70y4j4ya52kvj9n1iy8jqn6ygydp11idr15fpjj4qh";
+      version = "0.10.0.0";
+      sha256 = "0jyg2mc8jmwpsix46nh8r6bc2p1j5rdrjsrcdyyvqz5a2ri6hac7";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -110795,6 +111259,61 @@ self: {
       license = lib.licenses.bsd3;
     }
   ) { };
+
+  "blockio-uring" = callPackage (
+    {
+      mkDerivation,
+      async,
+      base,
+      containers,
+      liburing,
+      primitive,
+      quickcheck-classes,
+      random,
+      tasty,
+      tasty-hunit,
+      tasty-quickcheck,
+      time,
+      unix,
+      vector,
+    }:
+    mkDerivation {
+      pname = "blockio-uring";
+      version = "0.1.0.0";
+      sha256 = "1g4sd7wqxf86i1c5iqiar6mpdszk99v7p71jcrx3dm8pap69r1x7";
+      libraryHaskellDepends = [
+        base
+        primitive
+        vector
+      ];
+      libraryPkgconfigDepends = [ liburing ];
+      testHaskellDepends = [
+        base
+        primitive
+        quickcheck-classes
+        tasty
+        tasty-hunit
+        tasty-quickcheck
+        vector
+      ];
+      testPkgconfigDepends = [ liburing ];
+      benchmarkHaskellDepends = [
+        async
+        base
+        containers
+        primitive
+        random
+        time
+        unix
+        vector
+      ];
+      benchmarkPkgconfigDepends = [ liburing ];
+      description = "Perform batches of asynchronous disk IO operations";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { inherit (pkgs) liburing; };
 
   "blogination" = callPackage (
     {
@@ -111453,8 +111972,8 @@ self: {
     { mkDerivation, bluefin-internal }:
     mkDerivation {
       pname = "bluefin";
-      version = "0.0.15.0";
-      sha256 = "0spy2zmq1gdw49iqnvn2xqg2ka5vz46afgdbr34wwrwxmj66q4r9";
+      version = "0.0.16.0";
+      sha256 = "12mvcawmm1b2n429lml86jqmnsha74nd6v45gd8sk288h9p4g3ks";
       libraryHaskellDepends = [ bluefin-internal ];
       description = "The Bluefin effect system";
       license = lib.licenses.mit;
@@ -111521,6 +112040,35 @@ self: {
     }
   ) { };
 
+  "bluefin-internal_0_1_0_0" = callPackage (
+    {
+      mkDerivation,
+      async,
+      base,
+      monad-control,
+      transformers,
+      transformers-base,
+      unliftio-core,
+    }:
+    mkDerivation {
+      pname = "bluefin-internal";
+      version = "0.1.0.0";
+      sha256 = "1106fij37sq7xnmb1zrvls94frqs9ard2nggiphmc2lpkcg71whz";
+      libraryHaskellDepends = [
+        async
+        base
+        monad-control
+        transformers
+        transformers-base
+        unliftio-core
+      ];
+      testHaskellDepends = [ base ];
+      description = "The Bluefin effect system, internals";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "bluemix-sdk" = callPackage (
     {
       mkDerivation,
@@ -111567,8 +112115,8 @@ self: {
     }:
     mkDerivation {
       pname = "bluesky-tools";
-      version = "0.6.0.0";
-      sha256 = "10si4bvrzn7jbcxmyrsf2qbnnhha3jpcvin1rx3cxkl77sc9igac";
+      version = "0.6.0.2";
+      sha256 = "0qshnig4f791swn2rf1ssgxi9l04fvf8s0jadbn95nqzxqyyyjv2";
       libraryHaskellDepends = [
         aeson
         async
@@ -111588,8 +112136,6 @@ self: {
       ];
       description = "Tools for interacting with Bluesky / AT Protocol";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -111936,8 +112482,8 @@ self: {
       pname = "board-games";
       version = "0.4";
       sha256 = "05lrjgxdg836ik7ry5h9m9diirfc55086winssr9y0g6vbgbifpc";
-      revision = "2";
-      editedCabalFile = "1dqrlqkl3zzccbq62i35acqbrgw9572il35cz3vyipjc98fqhq8c";
+      revision = "3";
+      editedCabalFile = "1wawaq86bfn45hnfb6qv3ng4i8vvps914qhvbgmmx2p5lwmml21g";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -113151,8 +113697,8 @@ self: {
       pname = "boomwhacker";
       version = "0.0.2";
       sha256 = "0q5cq5j7dy1qm5jqpcl1imwiqqm0h21yvqwnvabsjnfrvfvryqg2";
-      revision = "1";
-      editedCabalFile = "0hwqdahpbinw9m7h05q0fhakj4w8mlvqz0ah6609x6wgb0dggmyb";
+      revision = "2";
+      editedCabalFile = "0jqys322j818dc24fyb37a59qs66m3b46j05y4vswipakwm1kgmk";
       isLibrary = false;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -113767,8 +114313,6 @@ self: {
       libraryPkgconfigDepends = [ botan ];
       description = "Raw Botan bindings";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { botan = null; };
 
@@ -115050,7 +115594,7 @@ self: {
     }
   ) { };
 
-  "brick_2_8_3" = callPackage (
+  "brick_2_9" = callPackage (
     {
       mkDerivation,
       base,
@@ -115083,8 +115627,8 @@ self: {
     }:
     mkDerivation {
       pname = "brick";
-      version = "2.8.3";
-      sha256 = "0nd62a95dj9lhsyda8lf3wafp21q9v3f43bv3qdfayg159qgq5jl";
+      version = "2.9";
+      sha256 = "1jdhagw5ihp9g5pinmbb1mf3fjcbh4aim9qg9i4b1na9zn07s0f1";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -116392,6 +116936,8 @@ self: {
       pname = "brotli";
       version = "0.0.0.2";
       sha256 = "09y460adrq6cp9d8qlf8522yb0qc1vgjxv4d56kq2rdf9khqic6z";
+      revision = "1";
+      editedCabalFile = "1a0lbghilwpa6hb5msivb7hjqnnxi2bxlfgiawv0mjpc7gidhbz7";
       libraryHaskellDepends = [
         base
         bytestring
@@ -116474,8 +117020,8 @@ self: {
       pname = "brotli-streams";
       version = "0.0.0.0";
       sha256 = "14jc1nhm50razsl99d95amdf4njf75dnzx8vqkihgrgp7qisyz3z";
-      revision = "9";
-      editedCabalFile = "1rhy0d1jy3v9r1skg3bdlnjj5avxy968ih1cyg9x9yb7rbyf3za5";
+      revision = "10";
+      editedCabalFile = "0v0zg5q9ahf8kvfm9zwlj4ws1yd3bvdxyxkak3xk7nca49vb8mcm";
       libraryHaskellDepends = [
         base
         brotli
@@ -117669,8 +118215,8 @@ self: {
     }:
     mkDerivation {
       pname = "bugsnag";
-      version = "1.1.0.1";
-      sha256 = "1n2lq9iyz5m0s1mx22cwaci18f9i37g6xgdq3nbbyysmylrw09w2";
+      version = "1.1.0.2";
+      sha256 = "1f0jsad9z9zsj8sbirq6h1x0s7245rxv5gpciz4p8wv9ryi8d3m3";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -117699,6 +118245,63 @@ self: {
       ];
       description = "Bugsnag error reporter for Haskell";
       license = lib.licenses.mit;
+    }
+  ) { };
+
+  "bugsnag_1_2_0_0" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      annotated-exception,
+      base,
+      bugsnag-hs,
+      bytestring,
+      containers,
+      Glob,
+      hspec,
+      http-client,
+      http-client-tls,
+      parsec,
+      template-haskell,
+      text,
+      th-lift-instances,
+      ua-parser,
+      unliftio,
+      unordered-containers,
+    }:
+    mkDerivation {
+      pname = "bugsnag";
+      version = "1.2.0.0";
+      sha256 = "0hhr4z1jdsbg8jx2416dgpad0lirzdjiv79s4ykhfimn2pqk9liq";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        annotated-exception
+        base
+        bugsnag-hs
+        bytestring
+        containers
+        Glob
+        http-client
+        http-client-tls
+        parsec
+        template-haskell
+        text
+        th-lift-instances
+        ua-parser
+        unliftio
+        unordered-containers
+      ];
+      testHaskellDepends = [
+        annotated-exception
+        base
+        hspec
+        unliftio
+      ];
+      description = "Bugsnag error reporter for Haskell";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -117830,8 +118433,8 @@ self: {
     }:
     mkDerivation {
       pname = "bugsnag-wai";
-      version = "1.0.0.1";
-      sha256 = "0f3x4m9nl277rhg2pwrja9xh6fffrwl2dm1cf3jiyngkrbrfck0w";
+      version = "1.0.1.1";
+      sha256 = "0wi0ip7fjzk3hvw2i19wjj08pn0bvmnx9j68lh4hgc8a0bdr69bg";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -118724,8 +119327,8 @@ self: {
     }:
     mkDerivation {
       pname = "burrito";
-      version = "2.0.1.11";
-      sha256 = "082h0kchglzkqsv32hpzd195vxd24rhlv5s4myb4nndncrzks1yc";
+      version = "2.0.1.14";
+      sha256 = "1mywmf72rsj5p6mrg3454wsihlh1b26x4acb2gp0awx4bg96j09i";
       libraryHaskellDepends = [
         base
         bytestring
@@ -119042,8 +119645,8 @@ self: {
       pname = "butcher";
       version = "1.3.3.2";
       sha256 = "06qgqjc8h7dd786wkcwrxpl6bsd66jzywwcnhm52q0cb9678w3qx";
-      revision = "1";
-      editedCabalFile = "1c9rhsnzdpnxhs3l7yq6fh8p9lq177fmdn23khcl72n5m6xx64wm";
+      revision = "2";
+      editedCabalFile = "12gh1a4d5f4bcd5vg9a24ms0dwa3x9zln0rjh84l8cdim24r012l";
       libraryHaskellDepends = [
         base
         bifunctors
@@ -119719,6 +120322,8 @@ self: {
       pname = "bytebuild";
       version = "0.3.16.3";
       sha256 = "0l88c5c1i704g87zvnpazfmcppg90b5q5cd6q5k75yx4x9vdcc88";
+      revision = "1";
+      editedCabalFile = "0jcqp55d8a2fpimc937a1phd6s20ypk12r2ybm3c0d3120sr9bnd";
       libraryHaskellDepends = [
         base
         byteslice
@@ -120156,8 +120761,8 @@ self: {
     }:
     mkDerivation {
       pname = "byteslice";
-      version = "0.2.14.0";
-      sha256 = "0s9cnb7p1wr5vh3j95a952222xf2xzli451las5il3n04n4rxq1n";
+      version = "0.2.15.0";
+      sha256 = "10fcb7g9m4rkd6mza2km64agsgkwrbl7crv5hdcd5yljq6gyx2fm";
       libraryHaskellDepends = [
         base
         bytestring
@@ -122253,8 +122858,8 @@ self: {
       pname = "cabal-add";
       version = "0.1";
       sha256 = "1szbi0z8yf98641rwnj856gcfsvvflxwrfxraxy6rl60m7i0mab1";
-      revision = "2";
-      editedCabalFile = "1qb5xq7r68psc2dpp8wdfcfd1w4nls7xfla1fkc9vppd8zxmi87m";
+      revision = "3";
+      editedCabalFile = "0siv5ajqxcbs9c0ky94p5qk51w6cgf1zyc3rckxvlc25f4kygw4v";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -122286,6 +122891,67 @@ self: {
       ];
       description = "Extend Cabal build-depends from the command line";
       license = lib.licenses.bsd3;
+      mainProgram = "cabal-add";
+    }
+  ) { };
+
+  "cabal-add_0_2" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      Cabal,
+      cabal-install-parsers,
+      Cabal-syntax,
+      containers,
+      Diff,
+      directory,
+      filepath,
+      mtl,
+      optparse-applicative,
+      process,
+      string-qq,
+      tasty,
+      temporary,
+    }:
+    mkDerivation {
+      pname = "cabal-add";
+      version = "0.2";
+      sha256 = "0fd098gkfmxrhq0k4j1ll5g4xwwzgmhdx0mj9hnp5xanj7z1laxg";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        base
+        bytestring
+        Cabal
+        Cabal-syntax
+        containers
+        mtl
+      ];
+      executableHaskellDepends = [
+        base
+        bytestring
+        cabal-install-parsers
+        Cabal-syntax
+        directory
+        filepath
+        optparse-applicative
+        process
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        Cabal
+        Diff
+        directory
+        process
+        string-qq
+        tasty
+        temporary
+      ];
+      description = "Extend Cabal build-depends from the command line";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
       mainProgram = "cabal-add";
     }
   ) { };
@@ -122426,7 +123092,6 @@ self: {
       ];
       description = "A command line program for managing the dependency versions in a cabal file";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "cabal-bounds";
     }
   ) { };
@@ -122658,8 +123323,8 @@ self: {
     }:
     mkDerivation {
       pname = "cabal-cargs";
-      version = "1.6.0";
-      sha256 = "1kn21l5w838db558nijblar6i3z5jkh12d6l1yccxmd70lrb39vv";
+      version = "1.7.0";
+      sha256 = "17q51lg7vhdzvy9s8f3zplxa4mij2bjclzxry5f9d2pgiq4290p9";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -122686,7 +123351,6 @@ self: {
       ];
       description = "A command line program for extracting compiler arguments from a cabal file";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "cabal-cargs";
     }
   ) { };
@@ -122841,8 +123505,8 @@ self: {
     }:
     mkDerivation {
       pname = "cabal-debian";
-      version = "5.2.5";
-      sha256 = "0nkrvs1a9kj2nqz9pklxzni5wbirwgqim9haqn8lglqliycrdzbx";
+      version = "5.2.6";
+      sha256 = "081h14nw6spfpr6l0cd9knc2jw8g3zhlwyhq7zrxvfrlqwwwm14w";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -123289,6 +123953,8 @@ self: {
       pname = "cabal-flatpak";
       version = "0.1.2";
       sha256 = "05ig175b2glxppn5wr05pnncqkp8yhhy1m7ymmc1jk5pmiy3zvzi";
+      revision = "2";
+      editedCabalFile = "01iqpfj5nvl19580ckl4b0aljl86svplxzpkavp5r0jbwaqi0ll3";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -123506,7 +124172,7 @@ self: {
     }
   ) { };
 
-  "cabal-gild_1_6_0_0" = callPackage (
+  "cabal-gild_1_6_0_2" = callPackage (
     {
       mkDerivation,
       base,
@@ -123526,8 +124192,8 @@ self: {
     }:
     mkDerivation {
       pname = "cabal-gild";
-      version = "1.6.0.0";
-      sha256 = "09i4s1r5362w4q2ad2scw0d2p2p7l52b7nycxvrc71sb5a1x6zlw";
+      version = "1.6.0.2";
+      sha256 = "166ijl0lixglqpmif2934frdcxz8x6xp1ihfbi1j338mw6l212q2";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -124184,7 +124850,7 @@ self: {
     }
   ) { };
 
-  "cabal-install-parsers_0_6_2" = callPackage (
+  "cabal-install-parsers_0_6_3" = callPackage (
     {
       mkDerivation,
       aeson,
@@ -124216,8 +124882,8 @@ self: {
     }:
     mkDerivation {
       pname = "cabal-install-parsers";
-      version = "0.6.2";
-      sha256 = "1362p021irm0kaz7n8gdjy1ppjk914zza114cmpm87ris0i1a9jn";
+      version = "0.6.3";
+      sha256 = "1vcy6y1p750g4v9zqmsakrcvw78p43n2b745fl02xq7xyr5lpfij";
       libraryHaskellDepends = [
         aeson
         base
@@ -124354,8 +125020,6 @@ self: {
       ];
       description = "Lenses and traversals for the Cabal library";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -124590,8 +125254,8 @@ self: {
     }:
     mkDerivation {
       pname = "cabal-plan";
-      version = "0.7.5.0";
-      sha256 = "0svvsh3ir9z1pdjbbhi8fkcqv66812hixnv18vifhcw0v8w94ymi";
+      version = "0.7.6.0";
+      sha256 = "0n6q56gyyiflagka0bhmp077py71xdc9j921yyl7818q6b6ha3hs";
       configureFlags = [ "-fexe" ];
       isLibrary = true;
       isExecutable = true;
@@ -125033,6 +125697,8 @@ self: {
       pname = "cabal-sort";
       version = "0.1.2.1";
       sha256 = "0xj55y2cx5h3mmxk4sjjxlvqfzkv2jzhicdjvl3i85y7h28iqf35";
+      revision = "1";
+      editedCabalFile = "17l8rwaxrk3dqcpdw1wmrs5fvic7q72hxdsbq909z0ihk1ba9ws3";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -125078,6 +125744,8 @@ self: {
       pname = "cabal-sort";
       version = "0.1.2.2";
       sha256 = "1gyx5d485mzya147d7gwh0i9bkvdqxixrb80bfv5sn710p07bfdz";
+      revision = "1";
+      editedCabalFile = "0hlz8y734rgcqjlncv0bwi05m30iviz6bi9bsafvsv1w25lxlpc4";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -125602,8 +126270,8 @@ self: {
     }:
     mkDerivation {
       pname = "cabal2nix";
-      version = "2.20.0";
-      sha256 = "1mf9af4x1jndjlxis05r32fg03naaljc3zvha69n69r9m79vpd9i";
+      version = "2.20.1";
+      sha256 = "0yiqhrmfypf817mgabj1h5hx7nwix2fn46gmvailnry4s6gdwcbj";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -126395,8 +127063,8 @@ self: {
     }:
     mkDerivation {
       pname = "cachix";
-      version = "1.7.8";
-      sha256 = "18vp2r0q6ibk5snsys7qh65vmshp4344z29pqdp8qfwzk5yqc3hc";
+      version = "1.7.9";
+      sha256 = "02q0z2f668y826f9rspwwn1kw3ma1igwsh2fp291g4sz8x6z66fv";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -126556,8 +127224,8 @@ self: {
     }:
     mkDerivation {
       pname = "cachix-api";
-      version = "1.7.8";
-      sha256 = "0rvmfwmgyn6jpivq45f5v5sg0s007ansjmizflxgiqn4sfqbkndr";
+      version = "1.7.9";
+      sha256 = "1jp55yvih27xkpky4i6pl37ajwyql84cniz2nhgwdb67qac5nmgi";
       libraryHaskellDepends = [
         aeson
         async
@@ -126919,8 +127587,8 @@ self: {
     }:
     mkDerivation {
       pname = "cairo-canvas";
-      version = "0.1.0.0";
-      sha256 = "11qi0lnd8wlv2zz44lvd6336a6iz634n2rfk69qsh72vxrb3hd99";
+      version = "0.1.0.1";
+      sha256 = "1cpb6vsgq44k53i3a2a9369x90ii8k9321y9a8bh0cp09l00zlyp";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -127587,8 +128255,8 @@ self: {
       pname = "calendar-recycling";
       version = "0.0.0.1";
       sha256 = "0afmnii65axpqk3x50wj1d17942m1kyhwka3bn78ylxy9z7rrlwc";
-      revision = "1";
-      editedCabalFile = "0dp0gylbwsrrszg5nw7x38xhilmn0vgn79zl9bam024nb528x7m1";
+      revision = "2";
+      editedCabalFile = "0marcj19hh3fap328dmyqmhpcj3f9jx696whhrd4spqr17fpm57a";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -130929,8 +131597,8 @@ self: {
     }:
     mkDerivation {
       pname = "casr-logbook";
-      version = "0.7.0";
-      sha256 = "1l887hfswdaydzqzz2jd9jgmzb8gqi11bwj1kmzlxfynznr6ckvl";
+      version = "0.7.2";
+      sha256 = "0b9b391xs10p4h54s47p9xzz544h2hk48pvg7z0rz7q0gicwnmmg";
       libraryHaskellDepends = [
         attoparsec
         base
@@ -131380,10 +132048,10 @@ self: {
     }:
     mkDerivation {
       pname = "cassava";
-      version = "0.5.3.2";
-      sha256 = "1jd9s10z2y3hizrpy3iaw2vvqmk342zxhwkky57ba39cbli5vlis";
+      version = "0.5.4.0";
+      sha256 = "0vdbmvb36sg08glig1dqc8kb1s07l5fcn2n0c58iglkv5djsbpnr";
       revision = "1";
-      editedCabalFile = "0xkqzvj5xd6d37gpf2rm9cp2p2lhkc3jgd0gvlmv99vcmy125rdj";
+      editedCabalFile = "1w7mih2wpbgv0bn2cg2ip0ffsn2y7aywqixi1lig30yarsyc873x";
       configureFlags = [ "-f-bytestring--lt-0_10_4" ];
       libraryHaskellDepends = [
         array
@@ -131707,16 +132375,21 @@ self: {
   ) { };
 
   "cassette" = callPackage (
-    { mkDerivation, base }:
+    {
+      mkDerivation,
+      base,
+      profunctors,
+    }:
     mkDerivation {
       pname = "cassette";
-      version = "0.1.0";
-      sha256 = "04qnk1s4bdj3wbbxdwzzvpnhkcgma8c4qfkg454ybg7f8kyv6h7x";
-      libraryHaskellDepends = [ base ];
-      description = "A combinator library for simultaneously defining parsers and pretty printers";
-      license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
+      version = "0.2.0.1";
+      sha256 = "1rl5bb7bhprvnqcr55psbgws96xvjfci5nimhly3avs7pvkwxbhj";
+      libraryHaskellDepends = [
+        base
+        profunctors
+      ];
+      description = "Combinators to simultaneously define parsers and pretty printers";
+      license = lib.licenses.asl20;
     }
   ) { };
 
@@ -132355,41 +133028,36 @@ self: {
   "cauldron" = callPackage (
     {
       mkDerivation,
-      algebraic-graphs,
       base,
-      bytestring,
       containers,
       tasty,
       tasty-hunit,
-      text,
       transformers,
     }:
     mkDerivation {
       pname = "cauldron";
-      version = "0.6.1.0";
-      sha256 = "04anjjpjvj51x27mq9n2sc88v6398bz5ljzq049d879avl0i08sj";
+      version = "0.8.0.0";
+      sha256 = "1vkvxkr3lr99xvd4vqga18idcpw3p1mv8hr94qagvfqdxrd68wcl";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
-        algebraic-graphs
         base
-        bytestring
         containers
-        text
       ];
       executableHaskellDepends = [ base ];
       testHaskellDepends = [
-        algebraic-graphs
         base
         containers
         tasty
         tasty-hunit
-        text
         transformers
       ];
+      doHaddock = false;
       description = "Dependency injection library";
       license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
       mainProgram = "cauldron-example-wiring";
+      broken = true;
     }
   ) { };
 
@@ -132769,8 +133437,8 @@ self: {
       pname = "cborg";
       version = "0.2.10.0";
       sha256 = "15y7p5rsv76fpklh4rgrxlxxaivpbchxdfdw96mqqjgw7060gzhp";
-      revision = "2";
-      editedCabalFile = "0m1ndq1a4yya5p7093lw3ynpcw2q74s73im0bhm9jp6a19cj88m5";
+      revision = "3";
+      editedCabalFile = "1ahqlq51kjc8cf5sybbmrh4rf6vsbkcd67rhxhrr9rc5w6nl9h27";
       libraryHaskellDepends = [
         array
         base
@@ -132836,8 +133504,8 @@ self: {
       pname = "cborg-json";
       version = "0.2.6.0";
       sha256 = "1p6xdimwypmlsc0zdyw1vyyapnhwn2g8b9n0a83ca6h4r90722yv";
-      revision = "3";
-      editedCabalFile = "1dlmm5jyl8a8rxpkvr2dk5dlsvxrap3x4pbwnx4mg3q7sz25rs8r";
+      revision = "4";
+      editedCabalFile = "06pjqx8v7j8f6rvkf84vahva8y02lykaymnjdrjqrc5rgy01c6m0";
       libraryHaskellDepends = [
         aeson
         aeson-pretty
@@ -134273,10 +134941,8 @@ self: {
     }:
     mkDerivation {
       pname = "cfn-flip";
-      version = "0.1.0.3";
-      sha256 = "18nfqbc0iw5zvg9krrm8wyi6x34qxf7arp4jzf1l8qabds5s5371";
-      revision = "1";
-      editedCabalFile = "0816bw34b174wpxjw99lz8z8qi2l5w00dppb7kysjdbwh8a3gws0";
+      version = "0.1.0.6";
+      sha256 = "0g5cprps42wj9755fr0g98w8m6cv45css541bxjlb2h0lc0davnw";
       libraryHaskellDepends = [
         aeson
         base
@@ -135767,7 +136433,7 @@ self: {
     }
   ) { };
 
-  "chart-svg_0_8_0_3" = callPackage (
+  "chart-svg_0_8_1_0" = callPackage (
     {
       mkDerivation,
       base,
@@ -135791,8 +136457,8 @@ self: {
     }:
     mkDerivation {
       pname = "chart-svg";
-      version = "0.8.0.3";
-      sha256 = "0qvnxm90vka02pplz9fxncsplnsbxkh9xcp81wik0g795g7xkpsp";
+      version = "0.8.1.0";
+      sha256 = "1rsix6qdxhsgjg4zp7rh5di6y5mjxjv0mzv9g82ryl3vlcryyaj4";
       libraryHaskellDepends = [
         base
         bytestring
@@ -138241,6 +138907,8 @@ self: {
       pname = "chronos";
       version = "1.1.6.2";
       sha256 = "08y8s9mwb69kisi0yhng6plvasy6jnj25i4ar8k2cq3vsf6bgx73";
+      revision = "1";
+      editedCabalFile = "04991mhi13b95iy665s59r4z9qsh68wykkgch5dqlnlm1dd6fzdw";
       libraryHaskellDepends = [
         aeson
         attoparsec
@@ -139909,7 +140577,7 @@ self: {
     }
   ) { };
 
-  "citeproc_0_8_1_3" = callPackage (
+  "citeproc_0_9_0_1" = callPackage (
     {
       mkDerivation,
       aeson,
@@ -139938,8 +140606,8 @@ self: {
     }:
     mkDerivation {
       pname = "citeproc";
-      version = "0.8.1.3";
-      sha256 = "0gn2q7vnz5rs993xqi1hm9lzqwfxg26y7qwqc2gzhiqdl94cfkbi";
+      version = "0.9.0.1";
+      sha256 = "1s1gdd7piwssp5b6bwbfyp9sfna052v3rayav7di44yapm5dazmr";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -140009,6 +140677,8 @@ self: {
       pname = "citeproc-hs";
       version = "0.3.10";
       sha256 = "1fb51v8hv8ik3a8grba2br6cfbj1b3y72lgjh4i75xh09i7xna0r";
+      revision = "1";
+      editedCabalFile = "0zxkvahdjgbhw7wcfm7cgkqm7fkcprng1m1mhqvfb9ljylxk9drw";
       enableSeparateDataOutput = true;
       libraryHaskellDepends = [
         base
@@ -140905,8 +141575,8 @@ self: {
       pname = "clash-ghc";
       version = "1.8.2";
       sha256 = "1pwbpk0f502jx37raq4n64c39jgcrzbya7nzzi6mq7wjm1xmxnsw";
-      revision = "1";
-      editedCabalFile = "02arsg7mjlz8kjy04nsl4s91202ws40f1xccsm5kjs2zisgqcp15";
+      revision = "2";
+      editedCabalFile = "1fr27hfpj31yaqn46k3jzb3kfba182wnqx7b4y7mi7qbm4pqqyr8";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -141022,8 +141692,8 @@ self: {
       pname = "clash-lib";
       version = "1.8.2";
       sha256 = "02yzqkzaligkvd3830nsgnmnpswydf1a67hrhyhn6gg5crmb2jmg";
-      revision = "1";
-      editedCabalFile = "0ygb5h1y42q1l34zfb218h4vr3sv4bm5lshh04171a0v0ikjkxnx";
+      revision = "2";
+      editedCabalFile = "15h7vb7d0j9g9mnbgyn4sqdnffhvk7igchzyjpvan3h1p3r321wa";
       isLibrary = true;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -141256,8 +141926,8 @@ self: {
       pname = "clash-prelude";
       version = "1.8.2";
       sha256 = "0pxzb0cj3wp2fjjj6wa2hnbqpvg7rrfza3fqr7m5c7l73yjmi2m3";
-      revision = "2";
-      editedCabalFile = "05xq9523nfip6qzjrjsyy1jj84s86zad3jml5vd720v8aplkjrmc";
+      revision = "3";
+      editedCabalFile = "0b9rd93y48avji9fw6xfxsi3392php6j5qpvmyxjv32m5ljhp83d";
       libraryHaskellDepends = [
         array
         arrows
@@ -142148,6 +142818,38 @@ self: {
       testToolDepends = [ hspec-discover ];
       description = "CSS preprocessor as embedded Haskell";
       license = lib.licenses.bsd3;
+    }
+  ) { };
+
+  "clay_0_16_0" = callPackage (
+    {
+      mkDerivation,
+      base,
+      hspec,
+      hspec-discover,
+      mtl,
+      text,
+    }:
+    mkDerivation {
+      pname = "clay";
+      version = "0.16.0";
+      sha256 = "0746w54gcpck0sj493bh2wlfdgknxbpwgr7q3b6l9m8djs7j8q41";
+      libraryHaskellDepends = [
+        base
+        mtl
+        text
+      ];
+      testHaskellDepends = [
+        base
+        hspec
+        hspec-discover
+        mtl
+        text
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "CSS preprocessor as embedded Haskell";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -144762,6 +145464,46 @@ self: {
     }
   ) { };
 
+  "cloudevents-haskell" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      autodocodec,
+      autodocodec-schema,
+      base,
+      binary,
+      binary-instances,
+      bytestring,
+      hw-kafka-client,
+      iri,
+      lens,
+      text,
+      time,
+    }:
+    mkDerivation {
+      pname = "cloudevents-haskell";
+      version = "0.1.0.0";
+      sha256 = "0447kdavvd39zfz7p3gi232w45170gwkdki2hyvq8ah4ndi44hgn";
+      libraryHaskellDepends = [
+        aeson
+        autodocodec
+        autodocodec-schema
+        base
+        binary
+        binary-instances
+        bytestring
+        hw-kafka-client
+        iri
+        lens
+        text
+        time
+      ];
+      description = "Unofficial Haskell SDK for the CloudEvents specification";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "cloudfront-signer" = callPackage (
     {
       mkDerivation,
@@ -146633,10 +147375,10 @@ self: {
     }:
     mkDerivation {
       pname = "co-log-concurrent";
-      version = "0.5.1.0";
-      sha256 = "07qmx9z03vmgq2cgz4352fsav7r1nx8n7svmrhg2lkdiyp0j7a59";
-      revision = "3";
-      editedCabalFile = "17pmkgly1882hbwa6b2qb0y1wh4x4nawhw1vl8fsy252caxkck0s";
+      version = "0.5.1.1";
+      sha256 = "1yw5ljanhc176k4xj1pfqkhq6c63hv5an7pm06vjiakmk6j4rqlg";
+      revision = "1";
+      editedCabalFile = "071xrzj7bjnb32f5dlsqa726cmw9s9q22bv7ch4gj2r83crng68g";
       libraryHaskellDepends = [
         base
         co-log-core
@@ -146644,8 +147386,6 @@ self: {
       ];
       description = "Asynchronous backend for co-log library";
       license = lib.licenses.mpl20;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -146736,8 +147476,8 @@ self: {
     }:
     mkDerivation {
       pname = "co-log-json";
-      version = "0.1.0.0";
-      sha256 = "0212dcaw4anjn569a8gpv30k09b9lk99r70bbsh7kb8hb268rk83";
+      version = "0.1.0.2";
+      sha256 = "0lr8599hqiyg70qw5pmdbrpm1lyps819h7anxxi4ip2r1im2p3xd";
       libraryHaskellDepends = [
         aeson
         base
@@ -146749,8 +147489,6 @@ self: {
       ];
       description = "Structured messages support in co-log ecosystem";
       license = lib.licenses.mpl20;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -147198,7 +147936,7 @@ self: {
     }
   ) { };
 
-  "code-conjure_0_6_10" = callPackage (
+  "code-conjure_0_7_4" = callPackage (
     {
       mkDerivation,
       base,
@@ -147209,8 +147947,8 @@ self: {
     }:
     mkDerivation {
       pname = "code-conjure";
-      version = "0.6.10";
-      sha256 = "195xik1h55bl5rjipl2g979jnwh99h223v23di82cwaafmv747bn";
+      version = "0.7.4";
+      sha256 = "19ynxnzwfyspr22dgnrs3h6zb7a64lig59xhfir4m055y1wp6qvx";
       libraryHaskellDepends = [
         base
         express
@@ -149341,6 +150079,27 @@ self: {
     }
   ) { };
 
+  "colorhash" = callPackage (
+    {
+      mkDerivation,
+      base,
+      colour,
+      hashable,
+    }:
+    mkDerivation {
+      pname = "colorhash";
+      version = "0.2.0.0";
+      sha256 = "0w0f8dr2lzbna2k26ar6zx9bxih6hm9rj60mbcizyv695vhrdvgn";
+      libraryHaskellDepends = [
+        base
+        colour
+        hashable
+      ];
+      description = "Generate a color for a hashable object";
+      license = lib.licenses.bsd3;
+    }
+  ) { };
+
   "colorize-haskell" = callPackage (
     {
       mkDerivation,
@@ -150186,8 +150945,8 @@ self: {
       pname = "combinatorial";
       version = "0.1.1";
       sha256 = "0sz5x3776fr736mwsn582ih1pflkirsk6bqygagsg8jq0nh83v5g";
-      revision = "1";
-      editedCabalFile = "1g68vf9yj87qbmbazlasq11wcb1dd9rx83p95f4lqaji1ipzvq1y";
+      revision = "2";
+      editedCabalFile = "0kkzsa6rf7g65zdyyqwfcdzx7sqjfp2rhjc4ck5cw2kyp9dkvcdy";
       libraryHaskellDepends = [
         array
         base
@@ -150327,6 +151086,8 @@ self: {
       pname = "comfort-array";
       version = "0.5.5";
       sha256 = "0jyhlxm64di682i2hwf1f1mw6f7xjwhb1ihnp8dh9vsg93hwik5i";
+      revision = "1";
+      editedCabalFile = "123q7i0zv3cl2218dkb9xcccf7j5kpw0awhgrj05gjhancfcdzcr";
       libraryHaskellDepends = [
         base
         bifunctors
@@ -150434,6 +151195,8 @@ self: {
       pname = "comfort-blas";
       version = "0.0.3.1";
       sha256 = "1l18qx5nh72z4vgdb4zn2xmdzyc6j00c0py0kwh9nncik8cg5j1n";
+      revision = "1";
+      editedCabalFile = "0hyxjj53111dxkpbxh6p3qfjpr01bvi7q1q3fmvamy4w6d3czgw2";
       libraryHaskellDepends = [
         base
         blas-ffi
@@ -151948,8 +152711,8 @@ self: {
     }:
     mkDerivation {
       pname = "compactmap";
-      version = "0.1.4.5";
-      sha256 = "1xa4wa4qjd7yjghkaakpgrz9kw4iyy0zlc9cpajyysaxdq4k7czf";
+      version = "0.1.4.6";
+      sha256 = "1lkvhmdz77m6jm43946q2g6ijl7w6kqs9n68g1gzfxw6akmpy39y";
       libraryHaskellDepends = [
         base
         vector
@@ -155109,8 +155872,8 @@ self: {
       pname = "concurrent-supply";
       version = "0.1.8";
       sha256 = "07zjczcgxwpi8imp0w86vrb78w067b322q5d7zlqla91sbf2gy6c";
-      revision = "2";
-      editedCabalFile = "0ij8vz3vz2675mwapyzwhywnkkx8p67qq6vqs0c0hrj1659midl0";
+      revision = "3";
+      editedCabalFile = "1ybkwijyqp3v7i1idgbwa1mzkq5p75ccm15hfigh2clzvri1z4kg";
       libraryHaskellDepends = [
         base
         ghc-prim
@@ -155819,49 +156582,6 @@ self: {
     }:
     mkDerivation {
       pname = "conduit-concurrent-map";
-      version = "0.1.3";
-      sha256 = "0mpbklyfqdc1wzx5z4dy2x2y5zi8bb7p83q04csybj5c5f4136yq";
-      libraryHaskellDepends = [
-        base
-        conduit
-        containers
-        mtl
-        resourcet
-        unliftio
-        unliftio-core
-        vector
-      ];
-      testHaskellDepends = [
-        base
-        conduit
-        hspec
-        HUnit
-        QuickCheck
-        say
-      ];
-      description = "Concurrent, order-preserving mapping Conduit";
-      license = lib.licenses.mit;
-    }
-  ) { };
-
-  "conduit-concurrent-map_0_1_4" = callPackage (
-    {
-      mkDerivation,
-      base,
-      conduit,
-      containers,
-      hspec,
-      HUnit,
-      mtl,
-      QuickCheck,
-      resourcet,
-      say,
-      unliftio,
-      unliftio-core,
-      vector,
-    }:
-    mkDerivation {
-      pname = "conduit-concurrent-map";
       version = "0.1.4";
       sha256 = "1x8iydyjwa1lm3lmv2fc95ny3xdxzqdqk1cckyf6v7ny6lgv7smi";
       libraryHaskellDepends = [
@@ -155884,7 +156604,6 @@ self: {
       ];
       description = "Concurrent, order-preserving mapping Conduit";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -155962,8 +156681,10 @@ self: {
     }:
     mkDerivation {
       pname = "conduit-extra";
-      version = "1.3.7";
-      sha256 = "0mrbaf4lrnczgn1kxjwpmzxk226wprw10y9xg621g74h4s36zgdj";
+      version = "1.3.8";
+      sha256 = "08l2728vyr3dppnj4z3yagi2265ixp8g8ayhz07x3x88jj73w7s9";
+      revision = "1";
+      editedCabalFile = "1fq0cs2fcn2kd1mvp9ygsp7rm5qridwp1wwnr60jmpahvihb4cp9";
       libraryHaskellDepends = [
         async
         attoparsec
@@ -156023,8 +156744,6 @@ self: {
       conduit,
       conduit-combinators,
       conduit-extra,
-      directory,
-      doctest,
       either,
       exceptions,
       filepath,
@@ -156033,19 +156752,22 @@ self: {
       monad-control,
       mtl,
       regex-posix,
+      resourcet,
       semigroups,
       streaming-commons,
       text,
       time,
       transformers,
       transformers-base,
+      transformers-either,
       unix,
       unix-compat,
+      unliftio-core,
     }:
     mkDerivation {
       pname = "conduit-find";
-      version = "0.1.0.3";
-      sha256 = "13gbpvqxs3k2vlsbdn0vr90z4y8kaz7hlw9bywyqd8jna3ff13a9";
+      version = "0.1.0.4";
+      sha256 = "03mrfqmxryrv21adk6ijf3isfffjhf91qkjqqrlfkm3fxhz2xp4m";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -156061,13 +156783,16 @@ self: {
         monad-control
         mtl
         regex-posix
+        resourcet
         semigroups
         streaming-commons
         text
         time
         transformers
         transformers-base
+        transformers-either
         unix-compat
+        unliftio-core
       ];
       executableHaskellDepends = [
         attoparsec
@@ -156082,6 +156807,7 @@ self: {
         monad-control
         mtl
         regex-posix
+        resourcet
         semigroups
         streaming-commons
         text
@@ -156089,14 +156815,13 @@ self: {
         transformers
         transformers-base
         unix
+        unliftio-core
       ];
       testHaskellDepends = [
         attoparsec
         base
         conduit
         conduit-combinators
-        directory
-        doctest
         either
         exceptions
         filepath
@@ -156105,6 +156830,7 @@ self: {
         monad-control
         mtl
         regex-posix
+        resourcet
         semigroups
         streaming-commons
         text
@@ -156112,6 +156838,7 @@ self: {
         transformers
         transformers-base
         unix-compat
+        unliftio-core
       ];
       description = "A file-finding conduit that allows user control over traversals";
       license = lib.licenses.mit;
@@ -160572,8 +161299,8 @@ self: {
     }:
     mkDerivation {
       pname = "control-block";
-      version = "0.0.1";
-      sha256 = "06l9s8inrdqp9z4zsd178rk3211zmhx4acwxq1py801lpb7vgn8v";
+      version = "0.0.2";
+      sha256 = "0p79ic8yq9jw86jiyxs6k6z740w25ckkdn0lp3rj8rxya2h7viaw";
       libraryHaskellDepends = [
         base
         indexed-traversable
@@ -160581,8 +161308,6 @@ self: {
       ];
       description = "Higher-order functions with their function arguments at the end, for channeling the full power of BlockArguments and LambdaCase";
       license = lib.licenses.bsd2;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -161376,6 +162101,70 @@ self: {
     }
   ) { };
 
+  "convex-schema-parser" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      containers,
+      deepseq,
+      directory,
+      filepath,
+      fsnotify,
+      HUnit,
+      mtl,
+      optparse-applicative,
+      parsec,
+      process,
+      split,
+      stm,
+      yaml,
+    }:
+    mkDerivation {
+      pname = "convex-schema-parser";
+      version = "0.1.3.0";
+      sha256 = "01z32fdxzwqbn8i7izh4amqa3jv4zfkxjn2zcy3fmyc7js72az68";
+      isLibrary = false;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        base
+        containers
+        directory
+        filepath
+        mtl
+        parsec
+        process
+        split
+      ];
+      executableHaskellDepends = [
+        aeson
+        base
+        deepseq
+        directory
+        filepath
+        fsnotify
+        optparse-applicative
+        parsec
+        process
+        stm
+        yaml
+      ];
+      testHaskellDepends = [
+        base
+        containers
+        HUnit
+        mtl
+        parsec
+      ];
+      doHaddock = false;
+      description = "A type-safe client generator for Convex for both Rust and Python";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "convex-schema-parser";
+      broken = true;
+    }
+  ) { };
+
   "convexHullNd" = callPackage (
     {
       mkDerivation,
@@ -161638,7 +162427,7 @@ self: {
     }
   ) { };
 
-  "copilot_4_3" = callPackage (
+  "copilot_4_4" = callPackage (
     {
       mkDerivation,
       base,
@@ -161654,8 +162443,8 @@ self: {
     }:
     mkDerivation {
       pname = "copilot";
-      version = "4.3";
-      sha256 = "09015r4fryyc60dzk5pvjpl8vjp9sm6bmykgixshkfrd6788xlad";
+      version = "4.4";
+      sha256 = "1fazwy4wnbf7jvs793kwhpc6hjnxf0ak9fhpnlvmdcwryz35nfbw";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -161698,8 +162487,8 @@ self: {
     }:
     mkDerivation {
       pname = "copilot-bluespec";
-      version = "4.3";
-      sha256 = "1ybs2r8jllnb873l9aq2bq79y1spf2lj73i2ckkbiynqj33fzmih";
+      version = "4.4";
+      sha256 = "1iw53mmq7hn8a1zy1i8zhjapfdaccvg1l0xwgpkr53b761srbpni";
       libraryHaskellDepends = [
         base
         copilot-core
@@ -161784,7 +162573,7 @@ self: {
     }
   ) { };
 
-  "copilot-c99_4_3" = callPackage (
+  "copilot-c99_4_4" = callPackage (
     {
       mkDerivation,
       base,
@@ -161806,8 +162595,8 @@ self: {
     }:
     mkDerivation {
       pname = "copilot-c99";
-      version = "4.3";
-      sha256 = "1g7lnspbb0fkd6yhbv69an3q31ibr3a3pgvnsncsdasfbvz06hiy";
+      version = "4.4";
+      sha256 = "0wk3b1m9har25iwd0fg9pzcffk23gz0bf7xmfljr4fxlf16gqz0s";
       libraryHaskellDepends = [
         base
         copilot-core
@@ -161898,7 +162687,7 @@ self: {
     }
   ) { };
 
-  "copilot-core_4_3" = callPackage (
+  "copilot-core_4_4" = callPackage (
     {
       mkDerivation,
       base,
@@ -161910,8 +162699,8 @@ self: {
     }:
     mkDerivation {
       pname = "copilot-core";
-      version = "4.3";
-      sha256 = "0m8ynx430wkh7vgpag6c2ayzcll73zmhj7r9gdss0vgr7w73wki3";
+      version = "4.4";
+      sha256 = "0rdfz1q1g91jxack93lcl2bj1az53m1k8fs25xi6bqbrbb3w77f0";
       libraryHaskellDepends = [ base ];
       testHaskellDepends = [
         base
@@ -161998,7 +162787,7 @@ self: {
     }
   ) { };
 
-  "copilot-interpreter_4_3" = callPackage (
+  "copilot-interpreter_4_4" = callPackage (
     {
       mkDerivation,
       base,
@@ -162011,8 +162800,8 @@ self: {
     }:
     mkDerivation {
       pname = "copilot-interpreter";
-      version = "4.3";
-      sha256 = "15x06k5l06yfc173934nw5hqs0zhypr805kbkf9i1rvrzwz233k7";
+      version = "4.4";
+      sha256 = "02l48zpj8c51h3hs50j1q1fwglgsn8xdipdz5gha9kghvrkbl7p5";
       libraryHaskellDepends = [
         base
         copilot-core
@@ -162081,7 +162870,7 @@ self: {
     }
   ) { };
 
-  "copilot-language_4_3" = callPackage (
+  "copilot-language_4_4" = callPackage (
     {
       mkDerivation,
       array,
@@ -162101,8 +162890,8 @@ self: {
     }:
     mkDerivation {
       pname = "copilot-language";
-      version = "4.3";
-      sha256 = "1yzqm5kcy8by1smhaac3qw6y5kkbdkiimh41jj0q49n0k64hgs9y";
+      version = "4.4";
+      sha256 = "12jzx9sfzpvrbahha3mydpa5bzg2d5biar4cnn9rwxpw4i7vpnzy";
       libraryHaskellDepends = [
         array
         base
@@ -162169,7 +162958,7 @@ self: {
     }
   ) { };
 
-  "copilot-libraries_4_3" = callPackage (
+  "copilot-libraries_4_4" = callPackage (
     {
       mkDerivation,
       base,
@@ -162185,8 +162974,8 @@ self: {
     }:
     mkDerivation {
       pname = "copilot-libraries";
-      version = "4.3";
-      sha256 = "1yka76zqrxzbdv6ks35n0lhwi4ahcx7wj51cx0cwy9gar4608plm";
+      version = "4.4";
+      sha256 = "0q1znmgjk4hbd6z25avw23la6ckn7117vv9q4kkn4gyjy7q2kpjc";
       libraryHaskellDepends = [
         base
         containers
@@ -162230,7 +163019,7 @@ self: {
     }
   ) { };
 
-  "copilot-prettyprinter_4_3" = callPackage (
+  "copilot-prettyprinter_4_4" = callPackage (
     {
       mkDerivation,
       base,
@@ -162239,8 +163028,8 @@ self: {
     }:
     mkDerivation {
       pname = "copilot-prettyprinter";
-      version = "4.3";
-      sha256 = "0iynrm13cylmlmpzg9bdpx4nhsgl5ckz4ngzila9agfiijzs74f7";
+      version = "4.4";
+      sha256 = "06134bgb2386mfcgqyka2ldwiwxskv6d2lmqqyvdwg21108kn59f";
       libraryHaskellDepends = [
         base
         copilot-core
@@ -162345,7 +163134,7 @@ self: {
     }
   ) { };
 
-  "copilot-theorem_4_3" = callPackage (
+  "copilot-theorem_4_4" = callPackage (
     {
       mkDerivation,
       base,
@@ -162374,8 +163163,8 @@ self: {
     }:
     mkDerivation {
       pname = "copilot-theorem";
-      version = "4.3";
-      sha256 = "19kz53v5kj7z6jy8hxnm8mdy4xybimfrfq3xdbq0ynk8p47v18ry";
+      version = "4.4";
+      sha256 = "0v1b9nn783w9xc4mqq7ns0wn09rkfzl5vhy6x0icsidyp1h9kcdh";
       libraryHaskellDepends = [
         base
         bimap
@@ -162450,8 +163239,8 @@ self: {
     }:
     mkDerivation {
       pname = "copilot-verifier";
-      version = "4.3";
-      sha256 = "0wxycssvs4qnih1jblypmk8hn1yj9pkhi4l2lamyda70sm7dv624";
+      version = "4.4";
+      sha256 = "02kwvq3h04xq988zgvkhghfz4g00fj3s3bjfsp9962mw4dir3mbf";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -163930,6 +164719,8 @@ self: {
       pname = "countdown-numbers-game";
       version = "0.0.0.1";
       sha256 = "1warpkqimxjvqrm1jq4nbj3g3bz009alklqs46dh23p3lrgcif61";
+      revision = "1";
+      editedCabalFile = "05106icwf7kvnwj5109yim2xyx8q5lxvccbn2dqb0q571h5v1a5q";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -164591,8 +165382,8 @@ self: {
       pname = "cpphs";
       version = "1.20.9.1";
       sha256 = "17wi7fma2qaqdm1hwgaam3fd140v9bpa8ky0wg708h1pqc5v2nbz";
-      revision = "1";
-      editedCabalFile = "1f8jzs8zdh4wwbcq8fy6qqxkv75ypnvsm4yzw49wpr3b9vpnzlha";
+      revision = "2";
+      editedCabalFile = "0vxav36p0kplp4dpd17i4cfzrsl3r437d840xwv83lf1bqp7mrxc";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -164712,8 +165503,8 @@ self: {
     }:
     mkDerivation {
       pname = "cpsa";
-      version = "4.4.5";
-      sha256 = "0ysr77z15ml5r2gb6gxgjbbzgf7y82khwgxd1kpkbxr0gsj3yxn2";
+      version = "4.4.6";
+      sha256 = "02x57fxwxcs16kn8dgr4pxjx0nrvvlwg3sm05hlipbycyaqwncmf";
       isLibrary = false;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -166650,6 +167441,8 @@ self: {
       pname = "criterion";
       version = "1.6.4.0";
       sha256 = "0l9gxar759nskhm7gskr3j08bw8515amw6rr4n3zx3978dxg8aq6";
+      revision = "1";
+      editedCabalFile = "0wwzijzvqrv7swpalr24i3j4pjcjm266ybhhah853d783zz37vzz";
       isLibrary = true;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -170940,8 +171733,8 @@ self: {
     }:
     mkDerivation {
       pname = "csv-conduit";
-      version = "1.0.1.0";
-      sha256 = "0qlw5hhsrfpw972ryp3mr895q77d6p1g2q1z7jl7hf1xz7ba0c1r";
+      version = "1.0.1.1";
+      sha256 = "1jxd6sdqpmkapb1xllqwnw55b70ks4n3ii624a3rr8x25r2bvkjr";
       libraryHaskellDepends = [
         array
         attoparsec
@@ -171692,6 +172485,104 @@ self: {
       broken = true;
     }
   ) { inherit (pkgs) cudd; };
+
+  "cuddle" = callPackage (
+    {
+      mkDerivation,
+      base,
+      base16-bytestring,
+      boxes,
+      bytestring,
+      capability,
+      cborg,
+      containers,
+      data-default-class,
+      foldable1-classes-compat,
+      generic-optics,
+      hashable,
+      hspec,
+      hspec-megaparsec,
+      HUnit,
+      megaparsec,
+      mtl,
+      mutable-containers,
+      optics-core,
+      optparse-applicative,
+      ordered-containers,
+      parser-combinators,
+      prettyprinter,
+      QuickCheck,
+      random,
+      regex-tdfa,
+      scientific,
+      string-qq,
+      text,
+      tree-diff,
+    }:
+    mkDerivation {
+      pname = "cuddle";
+      version = "0.5.0.0";
+      sha256 = "1vjm6v5wf1hbj7ikwmfxf4ah62g4j33nhqqc1xjb9dll5jlvadyn";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        base
+        base16-bytestring
+        boxes
+        bytestring
+        capability
+        cborg
+        containers
+        data-default-class
+        foldable1-classes-compat
+        generic-optics
+        hashable
+        megaparsec
+        mtl
+        mutable-containers
+        optics-core
+        ordered-containers
+        parser-combinators
+        prettyprinter
+        random
+        regex-tdfa
+        scientific
+        text
+        tree-diff
+      ];
+      executableHaskellDepends = [
+        base
+        base16-bytestring
+        bytestring
+        cborg
+        megaparsec
+        mtl
+        optparse-applicative
+        prettyprinter
+        random
+        text
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        data-default-class
+        hspec
+        hspec-megaparsec
+        HUnit
+        megaparsec
+        prettyprinter
+        QuickCheck
+        string-qq
+        text
+        tree-diff
+      ];
+      description = "CDDL Generator and test utilities";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "cuddle";
+      broken = true;
+    }
+  ) { };
 
   "cue-sheet" = callPackage (
     {
@@ -173376,8 +174267,8 @@ self: {
       pname = "czipwith";
       version = "1.0.1.4";
       sha256 = "0zvi7wmbh09ngbyvavvhn6s3vz1pnps59fl1sq3vih6s03s0zmai";
-      revision = "1";
-      editedCabalFile = "1lijciq9ly8cmv7kjkazi8rz8zhh205f64iv3fsjj4spy2lpkyhx";
+      revision = "2";
+      editedCabalFile = "0s414j814l4v384hgii5zi33s2swn2kqz9761d6vcps6shcc2z3v";
       libraryHaskellDepends = [
         base
         template-haskell
@@ -174335,6 +175226,7 @@ self: {
       async,
       base,
       bytestring,
+      co-log-core,
       containers,
       hspec,
       lifted-base,
@@ -174351,15 +175243,14 @@ self: {
     }:
     mkDerivation {
       pname = "dap";
-      version = "0.1.0.0";
-      sha256 = "1iq6vd2s6qz5mmcqfg8a9a4y9i9k4v6ak4n3jl5n5mdqbrli7ipz";
-      revision = "1";
-      editedCabalFile = "1aapq2sv4f5lnzblplfrgxwi6x2hy0jz0h9dxi562lbxylmjvjaz";
+      version = "0.2.0.0";
+      sha256 = "04qv9k6ci2mgw5l39ac6c2kb9d0lby7774zwzr53iqv2xp44hp9l";
       libraryHaskellDepends = [
         aeson
         aeson-pretty
         base
         bytestring
+        co-log-core
         containers
         lifted-base
         monad-control
@@ -174378,6 +175269,7 @@ self: {
         async
         base
         bytestring
+        co-log-core
         containers
         hspec
         lifted-base
@@ -175493,8 +176385,8 @@ self: {
       pname = "data-accessor";
       version = "0.2.3.1";
       sha256 = "14ap1lxizxkgphl4kg8lr3ny9lblx1k6hm8i9nm7l43yla8cg8q6";
-      revision = "1";
-      editedCabalFile = "1v16s3d1kwlx9vzf6agacr2rfamnhyl7fgd81arznka51v3my2fs";
+      revision = "2";
+      editedCabalFile = "0qzccxgxfiyas435z14k8mkxz10fpyj0vrl856hiw0inv228cn9z";
       libraryHaskellDepends = [
         array
         base
@@ -176128,6 +177020,36 @@ self: {
       description = "a cyclic doubly linked list";
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
+  "data-debruijn" = callPackage (
+    {
+      mkDerivation,
+      base,
+      containers,
+      deepseq,
+      ghc-bignum,
+      ghc-prim,
+      QuickCheck,
+    }:
+    mkDerivation {
+      pname = "data-debruijn";
+      version = "0.1.0.0";
+      sha256 = "1zwi7wsznmhph5nljhxzk1rbz5a8qz79j8djdkqc169z5f7fkssv";
+      revision = "1";
+      editedCabalFile = "1njc7m4g0nwj9ww2gk2z83xbll8pcchmmix109fwgwgz9jv26ckr";
+      libraryHaskellDepends = [
+        base
+        containers
+        deepseq
+        ghc-bignum
+        ghc-prim
+        QuickCheck
+      ];
+      doHaddock = false;
+      description = "Fast and safe implementation of common compiler machinery";
+      license = lib.licenses.agpl3Only;
     }
   ) { };
 
@@ -176850,7 +177772,7 @@ self: {
     }
   ) { };
 
-  "data-effects-core_0_4_2_0" = callPackage (
+  "data-effects-core_0_4_3_0" = callPackage (
     {
       mkDerivation,
       base,
@@ -176866,8 +177788,8 @@ self: {
     }:
     mkDerivation {
       pname = "data-effects-core";
-      version = "0.4.2.0";
-      sha256 = "0m45lvyy4rpl1n0dk7pbpw7hna2i4m5l5s4x8vgs2afp8wdc15ix";
+      version = "0.4.3.0";
+      sha256 = "019r4cf6bx1naqipkkxr5fd4mdq7ss0q8x71rqh9gn2gq6dpd7gl";
       libraryHaskellDepends = [
         base
         free
@@ -177310,8 +178232,8 @@ self: {
     }:
     mkDerivation {
       pname = "data-findcycle";
-      version = "0.1.1.0";
-      sha256 = "06ix4v13gwxvbyaw89ka97zrbh5y2rmw12gl3lb41k823aaglgdj";
+      version = "0.1.2.0";
+      sha256 = "0j6xpphrghzp8sw8h9nnf9mbsdag421lbyyan86kb8dmr82hndjb";
       libraryHaskellDepends = [
         array
         base
@@ -177542,8 +178464,8 @@ self: {
       pname = "data-functor-logistic";
       version = "0.0";
       sha256 = "0k2r4jpm7sa3hgd6i08sg9xbgjzkgzx44z5ai5zpw32b7pqr9xqm";
-      revision = "2";
-      editedCabalFile = "0477ky1j44cval3f9nnakz946haxs4477rzbl0i3asc4qwkpi2xl";
+      revision = "3";
+      editedCabalFile = "1m2xhx3b80imcrmnw5jvak7rz82g0pym5bjnli6l69mwjfkpfrkl";
       libraryHaskellDepends = [
         base
         distributive
@@ -180037,8 +180959,8 @@ self: {
     }:
     mkDerivation {
       pname = "dataframe";
-      version = "0.1.0.3";
-      sha256 = "0p4syk43nz1b9x9fzm3hgrdgksjs3siqgczaf2bqmgrra61fw8nh";
+      version = "0.2.0.1";
+      sha256 = "1qgdlmyz4mlvqb1qicspv7yiddyla8kxczx7018myryws9861f52";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -181228,7 +182150,7 @@ self: {
     }
   ) { };
 
-  "dbus_1_4_0" = callPackage (
+  "dbus_1_4_1" = callPackage (
     {
       mkDerivation,
       base,
@@ -181264,8 +182186,8 @@ self: {
     }:
     mkDerivation {
       pname = "dbus";
-      version = "1.4.0";
-      sha256 = "1rb5q8g0n3fj9b57wlds7ldji029fqym4dvpvq10hmn7qw313dz6";
+      version = "1.4.1";
+      sha256 = "016xrx8gnvldpwgalpsxzvkwagavpzw9m7j65w5msskaxk474ln7";
       libraryHaskellDepends = [
         base
         bytestring
@@ -182341,6 +183263,7 @@ self: {
       ];
       description = "Delay differential equations";
       license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -182679,16 +183602,17 @@ self: {
       base,
       deepseq,
       fin,
+      QuickCheck,
       skew-list,
       some,
+      tasty,
+      tasty-quickcheck,
       transformers,
     }:
     mkDerivation {
       pname = "debruijn";
-      version = "0.3";
-      sha256 = "0yww60649wcaz7yjlhli5kijlcminf1h2n4f9za3ca85m20jzzy9";
-      revision = "1";
-      editedCabalFile = "11n3x3pviakx6q0cgnky0y3qgxjc89giq2jvk714b9vwb59rd0zj";
+      version = "0.3.1";
+      sha256 = "07hirkxdk28f6ri0dbyw34q2jqa9w7256yib8vjn24v644l9jsdg";
       libraryHaskellDepends = [
         base
         deepseq
@@ -182696,6 +183620,12 @@ self: {
         skew-list
         some
         transformers
+      ];
+      testHaskellDepends = [
+        base
+        QuickCheck
+        tasty
+        tasty-quickcheck
       ];
       description = "de Bruijn indices and levels";
       license = lib.licenses.bsd3;
@@ -182714,10 +183644,8 @@ self: {
     }:
     mkDerivation {
       pname = "debruijn-safe";
-      version = "0.3";
-      sha256 = "1x95kffjjki304bj37viz6rn74g51cm1ndikdc19zgkxxarraxxp";
-      revision = "1";
-      editedCabalFile = "0hlgml3nxhdc4d3arphhz51d85x6553cy5asjkabnqi8n0iffdpk";
+      version = "0.3.1";
+      sha256 = "1snk5dp4nh0gb98dask1d1nk8rckc8376n9kwi6rfgncya32qn6i";
       libraryHaskellDepends = [
         base
         deepseq
@@ -182995,17 +183923,19 @@ self: {
       containers,
       hspec,
       markdown-unlit,
+      scientific,
       text,
       vector,
     }:
     mkDerivation {
       pname = "debug-print";
-      version = "0.2.0.1";
-      sha256 = "1bcdmnkxcyicw4f57vlx64iyfj3lwz1157s89k4gdyk3ilc2x8g4";
+      version = "0.2.1.0";
+      sha256 = "1mgl8sc69fbpcx3hrb8b1dcsgs2zzflms5ryf3zbs8j91yvpx02s";
       libraryHaskellDepends = [
         aeson
         base
         containers
+        scientific
         text
         vector
       ];
@@ -183328,8 +184258,8 @@ self: {
       pname = "decimal-literals";
       version = "0.1.0.1";
       sha256 = "0lbpnc4c266fbqjzzrnig648zzsqfaphlxqwyly9xd15qggzasb0";
-      revision = "3";
-      editedCabalFile = "1650vnqwjsqg2mghsvghiyzg5qqbz36vibkq8614adhyjpcd3w07";
+      revision = "4";
+      editedCabalFile = "1jiayinmqx35lm7n5dwgfqfq8pafdz7q1ysv8lqqjaiylrlm092r";
       libraryHaskellDepends = [ base ];
       testHaskellDepends = [
         base
@@ -183767,7 +184697,7 @@ self: {
     }
   ) { };
 
-  "deepseq_1_5_1_0" = callPackage (
+  "deepseq_1_5_2_0" = callPackage (
     {
       mkDerivation,
       base,
@@ -183775,8 +184705,8 @@ self: {
     }:
     mkDerivation {
       pname = "deepseq";
-      version = "1.5.1.0";
-      sha256 = "0yz1b3c4fpa1pknwd64fba37wbr7mxzawd0han2ifq70mgiqfkiz";
+      version = "1.5.2.0";
+      sha256 = "1rgv1kn3igdip34bpn24syirmsjllipd98l301y5n225gw6q1mq9";
       libraryHaskellDepends = [
         base
         ghc-prim
@@ -184740,8 +185670,8 @@ self: {
     }:
     mkDerivation {
       pname = "delivery-status-notification";
-      version = "0.2.0.0";
-      sha256 = "0vmvgwq9g3kqdmfqs4gg7h1a926jqg7g8n065qvq0b4c4pmn7dy1";
+      version = "0.2.0.2";
+      sha256 = "07pwcil2qw5fzf7arya4a6n2bb68jyqd3lh9rvvp4g5y1dq3x97n";
       libraryHaskellDepends = [
         attoparsec
         base
@@ -184753,8 +185683,6 @@ self: {
       ];
       description = "Parse bounce messages per RFC3464, RFC3463";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -184884,6 +185812,7 @@ self: {
       description = "Facilities for storing a Haskell value, using delta types";
       license = lib.licenses.asl20;
       hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -184941,6 +185870,8 @@ self: {
       pname = "deltaq";
       version = "1.0.0.0";
       sha256 = "00zpvwxar13rq84li7j21ycapdnyx128cs2yqvn6hwnrr8w25w9d";
+      revision = "1";
+      editedCabalFile = "1i4lkq6w34ik7csx6wpwy4by2vbdijilpynwjf9kr7dfn5ac2gz1";
       libraryHaskellDepends = [
         base
         Chart
@@ -185536,6 +186467,34 @@ self: {
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
       broken = true;
+    }
+  ) { };
+
+  "dependent-enummap" = callPackage (
+    {
+      mkDerivation,
+      base,
+      containers,
+      dependent-sum,
+      some,
+    }:
+    mkDerivation {
+      pname = "dependent-enummap";
+      version = "0.1.0.0";
+      sha256 = "1i0p0yipihjm9p6mpag9zw1r8gfl7lwcg35w97gqfy4lbbx2rp4n";
+      libraryHaskellDepends = [
+        base
+        containers
+        dependent-sum
+        some
+      ];
+      testHaskellDepends = [
+        base
+        dependent-sum
+        some
+      ];
+      description = "A generalisation of EnumMap to dependent types";
+      license = lib.licenses.bsd3;
     }
   ) { };
 
@@ -186283,8 +187242,8 @@ self: {
     }:
     mkDerivation {
       pname = "derive-has-field";
-      version = "0.1.0.0";
-      sha256 = "1hc5fgsc0yzidrnhwrlhvmaw062yv1v6vg5wl4l597cd74316mcl";
+      version = "0.1.1.0";
+      sha256 = "17jvz6w3d806zh80dpgiq7lpxa9qjdj06c1h2x4la1cq0gixj9km";
       libraryHaskellDepends = [
         base
         template-haskell
@@ -189454,8 +190413,8 @@ self: {
     }:
     mkDerivation {
       pname = "dhscanner-ast";
-      version = "1.0.8";
-      sha256 = "0sgjlqrvdfqmma9cf1cs01mmj7gk66i3zwfjb1ywhs7l4kj4avn7";
+      version = "1.0.10";
+      sha256 = "0k4nligcx6k6nbf3jgslhll1vikbzvb8733m812b1yb9j4y2zk2m";
       libraryHaskellDepends = [
         aeson
         base
@@ -189485,8 +190444,8 @@ self: {
     }:
     mkDerivation {
       pname = "dhscanner-bitcode";
-      version = "1.0.4";
-      sha256 = "08jk89rn2g5aa57wwz7nsc38phdmg9wnkzxfsrk7l68rdbmxfl64";
+      version = "1.0.5";
+      sha256 = "0ik90c1kxbxrv99psrbyyc740qmi3yv6h8hs4pvfdqf45jmjn3hj";
       libraryHaskellDepends = [
         aeson
         base
@@ -189988,8 +190947,8 @@ self: {
       pname = "diagrams-builder";
       version = "0.8.0.6";
       sha256 = "17yi5dmcxx4sgk3wha386zbv9h69pwq72j8i21vmfh35brxhs9f4";
-      revision = "2";
-      editedCabalFile = "1mkxn0r6wmxyvdhwly1a6j0z4j234mfv7aimirwl7jmcv55lwbs4";
+      revision = "3";
+      editedCabalFile = "0pi4509j5i8jgxn0a9z39ac1sr8n2n97v8pfyla9s30sc63ybjag";
       configureFlags = [
         "-fcairo"
         "-fps"
@@ -190094,7 +191053,7 @@ self: {
     }
   ) { };
 
-  "diagrams-cairo_1_4_3" = callPackage (
+  "diagrams-cairo_1_5" = callPackage (
     {
       mkDerivation,
       array,
@@ -190121,8 +191080,10 @@ self: {
     }:
     mkDerivation {
       pname = "diagrams-cairo";
-      version = "1.4.3";
-      sha256 = "0irj7jigi9dfprjilndyx0kwg7vjpbhrsxhlsqc8n1sy1b4s2aha";
+      version = "1.5";
+      sha256 = "1s0cq1sv158b7pszhipc4f5555zfqz1xxa7hdd13afx7jnh68z3i";
+      revision = "1";
+      editedCabalFile = "19daz3jx4kc4pqr0ffq4wrpfwk95xz3fnhlacba9q96aw3c1vcnd";
       libraryHaskellDepends = [
         array
         base
@@ -190216,8 +191177,8 @@ self: {
       pname = "diagrams-canvas";
       version = "1.4.2";
       sha256 = "0ns1xmgcjqig7qld7r77rbcrk779cmzj7xfqj6a7sbdci3in2dgm";
-      revision = "1";
-      editedCabalFile = "08pm7i10k7a046jjrdbzhmlrv05wp171mblgs8y18m6vc8hw87v6";
+      revision = "2";
+      editedCabalFile = "0if7b5dzgrdqz491ma31kizasiyaa3pc0m570r4ccr4m2gs7jz2m";
       libraryHaskellDepends = [
         base
         blank-canvas
@@ -190355,8 +191316,8 @@ self: {
       pname = "diagrams-contrib";
       version = "1.4.6";
       sha256 = "1x5z361xmqfa503brmf0zwyq3lldm9kgixx90v14s4dsz52my46k";
-      revision = "1";
-      editedCabalFile = "00zgzy7b3vkjd0f22hbp2lknwl1x5nd6d1ng30wq4qlncwdxqkpz";
+      revision = "3";
+      editedCabalFile = "07yslc0ds8sj412xgy13dxa7g2a8psgx06nds99yd55bfppias32";
       libraryHaskellDepends = [
         base
         circle-packing
@@ -190418,8 +191379,8 @@ self: {
       pname = "diagrams-core";
       version = "1.5.1.1";
       sha256 = "168kjikw3x21pjgfy3lmxmrm89g9zlhbypkmzdg5xz9rl7acn7rc";
-      revision = "3";
-      editedCabalFile = "0wgb7rgj6mmmqnakp9qn6519c3jk3m0plkv6gmwrbddy92rs8b2i";
+      revision = "4";
+      editedCabalFile = "0lq4hs7h7ja9x8wz05z21fi9b507r8capxwknmadrxznrh892kky";
       libraryHaskellDepends = [
         adjunctions
         base
@@ -190467,10 +191428,8 @@ self: {
     }:
     mkDerivation {
       pname = "diagrams-gi-cairo";
-      version = "1.4.2";
-      sha256 = "0k6fw1vvqa4pra4czd90n7i7h1vf6hn08a4jip1xbqkf57d89bn6";
-      revision = "1";
-      editedCabalFile = "1r1ph8nc7xgh3by63dsamkvhi6bvw1bgvhnc8f664iiziaj9p08a";
+      version = "1.5";
+      sha256 = "1wkr52maf7320k75si6lbwds39i0zw0mhd8b4y5h262ifqfkyi1s";
       libraryHaskellDepends = [
         array
         base
@@ -190542,8 +191501,8 @@ self: {
       pname = "diagrams-gtk";
       version = "1.4";
       sha256 = "1sga2wwkircjgryd4pn9i0wvvcnh3qnhpxas32crpdq939idwsxn";
-      revision = "6";
-      editedCabalFile = "0fiv5w3pk8rbj6d28qyay13h25px7fs1flzqdriz1n74f6prnj98";
+      revision = "7";
+      editedCabalFile = "065hmxb3hhaa7g1xbay0wa29zcyivxrp289l9wrak7pg610ri3j3";
       libraryHaskellDepends = [
         base
         cairo
@@ -190553,8 +191512,6 @@ self: {
       ];
       description = "Backend for rendering diagrams directly to GTK windows";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -191027,6 +191984,8 @@ self: {
       pname = "diagrams-lib";
       version = "1.5";
       sha256 = "0gp9k6cfc62j6rlfiziig6j5shf05d0vbcvss40rzjk8qi012i11";
+      revision = "2";
+      editedCabalFile = "0499yz41prmsixfq2h9virqr9fkn9akllxxf0yc2kqkv7ran2ij9";
       libraryHaskellDepends = [
         active
         adjunctions
@@ -191110,8 +192069,8 @@ self: {
     }:
     mkDerivation {
       pname = "diagrams-pandoc";
-      version = "0.4";
-      sha256 = "164f0k1jk8p604h31wypy2z2jy5x0gfbkbmmrd64c9jp7j71iyc4";
+      version = "0.4.1";
+      sha256 = "1gil467zp3n6wymiw4d492izf1hhac01j4nafmahjh4ybvi840xr";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -191156,9 +192115,7 @@ self: {
       ];
       description = "A Pandoc filter to express diagrams inline using the Haskell EDSL _Diagrams_";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "diagrams-pandoc";
-      broken = true;
     }
   ) { };
 
@@ -191232,6 +192189,8 @@ self: {
       pname = "diagrams-pgf";
       version = "1.5";
       sha256 = "13zm00ayyk6gvlh4l2wdmrdqic386v69i3krylgvrajhdsd050al";
+      revision = "1";
+      editedCabalFile = "0vzi1dim76arwjrh9yqb9l2004ffsir8rws4vx26is5wzxsqf8y1";
       libraryHaskellDepends = [
         base
         bytestring
@@ -191322,8 +192281,8 @@ self: {
       pname = "diagrams-postscript";
       version = "1.5.2";
       sha256 = "08kqhnd5r60kisjraypwjfcri1v4f32rf14js413871pgic4rhy5";
-      revision = "1";
-      editedCabalFile = "0ndvf9nhvgwvwnc0k9in3n83l3jif1nzsyyrmpk5plif590hj1zp";
+      revision = "2";
+      editedCabalFile = "060zkv836i1df97nqkna8fnqkyxv4wgmk7yn74whyf1fii4rf86g";
       libraryHaskellDepends = [
         base
         bytestring
@@ -191447,6 +192406,8 @@ self: {
       pname = "diagrams-rasterific";
       version = "1.5";
       sha256 = "02bq6819a8xxa20kggmg9j5wa72zh4gbcvbpv1b1pzbg57bp2s8k";
+      revision = "1";
+      editedCabalFile = "1f5l5w28kbnajc0kd304fs2h9svc2inb90qbjmqyii30bf0b2n15";
       libraryHaskellDepends = [
         base
         bytestring
@@ -191509,7 +192470,6 @@ self: {
       ];
       description = "reflex backend for diagrams drawing EDSL";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -191645,6 +192605,8 @@ self: {
       pname = "diagrams-svg";
       version = "1.5";
       sha256 = "1g11fvcgx99xg71c9sd6m7pfclnzcfx72alcx3avlb4qzz56wn52";
+      revision = "2";
+      editedCabalFile = "1d7n707vmcbk1l1fi956hagyyzzn3hd11wxyabm1mirv8qxrha0s";
       libraryHaskellDepends = [
         base
         base64-bytestring
@@ -192778,8 +193740,8 @@ self: {
       pname = "digestive-functors";
       version = "0.8.4.2";
       sha256 = "0x0mh43rli77vqs9bpqd85w5wwr68qchfl5086nn137358583lrn";
-      revision = "2";
-      editedCabalFile = "1qi4ck718ly1gahlbw28fnc9znrmdxb4415kv6wjwnhlf9sp0np9";
+      revision = "3";
+      editedCabalFile = "0r5vaj2yn96nla750r7hh8ppgbkfhj4r4qb9c9s23dbg62mp8bls";
       libraryHaskellDepends = [
         base
         bytestring
@@ -194912,8 +195874,8 @@ self: {
     }:
     mkDerivation {
       pname = "discord-haskell";
-      version = "1.17.1";
-      sha256 = "1lw1n8m297ad0rcbn48ysg85l35sg5bh3gwbnm2698cd051b4yad";
+      version = "1.18.0";
+      sha256 = "0g3xlhjfqslv6565fgzq0m0qdsf50kv9m5shb71yr4hwvar4w7qc";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -194950,8 +195912,6 @@ self: {
       ];
       description = "Write bots for Discord in Haskell";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -195389,8 +196349,8 @@ self: {
       pname = "discrimination";
       version = "0.5";
       sha256 = "1qq7fs1dsfqgf4969gksqcp3swcx0wbzdh66a89fv78k6y94g0pc";
-      revision = "4";
-      editedCabalFile = "1m4sv7mdqdm5xx5khbyq0il3dn5isg575vgn1akb283l2jkz4v1g";
+      revision = "5";
+      editedCabalFile = "1pbnj7jzxxrd7s7nqmwmmxhw4pyrwxnsdx7xpw63240jb9f1cg8f";
       libraryHaskellDepends = [
         array
         base
@@ -198783,8 +199743,8 @@ self: {
     }:
     mkDerivation {
       pname = "dobutokO2";
-      version = "0.45.2.0";
-      sha256 = "19b9nyl2xhl0ha5imz0h7n5szydbvvv9gn4ji7ycb9xazq2h6jjk";
+      version = "0.45.3.0";
+      sha256 = "0cc73lsi8vp08v04ziwszk2wvszr2n3yn39n14f2f1j8jkw175zx";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -199721,7 +200681,7 @@ self: {
     }
   ) { };
 
-  "doctest_0_24_0" = callPackage (
+  "doctest_0_24_2" = callPackage (
     {
       mkDerivation,
       base,
@@ -199748,8 +200708,8 @@ self: {
     }:
     mkDerivation {
       pname = "doctest";
-      version = "0.24.0";
-      sha256 = "1cylb84kmlw7a38xnfyx0sxcpgahmfm7bsbv0vf2x3slsgz597kx";
+      version = "0.24.2";
+      sha256 = "1dpffnr24zaricmkwc13npap569crwwfha1w9vz3fhywmh0dnfjk";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -199923,10 +200883,8 @@ self: {
     }:
     mkDerivation {
       pname = "doctest-exitcode-stdio";
-      version = "0.0";
-      sha256 = "1g3c7yrqq2mwqbmvs8vkx1a3cf0p0x74b7fnn344dsk7bsfpgv0x";
-      revision = "2";
-      editedCabalFile = "0gfnxkbm126m0d4pnqgl5ca6ab8x5p1vpbxjxgz1sxczablsmk5b";
+      version = "0.0.0.1";
+      sha256 = "0kg5xiw4giyvqpcj6cxqqnysvixhxlwm0pbg3qks8dzwb5w79dvk";
       libraryHaskellDepends = [
         base
         doctest-lib
@@ -199956,6 +200914,8 @@ self: {
       pname = "doctest-extract";
       version = "0.1.2";
       sha256 = "1dizs0r9pdankbv5ijfgqva5ha8p5xxl7x8y1sjql6h7ch8pz0p6";
+      revision = "1";
+      editedCabalFile = "1m71h2iwizh9rms2dq29wwzbsfz8qzqw7q8vldpmk7nm1572rhss";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -200070,6 +201030,92 @@ self: {
       doHaddock = false;
       description = "Test interactive Haskell examples";
       license = lib.licenses.mit;
+    }
+  ) { };
+
+  "doctest-parallel_0_4" = callPackage (
+    {
+      mkDerivation,
+      base,
+      base-compat,
+      Cabal,
+      code-page,
+      containers,
+      deepseq,
+      directory,
+      exceptions,
+      filepath,
+      ghc,
+      ghc-exactprint,
+      ghc-paths,
+      Glob,
+      hspec,
+      hspec-core,
+      HUnit,
+      mockery,
+      process,
+      QuickCheck,
+      random,
+      setenv,
+      silently,
+      stringbuilder,
+      syb,
+      template-haskell,
+      transformers,
+      unordered-containers,
+    }:
+    mkDerivation {
+      pname = "doctest-parallel";
+      version = "0.4";
+      sha256 = "1y907fg2y7ayddwv38rjv6nyc18w682dxwkq3msqnlkddglqlxfx";
+      libraryHaskellDepends = [
+        base
+        base-compat
+        Cabal
+        code-page
+        containers
+        deepseq
+        directory
+        exceptions
+        filepath
+        ghc
+        ghc-exactprint
+        ghc-paths
+        Glob
+        process
+        random
+        syb
+        template-haskell
+        transformers
+        unordered-containers
+      ];
+      testHaskellDepends = [
+        base
+        base-compat
+        code-page
+        containers
+        deepseq
+        directory
+        exceptions
+        filepath
+        ghc
+        ghc-paths
+        hspec
+        hspec-core
+        HUnit
+        mockery
+        process
+        QuickCheck
+        setenv
+        silently
+        stringbuilder
+        syb
+        transformers
+      ];
+      doHaddock = false;
+      description = "Test interactive Haskell examples";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -200575,8 +201621,8 @@ self: {
     }:
     mkDerivation {
       pname = "dollaridoos";
-      version = "0.1.0.0";
-      sha256 = "1pipbyfpny8mq540rpfkgkwbc3mc13yf6xm1h9vxm0fnaa8kcbw9";
+      version = "0.2.0.0";
+      sha256 = "09hbm1dkgg8qb4y22hbqwmy858nbaxjn9vizv7z58gd2756gia7s";
       libraryHaskellDepends = [
         base
         profunctors
@@ -200697,8 +201743,6 @@ self: {
       ];
       description = "Simple monadic DOM parser";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -201825,8 +202869,8 @@ self: {
     }:
     mkDerivation {
       pname = "double-x-encoding";
-      version = "1.2.1";
-      sha256 = "0sg8sh9a1krzfhdwxcd3ja56kzr6hif11s4iqicrdqz3qgi905ia";
+      version = "1.2.2";
+      sha256 = "0wzawzwsw2dkmw5yvnva8la6v2iwr5ni353imi0qmsgssvg0va6s";
       libraryHaskellDepends = [
         base
         Cabal-syntax
@@ -201839,8 +202883,6 @@ self: {
       ];
       description = "Encoding scheme to encode any Unicode string with only [0-9a-zA-Z_]";
       license = lib.licenses.isc;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -203719,8 +204761,8 @@ self: {
       pname = "dsp";
       version = "0.2.5.2";
       sha256 = "0inar9c0n4x0li9c7krr17qv7zc49162wchhyn6ix7adni8j92z0";
-      revision = "2";
-      editedCabalFile = "1926z07yp9cm7hv10nklcf7kg5310g3i15kjvfamspj0dyai2zix";
+      revision = "3";
+      editedCabalFile = "059wipnkc0a70abi0ywccs3yma109lqjwnpgfz5zach4dia879cp";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -204083,8 +205125,8 @@ self: {
       pname = "dual-tree";
       version = "0.2.3.1";
       sha256 = "19nm34d166fhlkk7npx0iq9kbx7300a82bg75q1sx98jqfa4nffh";
-      revision = "4";
-      editedCabalFile = "0cbh0k0qqlbchzvh2yw1x3v5lab0gzmi2bk3y02j23qxr09nw3hm";
+      revision = "5";
+      editedCabalFile = "0ihx1l9s864z4pvqkahy0ch6k4fqrz4yzb0dqwrnagsa2akbz9c4";
       libraryHaskellDepends = [
         base
         monoid-extras
@@ -204404,8 +205446,8 @@ self: {
       pname = "dumb-cas";
       version = "0.2.1.1";
       sha256 = "0rqh1sy500gbgqr69z220yb8g7gp117z0iw1kly9zxqhrzn3sv9f";
-      revision = "1";
-      editedCabalFile = "031hcc34r20gpvsicllwcvvzirx2bm5nsdabp75a0m05rj3wzmvv";
+      revision = "2";
+      editedCabalFile = "0gg7yxb8r8f53pw6j33ifm9l5a934q7x261kbydj1kf8zbq0pwfd";
       libraryHaskellDepends = [
         base
         containers
@@ -204421,8 +205463,6 @@ self: {
       ];
       description = "A computer “algebra” system that knows nothing about algebra, at the core";
       license = lib.licenses.gpl3Only;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -205140,8 +206180,8 @@ self: {
     }:
     mkDerivation {
       pname = "dwergaz";
-      version = "0.3.0.2";
-      sha256 = "0849adznjgfg4z1llq5kfwi3ypjj9bj1jw7anax6g86izzvs75jj";
+      version = "0.3.1.0";
+      sha256 = "1c40js81v95hl90zv7nbsmdn8z05s8f2arjhzvsbimckvjrg03x9";
       libraryHaskellDepends = [
         base
         pretty
@@ -208607,8 +209647,8 @@ self: {
     }:
     mkDerivation {
       pname = "effect-stack";
-      version = "0.3";
-      sha256 = "08zalj8svp78ykqbf5nhd6khgygz8dplcvjd19w3hvgm08y4kxqi";
+      version = "0.3.0.1";
+      sha256 = "04y5rqvjzz5fsvlkwqwjlwngz3j3p83anzh77d7fbmkii8fb9g87";
       libraryHaskellDepends = [
         base
         constraints
@@ -208617,8 +209657,6 @@ self: {
       ];
       description = "Reducing the pain of transformer stacks with duplicated effects";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -208688,6 +209726,73 @@ self: {
     }
   ) { };
 
+  "effectful_2_6_0_0" = callPackage (
+    {
+      mkDerivation,
+      async,
+      base,
+      bytestring,
+      containers,
+      directory,
+      effectful-core,
+      exceptions,
+      lifted-base,
+      primitive,
+      process,
+      safe-exceptions,
+      stm,
+      strict-mutable-base,
+      tasty,
+      tasty-bench,
+      tasty-hunit,
+      text,
+      time,
+      unix,
+      unliftio,
+    }:
+    mkDerivation {
+      pname = "effectful";
+      version = "2.6.0.0";
+      sha256 = "1k850pgslnfdhfwqcwr4hv2ymab4cszklrh4rxmwhwixrbb7m3l8";
+      libraryHaskellDepends = [
+        async
+        base
+        bytestring
+        directory
+        effectful-core
+        process
+        stm
+        strict-mutable-base
+        time
+        unliftio
+      ];
+      testHaskellDepends = [
+        base
+        containers
+        effectful-core
+        exceptions
+        lifted-base
+        primitive
+        safe-exceptions
+        strict-mutable-base
+        tasty
+        tasty-hunit
+        unliftio
+      ];
+      benchmarkHaskellDepends = [
+        async
+        base
+        tasty-bench
+        text
+        unix
+        unliftio
+      ];
+      description = "An easy to use, performant extensible effects library";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "effectful-core" = callPackage (
     {
       mkDerivation,
@@ -208721,6 +209826,40 @@ self: {
     }
   ) { };
 
+  "effectful-core_2_6_0_0" = callPackage (
+    {
+      mkDerivation,
+      base,
+      containers,
+      deepseq,
+      exceptions,
+      monad-control,
+      primitive,
+      strict-mutable-base,
+      transformers-base,
+      unliftio-core,
+    }:
+    mkDerivation {
+      pname = "effectful-core";
+      version = "2.6.0.0";
+      sha256 = "1zi1cgnyfzz5csml8saf9zxixrc7q074ywgh0cjd5k2v3zj79rw1";
+      libraryHaskellDepends = [
+        base
+        containers
+        deepseq
+        exceptions
+        monad-control
+        primitive
+        strict-mutable-base
+        transformers-base
+        unliftio-core
+      ];
+      description = "An easy to use, performant extensible effects library";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "effectful-plugin" = callPackage (
     {
       mkDerivation,
@@ -208747,6 +209886,34 @@ self: {
       ];
       description = "A GHC plugin for improving disambiguation of effects";
       license = lib.licenses.bsd3;
+    }
+  ) { };
+
+  "effectful-plugin_2_0_0_0" = callPackage (
+    {
+      mkDerivation,
+      base,
+      containers,
+      effectful-core,
+      ghc,
+    }:
+    mkDerivation {
+      pname = "effectful-plugin";
+      version = "2.0.0.0";
+      sha256 = "11xy98k20r9bw2436digcn3mjdk5qlf12i0h7d0xizsqsdazyvy6";
+      libraryHaskellDepends = [
+        base
+        containers
+        effectful-core
+        ghc
+      ];
+      testHaskellDepends = [
+        base
+        effectful-core
+      ];
+      description = "A GHC plugin for improving disambiguation of effects";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -208820,6 +209987,7 @@ self: {
       blockfrost-api,
       blockfrost-client,
       bytestring,
+      Diff,
       directory,
       effectful,
       effectful-core,
@@ -208850,8 +210018,8 @@ self: {
     }:
     mkDerivation {
       pname = "effectful-zoo";
-      version = "0.0.5.0";
-      sha256 = "09qscfnbv1vfgj0f7nfscahqc36q5pr2x6fxar9mivh4zfpwi6cs";
+      version = "0.0.6.0";
+      sha256 = "15zv1nj48dl19cawyzcamia1r4jj02k2zy0zlv0fz6981k2m610y";
       isLibrary = false;
       isExecutable = false;
       libraryHaskellDepends = [
@@ -208866,6 +210034,7 @@ self: {
         blockfrost-api
         blockfrost-client
         bytestring
+        Diff
         directory
         effectful
         effectful-core
@@ -209679,15 +210848,13 @@ self: {
       profunctors,
       QuickCheck,
       semigroupoids,
-      test-framework,
-      test-framework-quickcheck2,
+      tasty,
+      tasty-quickcheck,
     }:
     mkDerivation {
       pname = "either";
-      version = "5.0.2";
-      sha256 = "1gl748ia68bldbqb2fl7vjv44g0y8ivn659fjmy1qyypgyb5p95z";
-      revision = "2";
-      editedCabalFile = "1lx6ls938vssg75ib2fr1ww4nsig2rkhjc6x57yfinx1yb9r62vz";
+      version = "5.0.3";
+      sha256 = "00a8h2jgrpqdlsi8vjrm2qa6rmw33ksirxv9s6i90nlmhhg6jrkd";
       libraryHaskellDepends = [
         base
         bifunctors
@@ -209698,8 +210865,8 @@ self: {
       testHaskellDepends = [
         base
         QuickCheck
-        test-framework
-        test-framework-quickcheck2
+        tasty
+        tasty-quickcheck
       ];
       description = "Combinators for working with sums";
       license = lib.licenses.bsd3;
@@ -210044,18 +211211,18 @@ self: {
       mkDerivation,
       base,
       containers,
+      ghc-prim,
       text,
       unordered-containers,
     }:
     mkDerivation {
       pname = "ekg-core";
-      version = "0.1.1.8";
-      sha256 = "028c3g1fz0rfxpfn98wxxmklnxx3szwvjxl9n9ls2w011vqslvia";
-      revision = "1";
-      editedCabalFile = "1lwss6aha8bjmjb3xji58jznca7k7nss76qva5pihgb20j7xs7vi";
+      version = "0.1.2.0";
+      sha256 = "12d4xzkdczbrmhhpgymf9brjn0kpq5645dq57xw05sylalfyslzz";
       libraryHaskellDepends = [
         base
         containers
+        ghc-prim
         text
         unordered-containers
       ];
@@ -215057,8 +216224,6 @@ self: {
       ];
       description = "Safe helpers for accessing and modifying environment variables";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -216288,8 +217453,8 @@ self: {
     }:
     mkDerivation {
       pname = "erebos-tester";
-      version = "0.3.1";
-      sha256 = "1qwhxhd8ihk20gwddfj3cj9ag8s9kaj3i5aynjbccx7s24chwmfv";
+      version = "0.3.3";
+      sha256 = "0xcwijr034dw5s4f6jyb727449wayyd31lv8afmfr49i0jmwhgay";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -217192,6 +218357,79 @@ self: {
         HUnit
         test-framework
         test-framework-hunit
+      ];
+      description = "A monad for expressing SAT or QSAT problems using observable sharing";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { };
+
+  "ersatz_0_6" = callPackage (
+    {
+      mkDerivation,
+      array,
+      attoparsec,
+      base,
+      bytestring,
+      containers,
+      data-default,
+      fail,
+      lens,
+      mtl,
+      optparse-applicative,
+      parsec,
+      process,
+      semigroups,
+      streams,
+      tasty,
+      tasty-hunit,
+      temporary,
+      transformers,
+      unordered-containers,
+    }:
+    mkDerivation {
+      pname = "ersatz";
+      version = "0.6";
+      sha256 = "05wg6hvrxijdw6pnzpzdcf85ybjdhax731f70gxl1hvwfllrp43j";
+      isLibrary = true;
+      isExecutable = true;
+      enableSeparateDataOutput = true;
+      libraryHaskellDepends = [
+        array
+        attoparsec
+        base
+        bytestring
+        containers
+        data-default
+        lens
+        mtl
+        process
+        semigroups
+        streams
+        temporary
+        transformers
+        unordered-containers
+      ];
+      executableHaskellDepends = [
+        array
+        base
+        bytestring
+        containers
+        fail
+        lens
+        mtl
+        optparse-applicative
+        parsec
+        semigroups
+      ];
+      testHaskellDepends = [
+        array
+        base
+        containers
+        data-default
+        tasty
+        tasty-hunit
       ];
       description = "A monad for expressing SAT or QSAT problems using observable sharing";
       license = lib.licenses.bsd3;
@@ -220254,10 +221492,8 @@ self: {
     }:
     mkDerivation {
       pname = "eventlog2html";
-      version = "0.11.1";
-      sha256 = "1rfyw285g48c7dck8kjykx9n4brw7ngm275n64g1wwwkm4ybn43n";
-      revision = "1";
-      editedCabalFile = "0kxb0990f8x394j2l7y5y2xz43lqdlm4bc6gihfqnkc6w5qsqhji";
+      version = "0.12.0";
+      sha256 = "1jbp46hcx4kcnkln9vd8b36fjwhxlmlcv08narr6w5bfxz1dpzy6";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -221654,25 +222890,23 @@ self: {
     }
   ) { };
 
-  "exceptions_0_10_9" = callPackage (
+  "exceptions_0_10_10" = callPackage (
     {
       mkDerivation,
       base,
       mtl,
       QuickCheck,
       stm,
+      tasty,
+      tasty-hunit,
+      tasty-quickcheck,
       template-haskell,
-      test-framework,
-      test-framework-hunit,
-      test-framework-quickcheck2,
       transformers,
     }:
     mkDerivation {
       pname = "exceptions";
-      version = "0.10.9";
-      sha256 = "0h5y2rqg7kz4ic59n5i7619766mzfpqcdill3l712nihs3q2nk4v";
-      revision = "1";
-      editedCabalFile = "11p0d1gd3ybgbyplhr18wy2k7cy3hf6ab288ymy3ddayc4a927k6";
+      version = "0.10.10";
+      sha256 = "1cddmj2y5h2hqjgmk14c698g8hhq0x2rycdl5vgz8vvzzsg83zq8";
       libraryHaskellDepends = [
         base
         mtl
@@ -221685,10 +222919,10 @@ self: {
         mtl
         QuickCheck
         stm
+        tasty
+        tasty-hunit
+        tasty-quickcheck
         template-haskell
-        test-framework
-        test-framework-hunit
-        test-framework-quickcheck2
         transformers
       ];
       description = "Extensible optionally-pure exceptions";
@@ -222872,8 +224106,8 @@ self: {
     }:
     mkDerivation {
       pname = "exotic-list-monads";
-      version = "1.1.1";
-      sha256 = "063nmcqp9swzmhbdbdvl63kll1mqw3gywwrzx64s5hdk893rzkrf";
+      version = "1.2.0";
+      sha256 = "1wxdhh869v69schj88xz9anzmj4qly3wrh8jmkwga6h5krhvqkgh";
       libraryHaskellDepends = [ base ];
       testHaskellDepends = [
         base
@@ -222884,6 +224118,8 @@ self: {
       testToolDepends = [ hspec-discover ];
       description = "Non-standard monads on lists and non-empty lists";
       license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -224043,8 +225279,10 @@ self: {
     }:
     mkDerivation {
       pname = "extended-reals";
-      version = "0.2.6.0";
-      sha256 = "0cy5fb6b9kidxqadpymy0pqvswlsqxwxqqhfx9di1l66ynks2b6z";
+      version = "0.2.7.0";
+      sha256 = "0q9k3fl8n30mlsv1c459470bjd4bqyg0vqycjc76qkzxwljl6pwk";
+      revision = "1";
+      editedCabalFile = "1w69ym1cpsdxh7344j6j0kabrdazfx7n9yzqgxcjplsd92gwr97k";
       libraryHaskellDepends = [
         base
         deepseq
@@ -224574,8 +225812,8 @@ self: {
       pname = "extensions";
       version = "0.1.0.3";
       sha256 = "1fks1yfdk0zjc1vccj3nr6li09j64cq6b6x9s5mi8qrsv5igbzlm";
-      revision = "1";
-      editedCabalFile = "1nd8zmxqlwnc3ksm13ld5d1rr6vhdi9dykp42mfk5lim7iyw3lj6";
+      revision = "2";
+      editedCabalFile = "0ph3qpvqdva8wjpxla4i188ib2pgx79hd3rrgrjzpp1ch5a1disv";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -226526,8 +227764,8 @@ self: {
     }:
     mkDerivation {
       pname = "fast-logger";
-      version = "3.2.5";
-      sha256 = "0cddv18k0n1hdbjf0szqq7pl5r0h4srzxy8pmr66a4pc1w410lii";
+      version = "3.2.6";
+      sha256 = "1hy5cczg64q6cafahfcfjsij48w80zskgjnn3ks0w5w4vqiccrmx";
       libraryHaskellDepends = [
         array
         auto-update
@@ -227565,6 +228803,7 @@ self: {
       mkDerivation,
       aeson,
       attoparsec,
+      attoparsec-aeson,
       base,
       bytestring,
       conduit,
@@ -227591,11 +228830,12 @@ self: {
     }:
     mkDerivation {
       pname = "fb";
-      version = "2.1.1.1";
-      sha256 = "18hqmhfzniydmxwi8b21iz04pc6x8hdy8pj6960ihrk20ddkih3d";
+      version = "2.1.1.2";
+      sha256 = "10vcqr2nbkr86jwkkvhzgc5m35wg5kncx2ci3z9h412hg5ca7xnn";
       libraryHaskellDepends = [
         aeson
         attoparsec
+        attoparsec-aeson
         base
         bytestring
         conduit
@@ -227635,8 +228875,6 @@ self: {
       ];
       description = "Bindings to Facebook's API";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -227720,6 +228958,7 @@ self: {
           gflags,
           ghc,
           ghci,
+          glog,
           hashable,
           haskell-src-exts,
           hspec,
@@ -227729,7 +228968,6 @@ self: {
           json,
           lens,
           libevent,
-          libglog,
           lifted-base,
           mangle,
           monad-control,
@@ -227817,8 +229055,8 @@ self: {
             double-conversion
             fmt
             gflags
+            glog
             libevent
-            libglog
           ];
           testHaskellDepends = [
             aeson
@@ -227860,8 +229098,8 @@ self: {
         inherit (pkgs) double-conversion;
         inherit (pkgs) fmt;
         inherit (pkgs) gflags;
+        inherit (pkgs) glog;
         inherit (pkgs) libevent;
-        libglog = null;
       };
 
   "fbmessenger-api" = callPackage (
@@ -227989,8 +229227,8 @@ self: {
     }:
     mkDerivation {
       pname = "fbrnch";
-      version = "1.6.2";
-      sha256 = "0yqpxma3qgdkacbabaffz0498phl79yvn2pbhn10gb6f18lzxcsf";
+      version = "1.7.1";
+      sha256 = "1xsq70xpd0qgz0krlmm31b821ir94sc8qa0qpshjlcfja882p11l";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -229043,16 +230281,43 @@ self: {
     }
   ) { };
 
+  "fedora-releases_0_3_0" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bodhi,
+      cached-json-file,
+      extra,
+      safe,
+    }:
+    mkDerivation {
+      pname = "fedora-releases";
+      version = "0.3.0";
+      sha256 = "1lipp022kxj72i9d25f8if4dppa706zvb1a62lx3gw1xw1p55j8b";
+      libraryHaskellDepends = [
+        aeson
+        base
+        bodhi
+        cached-json-file
+        extra
+        safe
+      ];
+      description = "Library for Fedora release versions";
+      license = lib.licenses.gpl3Only;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "fedora-repoquery" = callPackage (
     {
       mkDerivation,
       base,
-      bodhi,
-      cached-json-file,
       case-insensitive,
       curl,
       directory,
       extra,
+      fedora-releases,
       filepath,
       Glob,
       regex-compat,
@@ -229065,18 +230330,17 @@ self: {
     }:
     mkDerivation {
       pname = "fedora-repoquery";
-      version = "0.7.1";
-      sha256 = "1jz8v914s7janr6xyk6sf2c0fxfw2c5d7shc08ks62qlvg8qbs8c";
+      version = "0.7.3";
+      sha256 = "1sdyvbvrh1z32y8hsbfwzyrffl57niri0rgpp580syh11l621sj1";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
         base
-        bodhi
-        cached-json-file
         case-insensitive
         curl
         directory
         extra
+        fedora-releases
         filepath
         Glob
         regex-compat
@@ -229156,8 +230420,8 @@ self: {
       pname = "feed";
       version = "1.3.2.1";
       sha256 = "0marh7qmggq1z5339nid3gil7k786d3yk79b0rwfkxxaxmr41xd8";
-      revision = "4";
-      editedCabalFile = "1ihkckkn5xpk4mmgbxp0c3ik2rgzx3r60vzxmzgmw83a77ghjgmy";
+      revision = "5";
+      editedCabalFile = "0y9f6dcgmmfzgxq9dbgs6lypd6pmcb0x1qvvkj20l74ba9k30v96";
       enableSeparateDataOutput = true;
       libraryHaskellDepends = [
         base
@@ -229589,8 +230853,8 @@ self: {
     }:
     mkDerivation {
       pname = "feedback";
-      version = "0.1.0.5";
-      sha256 = "0g15yinnxh8x0dknhfjpy88z5bzary8midj5qskrbkyqbvkni20l";
+      version = "0.2.0.0";
+      sha256 = "04qd87ifd4sqc71r0h27i9hld9ncqxhxfdgrn1flc9njmnbmi8yr";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -231906,6 +233170,8 @@ self: {
       pname = "filepath";
       version = "1.5.4.0";
       sha256 = "1bswvf1hrsslb8xlwvsccz12h5habrdpqq4zgcyjg4zm6b28dajl";
+      revision = "1";
+      editedCabalFile = "0b7hmqygr29ppazwbmrrl60bshpqg7zhvzq5g4wl3pgj19iw55ql";
       libraryHaskellDepends = [
         base
         bytestring
@@ -232168,8 +233434,8 @@ self: {
       pname = "filestore";
       version = "0.6.5";
       sha256 = "0z29273vdqjsrj4vby0gp7d12wg9nkzq9zgqg18db0p5948jw1dh";
-      revision = "2";
-      editedCabalFile = "1m6qi647v475gcim8nfb6cgahhc99rszc8k1z2mpzm797qxg9xbs";
+      revision = "3";
+      editedCabalFile = "003vfb6j47vihjba1py9ls9l269gkg89rf732gb5lwdximxg7wf0";
       libraryHaskellDepends = [
         base
         bytestring
@@ -232458,8 +233724,8 @@ self: {
       pname = "filtrable";
       version = "0.1.6.0";
       sha256 = "058jl7wjaxzvcayc9qzpikxvi9x42civ4sb02jh66rcvpndbfh5y";
-      revision = "1";
-      editedCabalFile = "05xz53br6bsdfcv71js7sq4agb8xidl4zvv3f8xfls2a9rvb1jw0";
+      revision = "2";
+      editedCabalFile = "0ajsh1600c8rkgrallz0m2b3cwqy76yy52niikx2prj0z7k7lbv6";
       libraryHaskellDepends = [
         base
         containers
@@ -232832,6 +234098,7 @@ self: {
     {
       mkDerivation,
       base,
+      deepseq,
       HUnit,
       QuickCheck,
       test-framework,
@@ -232840,11 +234107,15 @@ self: {
     }:
     mkDerivation {
       pname = "fingertree";
-      version = "0.1.5.0";
-      sha256 = "0wdzpli8bpgk8lrsp105zb0y5gn1r2029laclvhz264bza93q9pk";
-      libraryHaskellDepends = [ base ];
+      version = "0.1.6.1";
+      sha256 = "0kx2nv9cddghcx4i413iq8078gqa20yrgpja6js4dl3wpsq47yzm";
+      libraryHaskellDepends = [
+        base
+        deepseq
+      ];
       testHaskellDepends = [
         base
+        deepseq
         HUnit
         QuickCheck
         test-framework
@@ -233053,8 +234324,8 @@ self: {
     }:
     mkDerivation {
       pname = "finite";
-      version = "1.4.1.2";
-      sha256 = "10hnqz4klgrpfbvla07h8yghpv22bsyijf0cibfzwl9j779vb4nc";
+      version = "1.5.0.0";
+      sha256 = "02fw2m1qn4rpz25jnd9vb16417srpzwz0lhzin04dwc6gjq74i8g";
       libraryHaskellDepends = [
         array
         base
@@ -236456,8 +237727,8 @@ self: {
     }:
     mkDerivation {
       pname = "flow";
-      version = "2.0.0.7";
-      sha256 = "18v7vlcc3na743i6755zk7qjqqvaxnd1lb68fci1z3wzyjxjcxml";
+      version = "2.0.0.9";
+      sha256 = "1cvz65jq882f3ip9fwifdjjf6hx9vm1w21403z3hiiwc7i39zxqb";
       libraryHaskellDepends = [ base ];
       testHaskellDepends = [
         base
@@ -238066,17 +239337,15 @@ self: {
       QuickCheck,
       quickcheck-instances,
       tagged,
+      tasty,
       tasty-bench,
-      test-framework,
-      test-framework-quickcheck2,
+      tasty-quickcheck,
       transformers,
     }:
     mkDerivation {
       pname = "foldable1-classes-compat";
-      version = "0.1.1";
-      sha256 = "17xmc3525crnd86rrl2c50rfnhibwh5xbqrnmvzvyns4d3l4vvdg";
-      revision = "2";
-      editedCabalFile = "0m1cd2g2f2983nb9h4d3amq058k2yri6hbh5v026y5lxhg9fq0i8";
+      version = "0.1.2";
+      sha256 = "1n6a8ga07gdwnhy485qzy23algcmnzppfcxfy8c6qipamn4hw5p3";
       libraryHaskellDepends = [
         base
         ghc-prim
@@ -238087,8 +239356,8 @@ self: {
         containers
         QuickCheck
         quickcheck-instances
-        test-framework
-        test-framework-quickcheck2
+        tasty
+        tasty-quickcheck
         transformers
       ];
       benchmarkHaskellDepends = [
@@ -240024,8 +241293,8 @@ self: {
     }:
     mkDerivation {
       pname = "fortran-src";
-      version = "0.16.5";
-      sha256 = "1adqczpb1d2zclgvg03z3izcmmncgxj7bff9zz5p8zc77v8865m4";
+      version = "0.16.7";
+      sha256 = "12d46b232aks34nvb3jc66dhz0nxq3z8ngbs6rfn71paj2mfj5cv";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -241866,8 +243135,8 @@ self: {
     }:
     mkDerivation {
       pname = "freckle-app";
-      version = "1.23.1.0";
-      sha256 = "0ik1ay4vm0qw5jg1zvbdfl1p0gxawlrah9lphg9y2cqq48yj4zql";
+      version = "1.23.3.0";
+      sha256 = "0405dj2isvhgib85km2fppq32aan5sghsny2ilwv39pr2g6kkwkm";
       libraryHaskellDepends = [
         aeson
         annotated-exception
@@ -242015,8 +243284,8 @@ self: {
     }:
     mkDerivation {
       pname = "freckle-env";
-      version = "0.0.1.1";
-      sha256 = "1vvmczv4z4gpp5h3k1ws6ghv6am7xdgx5l3v11bnwyp21fzmzp3n";
+      version = "0.0.1.2";
+      sha256 = "101rp0kzjhhhj08a77ysn1d2kadyg9fpjc758w0jmg72cp211vl2";
       libraryHaskellDepends = [
         base
         dotenv
@@ -242031,10 +243300,8 @@ self: {
         base
         doctest
       ];
-      description = "Some extension to the envparse library";
+      description = "Some extensions to the envparse library";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -242110,8 +243377,8 @@ self: {
     }:
     mkDerivation {
       pname = "freckle-http";
-      version = "0.1.0.0";
-      sha256 = "1a8isx1z9injzmbcfj19i4m8cccbl754chx8ayxww76ahd1s6v81";
+      version = "0.2.0.0";
+      sha256 = "0an1bqpsslr8zlpmvvp5hjw5fwpwqjr6w0m4ib7sa1d0218xzdnz";
       libraryHaskellDepends = [
         aeson
         annotated-exception
@@ -242192,8 +243459,8 @@ self: {
     }:
     mkDerivation {
       pname = "freckle-kafka";
-      version = "0.0.0.2";
-      sha256 = "1g2ynl6sxrj42jjjzf4y0bkh54alnd93c6gclgg0kqs593k0a2qx";
+      version = "0.0.0.3";
+      sha256 = "0l123k59jrcpl9hw3ciis22z7y0lrgsi99362zg5slrlmn8fs9nb";
       libraryHaskellDepends = [
         aeson
         annotated-exception
@@ -242215,8 +243482,6 @@ self: {
       ];
       description = "Some extensions to the hw-kafka-client library";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -243231,8 +244496,8 @@ self: {
       pname = "free-vector-spaces";
       version = "0.1.5.2";
       sha256 = "0p0flpai3n9ism9dd3kyf1fa8s8rpb4cc00m3bplb9s8zb6aghpb";
-      revision = "1";
-      editedCabalFile = "1b0c7vifxhnm91wzwy10nzjwxd4dv91zx7jcfmr22qflml89blp7";
+      revision = "3";
+      editedCabalFile = "1nhbj4ch0fayqbd90qzwhlda929rny81422grdqifghqrr1lq4lv";
       libraryHaskellDepends = [
         base
         lens
@@ -243245,6 +244510,8 @@ self: {
       ];
       description = "Instantiate the classes from the vector-space package with types from linear";
       license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -244836,10 +246103,8 @@ self: {
     }:
     mkDerivation {
       pname = "fs-api";
-      version = "0.3.0.1";
-      sha256 = "0yjfldwmxqg4fgcymyb9bb9axwsfsnldnxxfmk54spkmiab8kr49";
-      revision = "1";
-      editedCabalFile = "17z9clqfs0hm8jl2hdgk0jqvjdxm8i4lk0av489nhsj2qp6ikvmy";
+      version = "0.4.0.0";
+      sha256 = "1aw9x4cgflm2fy5ps3cgpwfzgfp7r7r9fps2vkzbqz03gjpql0dm";
       libraryHaskellDepends = [
         base
         bytestring
@@ -244892,6 +246157,7 @@ self: {
       bifunctors,
       bytestring,
       containers,
+      deepseq,
       fs-api,
       generics-sop,
       io-classes,
@@ -244910,10 +246176,8 @@ self: {
     }:
     mkDerivation {
       pname = "fs-sim";
-      version = "0.3.1.0";
-      sha256 = "0qq7fc9b37haz2dcywyxhkszy58i3fr7z8nyrrp16x46v5cs6jwq";
-      revision = "1";
-      editedCabalFile = "1pbpi5hngw723z2nr9zwp9rzfxh1p1q8jk8ln01brm7xf3kkq2pb";
+      version = "0.4.0.0";
+      sha256 = "0wirx3mk2dmjw13adbf4d9qpgx7b9kk0y5my7s3yx1lsm2z9m4pw";
       libraryHaskellDepends = [
         base
         base16-bytestring
@@ -244932,6 +246196,7 @@ self: {
         bifunctors
         bytestring
         containers
+        deepseq
         fs-api
         generics-sop
         io-classes
@@ -245103,8 +246368,8 @@ self: {
     }:
     mkDerivation {
       pname = "fsnotify";
-      version = "0.4.2.0";
-      sha256 = "0nm2wm01r3595pf2k3jmdll1i7q7vzayvxq1k2xxnmvxh0rnak8i";
+      version = "0.4.3.0";
+      sha256 = "0dq0dm4j5f16wpfrgh22001icvknmq4cmjyslakjvkyj7w9yfmnf";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -246415,8 +247680,8 @@ self: {
     }:
     mkDerivation {
       pname = "functor-combinators";
-      version = "0.4.1.3";
-      sha256 = "0123y4n01rga8kb86w74hzjwvz8jfr15c1abkrrngacp60bd25rl";
+      version = "0.4.1.4";
+      sha256 = "1yqfbnwv649viy1qpzvk8f9xip0id1k7q6m0j2ssiapfpig43xys";
       libraryHaskellDepends = [
         assoc
         base
@@ -246461,8 +247726,6 @@ self: {
       ];
       description = "Tools for functor combinator-based program design";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -247572,8 +248835,8 @@ self: {
     }:
     mkDerivation {
       pname = "futhark";
-      version = "0.25.30";
-      sha256 = "0sqglqm2w22wfl3sx4f4657k37f31mkjhl0xw3lxkpaxj187ijak";
+      version = "0.25.31";
+      sha256 = "0sbbc296gzxfib1i0390ipasy4k8dbxkv3nn4615vmg99njdz84p";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -247680,8 +248943,8 @@ self: {
     }:
     mkDerivation {
       pname = "futhark-data";
-      version = "1.1.1.0";
-      sha256 = "010q8mbyy320vw785phczmdjdv55w5i7mdd6q04949lzfzxi3w0f";
+      version = "1.1.2.0";
+      sha256 = "17v16w3085s835iqwn4zhyqybaw13w6h7vmfb1q2339d7xy28z34";
       libraryHaskellDepends = [
         base
         binary
@@ -248513,8 +249776,8 @@ self: {
     }:
     mkDerivation {
       pname = "fxpak";
-      version = "0.1.2";
-      sha256 = "1mrpbz32aczrh5aw550p1vzvj8zqhcnmj574sc012r3z1c0g1cin";
+      version = "0.1.3";
+      sha256 = "1fn88wzhazx9jwddjxq4l4q1xr9g9yl5dsbc9slizb8mnkrkacd9";
       libraryHaskellDepends = [
         base
         bytestring
@@ -248522,8 +249785,6 @@ self: {
       ];
       description = "Interface to the FXPak/FXPak Pro USB interface";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -250823,8 +252084,8 @@ self: {
       pname = "gemini-router";
       version = "0.1.2.0";
       sha256 = "12b5zvs1npqc47jy04dbs2mqy2n7m0pn83ndz0wb4c1x1qygp7sj";
-      revision = "1";
-      editedCabalFile = "0wlzl52x65mg3an0phmp6a9d0dbcyv6vvvc941xfrmx2jydq8v78";
+      revision = "2";
+      editedCabalFile = "1s3mgi37ds7xhlnkmw356zzbp6hikckp0ccn79l5cqhnjaj2213s";
       libraryHaskellDepends = [
         base
         gemini-server
@@ -250834,7 +252095,6 @@ self: {
       ];
       description = "A simple Happstack-style Gemini router";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -250855,8 +252115,8 @@ self: {
       pname = "gemini-server";
       version = "0.3.0.0";
       sha256 = "0s9h0lzxz5yjvz8rzw9mx9dba21171960waaqikj2qbbja0iq3k3";
-      revision = "3";
-      editedCabalFile = "1lg561xjfsa5q5gayipzr4ggragv2nv80i3bg1psg5n8ryijdpdm";
+      revision = "4";
+      editedCabalFile = "1qna0rqyv89l6vl9w4qfz8kx8kd6759ywycw17ssqa5aavdbnwpq";
       libraryHaskellDepends = [
         base
         bytestring
@@ -250870,8 +252130,6 @@ self: {
       ];
       description = "A lightweight server for the Gemini protocol";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -250896,10 +252154,8 @@ self: {
     }:
     mkDerivation {
       pname = "gemini-textboard";
-      version = "0.2.0.1";
-      sha256 = "1yvizcxafq943q9fbz08mq2x50dw9ykdz5vy6hr6ps2g47j4wfa0";
-      revision = "2";
-      editedCabalFile = "1pl0k7skmf3yp2f8mscmfynhkis6dn6hb94qg26kxyr7jpwbcsb8";
+      version = "0.2.0.2";
+      sha256 = "1wr27h2hikv2czgvml4pypkm8rg4qgfc1kf1rmrrlcdjzd67klc0";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -250921,7 +252177,6 @@ self: {
       ];
       description = "A barebones textboard for the Gemini protocol";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "gemini-textboard";
     }
   ) { };
@@ -251519,6 +252774,8 @@ self: {
       pname = "generic-aeson";
       version = "0.2.0.14";
       sha256 = "0ssras2db9fqgyfhhw2pk827xf4dd4g9s9vwj8g85vaqxyvzyd8x";
+      revision = "1";
+      editedCabalFile = "047mgqq08f1zmnw9400b246bjgpg1r5barz53kbqhfqiaq7ybz85";
       libraryHaskellDepends = [
         aeson
         attoparsec
@@ -251532,8 +252789,6 @@ self: {
       ];
       description = "Derivation of Aeson instances using GHC generics";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -251608,8 +252863,8 @@ self: {
     }:
     mkDerivation {
       pname = "generic-case";
-      version = "0.1.1.0";
-      sha256 = "1sqm7rcn7qc2m46xy8rvz08a47ls1qxyd2aivamskd0zy5kfmmm1";
+      version = "0.1.1.1";
+      sha256 = "1f55qbsrwgl0990cnh65dpg81jy14685d38f3p6f8qwb13x4q46p";
       libraryHaskellDepends = [
         base
         generics-sop
@@ -251851,6 +253106,43 @@ self: {
     }
   ) { };
 
+  "generic-diff" = callPackage (
+    {
+      mkDerivation,
+      base,
+      basic-sop,
+      generics-sop,
+      hspec,
+      hspec-discover,
+      QuickCheck,
+      sop-core,
+      text,
+    }:
+    mkDerivation {
+      pname = "generic-diff";
+      version = "0.1.0.0";
+      sha256 = "0wqa9jd2za2jzsm390fzsxfmz8rv3x8d9x3k95d7w7wc7zr57xdf";
+      libraryHaskellDepends = [
+        base
+        generics-sop
+        sop-core
+        text
+      ];
+      testHaskellDepends = [
+        base
+        basic-sop
+        generics-sop
+        hspec
+        QuickCheck
+        sop-core
+        text
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "Generic structural diffs";
+      license = lib.licenses.bsd3;
+    }
+  ) { };
+
   "generic-enum" = callPackage (
     {
       mkDerivation,
@@ -251885,8 +253177,8 @@ self: {
     { mkDerivation, base }:
     mkDerivation {
       pname = "generic-enumeration";
-      version = "0.1.0.3";
-      sha256 = "02ywn0byg4g42hl28mqc07jifj48jxzmnjm4plfdz4pnxs40kwzg";
+      version = "0.1.0.4";
+      sha256 = "0f83fnvmmi4yvdn9i2r1vkpk6cy4lqpxgjv26f380akyf30av90p";
       libraryHaskellDepends = [ base ];
       description = "Generically derived enumerations";
       license = lib.licenses.mit;
@@ -252055,6 +253347,8 @@ self: {
       pname = "generic-lens-lite";
       version = "0.1.1";
       sha256 = "1ldc13g7l5jjgca80c2hymkbgq9pf8b5j4x3dr83kz6wq2p76q12";
+      revision = "1";
+      editedCabalFile = "1wg3qxik9mgd49jkrgzargpncj6d1pg1zy13xg9yck5w4i10rixw";
       libraryHaskellDepends = [ base ];
       testHaskellDepends = [ base ];
       description = "Monomorphic field lens like with generic-lens";
@@ -252066,8 +253360,8 @@ self: {
     { mkDerivation, base }:
     mkDerivation {
       pname = "generic-lexicographic-order";
-      version = "0.1.0.0";
-      sha256 = "096c1fan7isxynyk968llm3p204kgcmh8xp4krnmspz0xvcn7sh0";
+      version = "0.1.0.1";
+      sha256 = "01vylkficx9ylri9200pvqgqc89lm9x4iy3s4bfal96pv8q59knx";
       libraryHaskellDepends = [ base ];
       testHaskellDepends = [ base ];
       description = "Derive Bounded and Enum for sum types and Enum for product types";
@@ -252244,6 +253538,8 @@ self: {
       pname = "generic-optics-lite";
       version = "0.1.1";
       sha256 = "1dd2dw72fyyimnyq8bw57k7lbh0lnjipvk08dyj87h357ykjv3ql";
+      revision = "1";
+      editedCabalFile = "1z3bf20fj03bfp4zigdxzw4v30hmxgwkdzdmgbn4hibpcz2j24p0";
       libraryHaskellDepends = [
         base
         generic-lens-lite
@@ -253792,8 +255088,8 @@ self: {
     }:
     mkDerivation {
       pname = "genvalidity-hspec";
-      version = "1.0.0.3";
-      sha256 = "0z4ykzbww4ydxf6f10hkrlmwbn4mkildbj2r57m8llyih8y51rhd";
+      version = "1.0.0.4";
+      sha256 = "0z9qk1yd3hz7zxbsa6j4xydy962im7ihi1r36n94hcvj5lvi5zsj";
       libraryHaskellDepends = [
         base
         genvalidity
@@ -255419,15 +256715,27 @@ self: {
       base,
       geomancy,
       gl-block,
+      lucid-svg,
+      shower,
+      tasty,
+      tasty-hunit,
     }:
     mkDerivation {
       pname = "geomancy-layout";
-      version = "0.1";
-      sha256 = "0pwd35cydwgp6vv31dz8lwvgqdpa2jjm2lv0cnkgcfgl5lpc22wc";
+      version = "0.1.1";
+      sha256 = "09lbab7x3cqs42jg50yqv5x0acsbc0jm5d707bwd0w1g5cnp87hn";
       libraryHaskellDepends = [
         base
         geomancy
         gl-block
+      ];
+      testHaskellDepends = [
+        base
+        geomancy
+        lucid-svg
+        shower
+        tasty
+        tasty-hunit
       ];
       description = "Geometry and matrix manipulation";
       license = lib.licenses.bsd3;
@@ -255892,7 +257200,7 @@ self: {
     }
   ) { };
 
-  "ghc_9_12_1" =
+  "ghc_9_12_2" =
     callPackage
       (
         {
@@ -255926,8 +257234,8 @@ self: {
         }:
         mkDerivation {
           pname = "ghc";
-          version = "9.12.1";
-          sha256 = "179gp0lqrxhvzc0pyxwmkvxpilm6c201s1pjws3dl8qqyddliiqs";
+          version = "9.12.2";
+          sha256 = "0l5rrnfv933m37dziqaf5iv4nqirig1mfaj037by94s486ggx5f7";
           setupHaskellDepends = [
             base
             Cabal
@@ -255974,28 +257282,6 @@ self: {
         deriveConstants = null;
         genprimopcode = null;
       };
-
-  "ghc-api-compat_8_10_7" = callPackage (
-    {
-      mkDerivation,
-      base,
-      ghc,
-    }:
-    mkDerivation {
-      pname = "ghc-api-compat";
-      version = "8.10.7";
-      sha256 = "1swsly340pj4inmk1l57q4s0dpw8iibl192y1zayvkgc43zky62a";
-      libraryHaskellDepends = [
-        base
-        ghc
-      ];
-      doHaddock = false;
-      description = "GHC-API compatibility helpers";
-      license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
-    }
-  ) { };
 
   "ghc-api-compat" = callPackage (
     {
@@ -256219,8 +257505,8 @@ self: {
       pname = "ghc-compact";
       version = "0.1.0.0";
       sha256 = "03sf8ap1ncjsibp9z7k9xgcsj9s0q3q6l4shf8k7p8dkwpjl1g2h";
-      revision = "5";
-      editedCabalFile = "0f1jbvfnw1c7q43bw952vskrsr6wg9ili30b44w2kdrk764h2idl";
+      revision = "6";
+      editedCabalFile = "1v4mbhxggd8nnl76nhgvi7sngb10pshblvw8a2b41fh5y0ips7pm";
       libraryHaskellDepends = [
         base
         bytestring
@@ -256392,8 +257678,8 @@ self: {
     }:
     mkDerivation {
       pname = "ghc-debug-brick";
-      version = "0.6.0.0";
-      sha256 = "0mmy484sj89g5y69j7lgcczipmmhlra7kmv230kg3380mh3r1ndv";
+      version = "0.7.0.0";
+      sha256 = "06lwx3j9cfyaffqwjmyvv53lhybnz1zyd7djaz2an99d2pp037bp";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -256455,8 +257741,8 @@ self: {
     }:
     mkDerivation {
       pname = "ghc-debug-client";
-      version = "0.6.0.0";
-      sha256 = "0002w48g4fw053vwzdi5l1qaglr6035jnmxajd8i9c1ppz09q8kn";
+      version = "0.7.0.0";
+      sha256 = "03gqzbms7iv06qbcmz2v2zpqz9rsz4in14jf37s574rj3kh1xw0m";
       libraryHaskellDepends = [
         async
         base
@@ -256508,8 +257794,8 @@ self: {
     }:
     mkDerivation {
       pname = "ghc-debug-common";
-      version = "0.6.0.0";
-      sha256 = "1i2212qd7qvighvrb8x7hb6fisg3fb6vr49xgdcv66wrclj9n0hd";
+      version = "0.7.0.0";
+      sha256 = "0nb6d18lkynzas55inx7h60xygj1f5n2hzjiw3zl3j4yhs9pnq6k";
       libraryHaskellDepends = [
         array
         base
@@ -256540,8 +257826,8 @@ self: {
     }:
     mkDerivation {
       pname = "ghc-debug-convention";
-      version = "0.6.0.0";
-      sha256 = "0iwjfqxl0q6kja2zzrv3ypcc39vyc9cfaab83854jd1qi9vffkm9";
+      version = "0.7.0.0";
+      sha256 = "19ir87s3n2k0ijwa0ax6d8p8gpbmf64a5h46k40dbs9h6waij0pa";
       libraryHaskellDepends = [
         base
         directory
@@ -256563,8 +257849,8 @@ self: {
     }:
     mkDerivation {
       pname = "ghc-debug-stub";
-      version = "0.6.0.0";
-      sha256 = "0cajxbz0lfin2vm9cs4ap7h2s4wxynrp606aqbnlj4m5x1yp6fp0";
+      version = "0.7.0.0";
+      sha256 = "0p7x3j5qwc1s4svqmxq1s5vcrjczwm86lml403mdg1xvd2scyn1z";
       libraryHaskellDepends = [
         base
         directory
@@ -256575,6 +257861,76 @@ self: {
       description = "Functions for instrumenting your application so the heap can be analysed with ghc-debug-common";
       license = lib.licenses.bsd3;
       maintainers = [ lib.maintainers.maralorn ];
+    }
+  ) { };
+
+  "ghc-debugger" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      array,
+      async,
+      base,
+      binary,
+      bytestring,
+      containers,
+      dap,
+      directory,
+      exceptions,
+      filepath,
+      ghc,
+      ghci,
+      hie-bios,
+      mtl,
+      process,
+      text,
+      unix,
+    }:
+    mkDerivation {
+      pname = "ghc-debugger";
+      version = "0.4.0.0";
+      sha256 = "0nzmlnhv5liwkibva0djvc06c0d2wwpqa9x4lvpb2snkid0yliyl";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        array
+        base
+        binary
+        bytestring
+        containers
+        directory
+        exceptions
+        filepath
+        ghc
+        ghci
+        hie-bios
+        mtl
+        process
+        unix
+      ];
+      executableHaskellDepends = [
+        aeson
+        async
+        base
+        bytestring
+        containers
+        dap
+        directory
+        exceptions
+        filepath
+        ghc
+        hie-bios
+        mtl
+        process
+        text
+        unix
+      ];
+      testHaskellDepends = [ base ];
+      description = "A step-through machine-interface debugger for GHC Haskell";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "ghc-debug-adapter";
     }
   ) { };
 
@@ -257440,6 +258796,63 @@ self: {
     }
   ) { };
 
+  "ghc-hie" = callPackage (
+    {
+      mkDerivation,
+      array,
+      base,
+      bytestring,
+      containers,
+      deepseq,
+      directory,
+      filepath,
+      ghc,
+      ghc-boot,
+      hspec,
+      hspec-discover,
+      process,
+      QuickCheck,
+      temporary,
+      transformers,
+    }:
+    mkDerivation {
+      pname = "ghc-hie";
+      version = "0.0.2";
+      sha256 = "1z51fbm0n9knqrp01gqd7xx0pkfwyr9kgaginvqmdw45gi8rqhm7";
+      libraryHaskellDepends = [
+        array
+        base
+        bytestring
+        containers
+        deepseq
+        directory
+        filepath
+        ghc
+        ghc-boot
+        transformers
+      ];
+      testHaskellDepends = [
+        array
+        base
+        bytestring
+        containers
+        deepseq
+        directory
+        filepath
+        ghc
+        ghc-boot
+        hspec
+        process
+        QuickCheck
+        temporary
+        transformers
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "HIE-file parsing machinery that supports multiple versions of GHC";
+      license = lib.licenses.mit;
+    }
+  ) { };
+
   "ghc-hotswap" = callPackage (
     {
       mkDerivation,
@@ -257913,7 +259326,7 @@ self: {
     }
   ) { };
 
-  "ghc-lib_9_10_2_20250503" = callPackage (
+  "ghc-lib_9_10_2_20250515" = callPackage (
     {
       mkDerivation,
       alex,
@@ -257942,8 +259355,8 @@ self: {
     }:
     mkDerivation {
       pname = "ghc-lib";
-      version = "9.10.2.20250503";
-      sha256 = "0glpa8jaq31dga6avif4k9yp6vi11xh68qm3vrcrrcs11bj0wjcq";
+      version = "9.10.2.20250515";
+      sha256 = "0ix0pbpn945hdcnha7vklxsamvqqr698yg5xy52p0s6q7shydvn3";
       enableSeparateDataOutput = true;
       libraryHaskellDepends = [
         array
@@ -258209,7 +259622,7 @@ self: {
     }
   ) { };
 
-  "ghc-lib-parser_9_10_2_20250503" = callPackage (
+  "ghc-lib-parser_9_10_2_20250515" = callPackage (
     {
       mkDerivation,
       alex,
@@ -258233,8 +259646,8 @@ self: {
     }:
     mkDerivation {
       pname = "ghc-lib-parser";
-      version = "9.10.2.20250503";
-      sha256 = "04nsz41x0v62nbi3y3x3ilxawr3kzldmd8rlxqxzpj00gdd8jndk";
+      version = "9.10.2.20250515";
+      sha256 = "1wlwgm6596dnsc60j40byw9d1krb3gmvapglz3g8ampjy8scadvb";
       enableSeparateDataOutput = true;
       libraryHaskellDepends = [
         array
@@ -259124,8 +260537,8 @@ self: {
     }:
     mkDerivation {
       pname = "ghc-prof";
-      version = "1.4.1.13";
-      sha256 = "0g85216s10pm515wi0dl95znq3vdac3zvagizg8vy82zfmsgxwcp";
+      version = "1.4.1.14";
+      sha256 = "16zl8x8abkh2fbyzsd6k48vm2na0bbm0cv2b9sfi3jac7mi3v3kq";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -259348,40 +260761,6 @@ self: {
       license = lib.licenses.mit;
       hydraPlatforms = lib.platforms.none;
       broken = true;
-    }
-  ) { };
-
-  "ghc-source-gen_0_4_5_0" = callPackage (
-    {
-      mkDerivation,
-      base,
-      ghc,
-      ghc-paths,
-      QuickCheck,
-      tasty,
-      tasty-hunit,
-      tasty-quickcheck,
-    }:
-    mkDerivation {
-      pname = "ghc-source-gen";
-      version = "0.4.5.0";
-      sha256 = "18v6i0a6j72brwr7zq0j0igmkzigx3w4a6rdhq8cn768vflpflvv";
-      libraryHaskellDepends = [
-        base
-        ghc
-      ];
-      testHaskellDepends = [
-        base
-        ghc
-        ghc-paths
-        QuickCheck
-        tasty
-        tasty-hunit
-        tasty-quickcheck
-      ];
-      description = "Constructs Haskell syntax trees for the GHC API";
-      license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -259971,16 +261350,18 @@ self: {
       base,
       containers,
       ghc,
+      template-haskell,
       transformers,
     }:
     mkDerivation {
       pname = "ghc-tcplugin-api";
-      version = "0.14.0.0";
-      sha256 = "089lw1gjxrk54s1agl5gxkwg49368z6i6m260snz05nfia4m7fak";
+      version = "0.15.0.0";
+      sha256 = "024gwhs575rirrizlriigxvz0b9az2c63vbbdfm3dd4qa5ln3jmq";
       libraryHaskellDepends = [
         base
         containers
         ghc
+        template-haskell
         transformers
       ];
       description = "An API for type-checker plugins";
@@ -260806,6 +262187,68 @@ self: {
     }
   ) { };
 
+  "ghci4luatex" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      cmdargs,
+      containers,
+      hspec,
+      network-simple,
+      process,
+      QuickCheck,
+      stm,
+      text,
+    }:
+    mkDerivation {
+      pname = "ghci4luatex";
+      version = "0.1";
+      sha256 = "1x3kdwxcallnyvssbxaj4scf6rc0f5yx3js1bzzwmi9p3imxj4x8";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        cmdargs
+        containers
+        network-simple
+        process
+        stm
+        text
+      ];
+      executableHaskellDepends = [
+        aeson
+        base
+        bytestring
+        cmdargs
+        containers
+        network-simple
+        process
+        stm
+        text
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        bytestring
+        cmdargs
+        containers
+        hspec
+        network-simple
+        process
+        QuickCheck
+        stm
+        text
+      ];
+      description = "A GHCi session in LaTeX";
+      license = lib.licenses.bsd3;
+      mainProgram = "ghci4luatex";
+    }
+  ) { };
+
   "ghcid" = callPackage (
     {
       mkDerivation,
@@ -260950,8 +262393,8 @@ self: {
     }:
     mkDerivation {
       pname = "ghcide";
-      version = "2.10.0.0";
-      sha256 = "1l8c0gpzbp6lk11zvwby2n7798lnpsc23gb3xvn5yl1kd1x0dk44";
+      version = "2.11.0.0";
+      sha256 = "0d9rvh6xxw8y64f1pdivwdkmi9wqknl4m2n2h3x4rjmqj2al92vs";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -261213,8 +262656,8 @@ self: {
     }:
     mkDerivation {
       pname = "ghcitui";
-      version = "0.4.1.0";
-      sha256 = "05c9s43qhzxc280xycicwrm95kl1jpz14pzlcnv0a29i8589gpdz";
+      version = "0.4.1.1";
+      sha256 = "1s7imyvv7pg3yyrajgl5fqv1q35188ianm8y689mzb5ikbwr5wq4";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -261286,8 +262729,8 @@ self: {
     { mkDerivation }:
     mkDerivation {
       pname = "ghcjs-base";
-      version = "0.8.0.3";
-      sha256 = "1cff0sgcwdas30dgxg9mdab5rk0s1v2qkkb9cr47dl3d5wmc4add";
+      version = "0.8.0.4";
+      sha256 = "081w3234jramsmafnl86v37lwbckr2vc93gr9pdwc31yzni9kbml";
       description = "base library for GHCJS";
       license = lib.licenses.mit;
       platforms = [ "javascript-ghcjs" ];
@@ -261874,8 +263317,8 @@ self: {
     }:
     mkDerivation {
       pname = "ghcup";
-      version = "0.1.50.1";
-      sha256 = "0y0zpzxkxhm6kgwrbzhy167qllkzgyk5wcc3iy3qmbyg7wplb8xy";
+      version = "0.1.50.2";
+      sha256 = "1djhvm1iw5hff0cicg3kyi29hbhpk0klqia8sd8rp90wkb7ipfnx";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -262072,6 +263515,8 @@ self: {
       pname = "ghostscript-parallel";
       version = "0.0.1";
       sha256 = "1sja6nhp8p9h2z0yr5qwxd8d59zzpb11ybmsbargza6ddaplpxny";
+      revision = "1";
+      editedCabalFile = "1sd1rh0fm29c3h4vm42fv6vbqplcm32ilqzimdp7vxfp3mhbblpr";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -263328,8 +264773,8 @@ self: {
     }:
     mkDerivation {
       pname = "gi-gio";
-      version = "2.0.37";
-      sha256 = "0a3z1aj1fqnpwxcf27anjcp2wpg3mbn86xybk150260bb00jzxpb";
+      version = "2.0.38";
+      sha256 = "12bmpafy5w85y7mzww0l5ilimbdmaabpxz7ry9sacg37kjm3kidf";
       setupHaskellDepends = [
         base
         Cabal
@@ -264399,6 +265844,53 @@ self: {
       license = lib.licenses.lgpl21Only;
     }
   ) { inherit (pkgs) gtk4; };
+
+  "gi-gtk4-layer-shell" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      Cabal,
+      containers,
+      gi-gdk4,
+      gi-gtk4,
+      gtk4-layer-shell,
+      haskell-gi,
+      haskell-gi-base,
+      haskell-gi-overloading,
+      text,
+      transformers,
+    }:
+    mkDerivation {
+      pname = "gi-gtk4-layer-shell";
+      version = "0.1.0";
+      sha256 = "0x1bafara3nq2f76lmmzvkm51i16za0fymh0zpvqx4mvac8lhpzz";
+      setupHaskellDepends = [
+        base
+        Cabal
+        gi-gdk4
+        gi-gtk4
+        haskell-gi
+      ];
+      libraryHaskellDepends = [
+        base
+        bytestring
+        containers
+        gi-gdk4
+        gi-gtk4
+        haskell-gi
+        haskell-gi-base
+        haskell-gi-overloading
+        text
+        transformers
+      ];
+      libraryPkgconfigDepends = [ gtk4-layer-shell ];
+      description = "gtk4-layer-shell bindings";
+      license = lib.licenses.lgpl21Only;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { inherit (pkgs) gtk4-layer-shell; };
 
   "gi-gtkosxapplication" = callPackage (
     {
@@ -265810,8 +267302,8 @@ self: {
     }:
     mkDerivation {
       pname = "gi-webkit";
-      version = "6.0.4";
-      sha256 = "0cabpym4p654psrck548wpkdf43wbm8zn0r2lrqiijx72f6xwij5";
+      version = "6.0.5";
+      sha256 = "1a7nmzry1h24i35imhp2d9x32bn32fwswpvrp72lk8yyb12v7i5g";
       setupHaskellDepends = [
         base
         Cabal
@@ -266412,10 +267904,10 @@ self: {
     }:
     mkDerivation {
       pname = "ginger";
-      version = "0.10.5.2";
-      sha256 = "0nwcppbfxj3nvq3hm9gj8gh076399zkksj2k39nb9zdm8dws79sf";
+      version = "0.10.6.0";
+      sha256 = "0j5arz8x2ksbcwy5iq8p7pzy71rl0nhadlv2d6933ibdgvzbsb7j";
       revision = "1";
-      editedCabalFile = "1bfxyx32dnf4giw4pwanxab0dsca1m5sd3haffpp9snk9jicbafd";
+      editedCabalFile = "1226x5dlcpaczy3kx5h27fmq4g03h4aa1nc1aw9r7x18h8rjay04";
       isLibrary = true;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -266473,6 +267965,98 @@ self: {
       description = "An implementation of the Jinja2 template language in Haskell";
       license = lib.licenses.mit;
       mainProgram = "ginger";
+    }
+  ) { };
+
+  "ginger2" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      array,
+      base,
+      base64-bytestring,
+      bytestring,
+      cmark,
+      containers,
+      directory,
+      filepath,
+      megaparsec,
+      mtl,
+      optparse-applicative,
+      quickcheck-instances,
+      random,
+      regex-tdfa,
+      scientific,
+      SHA,
+      tasty,
+      tasty-hunit,
+      tasty-quickcheck,
+      template-haskell,
+      text,
+      time,
+      vector,
+      yaml,
+    }:
+    mkDerivation {
+      pname = "ginger2";
+      version = "2.2.0.0";
+      sha256 = "0a8aa944v7b8qlwqykkrvm334ic8c8lfb8zwls7wx1cyh68kif66";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        array
+        base
+        base64-bytestring
+        bytestring
+        containers
+        filepath
+        megaparsec
+        mtl
+        random
+        regex-tdfa
+        scientific
+        SHA
+        tasty
+        tasty-quickcheck
+        template-haskell
+        text
+        time
+        vector
+      ];
+      executableHaskellDepends = [
+        aeson
+        base
+        cmark
+        containers
+        directory
+        filepath
+        optparse-applicative
+        random
+        text
+        vector
+        yaml
+      ];
+      testHaskellDepends = [
+        base
+        base64-bytestring
+        bytestring
+        containers
+        megaparsec
+        mtl
+        quickcheck-instances
+        random
+        tasty
+        tasty-hunit
+        tasty-quickcheck
+        text
+        vector
+      ];
+      description = "Jinja templates for Haskell";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "ginger2";
+      broken = true;
     }
   ) { };
 
@@ -267000,8 +268584,8 @@ self: {
     }:
     mkDerivation {
       pname = "git-annex";
-      version = "10.20250416";
-      sha256 = "02d4dw7mc72y4lb34nhg4lv0wjns9p8hzx80wqbf2vgsyq7q6zk5";
+      version = "10.20250630";
+      sha256 = "1varfir2vmnr29kfsjpqc5vd6msansch6xiag1d0s4bj5wpn1pq3";
       configureFlags = [
         "-fassistant"
         "-f-benchmark"
@@ -267136,10 +268720,7 @@ self: {
       description = "manage files with git, without checking their contents into git";
       license = lib.licenses.agpl3Only;
       mainProgram = "git-annex";
-      maintainers = [
-        lib.maintainers.peti
-        lib.maintainers.roosemberth
-      ];
+      maintainers = [ lib.maintainers.peti ];
     }
   ) { };
 
@@ -268367,6 +269948,159 @@ self: {
     }
   ) { };
 
+  "github_0_30" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      base-compat,
+      base16-bytestring,
+      binary,
+      binary-instances,
+      bytestring,
+      containers,
+      cryptohash-sha1,
+      deepseq,
+      deepseq-generics,
+      exceptions,
+      file-embed,
+      hashable,
+      hspec,
+      hspec-discover,
+      http-client,
+      http-client-tls,
+      http-link-header,
+      http-types,
+      iso8601-time,
+      mtl,
+      network-uri,
+      tagged,
+      text,
+      time,
+      tls,
+      transformers,
+      transformers-compat,
+      unordered-containers,
+      vector,
+    }:
+    mkDerivation {
+      pname = "github";
+      version = "0.30";
+      sha256 = "04rwdgrzsf2bq829w1v3435ynxz0lhb3c5vgbm2q080rwww29bif";
+      libraryHaskellDepends = [
+        aeson
+        base
+        base-compat
+        base16-bytestring
+        binary
+        binary-instances
+        bytestring
+        containers
+        cryptohash-sha1
+        deepseq
+        deepseq-generics
+        exceptions
+        hashable
+        http-client
+        http-client-tls
+        http-link-header
+        http-types
+        iso8601-time
+        mtl
+        network-uri
+        tagged
+        text
+        time
+        tls
+        transformers
+        transformers-compat
+        unordered-containers
+        vector
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        base-compat
+        bytestring
+        file-embed
+        hspec
+        http-client
+        tagged
+        text
+        unordered-containers
+        vector
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "Access to the GitHub API, v3";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
+  "github-actions" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      containers,
+      filepath,
+      hedgehog,
+      hoist-error,
+      pretty-show,
+      string-interpolate,
+      tasty,
+      tasty-discover,
+      tasty-golden,
+      tasty-golden-extra,
+      tasty-hedgehog,
+      tasty-hunit,
+      text,
+      vector,
+      yaml,
+    }:
+    mkDerivation {
+      pname = "github-actions";
+      version = "0.1.0.0";
+      sha256 = "0aa4j8cbij6ags49pmdlfjgwfhj4w1960cjijfhncjm1dr5gij1z";
+      revision = "1";
+      editedCabalFile = "13n5nxpqgak96fqyywp1kx0yvzp7m2r19fn84z0khb5bq5nglv01";
+      libraryHaskellDepends = [
+        aeson
+        base
+        containers
+        hedgehog
+        hoist-error
+        string-interpolate
+        text
+        vector
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        bytestring
+        containers
+        filepath
+        hedgehog
+        hoist-error
+        pretty-show
+        string-interpolate
+        tasty
+        tasty-discover
+        tasty-golden
+        tasty-golden-extra
+        tasty-hedgehog
+        tasty-hunit
+        text
+        vector
+        yaml
+      ];
+      testToolDepends = [ tasty-discover ];
+      description = "Github Actions";
+      license = lib.licenses.bsd3;
+    }
+  ) { };
+
   "github-app-token" = callPackage (
     {
       mkDerivation,
@@ -268628,8 +270362,8 @@ self: {
     }:
     mkDerivation {
       pname = "github-release";
-      version = "2.0.0.12";
-      sha256 = "10jwkapww6h5d5jvkr0nmg1nvba8dd7yc06qqcy84q01xxr7y0c1";
+      version = "2.0.0.14";
+      sha256 = "1918vvxfya3b2zw56kbdblkbf5c524yz6m9d7bcr5rbpsx9fr9zh";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -269990,6 +271724,53 @@ self: {
     }
   ) { };
 
+  "gitrev-typed" = callPackage (
+    {
+      mkDerivation,
+      base,
+      directory,
+      env-guard,
+      exceptions,
+      file-io,
+      filepath,
+      os-string,
+      process,
+      tasty,
+      tasty-hunit,
+      template-haskell,
+      text,
+    }:
+    mkDerivation {
+      pname = "gitrev-typed";
+      version = "0.1";
+      sha256 = "17313dgh672zw854zckp9wch7fpkwq3gsragqv7fpj82av0s4js1";
+      libraryHaskellDepends = [
+        base
+        directory
+        exceptions
+        file-io
+        filepath
+        os-string
+        process
+        template-haskell
+        text
+      ];
+      testHaskellDepends = [
+        base
+        env-guard
+        os-string
+        tasty
+        tasty-hunit
+        template-haskell
+        text
+      ];
+      description = "Compile git revision info into Haskell projects";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { };
+
   "gitson" = callPackage (
     {
       mkDerivation,
@@ -270315,8 +272096,8 @@ self: {
     }:
     mkDerivation {
       pname = "glabrous";
-      version = "2.0.6.3";
-      sha256 = "0ndw2mbbfvrp5p2zxn7fx78gdj13xw9rx46a7zg33f9k2dsvjnp8";
+      version = "2.0.6.4";
+      sha256 = "0qz4hza2arv37dwhy6pjgyrrjy723zxa4prc0fzj1lcsa1nsjw74";
       libraryHaskellDepends = [
         aeson
         aeson-pretty
@@ -271162,61 +272943,81 @@ self: {
     {
       mkDerivation,
       base,
+      bytestring,
       directory,
       discover-instances,
       dlist,
       file-embed,
       filepath,
+      Glob,
       hspec,
       hspec-discover,
       mtl,
+      optparse-applicative,
       some-dict-of,
+      split,
       template-haskell,
       text,
+      typed-process,
     }:
     mkDerivation {
       pname = "glob-imports";
-      version = "0.0.1.0";
-      sha256 = "1a7n5mn7pd1m1hjw1cymw3lx6gf9yp4s068gsf72cm4zx4cvb6i8";
+      version = "0.0.2.1";
+      sha256 = "1dwns8krs4gq97mg7xkaq41k6lrn9mc2m0ai496qamlgyp2sinln";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
         base
+        bytestring
         directory
         discover-instances
         dlist
         file-embed
         filepath
+        Glob
         mtl
+        optparse-applicative
         some-dict-of
+        split
         template-haskell
         text
+        typed-process
       ];
       executableHaskellDepends = [
         base
+        bytestring
         directory
         discover-instances
         dlist
         file-embed
         filepath
+        Glob
         mtl
+        optparse-applicative
         some-dict-of
+        split
         template-haskell
         text
+        typed-process
       ];
       testHaskellDepends = [
         base
+        bytestring
         directory
         discover-instances
         dlist
         file-embed
         filepath
+        Glob
         hspec
         hspec-discover
         mtl
+        optparse-applicative
         some-dict-of
+        split
         template-haskell
         text
+        typed-process
       ];
       testToolDepends = [ hspec-discover ];
       description = "Import modules for metaprogramming";
@@ -271383,24 +273184,32 @@ self: {
       base,
       bytestring,
       effectful,
+      exceptions,
+      filepath,
       http-api-data,
+      http-client,
+      http-client-tls,
       http-types,
-      req,
+      network-uri,
       tagged,
       text,
     }:
     mkDerivation {
       pname = "globus";
-      version = "0.1.3";
-      sha256 = "1n2pn21hmmkf982q4gxjb7pli0ln1xc2056bnyy19l4gx4rmvp1x";
+      version = "0.2.1";
+      sha256 = "1mxzdhihx7l8bgpdqvrbxjwbcyrl5gavxrv0g6xa0wkimp0aqqns";
       libraryHaskellDepends = [
         aeson
         base
         bytestring
         effectful
+        exceptions
+        filepath
         http-api-data
+        http-client
+        http-client-tls
         http-types
-        req
+        network-uri
         tagged
         text
       ];
@@ -273635,9 +275444,10 @@ self: {
       base,
       bytestring,
       case-insensitive,
-      conduit,
       conduit-extra,
-      cryptonite,
+      crypton,
+      crypton-x509,
+      crypton-x509-store,
       directory,
       exceptions,
       filepath,
@@ -273653,24 +275463,20 @@ self: {
       resourcet,
       text,
       time,
-      transformers,
-      unliftio-core,
-      unordered-containers,
-      x509,
-      x509-store,
     }:
     mkDerivation {
       pname = "gogol";
-      version = "0.5.0";
-      sha256 = "1aah3db2ws07q4z2pka4gmsagpwlimv19xq0p6y0bznq86yy7i1q";
+      version = "1.0.0.0";
+      sha256 = "0hpdppfrmcnbssnj220hsdbka3hfqxjqmqg0dg2mhl9bxff6pgsd";
       libraryHaskellDepends = [
         aeson
         base
         bytestring
         case-insensitive
-        conduit
         conduit-extra
-        cryptonite
+        crypton
+        crypton-x509
+        crypton-x509-store
         directory
         exceptions
         filepath
@@ -273686,204 +275492,129 @@ self: {
         resourcet
         text
         time
-        transformers
-        unliftio-core
-        unordered-containers
-        x509
-        x509-store
       ];
       description = "Comprehensive Google Services SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-abusiveexperiencereport" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-abusiveexperiencereport";
-      version = "0.5.0";
-      sha256 = "1c701rajjybggf04rvmj39mn5ryq27kvz79jacxhk9ia1g48lfbb";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0h6iwa2z863qgi1vixp28xgq8f2vk0dwlvs3ppbh1f4i9viqvr8b";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Abusive Experience Report SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-acceleratedmobilepageurl" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-acceleratedmobilepageurl";
-      version = "0.5.0";
-      sha256 = "0mr77fifnjl9r1jvmdzr7nvbxrh18n1c7m5yahlg4gsph9jzxg6i";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1a1x97xgpmznjgqjrbgz63vfdlgdilzi6y7myxm8v6fin4pf1y2p";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Accelerated Mobile Pages (AMP) URL SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-accessapproval" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-accessapproval";
-      version = "0.5.0";
-      sha256 = "062377i1nrhynsqyg53fkczhj9ljxa1ms062zykyxq4inv7d9r2a";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0cy8bwkrgwmz2lm1bqq1w3c895x5h6bfd27wlp6zihivj4kmky8j";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Access Approval SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-accesscontextmanager" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-accesscontextmanager";
-      version = "0.5.0";
-      sha256 = "0nglp371pxal59p33bb50r1vck6mc662z2yrqsq326w77dc24k6z";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1n0llmpcp8da4nzmz6350gnjaj0ir3wl1iqnx9y1wvq99jr1xb4s";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Access Context Manager SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-adexchange-buyer" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-adexchange-buyer";
-      version = "0.5.0";
-      sha256 = "0a2v15z4x0a6dbc789s1j78qcsfqypdf65ydw0gxzgajl136ni7x";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1msm75jv2p73fxw9nffjyqyw8zyg0xpna1dhir08pzsmwwyysdx8";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Ad Exchange Buyer SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-adexchange-seller" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-adexchange-seller";
-      version = "0.5.0";
-      sha256 = "02y7sz24flvm6fayfjjvdrywsqy0qw3wrqkfg4jcwa1093j2x3g9";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1k2is2alb7d5zdxpqbiv07kxbg86gzkc8zmlndva8p7zrrayanwd";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Ad Exchange Seller SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-adexchangebuyer2" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-adexchangebuyer2";
-      version = "0.5.0";
-      sha256 = "0sy40qp8z47d364dml5fafdy34xwlaa8lwn86n076i0xr0a2c3sc";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0k8fdnyyd20qis54nnarj7dk17ncfsn1br83mhjsgkp5x956zlzr";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Ad Exchange Buyer API II SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-adexperiencereport" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-adexperiencereport";
-      version = "0.5.0";
-      sha256 = "1sk083dkiwzr39w7bgqv3klvnx0jb8xqz1v3x0val3dzhfhd0rg0";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0hj5ic3mhigk524d760g9s2xlqfx5aj6rxqwyzfs9hrnvl88m79c";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Ad Experience Report SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-admin-datatransfer" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-admin-datatransfer";
-      version = "0.5.0";
-      sha256 = "149h3kg68xqanpzyqxbjxq1nskigv1310fq17inkl3bqm7mk0d3s";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Admin Data Transfer SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "068ib1s04y39q0llrnn64ha1l1q61jspfgkb3chcb056yiam3z7k";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Admin SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-admin-directory" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-admin-directory";
-      version = "0.5.0";
-      sha256 = "0kinbhz4j11nd6s5w4jg13dpbq6hgf6acnqi6hvmn4m4yjm6qs5i";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Admin Directory SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "1aw1369bb5lqzc8z0aqpghjk4pzqk3747ciiwzjibxp5fw6gp8fb";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Admin SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
@@ -273909,59 +275640,38 @@ self: {
   ) { };
 
   "gogol-admin-reports" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-admin-reports";
-      version = "0.5.0";
-      sha256 = "17m4924mqr0wiq07n3ada8jqc2kbwn2apzmbkpcsf6ns8qpw4r4k";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Admin Reports SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "189fx1ih296s26rn7m92rmay6csps1ihnyrm8wif1530xf6i7i9j";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Admin SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-adsense" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-adsense";
-      version = "0.5.0";
-      sha256 = "07v6sgp6dqvgcmni4579c6iyxqbbn24lyp64zfdv88s4wjhjbdjj";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "02qh6rqmbllfj27zi4ddgfy88ck7gayzr9ziw6r2brajwdd7rmcx";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google AdSense Management SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-adsense-host" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-adsense-host";
-      version = "0.5.0";
-      sha256 = "1s9dsrz6svnm8jjl13w3v72gyyg2xc5sxg6piw087c8j1sqfx131";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1h0iv25rpv495qgn021dlxi0cy9v1yxhr6q1l42nb5sp3nfx8j4l";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google AdSense Host SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
@@ -273987,268 +275697,170 @@ self: {
   ) { };
 
   "gogol-alertcenter" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-alertcenter";
-      version = "0.5.0";
-      sha256 = "0d114xkvdjzfgl63gyc1a56jfdacbr5chdz80199jp85zp04h3wi";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google G Suite Alert Center SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "0grqgrczqwa3f8ir7yx8rlw1y0alrqz8m4dhbx6268dz5y192421";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Workspace Alert Center SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-analytics" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-analytics";
-      version = "0.5.0";
-      sha256 = "1bfm1z13hvijln3f92n4i8042dd56z6wian6scnbfcndnsfwsrc9";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1pqr20s11z75m8lzqq4kx86h8gf9hqmv0n45kbb1v99nmiyl6scq";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Analytics SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-analyticsreporting" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-analyticsreporting";
-      version = "0.5.0";
-      sha256 = "0ih63njgb3612myqfc1impas9jc5gx5hlmhvjzw0bp6rn7dv5qvm";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1ps7lln0z027g0lmg0b8bs14ycz3i607a6ja5kxh9xpqi2bcj1pq";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Analytics Reporting SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-android-enterprise" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-android-enterprise";
-      version = "0.5.0";
-      sha256 = "0qxvqv3i21k9g0mgy67073xb2yd8m357c2806v18inh7cikhndgy";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0l40nv4jfba6h7vpfca548k7y5yya54n237f11gksclyij5xzc5j";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Play EMM SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-android-publisher" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-android-publisher";
-      version = "0.5.0";
-      sha256 = "05dz12615l74y4iqasgn84vi79i1m7wv11gz5sfbmmmddizjdxy4";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Play Developer SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "14knrvx11f97jb7z7vbmjmh8zrchds5wzacaaiz68g5pqh44sqqg";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Play Android Developer SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-androiddeviceprovisioning" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-androiddeviceprovisioning";
-      version = "0.5.0";
-      sha256 = "1yc88s0h6v8ipw26a90ds0wdmsg78zpp3pqrybip9fh8grzbplv5";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0vf3y14bjzs1yb6fsaizsgcjvpk8r3gxavbkkf9cdy3zz6mdfs6y";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Android Device Provisioning Partner SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-androidmanagement" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-androidmanagement";
-      version = "0.5.0";
-      sha256 = "0j68bbdyb3qnjylkb7fyv162pxfjx6802cnb63kryl7wbzcvf02s";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0hcfjz9lz9j4sk5vxsq0a67gbrgi9cmrwblkyslzlc3jqd689grh";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Android Management SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-appengine" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-appengine";
-      version = "0.5.0";
-      sha256 = "1p4cxp4f417m0llw58zslaabfswp5s9b9xlxfn3qrl3mdghs8lvk";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1d6nsqd6lynk2cvrb53zd1h74w46f8grjrgawrdczkhn9sjplgg4";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google App Engine Admin SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-apps-activity" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-apps-activity";
-      version = "0.5.0";
-      sha256 = "0frs0976h57gckraxhipbsd1ps39ddw5bcsxrya9mczyh31aqn4w";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0ai1ip5hkqbk0shwhgkjrc81422f0as78spahvyp2b18h9ds3f12";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Drive Activity SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-apps-calendar" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-apps-calendar";
-      version = "0.5.0";
-      sha256 = "1q68zbqk7pkh7clvlyjlkdy7i3zwrh8rl7ksyxd9x8wvla91qc34";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "119gfvs7wfchf4l50r13pwwqilxfkxbpdsr1hxa0qshx7qs4hdn3";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Calendar SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-apps-licensing" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-apps-licensing";
-      version = "0.5.0";
-      sha256 = "1x86ssslmksdlfmf8rasavpn9dg5kpk416zf001mb896lh6r5dlq";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "13xr8d87xyv1nif1vm8hx92aqp7w2h68qqpci01jrlgvbwikwg0z";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Enterprise License Manager SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-apps-reseller" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-apps-reseller";
-      version = "0.5.0";
-      sha256 = "0zxjp7apiqd12bcj6fwwrlx8j466pavfgmv35d2alvmb83n1h8gw";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Enterprise Apps Reseller SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "02as3zv92pmki03ylcjc999cfk4qwgp066ns5wmvhg71x66wcy97";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Workspace Reseller SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-apps-tasks" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-apps-tasks";
-      version = "0.5.0";
-      sha256 = "0cb61wqjq8za2d44i0h561hzp2nmyynr2fy24mbhj2gb0zcd14bc";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1imkjjq2l8j36anzn4rv51mcdr3j1w9wxk2z4ps8py9whz2yfqa3";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Tasks SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-appstate" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-appstate";
-      version = "0.5.0";
-      sha256 = "1gx52lnrp6mdsf168x0viwkj8pr49a0npf98a402ij3gndsn28aq";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1ipa3a1d6in8kvk6qrbmpsfns30nci95dlsb2x3ds8jx9rwffsad";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google App State SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
@@ -274274,306 +275886,194 @@ self: {
   ) { };
 
   "gogol-bigquery" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-bigquery";
-      version = "0.5.0";
-      sha256 = "1z3rdh9qrabycxnxrzay6ddw5l97qws48hn78g5pkbn73z1dh22z";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0r19gn2i4bvbacvsaw371nwiif41zi3bqvkv1b92nfyzig9nnnpr";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google BigQuery SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-bigquerydatatransfer" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-bigquerydatatransfer";
-      version = "0.5.0";
-      sha256 = "13pbbhk4ryg7vpkhkdvkjhc4sjnizdpjll4x9inb0zm8k1ki21ws";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0vv8jhqk2z1ji8l2k83021ycsbqqf4mkzq13k6yra5k62f886hb0";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google BigQuery Data Transfer SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-bigtableadmin" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-bigtableadmin";
-      version = "0.5.0";
-      sha256 = "0nxrcyf3spmhchmmjbszpv935lcwb979zfil9iwdigymq5wvfzgx";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1q30h5qgrxwi3vpk28iklmy220lhvpk1bc1cdl2wvj9g87vk3jyg";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Bigtable Admin SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-billing" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-billing";
-      version = "0.5.0";
-      sha256 = "1zx7k5qhasvjz1568znasix6xrkxhsfhcsqwv6r1zd5a3pnzvaxm";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0ws694ymsrlk4hw1jzqi4lpjjmjas8cdvxxz9dcmkbd3yhpsq16z";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Billing SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-binaryauthorization" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-binaryauthorization";
-      version = "0.5.0";
-      sha256 = "19gbql17mrxn4xgdbl96f245fckaj5gwwggn5f7xa59ahzbgfgay";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0m82qlih6dxijd83bsjfbw4dxrn1k1w8gnfdxdxxvccf58xxkb48";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Binary Authorization SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-blogger" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-blogger";
-      version = "0.5.0";
-      sha256 = "027g8vj7msdzmkb7sjbd9s0p3zpxyal1l0daxbw1bhwr9lrd8j94";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "02qrqqkhy7v14jygqnwv99bkfmnjpkjbxx33avk3fzx5vfh04phh";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Blogger SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-books" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-books";
-      version = "0.5.0";
-      sha256 = "07rd2592hqvbx1lkz9hgrqjfy91a6g5vhy6d88yqzzyl1mkwq405";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0b8r416cg9cy36adv4frndcc64vy1wcqmhpshbs4ba583yqxndw6";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Books SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-chat" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-chat";
-      version = "0.5.0";
-      sha256 = "0dxwfml51xh3a04ghhr41dbaayq1c36klaiwams3rq95ak7mnq6i";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Hangouts Chat SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "1m5ikfi8gl8xsi1kgv3ca7pfjd56gykw29s4x5mkm76a727sy454";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Chat SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-civicinfo" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-civicinfo";
-      version = "0.5.0";
-      sha256 = "04kv6rnaiq1bxn46ir1l5w6w5qysb6f85ly3c9jksf0m5607gxxr";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1cg0xvxs8hkdzrsal7wn0gchscssvnwpfx2kzqqv3k539vjxb07w";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Civic Information SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-classroom" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-classroom";
-      version = "0.5.0";
-      sha256 = "0hh6kbknnz7drd6ba1irr9wk5vhf51pgiskydgcav3f251j31sx4";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0d32fmi65cmhallbiwifwzbwald508025crshh951g2l4sypdbsx";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Classroom SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-cloudasset" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-cloudasset";
-      version = "0.5.0";
-      sha256 = "0368lmz0nsffs9pj1v4ab5yx5xhfh1g27c9l3fs49aihdrvij3yk";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1r2ijkzlqi2a34qq6978n8f3iqn2f14srw8cyglhy7if6f23ybp0";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Asset SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-clouderrorreporting" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-clouderrorreporting";
-      version = "0.5.0";
-      sha256 = "1hsgrpc9cbazn5a1g6lsg5azd8bgl45b95djwy13bc6vi9xwsr28";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Stackdriver Error Reporting SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "16scs0jzk0fbvhchf68f69b3pmipffdvi38ihfdn7495dipikpjp";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Error Reporting SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-cloudfunctions" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-cloudfunctions";
-      version = "0.5.0";
-      sha256 = "1pv7h53zyqlp7wbw48hxxp3x9n515v0jdkjnpxqbszfhza28jsy9";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1w5cpsafgks7zhx08bri3sx9m30ad39wxraa296czhvzhlrz95qq";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Functions SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-cloudidentity" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-cloudidentity";
-      version = "0.5.0";
-      sha256 = "1z4ncvzggpn52r75bl7y9mk19vdpsimxfflggvzz1lgy941ciyil";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0ygdq4fvgbbjw1jzrvr7r02qjjvr21fjsyvjs5r781bsps9msr66";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Identity SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-cloudiot" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-cloudiot";
-      version = "0.5.0";
-      sha256 = "07zw4p2pi9gb90fzfg899xqbv50iwxc7rsb705wbpiyj80ynd85b";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1dvgygzzyk038p6f5qwgiipiz1466zmm760yi1ci9sh7fl4i4ndp";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud IoT SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-cloudkms" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-cloudkms";
-      version = "0.5.0";
-      sha256 = "0wpjmxrp1gl663sqcfgalrgjqw90wcahjlsg9bm6ay9y7g8mic0m";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0wvk6ll7xmlly1bi1kwpj3vp4scg06cjsb1xnpd2rd6j2fhi2vmz";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Key Management Service (KMS) SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
@@ -274599,287 +276099,182 @@ self: {
   ) { };
 
   "gogol-cloudprivatecatalog" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-cloudprivatecatalog";
-      version = "0.5.0";
-      sha256 = "0y0z6wmsr2qsgj6wh4y37ph68fayk5szzk02xv0ncggrn5pbpm07";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "18siw287hdcfmcdp0sxd1r94pk4rri71987mi5mjgxgan90lhgxk";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Private Catalog SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-cloudprivatecatalogproducer" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-cloudprivatecatalogproducer";
-      version = "0.5.0";
-      sha256 = "1zq8pb3jm6gpp116q4x8i69jihgwnbyafdrnw5jxyl3ynr6bwll0";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "12sf1rmiv52gfml3xcv76iza8mry9vhcpk4xzdb80yaw8343idj3";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Private Catalog Producer SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-cloudprofiler" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-cloudprofiler";
-      version = "0.5.0";
-      sha256 = "022d1ix4a4n3kk108jl1yl2x13q57ahg4c9gvbxlvm7g3skz2rda";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Stackdriver Profiler SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "0hwby0sk3rxsii76425hgy9d7p4v5l0infsqj0qbs0197qhwh4zi";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Cloud Profiler SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-cloudscheduler" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-cloudscheduler";
-      version = "0.5.0";
-      sha256 = "1vb3xwnn59b3fzybp09lxpysij37q8rxg3392gnf09mqg57vlcpw";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "14gbhgyy8g7kaarxpy8llpvgydapq49sr8gzda144gkfq68svabw";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Scheduler SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-cloudsearch" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-cloudsearch";
-      version = "0.5.0";
-      sha256 = "05nwvrdilz79hdlbzl853h3aj4gqcwql251slmzgg3s92haz0ygx";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1nhqkvm5v2m4xbcdi29m8padjzmampcsy3l61vknwfc0n6f89rhf";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Search SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-cloudshell" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-cloudshell";
-      version = "0.5.0";
-      sha256 = "08hngcd8v08j7gp7pfyx6jm10p1g5w80ljq511f0jg5i5s6pkpr9";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1zi69k64klas18kmq525z52nchc9gqdk7v15x8prdln6x46ic1dn";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Shell SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-cloudtasks" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-cloudtasks";
-      version = "0.5.0";
-      sha256 = "1rgm3m1nsvfc96vipsqjaci6h21j8lxk0qb9jxs7qmifyhlycr5a";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "11ygaka332an20cyl5i9bj5jxkgddc36pfdl07mjab68b6500ggc";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Tasks SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-cloudtrace" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-cloudtrace";
-      version = "0.5.0";
-      sha256 = "12yh4ks9mwfk48qqgkp38vv7xrrlqlnx1d41x851xwb7hw61288r";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Stackdriver Trace SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "0wnn3pfx28g7iqr8vwk2v5vqh06vwcmgjj0blwi9aznkm1g3qp1k";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Cloud Trace SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-commentanalyzer" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-commentanalyzer";
-      version = "0.5.0";
-      sha256 = "1psy2vd6xj2rlnacay6srp0lcy4bvfnkpqjg5yvl41qx74w11dc9";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1vcwyv86a3mpis6d1rgldn61qzxfz8x2ncfv3r7rrpr79zclqhkj";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Perspective Comment Analyzer SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-composer" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-composer";
-      version = "0.5.0";
-      sha256 = "1hzdnrchczaha310sr5ndk7bwykvv6qy70hh2jcw6s5fg6kjmpi5";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0j4kabhl6wlyhqjiiz6qw6hc8q9c8c0x0ylqxfiwxgr8j0m3x17h";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Composer SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-compute" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-compute";
-      version = "0.5.0";
-      sha256 = "1z0l373qb3swnli6987r5s6l1kkrrh4m3hc8mghchviz16hpwm30";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "094p7nms03jypq44snnsz05z485dz5ynawcnmjjlmwh387i59j4x";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Compute Engine SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-consumersurveys" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-consumersurveys";
-      version = "0.5.0";
-      sha256 = "13az55a4hdpgrsfa4s4x2l40yjlfl01ypba3p1z36ckv70yqvmax";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "01q4dmqxwdy8p9ix9dhj0dgqs71z7mmjznybv2r8jmfwxm4nxgka";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Consumer Surveys SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-container" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-container";
-      version = "0.5.0";
-      sha256 = "06pjabcch02pknn8rqq2kl4zyb331v89iq3l6i279i5prqp8jkh2";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0ci3xdl0rb5nq54z6i748gh240ipgp9wa36pncq3yasf58pn9rvp";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Kubernetes Engine SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-containeranalysis" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-containeranalysis";
-      version = "0.5.0";
-      sha256 = "059nkdz6zb9ffi5731dfrppk2cv5mcvh84x8b30yhfp63vs083dp";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1vzmzbgr88qij6fgi2gsz3iavvbzdxnpjf864l656fkvr5xw83wl";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Container Analysis SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-containerbuilder" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-containerbuilder";
-      version = "0.5.0";
-      sha256 = "04jrblg8z1sji9xg6qbypxkbwzidx76hwy2c9kdgchjj298xifcc";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "12mmiza1sd4fryy86kzy88adw8nkswxpf1r2sryndjkyk9a47knx";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Build SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
@@ -274889,7 +276284,7 @@ self: {
       aeson,
       attoparsec,
       base,
-      bifunctors,
+      base64,
       bytestring,
       case-insensitive,
       conduit,
@@ -274911,15 +276306,13 @@ self: {
     }:
     mkDerivation {
       pname = "gogol-core";
-      version = "0.5.0";
-      sha256 = "0xvlrx4hzhwp3slinh8apnxlgxmispjjnmwsfbpi4p9n451ilx93";
-      revision = "1";
-      editedCabalFile = "0k6nhsl0jh233ym25fh03nc2gja6q27hcav1kbs9lfpyf0qdvvyl";
+      version = "1.0.0.0";
+      sha256 = "0gspq5vniaw4k1gcsk4fjjq6wy4akdibfkvmxkmxrcqg9jmvlja2";
       libraryHaskellDepends = [
         aeson
         attoparsec
         base
-        bifunctors
+        base64
         bytestring
         case-insensitive
         conduit
@@ -274943,520 +276336,331 @@ self: {
         tasty
       ];
       description = "Core data types and functionality for Gogol libraries";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-customsearch" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-customsearch";
-      version = "0.5.0";
-      sha256 = "1rfc932v4pwffry7864in7q9g68xzqz2sharzwfn8ql04la88fg7";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google CustomSearch SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "04yvwb12qpf57p82a7j5h7z0ckxmfircxzyl1a9h8qwmkf2h9g9n";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Custom Search SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-dataflow" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-dataflow";
-      version = "0.5.0";
-      sha256 = "0k27idpz6n8gilpm5cb1yz6x6x89qlnpqg7jzpp4ipld1h4m6xp1";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0qi91p8x8jx3rnz4vpk7mkcms1hqjhwlmrvpjzxx489bazllsz66";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Dataflow SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-datafusion" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-datafusion";
-      version = "0.5.0";
-      sha256 = "0g90fa6mdicv4fyv999vild0accvsd4kr7mj9b008b5f4x286wpn";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0r28ccchciw067w1gsm9pcfhnmr6ggk0m5p27i3rhwz1v3mhspnf";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Data Fusion SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-dataproc" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-dataproc";
-      version = "0.5.0";
-      sha256 = "0v1h6621v0aj415c8d11rfgri40vh3d1h3wl5i40nnz81qa11d5j";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1gls8g771b7d90a57zz30cwpg0sr9vjmjwkb2sn1syr3q82vz8ba";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Dataproc SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-datastore" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-datastore";
-      version = "0.5.0";
-      sha256 = "17raqp9la38r2jbx5438hxi12blkckzfdgmfvnw05isdwnz1azjl";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0d727wn1yr4w5svvzsfyvn8ybl6l0ijr1mq86zwpz041709llbfg";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Datastore SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-debugger" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-debugger";
-      version = "0.5.0";
-      sha256 = "0a29kcihp90s6zvc8f9733rylsnf6098vkvqx7nsrg78x7qcz48p";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Stackdriver Debugger SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "0m71pa6ilqy5s20vmn8q4gn1vikr2fjxvhz8h54qswn5sanjpiz8";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Cloud Debugger API (Deprecated) SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-deploymentmanager" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-deploymentmanager";
-      version = "0.5.0";
-      sha256 = "0l52j1vlnhm5dnz9jfld2rixs511l567gw7dbd2ylnx77632fvsw";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Cloud Deployment Manager SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "143k175i32i4nw54r1w7490wqj9g703a5787aw86r468xfagwmdy";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Cloud Deployment Manager V2 SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-dfareporting" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-dfareporting";
-      version = "0.5.0";
-      sha256 = "0s7s5cm7kdigx1212abzyv69p4gzpx4dkxvycip60p27chsiv47p";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google DCM/DFA Reporting And Trafficking SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "1vhc4fx78h26hcxhmgijfprsvshqgh8v6q9dialckh7rq226g0mn";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Campaign Manager 360 SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-dialogflow" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-dialogflow";
-      version = "0.5.0";
-      sha256 = "02q9qj713gz75gzdvqlladddniyk0waf2gbfqnh7dyirn8l67k6a";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1gijb69hmba7dh493zifv5809zri33fmi7fi8wmf3973qaylp7g6";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Dialogflow SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-digitalassetlinks" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-digitalassetlinks";
-      version = "0.5.0";
-      sha256 = "04mfan610hzi9ar7rpmdwn4hw2m4v4n5hfz00si648vx6grn3835";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1a6r481sxp50x5mpw8inp4904jm0a21m1rcya2wijwrj8xblynpp";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Digital Asset Links SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-discovery" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-discovery";
-      version = "0.5.0";
-      sha256 = "14igx8cs86v88vfvdw3fr090yk3f5dnpiggai1w2xnshbvg3gfdd";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1gyh5fbiv98j74p3bkg0kv1clszdpy8ksb47k4bnpjg8livfgzf4";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google API Discovery Service SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-dlp" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-dlp";
-      version = "0.5.0";
-      sha256 = "0wd5l1bjiaw5cp78ppz81ab3cb9dpgjw5iy3hz9cg0y6y8x6smm5";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Cloud Data Loss Prevention (DLP) SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "15q8fr1y21zacz30kjvpxsn2irnzqjl5r2xvhkd2mbcpplyvcbcz";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Sensitive Data Protection (DLP) SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-dns" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-dns";
-      version = "0.5.0";
-      sha256 = "0wzlbpkaqd94dkgbg5nqss9kbyx2lqk0jbd97l9jmka1pmm0c30a";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1igqrn1w1jda0xplbslwib2mdv9mzhfb4dpqgymlmp5g1ps9qy28";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud DNS SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-docs" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-docs";
-      version = "0.5.0";
-      sha256 = "1ig79q8iwfmyrjy7jb27fcdd05zjgpi0aikw597gkjj9vga5jzms";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1chxs5a1wlql6vb9wqr9navijis7khbpndy0grwzfcdafcyz71jm";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Docs SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-doubleclick-bids" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-doubleclick-bids";
-      version = "0.5.0";
-      sha256 = "1jk725c2viyvbi4i12zlvwnz855jnpjjfc9qp5rbbfkkyf8904n3";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "01955ainvq9fmmjvkwpgbarmnplw30ilf05shsnjskdhp6b1hqvc";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google DoubleClick Bid Manager SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-doubleclick-search" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-doubleclick-search";
-      version = "0.5.0";
-      sha256 = "1kd0x3xb365r30gaz74wksny20dp96ynr9xvds2z4jnmabhlc1fx";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google DoubleClick Search SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "1l70nmx86wvixyr84zjhns69l58z1v65aiycmqi3i441c5hjrax2";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Search Ads 360 SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-drive" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-drive";
-      version = "0.5.0";
-      sha256 = "0qbdchfni89h0l28db37dl5ysjlzckby59ng7026xhjkk5c8iyrl";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0alf3jahdmkjxjzqj2bs5wlrvx7d3414kbhpi1pvdcy8s3fm2b49";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Drive SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-driveactivity" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-driveactivity";
-      version = "0.5.0";
-      sha256 = "1n2frzhrz1rfbxm6lcxyd13q99wwlyp7c6n4pjy87skvd332xqsg";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "06lnmdz833wvkh9h2q8q73mnqyp2klmfhg132zabwpcpkywlinvl";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Drive Activity SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-factchecktools" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-factchecktools";
-      version = "0.5.0";
-      sha256 = "1bga1plk1v57v6lpyk292ia0fzxks6lj0jq9d5gqz7k22yaqwzl5";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1v2s3696i71z4pqclqc2x53c51n4llv6wbpvms1mr666zgmchvxr";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Fact Check Tools SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-file" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-file";
-      version = "0.5.0";
-      sha256 = "1k0mc2vavnfpxx6h878iib3a15bp2h2mx7wq9pa3527syh5d424p";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0fd23xaqcqn6qq696i1dlrbdlk7yw15h8wq9jsy0l8sqa8f9ygn2";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Filestore SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-firebase-dynamiclinks" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-firebase-dynamiclinks";
-      version = "0.5.0";
-      sha256 = "1hbknisl0358iznc45hhjixhdb3kh2b5chxiyq028ayl5w1p4rvn";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "18ywm1xzr0sqj4pp6lsjw8pbhydimapnxa5xylybc1ii69jqq3xj";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Firebase Dynamic Links SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-firebase-rules" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-firebase-rules";
-      version = "0.5.0";
-      sha256 = "06779qj9vjhvzw0d60ddxlzmij7sjjv67npav670xkgs3q71b655";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1znwn8xl2yfxarbf6gcmwlhrm7mn4xan89bd2sh1sd520155yw4q";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Firebase Rules SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-firebasehosting" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-firebasehosting";
-      version = "0.5.0";
-      sha256 = "0h2k4ymqn0r5vpgqb1pzcydmcwx2s0x4yim5j47b963qqwrwb7yc";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0v0jbgffkxgk17qn79qjbcp3rnnfihcikb9709kwkz5vf246rzs7";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Firebase Hosting SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-firebaseremoteconfig" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-firebaseremoteconfig";
-      version = "0.5.0";
-      sha256 = "1qpv689lrizcv308303ajzjvkh9z4hs256ibnmlk0835xzwcw1qc";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "09n8bfaa9spara3yh5awjcfyxdwcag5qi7w01vk9m9snfzdypfrg";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Firebase Remote Config SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-firestore" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-firestore";
-      version = "0.5.0";
-      sha256 = "13y9g4h21mis26x663pv9lhi9i3r4s6x4pcnnwsk20a0s83k8x2k";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0fillhmd5xdb45mfg62fr6vhki4gdc8mqvqzs56il3p70ykbrgby";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Firestore SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-fitness" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-fitness";
-      version = "0.5.0";
-      sha256 = "0pbz6kjkrwcb1mz83gfmyf1mcdp6lsbdp450h79083xlpbwz0kwx";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "19a63kbgf8r268ybj1dyd7z4bzaw2dd6ygp3pk4swabjjj1pfrvx";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Fitness SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-fonts" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-fonts";
-      version = "0.5.0";
-      sha256 = "0cgkdgvs65znknf1dpdr2jxn3wan705i89bwfzfwavwykacsjqbk";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Fonts Developer SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "15dsq67qnpnmninklr9pm5yy1xn8a459pvgmhaabbp2x31ghqjiv";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Web Fonts Developer SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
@@ -275482,325 +276686,206 @@ self: {
   ) { };
 
   "gogol-fusiontables" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-fusiontables";
-      version = "0.5.0";
-      sha256 = "1bi9cjm7xn5dq74a7r5y95snbfjwljmfjl5pxfh2cjshpjgdpd67";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "18scbflas6w5avgsm5ndnj1qyn277mlj3v2fl71mrfjwr6171l5c";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Fusion Tables SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-games" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-games";
-      version = "0.5.0";
-      sha256 = "0kdqw6l1fr37amhd830lyqrh87znbbbs2lxh7cbqr831gwj4qnpk";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0l73pqrsfnwxv3mbg6lxkzmbal1xb5gxcb3rnv16d60ng50xrpc3";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Play Game Services SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-games-configuration" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-games-configuration";
-      version = "0.5.0";
-      sha256 = "0j2psg58f6ilvnvdq88vmq1b462dpfssij1pa6y5xmm62gvvv6i5";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1qfag0mqyp5fk7p225qlc2551hdyzpmflnx0i59b24vm2yym1y4a";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Play Game Services Publishing SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-games-management" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-games-management";
-      version = "0.5.0";
-      sha256 = "0bnkv9vic8rly2ga4k73s8cnhvird3kv5nmy17560pw4q40a5d9n";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Play Game Services Management SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "0zy5bqi8lsb6r19bb5sd8fjcqx9v4g0lphxj60p20p94k5vw7wcd";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Play Game Management SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-genomics" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-genomics";
-      version = "0.5.0";
-      sha256 = "0cygvkm388g0scmy51b2dmkj6kzpcdwpxd0w98dfmwhgvln3xgl2";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0ddyddxan844csb6mflrsq42ivvwrwcm6lhqy7wydysbf1wcfgmm";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Genomics SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-gmail" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-gmail";
-      version = "0.5.0";
-      sha256 = "053l0k1h2wmwgqzywswhhmwh2275n6psiy8bk684dkzvdj1msbkz";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "045hqcyypvi8c2d9lh6szp1crz1xk9ll2ll93w5viyvzz2fzlpza";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Gmail SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-groups-migration" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-groups-migration";
-      version = "0.5.0";
-      sha256 = "1sbmnq1ivy8dcgngfprd7g5g08fvzgwhr5hrixg4gmw95hwplafi";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0gskbydkk39zs6aa8ss4y3ibnsdb69zmm7jbi6ijr56y7qv11fgm";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Groups Migration SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-groups-settings" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-groups-settings";
-      version = "0.5.0";
-      sha256 = "0l1bwgwic8q252idfv8d6jamfqfghwxq4jkaan3dwwlgjc2b6b3a";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0n0j1m01y9k2q07mkrdm5n9pp3ahs9byhl0kpi8na30y4zhscxr8";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Groups Settings SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-healthcare" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-healthcare";
-      version = "0.5.0";
-      sha256 = "1ny184rhkjs571ibnwznxhc8zxqc2bag7z0lj922v53js4bvbrld";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1dskfbpm1mv2dax64izj8sarkssajnbkinc4pwkvgfgjhf9l9sq9";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Healthcare SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-iam" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-iam";
-      version = "0.5.0";
-      sha256 = "1hxzg3v9b8va2s76q3jizz84vfjnjrckv5ysy9193dv6yk68h48p";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0ylryxz1wa8v246mwzpvqkqmggj2gbd9mxmgf5cbnkibmnbcwswg";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Identity and Access Management (IAM) SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-iamcredentials" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-iamcredentials";
-      version = "0.5.0";
-      sha256 = "021x1rgmws8r2mj1ji6wpj8lspn70m1pzal6zmj3j8cbgmvbzgra";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1jzqijf08jmmavgc5f7vpvs1ixiw6h9k4x8y7q8kwiayp57gcgfh";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google IAM Service Account Credentials SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-iap" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-iap";
-      version = "0.5.0";
-      sha256 = "04cph84f8h7qcg8jmz442qciq81ra2yw3jrffy8apyhy78x8zxlc";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0v7xm5qr5im2hcvq34s7c880f6yxnzwc4cax1cwm4f3zjq7galmb";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Identity-Aware Proxy SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-identity-toolkit" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-identity-toolkit";
-      version = "0.5.0";
-      sha256 = "12yqcxcqvmlcrjla1qx6j78dk5qnfa8mia4nv1rr9y728w0k2ski";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1wdm8w4z4iicbla6139501v7ri9k9w6f0b131li0578dxqw411m0";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Identity Toolkit SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-indexing" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-indexing";
-      version = "0.5.0";
-      sha256 = "1vyxrl7abwkz1mc08id08ncm9f1qgpkwc9mriyx3hlr9cvdj2fb0";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Indexing SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "1hxk0gzk183vjljj57qkgyi5y4j1rigvjxkivxzvzlqyvpbirdrs";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Web Search Indexing SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-jobs" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-jobs";
-      version = "0.5.0";
-      sha256 = "1azggfjas13dqhl9kzqpr8bvks1gbjg1q7ia64ssxdj19mx1d5ii";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0i9pi31vz2ngk8fpv16cizc2yjhs0pacnwf2c0fk9nylg9x4ms38";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Talent Solution SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-kgsearch" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-kgsearch";
-      version = "0.5.0";
-      sha256 = "0ynll6mm551x0jbx6bar5p97hy29g6nfq9mshlapmv82n9i2qqk4";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "02py8n5kk1lxmm7bkxag041rwzip4jxpdmldciq4vyq9fkkxvy57";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Knowledge Graph Search SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-language" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-language";
-      version = "0.5.0";
-      sha256 = "0hw181ha949q97yyg35yvwwshign43wxb2xkg482g4fq86b2iy3h";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0y0r5c1kgzxmsply7zksh9dbzs2sd4fxwb4ps4w4lqzjkchdbj4x";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Natural Language SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
@@ -275826,59 +276911,38 @@ self: {
   ) { };
 
   "gogol-libraryagent" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-libraryagent";
-      version = "0.5.0";
-      sha256 = "1jk46i3a9z5i1451gyjzmqahcjg3r1w03y2x64dfpc309zwivaar";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "14s5hw0qby8acqmf9f3kh068iaglmf9lp6p802vf3bg3qqx43857";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Library Agent SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-logging" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-logging";
-      version = "0.5.0";
-      sha256 = "0795dsyq28w3kgw3f96w99ax6v24lbahmr0mvyql1cx4z2slqp82";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Stackdriver Logging SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "1a2w6dyb0h3dy9fxzsrmq81d7vr3z2nk7xc0wkb4jhsdvn3nwkzk";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Cloud Logging SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-manufacturers" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-manufacturers";
-      version = "0.5.0";
-      sha256 = "1l7dpp39yszay5aykiq81qi1f7l3fyz2s8zskyl37lvb46mv9ywr";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0ydxl3cxrw65bfp708im1mlqgf76bi8m0wl8x295mgzyyvi6q75g";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Manufacturer Center SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
@@ -275925,154 +276989,98 @@ self: {
   ) { };
 
   "gogol-mirror" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-mirror";
-      version = "0.5.0";
-      sha256 = "1nb7wydv7z5ip7jnj1928kfk57sk67ng3dhz9hq136lajl0lqy4r";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0si4kk7da0mxgqddjamxa8cmci75rlpl2bivjyqx99awff788376";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Mirror SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-ml" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-ml";
-      version = "0.5.0";
-      sha256 = "01n7jhi8p0db7dhbjm7ll3r6yqw0cfi6l48r1ms0kcrscdfij93v";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Cloud Machine Learning Engine SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "1vr7kv86b1cz364a5mbcl8w14k3f0rdkya4dqc99j46rqa89hcjs";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google AI Platform Training & Prediction SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-monitoring" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-monitoring";
-      version = "0.5.0";
-      sha256 = "1754cssjhcfxn6g71vvq7jspgbwqn2a1821lhhn2ybhq8ngiay8i";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Stackdriver Monitoring SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "1psii00flwy8yh76ng1ixpzdix4i31gr9nlysvi20m962j2zb8x7";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Cloud Monitoring SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-oauth2" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-oauth2";
-      version = "0.5.0";
-      sha256 = "0pnwmm0vn0hcdnww13b65ii5wapy8638svkf3srh2ap161ijf443";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1yrzaa7wab67dw7yyz3kv78rka6vrmq4q53rrjda25y5mbzax08j";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google OAuth2 SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-oslogin" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-oslogin";
-      version = "0.5.0";
-      sha256 = "02gzg06qlli84wvq6cr1xch8qxk70r5kgs5hqaqfqsr7rg79vfvd";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0mwxzx6qqbcybanf8cvdrwi4q2y1rs9wlrs4ivsx5csjk07zrbpy";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud OS Login SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-pagespeed" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-pagespeed";
-      version = "0.5.0";
-      sha256 = "116diwib3xi34znhl9b2hx3y4m3nqyqfkry0zh2aqknrxx3mpyl7";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "000p7lhs82fgw80x2g77bgk0ywhxcj22388a37xfdlvfwk7rxxhp";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google PageSpeed Insights SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-partners" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-partners";
-      version = "0.5.0";
-      sha256 = "12wfzjf3hvwba4ccnymxrqwk2hzi1zcw5h53iqk33yscx6s30jzm";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0jcqch35rw33fp3xc24x6063hfxfd6hkdhy8ns1b3ry0x59r42na";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Partners SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-people" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-people";
-      version = "0.5.0";
-      sha256 = "01msa1r6p96kgz9isnnqy6ndsrh579c25m9sw43azsij8l1dd43j";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1qjr57q91kr6gf37y24z0hr4lwkqq5fk474mb53s6ipqiyqxsk1s";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google People SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
@@ -276098,97 +277106,62 @@ self: {
   ) { };
 
   "gogol-play-moviespartner" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-play-moviespartner";
-      version = "0.5.0";
-      sha256 = "0cjkikknkk4la3nlw8mn1r0xdq871sd9wakyvsznm9wjqrzysn97";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "05nc0w5v5sgg2z1ldx8y6a06nqy81hsq1bln882gv5595mcz3134";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Play Movies Partner SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-playcustomapp" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-playcustomapp";
-      version = "0.5.0";
-      sha256 = "0dfiwncjngfaj5i3sf38q3qkrlggvpiw9d08xpwr5rbcbi9qp43i";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1mga3ppvlzjw133g8li20hjacp8k280qwpcsrfh1a9srmkflnqpi";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Play Custom App Publishing SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-plus" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-plus";
-      version = "0.5.0";
-      sha256 = "00njgd754pzyss5n3ilnaqr1qd1f4rfz1q9m4x1a3g73fja1yzgh";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1jy99vdjqhlhvgir9h7hfc4w27nql44gqv9bn7g6w77xrh5qbbgg";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google + SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-plus-domains" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-plus-domains";
-      version = "0.5.0";
-      sha256 = "1p3qdj0vjz01yrkdjxsikriy755028v4yhw1d27ypriqh7k5widk";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "00nyww46c4fxqvzm8jdl8wnmv0a7inm4hcyp56vl336l5fzw6wid";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google + Domains SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-poly" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-poly";
-      version = "0.5.0";
-      sha256 = "1da600ahg4x5k8vsw37cr5wrqrz8sq3mhir874fk5xpf2kdqdmkp";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0i87jzs5vrd7zwmrpkbf0jpw7yhq0y9hhiyay18kl78jkwh8gp9v";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Poly SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
@@ -276214,154 +277187,110 @@ self: {
   ) { };
 
   "gogol-proximitybeacon" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-proximitybeacon";
-      version = "0.5.0";
-      sha256 = "1n49i32isjx3iljj035yc4y1lv3d01mpf15ab4ji49x01a0qfs5a";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "13yzm104viq54pddz321bh9fknr4i0pywsnmlayav82gy6q70fnn";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Proximity Beacon SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-pubsub" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-pubsub";
-      version = "0.5.0";
-      sha256 = "1pfw3pz8yr7slbyhp9rf32brqck2l2a60lx3ysz4pjjmfc72rahz";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0ay6npsyzcq2m6dww8xdima8d19bqnrpi942hpmn5ny1rlxahvnj";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Pub/Sub SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-qpxexpress" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-qpxexpress";
-      version = "0.5.0";
-      sha256 = "1xqlqv680w1rr3sqzq5k8kk1xcxagh8zk5g6rqs83xjr1j5lfmsr";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1nvn2c936ia0jzkc6lljcrnxp69y7wj8yk4n95y4wqmibi7v1pc6";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google QPX Express SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
+    }
+  ) { };
+
+  "gogol-recaptcha-enterprise" = callPackage (
+    { mkDerivation, gogol-core }:
+    mkDerivation {
+      pname = "gogol-recaptcha-enterprise";
+      version = "1.0.0";
+      sha256 = "1xcgfz3d34iac66kld3fjszi6zn03hw6i51niyapnmgs7qwvw8xm";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google reCAPTCHA Enterprise SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-redis" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-redis";
-      version = "0.5.0";
-      sha256 = "0x774h1pryr12s6ndcgdvbwqx1nw2sc8yln147hjf4mg3fva6gkc";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1fynpbfhnhpxki81wak3w6256rhb6yj2n6h605zpkmqb6zgdcraw";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Memorystore for Redis SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-remotebuildexecution" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-remotebuildexecution";
-      version = "0.5.0";
-      sha256 = "037biha22xv1ayb3zxx5dc7a86sbmr5zwmg1m24f3bbsgjfnn5ms";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0316qcavy06s6lc77nd3kvkcivx99a29kybqk2v8gkm3d3hgnay6";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Remote Build Execution SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-replicapool" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-replicapool";
-      version = "0.5.0";
-      sha256 = "173ywr9vc69jf5s5vncwjby75mgfbfxw3m42jyi7dcyrxc4jbg68";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1nx55xgghprwzs81x4xvald37xvjzwrsfq5lrrarig5gsz3crb8h";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Replica Pool SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-replicapool-updater" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-replicapool-updater";
-      version = "0.5.0";
-      sha256 = "1wi8x5zj61daln96dqlhq8ki57kl2k6jjz4sm1lbqffcgq66743d";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "14cwrx4qw002464i913n6hxq7rw962w2kcrw3bzng74ndhaaswd2";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Compute Engine Instance Group Updater SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-resourcemanager" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-resourcemanager";
-      version = "0.5.0";
-      sha256 = "1sd8zaigvpbq591nwsjyxf9jf9hxc00mjhwfc0i6mahbgax73764";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "12mhxjw4x9cb5sgpy2z4sk9qkmarhwv8mb8q88qigx4d1abqj5gm";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Resource Manager SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
@@ -276387,515 +277316,326 @@ self: {
   ) { };
 
   "gogol-run" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-run";
-      version = "0.5.0";
-      sha256 = "0219vjrlpq16akzwsbk8kfh7p8gc8kkczcvg5a3l6lssxjp87lfg";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Cloud Run SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "07wqy2cp62d8gs4izqzqv50yaj7b37jfhq5qm67j9dr3s56kzz6q";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Cloud Run Admin SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-runtimeconfig" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-runtimeconfig";
-      version = "0.5.0";
-      sha256 = "057qlad1mipdyif8n6wmhwinknnf0qgb65wbw0484b2yzcdj3zd1";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0hrjl2vcbmk3hx38c0alh2lgz10xnsvb90lb5x9fkls2n6l0q3lm";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Runtime Configuration SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-safebrowsing" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-safebrowsing";
-      version = "0.5.0";
-      sha256 = "0690xz81mz8gn0qgkg11y5sx57kjmvd4lryqw8rblrh7ixypn8wb";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "13yyab714dpd42j6683p4c6v97apc2qy4ihyhrsjr7yn6ysyc4jy";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Safe Browsing SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-script" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-script";
-      version = "0.5.0";
-      sha256 = "1ckjj9i8fqd3igz7bnjmri5pgj3risqarcivrr3nmd1d045rx1zx";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1a2ppyk9869bkwzfhaznqkja5pkdwjwal276k4mzn0ba7jrq47hs";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Apps Script SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-searchconsole" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-searchconsole";
-      version = "0.5.0";
-      sha256 = "0k971p9c4yhscnxxfhxlb5wnkzjxd2k9q8qnxlbnvp7ch7z1yv00";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Search Console URL Testing Tools SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "0l5q9zj6scj72zg4sd1hkn5jwm4hh4q85wq6y5pm8s1sbqk3wsqz";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Search Console SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-securitycenter" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-securitycenter";
-      version = "0.5.0";
-      sha256 = "1axvvz60vdvjpd9bd0516fhbqnk8cjb3x52sgf42fq00dhwxy3mj";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google Cloud Security Command Center SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "0vkipvyapjimizikzfgk4q2cdn0my5j85agnnz79hvlkqb412ggp";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Security Command Center SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-servicebroker" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-servicebroker";
-      version = "0.5.0";
-      sha256 = "13726hq8c3g7gqwz2zrzx0k6vywv5ggd6bl90kkw09118zvyc13a";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0z5mfig3k7k90r5khcs8is4c278dsp9y6qa5fljfkljkd4bniyv4";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Service Broker SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-serviceconsumermanagement" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-serviceconsumermanagement";
-      version = "0.5.0";
-      sha256 = "1pln47lpr1wb9w84z8lmskbn49456k9h4awi67mdfg10jzh4n46j";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "17g49aqdgml3w16mj8qf3m0lz7wa6qhmvz1m7s5q2dly8i7klb9q";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Service Consumer Management SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-servicecontrol" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-servicecontrol";
-      version = "0.5.0";
-      sha256 = "01vfjg16x6vpabvb1q2ipnv04j7r7fxxvcbjgq08phq0fnnk8sd1";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0zw9a5q6nsyar5210ryh3svzv8jgjwjmn6mm1kpiqx32bi0gcb53";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Service Control SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-servicemanagement" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-servicemanagement";
-      version = "0.5.0";
-      sha256 = "0bzcv7z5n2ykkydq4wc5ka11cc82y17x4rb26k3hbsak62qx67j2";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0i3v8ryswaz84d27v867v5f3rpa6wa518k9y9sim87l4yvqdd72s";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Service Management SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-servicenetworking" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-servicenetworking";
-      version = "0.5.0";
-      sha256 = "1aja2maxgjhxgqf6agngbx37w02ifb1b5ypnqdwwpi1615qxvrsh";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0180yqdgrbsf7zazvdsbi1hwy671qc4m80chv458fgnhl6irqzsj";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Service Networking SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-serviceusage" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-serviceusage";
-      version = "0.5.0";
-      sha256 = "0zvnd7pl5q73kzdx2x19zrw0rk334l8xlqawlbl5p1zimvvsbpkl";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0mc44gczmh6acgfp3x0lhd7kv7agqdqskv91bvnrk9lmrhcqchr6";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Service Usage SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-serviceuser" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-serviceuser";
-      version = "0.5.0";
-      sha256 = "1xfgp5nm23c8hjzkjamk4qc6qs5j4q3z5pxrlsbnir7lqv73jnwf";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0gh7flld3vai2fwx9gqw3gcrjwwdk3nkahdxdzrixk96lrvfd2lb";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Service User SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-sheets" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-sheets";
-      version = "0.5.0";
-      sha256 = "0wl00f6p5qylbffhm3jw0123aqfc3acls91150nj3ncfl55q0g28";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0jx155xaa053mp7sdrrjng28vdvls51bqg374bp8015dqx8pq388";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Sheets SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-shopping-content" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-shopping-content";
-      version = "0.5.0";
-      sha256 = "0b7i6vc5cw1sigvkpn8k1q8k06alx36h7fw520swhyk2p3v5shmh";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "09j3a7scawkxq81mghnypwhxi5jfx1w8nircmmhpm6a9543ikbgl";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Content API for Shopping SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-siteverification" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-siteverification";
-      version = "0.5.0";
-      sha256 = "0lapqji0cwf0gqp4855wqg8h1xd61bncya5b7b25lnqlld7gnp9w";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "04nn9382mwi4x83whhp66x99mml2djf97nlvpq0n5d6vs5nl65vf";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Site Verification SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-slides" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-slides";
-      version = "0.5.0";
-      sha256 = "0b76hx0bllbpb25d59pqlz0clcv34pkw8rpd7g7g1916sqrsd7dx";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "06cc335zva6qdqr3mmhgsmhzyg09lipzmcsffwvngmbbk6adqfag";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Slides SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-sourcerepo" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-sourcerepo";
-      version = "0.5.0";
-      sha256 = "0j3hcc9fq2aksx1nrvrb0g6xwv86a4n8l2vfgyyzji3gknbqx9ff";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1v5wl66rl9kj7ckzvmy65a23s9d3ajfrxc4rsmpx6zzg3xmxjlw0";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Source Repositories SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-spanner" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-spanner";
-      version = "0.5.0";
-      sha256 = "0z9aycaqp3rb798mcrmrni9jfa8r9j2gjgmlxjx9icg9wh4bs5h4";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0wbkqr2f2dha298n3sz007y9jg9c4yxn69m5ln7ffxa135yan6l8";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Spanner SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-spectrum" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-spectrum";
-      version = "0.5.0";
-      sha256 = "12h0rgnldgjf6qkvjbjsjcbw9vn3wlbs02baybyf70hmp58n8f0k";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0z1la9nan5dfdksgkajh1a2smlj4vjqk3r2586cshyn4lf1iswsa";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Spectrum Database SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-speech" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-speech";
-      version = "0.5.0";
-      sha256 = "1snmajsca1fdq1c98f1pqvghlwgff6vsmz47wvwsjjjqz15nx9j1";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1bg6kqxjgwj5qrkrvl7gk9h9r60z41k9h7zf6y7a74arw1ycnfcs";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Speech-to-Text SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-sqladmin" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-sqladmin";
-      version = "0.5.0";
-      sha256 = "0yyamr3mgwg1gxy1w258gg6gvzcymmqmknkabgxp2p5kkqsyqgv1";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0aamc6i0l1ad9x4fnw1psq37fr8iq4pflmi7r9zpqpqh61225qic";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud SQL Admin SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-storage" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-storage";
-      version = "0.5.0";
-      sha256 = "0jsmgb311iinbmj12chbch3z0d56k9vqqvhjzfcilx05m1pm9xan";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1sdmnkaclgi1n9kip5v3791dbvl992sbf95kp967261cwdm00mw5";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Storage JSON SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-storage-transfer" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-storage-transfer";
-      version = "0.5.0";
-      sha256 = "1zlfszkh59p4pca2n2scxa02ln4va6k5vjz41186350lfxqwba4r";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "14v3gk3pp3cn1r27dc9j6f0a8ska2mdpyarx54607x3y23bl1xc5";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Storage Transfer SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-streetviewpublish" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-streetviewpublish";
-      version = "0.5.0";
-      sha256 = "07w3s049sglcvh8s94kbhj8l3irscji9s14bl493p7bwj1n3dbsb";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "03zd6hk87fchc2v7wch7s2jjlp6kk2pdadd3vqapnfai5b4nmi0c";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Street View Publish SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-surveys" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-surveys";
-      version = "0.5.0";
-      sha256 = "0p9qkqxddgv8m24h2g58hiwhcpwndxl9r9gifjgpbh4mlcsx42q1";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1bpybiarlh030k825ikf4sc3wm54qn8jxn9wcycfchz311rahci1";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Surveys SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-tagmanager" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-tagmanager";
-      version = "0.5.0";
-      sha256 = "116wc01i63q519bbqdi7ln12cvbfdsf6jdfbxrmz7zrzj4zw27l5";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1lfadp570iampv44s8kjykimll2h3jrm7kmg696lc4gvr45ps9iz";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Tag Manager SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
@@ -276921,135 +277661,86 @@ self: {
   ) { };
 
   "gogol-testing" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-testing";
-      version = "0.5.0";
-      sha256 = "1fawwvbcy51ri9szfiknkrqvhapdhfw2qpbvdf10mjn5jpiqmj39";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0spim4pb7l582ydp4p5fz24bdqdl2d3jl75sw90g39fkdhx8b36s";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Testing SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-texttospeech" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-texttospeech";
-      version = "0.5.0";
-      sha256 = "0na9qf1307lg9bf23pd20wic530hy8hdqy95g65gdjz9g2969flk";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0dal449bcdlr04mllfam1m9n0qz8p3ddlv8vm1xpxzw52090jq3m";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Text-to-Speech SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-toolresults" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-toolresults";
-      version = "0.5.0";
-      sha256 = "1m84mv6nbbf142ss1dgk91qhciy9wlfshf3hybb364wxqf4bkq93";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "108x732f9bxsqwj1wnmp3sb19v2hc0amjq3hjpw8f2iciyy4l5ia";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Tool Results SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-tpu" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-tpu";
-      version = "0.5.0";
-      sha256 = "1w6qcqz13sgk05i49nkx6pkxgsyc8pxy0rjyqlbribiwy30isxv3";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "09hbn03scg5axmfy15d29v5nmqxgsc8289x95rahcy00vjcx0aip";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud TPU SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-tracing" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-tracing";
-      version = "0.5.0";
-      sha256 = "12f84mhfyckic7kq92xyry4xfipic50znzm4q37vphjfsv9m9r4i";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0a98hq71pl3hiv8axaqibs7i5vx9h36zcp4lhj1ckca9mbqps87g";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Tracing SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-translate" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-translate";
-      version = "0.5.0";
-      sha256 = "1ida8wkwp0fqvzsnbd99c842b6a3bcg5nw84aicffn95vwbl9rma";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "15ai2f66bi5hvfpfqx3kpr7pb9nw5sw13p6igs9a2vmdaqf57mkg";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Translation SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-urlshortener" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-urlshortener";
-      version = "0.5.0";
-      sha256 = "0a5fxcrmwjncxz6l9mhgj44i8lk8rnbgqacvkdmmhylc0yh3al2l";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0j846nnb5w2lki10wnvdslds4bi387hxcfrr3m8q156n0dvgzz5q";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google URL Shortener SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
@@ -277075,154 +277766,98 @@ self: {
   ) { };
 
   "gogol-vault" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-vault";
-      version = "0.5.0";
-      sha256 = "1dzk79y10396qq6l3y7zs9jm5rga02yxvdhp8dm7af9lb3izmjnc";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google G Suite Vault SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "08dyv38d0ga4dc6zlxz41dgba84ylxc336xv0c33jqxhrzdq6654";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google Vault SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-videointelligence" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-videointelligence";
-      version = "0.5.0";
-      sha256 = "16jczzbvk4ww8li0yyk6clx4l2b28g48pxsckic9sdsqy5xj709c";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1303p25mdzvk79rhy942f1v27n476cqj1sclycq3mnflf661sbwa";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Video Intelligence SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-vision" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-vision";
-      version = "0.5.0";
-      sha256 = "1h71p2a35lwj3p8zw6mvzxas9yyw5diss0lyg2w2nqsx8cynh7rb";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "13llhpsj0lzd4r6mbgzlcqgj8m14i0qk3il3pynxwhzvn1nccjps";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Cloud Vision SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-webmaster-tools" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-webmaster-tools";
-      version = "0.5.0";
-      sha256 = "029kbgzsbqyd8mbflkca8djmavmphddcldkjf8ds5jkp1qpqnnha";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "1da7zap20g3s8n8pail5sh7wy4i7m718qr1h3dmqpd4413p9ybcn";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Search Console SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-websecurityscanner" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-websecurityscanner";
-      version = "0.5.0";
-      sha256 = "1mcr0cs8pnlbwwsmlwjmkclvcwdwzhg2zqw9bqljw3iism43m9dq";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "0asdbgv7n7vcc7z2qxr4aqva0w75wzxba2niyq10648ya1dxrx5d";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google Web Security Scanner SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-youtube" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-youtube";
-      version = "0.5.0";
-      sha256 = "0gamhcnhvxkybsnikwrlmin0fkf1h3fcflk4vg1zcm1sg7sk9xlj";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
-      description = "Google YouTube Data SDK";
-      license = "unknown";
+      version = "1.0.0";
+      sha256 = "1zgfx51z3wxmjkyzg876kfmwb516n5dhaygg1bmjhqc6xwzzp2si";
+      libraryHaskellDepends = [ gogol-core ];
+      description = "Google YouTube Data API v3 SDK";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-youtube-analytics" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-youtube-analytics";
-      version = "0.5.0";
-      sha256 = "0fnrmabcw5kfl8s5nam6wl8qr6ri693wk6wlhvynj1skc54v6l4s";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "01rcrcj83smzhz9bzdhwrnd799w2gg62ypvkffyd1n06frs6jlaf";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google YouTube Analytics SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
   "gogol-youtube-reporting" = callPackage (
-    {
-      mkDerivation,
-      base,
-      gogol-core,
-    }:
+    { mkDerivation, gogol-core }:
     mkDerivation {
       pname = "gogol-youtube-reporting";
-      version = "0.5.0";
-      sha256 = "0cb88q2g67cx9zndf40a0c62cw7r32g1ps12a2ks0gz863bq53vn";
-      libraryHaskellDepends = [
-        base
-        gogol-core
-      ];
+      version = "1.0.0";
+      sha256 = "14p05jzz2vpxhgr2gb8pp5i8ni46zy3j5vjhlq3gb2ri7cz76asz";
+      libraryHaskellDepends = [ gogol-core ];
       description = "Google YouTube Reporting SDK";
-      license = "unknown";
+      license = lib.licenses.mpl20;
     }
   ) { };
 
@@ -278830,8 +279465,8 @@ self: {
     }:
     mkDerivation {
       pname = "gothic";
-      version = "0.1.8.2";
-      sha256 = "1mqkkla4ipibp7y7aiy466qrqcapra4n2xx8an07c1inwkpsxzw1";
+      version = "0.1.8.3";
+      sha256 = "0lf0yhq4q2vcw9b69l7ixdscmz5drxiag9l31iz1ypb8cyjspi1q";
       libraryHaskellDepends = [
         aeson
         base
@@ -279590,8 +280225,8 @@ self: {
     }:
     mkDerivation {
       pname = "gpu-vulkan-middle";
-      version = "0.1.0.75";
-      sha256 = "1m22f7p78pwpipkvlsg95izivhz4z2cxiww4l4qy329s1cyyy0w6";
+      version = "0.1.0.76";
+      sha256 = "188g8i3zszb3xm5cl57bvhmwwrg1adx679h4j52z1a1qzyiia02m";
       enableSeparateDataOutput = true;
       libraryHaskellDepends = [
         base
@@ -281537,8 +282172,8 @@ self: {
     }:
     mkDerivation {
       pname = "graphql";
-      version = "1.5.0.0";
-      sha256 = "1vgvrk225fgn94cmdk5yy6a6d8p10igwx1fbvll94x4izkq57h9y";
+      version = "1.5.0.1";
+      sha256 = "0kx0pnf16zwdjxc1ig46mbv7px7r7v6xn6kmlypl0d73ik8jfzrq";
       libraryHaskellDepends = [
         base
         conduit
@@ -281675,6 +282310,8 @@ self: {
       pname = "graphql-client";
       version = "1.2.4";
       sha256 = "0rm7x5hrjz7fqfixpaab2c8fmwpn6m3p14zr0wq2bll8qf0hj15c";
+      revision = "1";
+      editedCabalFile = "0fi7q2zxfm85pdpn9b4jzh49rnakm5dvcmjkr0g39738zprgwaph";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -281936,8 +282573,8 @@ self: {
     }:
     mkDerivation {
       pname = "graphula";
-      version = "2.1.0.1";
-      sha256 = "1bc8nr6m9lahbfg5h1i9y25kv5ikr7dcqs4ga4hzii07zvq6ks84";
+      version = "2.1.2.0";
+      sha256 = "11w4sp6jpygpqd0xjnhwdrj5gizz4nrn01md2hc98fxm19a0la03";
       libraryHaskellDepends = [
         base
         containers
@@ -282840,8 +283477,8 @@ self: {
     }:
     mkDerivation {
       pname = "greskell-core";
-      version = "1.0.0.4";
-      sha256 = "0cvqrbpfa0flsvjvmdg6pf1m0dd1gxgk22n8wqbnvwak8c528hff";
+      version = "1.0.0.6";
+      sha256 = "14xsjs4xf3db8ppz4xypshzvyvxsn7s7syr8vqkrbll8vz9laab8";
       libraryHaskellDepends = [
         aeson
         base
@@ -283410,7 +284047,7 @@ self: {
     }
   ) { };
 
-  "grisette_0_12_0_0" = callPackage (
+  "grisette_0_13_0_0" = callPackage (
     {
       mkDerivation,
       array,
@@ -283450,8 +284087,8 @@ self: {
     }:
     mkDerivation {
       pname = "grisette";
-      version = "0.12.0.0";
-      sha256 = "0dcwbc53321jg6jfmsr72kmsx8w7c6x9aq4yllwfvbzh092ljlib";
+      version = "0.13.0.0";
+      sha256 = "0115al5kw0vfsp11cndra6qrjiakm2w0gpi8ai4g47fysn8xbx6p";
       libraryHaskellDepends = [
         array
         async
@@ -289508,8 +290145,8 @@ self: {
     }:
     mkDerivation {
       pname = "hackage-cli";
-      version = "0.1.0.2";
-      sha256 = "1q7k8fy6mqb7h4q4bm8qp0ma2nhspszkwy8d606hb66sdiw7k73k";
+      version = "0.1.0.3";
+      sha256 = "19mnvvhhcagq1l3qc37qxxv7pwzfw6p15194f21z7harj5y1ly5c";
       isLibrary = false;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -289890,8 +290527,8 @@ self: {
       pname = "hackage-repo-tool";
       version = "0.1.1.4";
       sha256 = "1nqm6rri8rkhrqvppyzy04s3875c4wjcay8gny4ygbr65c6iw81v";
-      revision = "1";
-      editedCabalFile = "09fx1z32m36riv3hmjrv36knlmmrrjq2hbl30i2qfk7pfcbcjlgw";
+      revision = "2";
+      editedCabalFile = "0ghjpd02ccv6xdp0n6mxylq09ff5w7yzvpw3v3w4i62l43fi9j7q";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -289925,7 +290562,8 @@ self: {
       base,
       bytestring,
       Cabal,
-      cabal-install-parsers,
+      cabal-install,
+      Cabal-syntax,
       containers,
       filepath,
       optparse-applicative,
@@ -289935,10 +290573,10 @@ self: {
     }:
     mkDerivation {
       pname = "hackage-revdeps";
-      version = "0.1";
-      sha256 = "1rc6k7cjcc581cx7nx7q0p5qdfzpc010bacx4w524j6bw1qb2kp1";
+      version = "0.1.1";
+      sha256 = "0ckkcp2ndzv219hpl42vfzw0hvb5vblsx2bvdsa98wikkxnmn47j";
       revision = "1";
-      editedCabalFile = "1x0rslnwk818wv37qxjfk8nmv1ld5an6ca402zhgmq0i94gd39h3";
+      editedCabalFile = "078lhc7lzs24qqizplyf4ipggxkqqsfmgq6vnrgbyhxiia2smc4b";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -289957,8 +290595,10 @@ self: {
         base
         bytestring
         Cabal
-        cabal-install-parsers
+        cabal-install
+        Cabal-syntax
         containers
+        filepath
         optparse-applicative
         time
       ];
@@ -289983,7 +290623,6 @@ self: {
       ed25519,
       filepath,
       ghc-prim,
-      lukko,
       mtl,
       network,
       network-uri,
@@ -290005,10 +290644,10 @@ self: {
     }:
     mkDerivation {
       pname = "hackage-security";
-      version = "0.6.2.6";
-      sha256 = "0sfvd5y9v01bjsxsrf446ldcqf56arzr94jk2zsvj49yddbn2hif";
-      revision = "5";
-      editedCabalFile = "1aa020az04a459zx8xy8apdsxmvgndnlfz1cbxwr27sxylg6ypzq";
+      version = "0.6.3.1";
+      sha256 = "05sckvvwj10krkhp1457mgp1hgq45p7r2sp850g3b5689i91mvqx";
+      revision = "1";
+      editedCabalFile = "1si6mkc8gimkpqkdl2wyzxp14v7yphp40hxvp77im7bhr8brsa77";
       libraryHaskellDepends = [
         base
         base16-bytestring
@@ -290022,7 +290661,6 @@ self: {
         ed25519
         filepath
         ghc-prim
-        lukko
         mtl
         network
         network-uri
@@ -291647,6 +292285,7 @@ self: {
       aeson,
       attoparsec,
       base,
+      bytestring,
       data-default,
       doctest,
       filepath,
@@ -291665,8 +292304,8 @@ self: {
     }:
     mkDerivation {
       pname = "haiji";
-      version = "0.3.4.0";
-      sha256 = "1m97lnd993xpxcbm3n2qgqzqjb5j3jvkzkdcb1h9qjd3lr88j1cf";
+      version = "0.4.0.0";
+      sha256 = "1r6bzh95a4qg0waday49qqrm1kmss667hksp0wcl749w5g32jnaq";
       libraryHaskellDepends = [
         aeson
         attoparsec
@@ -291684,6 +292323,7 @@ self: {
       testHaskellDepends = [
         aeson
         base
+        bytestring
         data-default
         doctest
         filepath
@@ -292381,6 +293021,8 @@ self: {
       pname = "hakyll";
       version = "4.16.6.0";
       sha256 = "1933k6aiawa0kdws7ajm9picjchnfrkkd0qd8xb9l2yv1fvcywg2";
+      revision = "3";
+      editedCabalFile = "0q2yl6vqf6qqc7azqwsls7b2pm3y42shhdcpyszrpi16zgx9y137";
       isLibrary = true;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -293575,14 +294217,14 @@ self: {
       bytestring,
       deepseq,
       QuickCheck,
+      tasty,
+      tasty-quickcheck,
       template-haskell,
-      test-framework,
-      test-framework-quickcheck2,
     }:
     mkDerivation {
       pname = "half";
-      version = "0.3.2";
-      sha256 = "0f7hgnfy8qpjsjv78gk01di3riwfbrb961msn19qmsplnsgjx68r";
+      version = "0.3.3";
+      sha256 = "00mb2xfz0q8sq8zxqpw3ycp1p8gjhlgc0wxh5xr7kzyn52b08xpl";
       libraryHaskellDepends = [
         base
         binary
@@ -293594,8 +294236,8 @@ self: {
         binary
         bytestring
         QuickCheck
-        test-framework
-        test-framework-quickcheck2
+        tasty
+        tasty-quickcheck
       ];
       description = "Half-precision floating-point";
       license = lib.licenses.bsd3;
@@ -296914,41 +297556,6 @@ self: {
     }
   ) { };
 
-  "happy_1_19_12" = callPackage (
-    {
-      mkDerivation,
-      array,
-      base,
-      containers,
-      mtl,
-      process,
-    }:
-    mkDerivation {
-      pname = "happy";
-      version = "1.19.12";
-      sha256 = "03xlmq6qmdx4zvzw8bp33kd9g7yvcq5cz4wg50xilw812kj276pv";
-      revision = "1";
-      editedCabalFile = "13wydw1mmdry4l9r63vxjk4h55ci9hgwzn1a842qqk1m2rb4xiln";
-      isLibrary = false;
-      isExecutable = true;
-      enableSeparateDataOutput = true;
-      executableHaskellDepends = [
-        array
-        base
-        containers
-        mtl
-      ];
-      testHaskellDepends = [
-        base
-        process
-      ];
-      description = "Happy is a parser generator for Haskell";
-      license = lib.licenses.bsd2;
-      hydraPlatforms = lib.platforms.none;
-      mainProgram = "happy";
-    }
-  ) { };
-
   "happy_1_20_1_1" = callPackage (
     {
       mkDerivation,
@@ -297910,6 +298517,55 @@ self: {
       ];
       description = "Haskell array programming";
       license = lib.licenses.bsd3;
+    }
+  ) { };
+
+  "harpie_0_1_3_0" = callPackage (
+    {
+      mkDerivation,
+      adjunctions,
+      base,
+      distributive,
+      doctest-parallel,
+      first-class-families,
+      prettyprinter,
+      QuickCheck,
+      quickcheck-instances,
+      random,
+      vector,
+      vector-algorithms,
+    }:
+    mkDerivation {
+      pname = "harpie";
+      version = "0.1.3.0";
+      sha256 = "1agkp62rcgk705hp8hlppfiidv5vsz0ps6pq3pvlnn1g73vv5ivr";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        adjunctions
+        base
+        distributive
+        first-class-families
+        prettyprinter
+        QuickCheck
+        quickcheck-instances
+        random
+        vector
+        vector-algorithms
+      ];
+      executableHaskellDepends = [
+        adjunctions
+        base
+        first-class-families
+      ];
+      testHaskellDepends = [
+        base
+        doctest-parallel
+      ];
+      description = "Haskell array programming";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "harpie-bug-issue1";
     }
   ) { };
 
@@ -298916,8 +299572,8 @@ self: {
     }:
     mkDerivation {
       pname = "hash-string";
-      version = "0.1.0.0";
-      sha256 = "154iqs3pnxypsj5xj35gncmc4cvzfsx9x28iyh2i3dwdyks33rj5";
+      version = "0.1.0.2";
+      sha256 = "0ri03id2jwpsn77mnnvvicx6niy5q5q7mr38r6y64am4j6yfh2q3";
       libraryHaskellDepends = [
         base
         bytestring
@@ -300846,6 +301502,293 @@ self: {
     }
   ) { };
 
+  "haskell-bee" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      safe-exceptions,
+      stm,
+      tasty,
+      tasty-quickcheck,
+      text,
+      unbounded-delays,
+    }:
+    mkDerivation {
+      pname = "haskell-bee";
+      version = "0.1.0.0";
+      sha256 = "1wsdwfqswvq9vbsk8vpdx58bqrznqix2p8d527fwvksvg9rpq5r0";
+      libraryHaskellDepends = [
+        aeson
+        base
+        safe-exceptions
+        stm
+        text
+        unbounded-delays
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        tasty
+        tasty-quickcheck
+      ];
+      description = "A lightweight library for asynchronous job workers with multiple broker backends";
+      license = lib.licenses.agpl3Plus;
+    }
+  ) { };
+
+  "haskell-bee-pgmq" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      containers,
+      deepseq,
+      haskell-bee,
+      haskell-bee-tests,
+      haskell-pgmq,
+      hspec,
+      mtl,
+      postgresql-libpq,
+      postgresql-simple,
+      random-strings,
+      safe,
+      safe-exceptions,
+      scientific,
+      tasty,
+      tasty-hspec,
+      text,
+      time,
+      units,
+      unix-time,
+    }:
+    mkDerivation {
+      pname = "haskell-bee-pgmq";
+      version = "0.1.0.0";
+      sha256 = "1cf8mc1ddl1vhh7nyjsla5ccymy3963sz2j9l337pvpm492lxf0a";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        containers
+        deepseq
+        haskell-bee
+        haskell-pgmq
+        postgresql-libpq
+        postgresql-simple
+        safe
+        safe-exceptions
+        scientific
+        text
+        time
+        units
+        unix-time
+      ];
+      executableHaskellDepends = [
+        aeson
+        base
+        haskell-bee
+        haskell-pgmq
+        mtl
+        postgresql-simple
+        text
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        containers
+        haskell-bee
+        haskell-bee-tests
+        hspec
+        postgresql-simple
+        random-strings
+        tasty
+        tasty-hspec
+        text
+      ];
+      description = "PostgreSQL/PGMQ broker implementation for haskell-bee";
+      license = lib.licenses.agpl3Plus;
+      mainProgram = "simple-worker";
+    }
+  ) { };
+
+  "haskell-bee-redis" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      containers,
+      deepseq,
+      haskell-bee,
+      haskell-bee-tests,
+      hedis,
+      hspec,
+      random-strings,
+      safe,
+      safe-exceptions,
+      scientific,
+      stm,
+      tasty,
+      tasty-hspec,
+      tasty-hunit,
+      tasty-quickcheck,
+      text,
+      time,
+      units,
+      unix-time,
+    }:
+    mkDerivation {
+      pname = "haskell-bee-redis";
+      version = "0.1.0.0";
+      sha256 = "19qq0gkpqb0ywchsz0z2q5qpvj3f260k1175zkjc49mzwl6q26x4";
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        containers
+        deepseq
+        haskell-bee
+        hedis
+        safe
+        safe-exceptions
+        scientific
+        stm
+        text
+        time
+        units
+        unix-time
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        containers
+        haskell-bee
+        haskell-bee-tests
+        hedis
+        hspec
+        random-strings
+        stm
+        tasty
+        tasty-hspec
+        tasty-hunit
+        tasty-quickcheck
+        text
+        unix-time
+      ];
+      description = "Redis broker implementation for haskell-bee";
+      license = lib.licenses.agpl3Plus;
+    }
+  ) { };
+
+  "haskell-bee-stm" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      containers,
+      deepseq,
+      haskell-bee,
+      haskell-bee-tests,
+      hspec,
+      random-strings,
+      safe,
+      safe-exceptions,
+      scientific,
+      stm,
+      tasty,
+      tasty-hspec,
+      tasty-hunit,
+      tasty-quickcheck,
+      text,
+      time,
+      units,
+      unix-time,
+    }:
+    mkDerivation {
+      pname = "haskell-bee-stm";
+      version = "0.1.0.0";
+      sha256 = "1m34642h4nkl03yrvpgrhnprkj09xylg5rfg169gadwk8jm6w0bw";
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        containers
+        deepseq
+        haskell-bee
+        safe
+        safe-exceptions
+        scientific
+        stm
+        text
+        time
+        units
+        unix-time
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        containers
+        haskell-bee
+        haskell-bee-tests
+        hspec
+        random-strings
+        stm
+        tasty
+        tasty-hspec
+        tasty-hunit
+        tasty-quickcheck
+        text
+        unix-time
+      ];
+      description = "STM broker implementation for haskell-bee";
+      license = lib.licenses.agpl3Plus;
+    }
+  ) { };
+
+  "haskell-bee-tests" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      containers,
+      haskell-bee,
+      hedis,
+      hspec,
+      postgresql-simple,
+      random-strings,
+      stm,
+      tasty,
+      tasty-hspec,
+      text,
+    }:
+    mkDerivation {
+      pname = "haskell-bee-tests";
+      version = "0.1.0.0";
+      sha256 = "1bcg8c8fm9yaq4k3v8m79qq6miqjgbmc3xbdnr4mn5z8ayi1s2cr";
+      libraryHaskellDepends = [
+        aeson
+        base
+        containers
+        haskell-bee
+        hedis
+        hspec
+        postgresql-simple
+        random-strings
+        stm
+        tasty
+        tasty-hspec
+        text
+      ];
+      description = "Reusable test suite for any haskell-bee Broker implementation";
+      license = lib.licenses.agpl3Plus;
+    }
+  ) { };
+
   "haskell-bitmex-client" = callPackage (
     {
       mkDerivation,
@@ -302038,8 +302981,8 @@ self: {
         }:
         mkDerivation {
           pname = "haskell-gi";
-          version = "0.26.15";
-          sha256 = "07lpd31j582czgvrivyh0fp3bbjmhvqicgy47pv2j69x450q2wsa";
+          version = "0.26.16";
+          sha256 = "0v5pjysap2v5a9njc1z9c6by2sv18p9kkqcpzpxwqjs9hh4mxq5q";
           setupHaskellDepends = [
             base
             Cabal
@@ -302083,6 +303026,82 @@ self: {
         inherit (pkgs) gobject-introspection;
       };
 
+  "haskell-gi_0_26_17" =
+    callPackage
+      (
+        {
+          mkDerivation,
+          ansi-terminal,
+          attoparsec,
+          base,
+          bytestring,
+          Cabal,
+          cabal-doctest,
+          containers,
+          directory,
+          doctest,
+          filepath,
+          glib,
+          gobject-introspection,
+          haskell-gi-base,
+          mtl,
+          pretty-show,
+          process,
+          regex-tdfa,
+          safe,
+          text,
+          transformers,
+          xdg-basedir,
+          xml-conduit,
+        }:
+        mkDerivation {
+          pname = "haskell-gi";
+          version = "0.26.17";
+          sha256 = "0vg75z5qgf0km59gv6dvpzckyxdli3i5d8lk8xck55smaf9h6f6i";
+          setupHaskellDepends = [
+            base
+            Cabal
+            cabal-doctest
+          ];
+          libraryHaskellDepends = [
+            ansi-terminal
+            attoparsec
+            base
+            bytestring
+            Cabal
+            containers
+            directory
+            filepath
+            haskell-gi-base
+            mtl
+            pretty-show
+            process
+            regex-tdfa
+            safe
+            text
+            transformers
+            xdg-basedir
+            xml-conduit
+          ];
+          libraryPkgconfigDepends = [
+            glib
+            gobject-introspection
+          ];
+          testHaskellDepends = [
+            base
+            doctest
+            process
+          ];
+          description = "Generate Haskell bindings for GObject Introspection capable libraries";
+          license = lib.licenses.lgpl21Only;
+          hydraPlatforms = lib.platforms.none;
+        }
+      )
+      {
+        inherit (pkgs) glib;
+        inherit (pkgs) gobject-introspection;
+      };
+
   "haskell-gi-base" = callPackage (
     {
       mkDerivation,
@@ -302090,16 +303109,18 @@ self: {
       bytestring,
       containers,
       glib,
+      optics-core,
       text,
     }:
     mkDerivation {
       pname = "haskell-gi-base";
-      version = "0.26.8";
-      sha256 = "19sp8yi9inxq7vqw6zpf2rlk56algxajkf8gyl0iqbx95kb4x1bb";
+      version = "0.26.9";
+      sha256 = "1li1q8k5zn7yxqn3rdh5sjkq4lsr9gsbhkvxh6wzca39n37vnnf3";
       libraryHaskellDepends = [
         base
         bytestring
         containers
+        optics-core
         text
       ];
       libraryPkgconfigDepends = [ glib ];
@@ -302146,6 +303167,90 @@ self: {
     }
   ) { };
 
+  "haskell-google-genai-client" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      base64-bytestring,
+      bytestring,
+      case-insensitive,
+      containers,
+      deepseq,
+      exceptions,
+      hspec,
+      http-api-data,
+      http-client,
+      http-client-tls,
+      http-media,
+      http-types,
+      iso8601-time,
+      microlens,
+      monad-logger,
+      mtl,
+      network,
+      QuickCheck,
+      random,
+      safe-exceptions,
+      semigroups,
+      text,
+      time,
+      transformers,
+      unordered-containers,
+      vector,
+    }:
+    mkDerivation {
+      pname = "haskell-google-genai-client";
+      version = "0.1.0";
+      sha256 = "020qnab47jn1ixmwds8w4nbyzd2j1kpg7ykd71lfc71vnr4mh93h";
+      libraryHaskellDepends = [
+        aeson
+        base
+        base64-bytestring
+        bytestring
+        case-insensitive
+        containers
+        deepseq
+        exceptions
+        http-api-data
+        http-client
+        http-client-tls
+        http-media
+        http-types
+        iso8601-time
+        microlens
+        monad-logger
+        mtl
+        network
+        random
+        safe-exceptions
+        text
+        time
+        transformers
+        unordered-containers
+        vector
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        bytestring
+        containers
+        hspec
+        iso8601-time
+        mtl
+        QuickCheck
+        semigroups
+        text
+        time
+        transformers
+        unordered-containers
+        vector
+      ];
+      description = "Auto-generated Gemini API Client for Haskell";
+      license = lib.licenses.mit;
+    }
+  ) { };
+
   "haskell-google-trends" = callPackage (
     {
       mkDerivation,
@@ -302178,6 +303283,120 @@ self: {
       ];
       description = "Simple library for accessing Google Trends";
       license = lib.licenses.publicDomain;
+    }
+  ) { };
+
+  "haskell-halogen-core" = callPackage (
+    {
+      mkDerivation,
+      async,
+      base,
+      bytestring,
+      clay,
+      containers,
+      data-default,
+      deepseq,
+      free,
+      hashable,
+      hspec,
+      kan-extensions,
+      mtl,
+      protolude,
+      random,
+      row-types,
+      safe-exceptions,
+      stm,
+      text,
+      time,
+      transformers,
+      unliftio,
+      unordered-containers,
+      uuid-types,
+    }:
+    mkDerivation {
+      pname = "haskell-halogen-core";
+      version = "0.9.0";
+      sha256 = "0c48150a29rssnzxvqmvq7ivdgb9yh47hhfzy0c56jqh2dy8gx0z";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        async
+        base
+        bytestring
+        clay
+        containers
+        data-default
+        deepseq
+        free
+        hashable
+        kan-extensions
+        mtl
+        protolude
+        random
+        row-types
+        safe-exceptions
+        stm
+        text
+        time
+        transformers
+        unliftio
+        unordered-containers
+        uuid-types
+      ];
+      executableHaskellDepends = [
+        async
+        base
+        bytestring
+        clay
+        containers
+        data-default
+        deepseq
+        free
+        hashable
+        kan-extensions
+        mtl
+        protolude
+        random
+        row-types
+        safe-exceptions
+        stm
+        text
+        time
+        transformers
+        unliftio
+        unordered-containers
+        uuid-types
+      ];
+      testHaskellDepends = [
+        async
+        base
+        bytestring
+        clay
+        containers
+        data-default
+        deepseq
+        free
+        hashable
+        hspec
+        kan-extensions
+        mtl
+        protolude
+        random
+        row-types
+        safe-exceptions
+        stm
+        text
+        time
+        transformers
+        unliftio
+        unordered-containers
+        uuid-types
+      ];
+      description = "Haskell port of purescript-halogen library";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "halogen-core-prototype";
+      broken = true;
     }
   ) { };
 
@@ -302428,7 +303647,6 @@ self: {
       lsp-types,
       megaparsec,
       mod,
-      monoid-subclasses,
       mtl,
       network-uri,
       optparse-applicative,
@@ -302477,8 +303695,10 @@ self: {
     }:
     mkDerivation {
       pname = "haskell-language-server";
-      version = "2.10.0.0";
-      sha256 = "1h1w40y03lwkwzhl4bz0xvk2fdvzxq3gzx0xjkqv0bghmnkmz3fn";
+      version = "2.11.0.0";
+      sha256 = "1acd42sqa76nkrwkb6jcrimbf8va6ikkynv9ssbbamyy4vmx1aa4";
+      revision = "1";
+      editedCabalFile = "06ah5cdcg52azd0jx7n4n7xwrhphjc2k4k8gqda44m1kiv5z2v18";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -302605,7 +303825,6 @@ self: {
         enummapset
         extra
         filepath
-        fuzzy
         ghcide
         hashable
         hls-plugin-api
@@ -302615,7 +303834,6 @@ self: {
         lsp
         lsp-test
         lsp-types
-        monoid-subclasses
         mtl
         network-uri
         ormolu
@@ -303362,6 +304580,62 @@ self: {
       license = lib.licenses.gpl3Only;
       hydraPlatforms = lib.platforms.none;
       mainProgram = "hpdfp";
+    }
+  ) { };
+
+  "haskell-pgmq" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      containers,
+      hspec,
+      postgresql-simple,
+      random-strings,
+      safe,
+      stm,
+      tasty,
+      tasty-hspec,
+      text,
+      time,
+      units,
+    }:
+    mkDerivation {
+      pname = "haskell-pgmq";
+      version = "0.1.0.0";
+      sha256 = "1kslpx1zah97k9z2k967rwkjm01p9c0vz0if4hhpa52rprcadm7k";
+      isLibrary = true;
+      isExecutable = true;
+      enableSeparateDataOutput = true;
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        postgresql-simple
+        safe
+        text
+        time
+        units
+      ];
+      executableHaskellDepends = [
+        base
+        postgresql-simple
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        containers
+        hspec
+        postgresql-simple
+        random-strings
+        stm
+        tasty
+        tasty-hspec
+        text
+      ];
+      description = "Haskell interface for Tembo's PGMQ PostgreSQL extension";
+      license = lib.licenses.agpl3Plus;
     }
   ) { };
 
@@ -307313,6 +308587,127 @@ self: {
     }
   ) { };
 
+  "haskoin-core_1_2_2" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      array,
+      base,
+      base16,
+      base64,
+      binary,
+      bytes,
+      bytestring,
+      cereal,
+      conduit,
+      containers,
+      crypton,
+      data-default,
+      deepseq,
+      entropy,
+      hashable,
+      hspec,
+      hspec-discover,
+      HUnit,
+      lens,
+      lens-aeson,
+      memory,
+      mtl,
+      murmur3,
+      network,
+      QuickCheck,
+      safe,
+      scientific,
+      secp256k1-haskell,
+      split,
+      string-conversions,
+      text,
+      time,
+      transformers,
+      unordered-containers,
+      vector,
+    }:
+    mkDerivation {
+      pname = "haskoin-core";
+      version = "1.2.2";
+      sha256 = "0zv2mjxixp059jd8gz0kr45wsi682wlpbzvik7lj62xq70qfffgx";
+      libraryHaskellDepends = [
+        aeson
+        array
+        base
+        base16
+        binary
+        bytes
+        bytestring
+        cereal
+        conduit
+        containers
+        crypton
+        data-default
+        deepseq
+        entropy
+        hashable
+        hspec
+        memory
+        mtl
+        murmur3
+        network
+        QuickCheck
+        safe
+        scientific
+        secp256k1-haskell
+        split
+        string-conversions
+        text
+        time
+        transformers
+        unordered-containers
+        vector
+      ];
+      testHaskellDepends = [
+        aeson
+        array
+        base
+        base16
+        base64
+        binary
+        bytes
+        bytestring
+        cereal
+        conduit
+        containers
+        crypton
+        data-default
+        deepseq
+        entropy
+        hashable
+        hspec
+        HUnit
+        lens
+        lens-aeson
+        memory
+        mtl
+        murmur3
+        network
+        QuickCheck
+        safe
+        scientific
+        secp256k1-haskell
+        split
+        string-conversions
+        text
+        time
+        transformers
+        unordered-containers
+        vector
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "Bitcoin & Bitcoin Cash library for Haskell";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "haskoin-crypto" = callPackage (
     {
       mkDerivation,
@@ -307400,8 +308795,8 @@ self: {
     }:
     mkDerivation {
       pname = "haskoin-node";
-      version = "1.1.3";
-      sha256 = "1bsbnfyk7abcgm9czcn0r2fiimiy7r6h9mxqbv464dpchgnnp9iy";
+      version = "1.1.4";
+      sha256 = "1ghi2k8hmfpxnzajpz4f2wa2679qbh1ajd91hs7jyg3fyx341hp2";
       libraryHaskellDepends = [
         base
         bytestring
@@ -307614,8 +309009,8 @@ self: {
     }:
     mkDerivation {
       pname = "haskoin-store";
-      version = "1.5.14";
-      sha256 = "1829p5mzgi6zq19h88dcs2cbsafvp7bg7hm3syf444yra9x9brps";
+      version = "1.5.16";
+      sha256 = "1ksqxbng1c2zsl2pvw1iy53z5skidpnar10rk145lna96mw9wsqk";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -307758,7 +309153,9 @@ self: {
       testToolDepends = [ hspec-discover ];
       description = "Storage and index for Bitcoin and Bitcoin Cash";
       license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
       mainProgram = "haskoin-store";
+      broken = true;
     }
   ) { };
 
@@ -307854,6 +309251,99 @@ self: {
     }
   ) { };
 
+  "haskoin-store-data_1_5_16" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      binary,
+      bytes,
+      bytestring,
+      cereal,
+      containers,
+      data-default,
+      deepseq,
+      hashable,
+      haskoin-core,
+      hspec,
+      hspec-discover,
+      http-client,
+      http-types,
+      lens,
+      mtl,
+      network,
+      QuickCheck,
+      scotty,
+      string-conversions,
+      text,
+      time,
+      unordered-containers,
+      vector,
+      wreq,
+    }:
+    mkDerivation {
+      pname = "haskoin-store-data";
+      version = "1.5.16";
+      sha256 = "0qbka5arcr32vrw08hx0xwfi2nmy5hm078j3r2x41cg7d7mvbhvi";
+      libraryHaskellDepends = [
+        aeson
+        base
+        binary
+        bytes
+        bytestring
+        cereal
+        containers
+        data-default
+        deepseq
+        hashable
+        haskoin-core
+        http-client
+        http-types
+        lens
+        mtl
+        network
+        scotty
+        string-conversions
+        text
+        time
+        unordered-containers
+        vector
+        wreq
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        binary
+        bytes
+        bytestring
+        cereal
+        containers
+        data-default
+        deepseq
+        hashable
+        haskoin-core
+        hspec
+        http-client
+        http-types
+        lens
+        mtl
+        network
+        QuickCheck
+        scotty
+        string-conversions
+        text
+        time
+        unordered-containers
+        vector
+        wreq
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "Data for Haskoin Store";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "haskoin-util" = callPackage (
     {
       mkDerivation,
@@ -307908,138 +309398,176 @@ self: {
       mkDerivation,
       aeson,
       aeson-pretty,
+      ansi-terminal,
       base,
+      base16-bytestring,
+      base64-bytestring,
       bytestring,
       cereal,
       conduit,
       containers,
-      daemons,
       data-default,
-      deepseq,
+      Decimal,
       directory,
+      entropy,
       esqueleto,
-      exceptions,
-      file-embed,
-      filepath,
       haskeline,
       haskoin-core,
-      haskoin-node,
+      haskoin-store-data,
+      hspec,
+      hspec-discover,
+      http-types,
       HUnit,
-      lifted-async,
-      lifted-base,
-      monad-control,
+      lens,
+      lens-aeson,
       monad-logger,
       mtl,
+      optparse-applicative,
       persistent,
       persistent-sqlite,
-      persistent-template,
+      pretty,
       QuickCheck,
-      resourcet,
-      semigroups,
+      random,
+      raw-strings-qq,
+      secp256k1-haskell,
       split,
-      stm,
-      stm-chans,
-      stm-conduit,
       string-conversions,
-      test-framework,
-      test-framework-hunit,
-      test-framework-quickcheck2,
       text,
       time,
-      transformers-base,
-      unix,
+      transformers,
       unordered-containers,
-      yaml,
-      zeromq4-haskell,
+      wreq,
     }:
     mkDerivation {
       pname = "haskoin-wallet";
-      version = "0.4.2";
-      sha256 = "0ykjz5qy69mpz4gnwd25lv0jqb3vamk5z6i4pw1zcm5c413fqdm5";
+      version = "0.9.4";
+      sha256 = "06z1rr9lbak48jir8xwp5yy92iaraffd187b8a1g1dx00za5pmf3";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
         aeson
         aeson-pretty
+        ansi-terminal
         base
+        base16-bytestring
+        base64-bytestring
         bytestring
         cereal
         conduit
         containers
-        daemons
         data-default
-        deepseq
+        Decimal
         directory
+        entropy
         esqueleto
-        exceptions
-        file-embed
-        filepath
         haskeline
         haskoin-core
-        haskoin-node
-        lifted-async
-        lifted-base
-        monad-control
+        haskoin-store-data
+        http-types
+        lens
+        lens-aeson
         monad-logger
         mtl
+        optparse-applicative
         persistent
         persistent-sqlite
-        persistent-template
-        resourcet
-        semigroups
+        pretty
+        random
+        raw-strings-qq
+        secp256k1-haskell
         split
-        stm
-        stm-chans
-        stm-conduit
         string-conversions
         text
         time
-        transformers-base
-        unix
+        transformers
         unordered-containers
-        yaml
-        zeromq4-haskell
+        wreq
       ];
       executableHaskellDepends = [
         aeson
         aeson-pretty
+        ansi-terminal
         base
-        haskoin-node
+        base16-bytestring
+        base64-bytestring
+        bytestring
+        cereal
+        conduit
+        containers
+        data-default
+        Decimal
+        directory
+        entropy
+        esqueleto
+        haskeline
+        haskoin-core
+        haskoin-store-data
+        http-types
+        lens
+        lens-aeson
         monad-logger
+        mtl
+        optparse-applicative
+        persistent
         persistent-sqlite
-        resourcet
+        pretty
+        random
+        raw-strings-qq
+        secp256k1-haskell
+        split
         string-conversions
+        text
+        time
+        transformers
         unordered-containers
-        zeromq4-haskell
+        wreq
       ];
       testHaskellDepends = [
         aeson
+        aeson-pretty
+        ansi-terminal
         base
+        base16-bytestring
+        base64-bytestring
         bytestring
+        cereal
+        conduit
         containers
+        data-default
+        Decimal
         directory
+        entropy
+        esqueleto
+        haskeline
         haskoin-core
-        haskoin-node
+        haskoin-store-data
+        hspec
+        http-types
         HUnit
+        lens
+        lens-aeson
         monad-logger
         mtl
+        optparse-applicative
         persistent
         persistent-sqlite
+        pretty
         QuickCheck
-        resourcet
-        stm
-        stm-chans
+        random
+        raw-strings-qq
+        secp256k1-haskell
+        split
         string-conversions
-        test-framework
-        test-framework-hunit
-        test-framework-quickcheck2
         text
+        time
+        transformers
         unordered-containers
+        wreq
       ];
-      description = "Implementation of a Bitcoin SPV Wallet with BIP32 and multisig support";
+      testToolDepends = [ hspec-discover ];
+      description = "Lightweight CLI wallet for Bitcoin and Bitcoin Cash";
       license = lib.licenses.publicDomain;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
+      mainProgram = "hw";
     }
   ) { };
 
@@ -308229,8 +309757,6 @@ self: {
       ];
       description = "The Haskore Computer Music System";
       license = "GPL";
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -308273,6 +309799,7 @@ self: {
       description = "Routines for realtime playback of Haskore songs";
       license = "GPL";
       hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -308564,8 +310091,8 @@ self: {
     }:
     mkDerivation {
       pname = "hasktorch";
-      version = "0.2.1.3";
-      sha256 = "18j3mvbag1anmkc5s8486i1a6am3iljm48aixxf5fi1bg2mkq46k";
+      version = "0.2.1.4";
+      sha256 = "0g5k796s66mz53cabfd0gl099rrjk1pfxc55qfg2j97mn69hgb1q";
       setupHaskellDepends = [
         base
         Cabal
@@ -310984,7 +312511,7 @@ self: {
     }
   ) { };
 
-  "hasql-pool_1_3_0_1" = callPackage (
+  "hasql-pool_1_3_0_2" = callPackage (
     {
       mkDerivation,
       async,
@@ -311001,8 +312528,8 @@ self: {
     }:
     mkDerivation {
       pname = "hasql-pool";
-      version = "1.3.0.1";
-      sha256 = "0rvj241z6adnkrkr5yfr0k8ngxqylsl85kjcka6mn05m4swplsfz";
+      version = "1.3.0.2";
+      sha256 = "1adx703q4vx2qpmp2hl3zaa48h79px2py9p04ikwixd1aq300wrh";
       libraryHaskellDepends = [
         base
         bytestring
@@ -311276,17 +312803,19 @@ self: {
       hasql,
       hspec,
       resource-pool,
+      text,
       time,
     }:
     mkDerivation {
       pname = "hasql-resource-pool";
-      version = "0.6.0.0";
-      sha256 = "05xvmcrlxp8gksizsx916awsxhbh4a9svnirhnibn9cp1bqcr11i";
+      version = "1.9.1.3";
+      sha256 = "10hgwdpnd82yhsjflbskngwkjmkpp49qrvxspgka24ngp8q08zyz";
       libraryHaskellDepends = [
         base-prelude
         clock
         hasql
         resource-pool
+        text
         time
       ];
       testHaskellDepends = [
@@ -313169,6 +314698,8 @@ self: {
       pname = "haxr";
       version = "3000.11.5.1";
       sha256 = "1r5ipm1qzlkxk1xc9hv86kli5aa4nw7i9a6n42ixkcspwb8fjhzd";
+      revision = "1";
+      editedCabalFile = "0m9x1cs789qs7k3zc197zri1nbh6g1y05xraq5a1k10s0xs5sjdy";
       libraryHaskellDepends = [
         array
         base
@@ -313802,6 +315333,33 @@ self: {
       ];
       description = "A mutable vector that provides indexation on the datatype fields it stores";
       license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { };
+
+  "hblosc" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      hspec,
+    }:
+    mkDerivation {
+      pname = "hblosc";
+      version = "0.1.0.2";
+      sha256 = "0xsp5cwj8mqss6rwbm5ndjkzl2yhw7x135s9gvhwm6xj36pz0gnb";
+      libraryHaskellDepends = [
+        base
+        bytestring
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        hspec
+      ];
+      description = "Blosc (numerical compression library) bindings for Haskell";
+      license = lib.licenses.mit;
       hydraPlatforms = lib.platforms.none;
       broken = true;
     }
@@ -316769,6 +318327,18 @@ self: {
     }
   ) { };
 
+  "heck" = callPackage (
+    { mkDerivation, base }:
+    mkDerivation {
+      pname = "heck";
+      version = "0.2025.5.22";
+      sha256 = "01lxh37sw8sjcmss34nh97im4l3vpdxy1wp7qxgdwynzgz6lf4s9";
+      libraryHaskellDepends = [ base ];
+      description = "Abstract unit test interface";
+      license = lib.licenses.bsd0;
+    }
+  ) { };
+
   "heckin" = callPackage (
     {
       mkDerivation,
@@ -317083,8 +318653,8 @@ self: {
       pname = "hedgehog-classes";
       version = "0.2.5.4";
       sha256 = "0z9ik5asddc2pnz430jsi1pyahkh6jy36ng0vwm7ywcq7cvhcvlz";
-      revision = "5";
-      editedCabalFile = "19jxkb9dszkvch4cd30n4nsp36p86xdbgqbliqv836m2qwayjmyp";
+      revision = "6";
+      editedCabalFile = "1gj6lrvy11bxnv26ayg1b98dv44ahwqngi8d5rxw1h1m13a7yzkk";
       libraryHaskellDepends = [
         aeson
         base
@@ -317134,22 +318704,25 @@ self: {
       async,
       base,
       bytestring,
+      containers,
       deepseq,
       Diff,
       directory,
       exceptions,
       filepath,
+      generic-lens,
       hedgehog,
       http-conduit,
+      hw-prelude,
       lifted-async,
       lifted-base,
+      microlens,
       mmorph,
       monad-control,
       mtl,
       network,
       process,
       resourcet,
-      retry,
       stm,
       tar,
       tasty,
@@ -317166,34 +318739,38 @@ self: {
     }:
     mkDerivation {
       pname = "hedgehog-extras";
-      version = "0.7.0.0";
-      sha256 = "0dhkhai2q831fb8z9cyv065gdf0468x0sbns1np74v8qnzwbhgav";
-      revision = "1";
-      editedCabalFile = "1f8xc2dr158c3nppj4rny611vfli74fpggnx1s75ln846xq2yzkj";
+      version = "0.9.0.0";
+      sha256 = "0l067gvm7vvhr5jrcys9676kfhdvaivbwiqh85n0zlcnkf3mjff0";
       libraryHaskellDepends = [
         aeson
         aeson-pretty
         async
         base
         bytestring
+        containers
         deepseq
         Diff
         directory
         exceptions
         filepath
+        generic-lens
         hedgehog
         http-conduit
+        hw-prelude
         lifted-async
         lifted-base
+        microlens
         mmorph
         monad-control
         mtl
         network
         process
         resourcet
-        retry
         stm
         tar
+        tasty
+        tasty-discover
+        tasty-hedgehog
         temporary
         text
         time
@@ -317206,10 +318783,12 @@ self: {
       testHaskellDepends = [
         base
         hedgehog
+        lifted-base
         network
         process
         resourcet
         tasty
+        tasty-discover
         tasty-hedgehog
         time
         transformers
@@ -317217,6 +318796,8 @@ self: {
       testToolDepends = [ tasty-discover ];
       description = "Supplemental library for hedgehog";
       license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -317233,8 +318814,8 @@ self: {
       pname = "hedgehog-fakedata";
       version = "0.0.1.5";
       sha256 = "00k26d83v0646klrg0k3cf94r4fnnx3ykxv7i8shjjgbkbzlzz78";
-      revision = "2";
-      editedCabalFile = "1b8v4j8zkvdfx786nfxxdkxj57b2qh4p9h16wiy0kc3l1dsj6llm";
+      revision = "3";
+      editedCabalFile = "1gfknhs1lslw7s00ciqn14r9b1lpph0827hhbb6bg9r52lylv9g3";
       libraryHaskellDepends = [
         base
         fakedata
@@ -318495,8 +320076,8 @@ self: {
       pname = "heist";
       version = "1.1.1.2";
       sha256 = "1377740si611j0szp64axy0xj1fi2a6w8i9s3xij89h34m7rb3rz";
-      revision = "4";
-      editedCabalFile = "112bhvishyhknb7gzii56sqaz5gxzb1png2k73rsnfmranvzl3ka";
+      revision = "5";
+      editedCabalFile = "0rx4cx09zlg9kdl2sn5fn2ka7a7c26xrvbhkp60pzdnj1hdnsbqi";
       libraryHaskellDepends = [
         aeson
         attoparsec
@@ -319794,6 +321375,63 @@ self: {
     }
   ) { };
 
+  "heph-sparse-set" = callPackage (
+    {
+      mkDerivation,
+      base,
+      containers,
+      criterion,
+      deepseq,
+      hedgehog,
+      mtl,
+      nothunks,
+      primitive,
+      random,
+      tasty,
+      tasty-discover,
+      tasty-hedgehog,
+      tasty-hunit,
+      vector,
+    }:
+    mkDerivation {
+      pname = "heph-sparse-set";
+      version = "0.1.0.0";
+      sha256 = "0w1h6xa62xp1bwpz4czdr6vzml311zq76i1swq6iqpw2wch0dbvn";
+      libraryHaskellDepends = [
+        base
+        deepseq
+        primitive
+        vector
+      ];
+      testHaskellDepends = [
+        base
+        containers
+        deepseq
+        hedgehog
+        nothunks
+        primitive
+        tasty
+        tasty-discover
+        tasty-hedgehog
+        tasty-hunit
+        vector
+      ];
+      testToolDepends = [ tasty-discover ];
+      benchmarkHaskellDepends = [
+        base
+        containers
+        criterion
+        deepseq
+        mtl
+        primitive
+        random
+        vector
+      ];
+      description = "Really fast mutable sparse sets";
+      license = lib.licenses.bsd3;
+    }
+  ) { };
+
   "heptapod" = callPackage (
     {
       mkDerivation,
@@ -320899,6 +322537,36 @@ self: {
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
       broken = true;
+    }
+  ) { };
+
+  "heredocs-r2" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      hspec,
+      parsec,
+      template-haskell,
+      text,
+    }:
+    mkDerivation {
+      pname = "heredocs-r2";
+      version = "0.1.0.2";
+      sha256 = "1dzsgblbn4hijd6hgrwc951h1v6fjbg7gjbl8l3ihy79jm75ifbx";
+      libraryHaskellDepends = [
+        base
+        parsec
+        template-haskell
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        hspec
+        text
+      ];
+      description = "Heredocument on Haskell";
+      license = lib.licenses.bsd3;
     }
   ) { };
 
@@ -322670,8 +324338,6 @@ self: {
       ];
       description = "Fast and safe representation of a hex string";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -325093,6 +326759,8 @@ self: {
       pname = "hie-bios";
       version = "0.15.0";
       sha256 = "1lih0gab4r33vyjmrfd7dq6fzwy6bzgkr2xw4cf3yxvxk3m1czaj";
+      revision = "1";
+      editedCabalFile = "1rcvcsz97y4b242mdjxlxmgv05bhb56hss1sqf4w07i9a6bjhnba";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -325373,6 +327041,77 @@ self: {
       ];
       description = "Generates a references DB from .hie files";
       license = lib.licenses.bsd3;
+      mainProgram = "hiedb";
+    }
+  ) { };
+
+  "hiedb_0_7_0_0" = callPackage (
+    {
+      mkDerivation,
+      algebraic-graphs,
+      ansi-terminal,
+      array,
+      base,
+      bytestring,
+      containers,
+      directory,
+      extra,
+      filepath,
+      ghc,
+      ghc-paths,
+      hie-compat,
+      hspec,
+      lucid,
+      mtl,
+      optparse-applicative,
+      process,
+      sqlite-simple,
+      temporary,
+      terminal-size,
+      text,
+    }:
+    mkDerivation {
+      pname = "hiedb";
+      version = "0.7.0.0";
+      sha256 = "0mhajz4wlgdzg079r9dcrhkl6dx5fdwq2x1c892frq0gqd18k5ln";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        algebraic-graphs
+        ansi-terminal
+        array
+        base
+        bytestring
+        containers
+        directory
+        extra
+        filepath
+        ghc
+        hie-compat
+        lucid
+        mtl
+        optparse-applicative
+        sqlite-simple
+        terminal-size
+        text
+      ];
+      executableHaskellDepends = [
+        base
+        ghc-paths
+      ];
+      testHaskellDepends = [
+        algebraic-graphs
+        base
+        directory
+        filepath
+        ghc-paths
+        hspec
+        process
+        temporary
+      ];
+      description = "Generates a references DB from .hie files";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
       mainProgram = "hiedb";
     }
   ) { };
@@ -329316,8 +331055,8 @@ self: {
     }:
     mkDerivation {
       pname = "hkgr";
-      version = "0.4.7";
-      sha256 = "0r01jbmbswldz9dld3k9wdsda352z9g9yls6l60r6dcxa1pah9p0";
+      version = "0.4.8";
+      sha256 = "09p5x379k150kly8q0v9w14b8gxr6mr4klivkfd9nnbsclscasqg";
       isLibrary = false;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -329710,7 +331449,7 @@ self: {
     }
   ) { };
 
-  "hledger_1_42_1" = callPackage (
+  "hledger_1_43_2" = callPackage (
     {
       mkDerivation,
       aeson,
@@ -329729,6 +331468,8 @@ self: {
       hashable,
       haskeline,
       hledger-lib,
+      http-client,
+      http-types,
       lucid,
       math-functions,
       megaparsec,
@@ -329737,6 +331478,7 @@ self: {
       mtl,
       process,
       regex-tdfa,
+      req,
       safe,
       shakespeare,
       split,
@@ -329755,10 +331497,8 @@ self: {
     }:
     mkDerivation {
       pname = "hledger";
-      version = "1.42.1";
-      sha256 = "0cw2v3ckg3b90d7xkq7mjwb1pr7z5js9qb3bm2i9mz7284aqzn3q";
-      revision = "1";
-      editedCabalFile = "1i422nwlp4pab9c4pi0vrdmnc52znxwd7pyd1173gk6jkkkvqg7n";
+      version = "1.43.2";
+      sha256 = "043gw3amc29fbjxlzyc4m97bw5i5462352lmk61adlxcd12l47i1";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -329778,6 +331518,8 @@ self: {
         hashable
         haskeline
         hledger-lib
+        http-client
+        http-types
         lucid
         math-functions
         megaparsec
@@ -329786,6 +331528,7 @@ self: {
         mtl
         process
         regex-tdfa
+        req
         safe
         shakespeare
         split
@@ -329817,12 +331560,15 @@ self: {
         githash
         haskeline
         hledger-lib
+        http-client
+        http-types
         math-functions
         megaparsec
         microlens
         mtl
         process
         regex-tdfa
+        req
         safe
         shakespeare
         split
@@ -329854,12 +331600,15 @@ self: {
         githash
         haskeline
         hledger-lib
+        http-client
+        http-types
         math-functions
         megaparsec
         microlens
         mtl
         process
         regex-tdfa
+        req
         safe
         shakespeare
         split
@@ -329877,7 +331626,7 @@ self: {
         wizards
       ];
       description = "Command-line interface for the hledger accounting system";
-      license = lib.licenses.gpl3Only;
+      license = lib.licenses.gpl3Plus;
       hydraPlatforms = lib.platforms.none;
       mainProgram = "hledger";
       maintainers = [
@@ -330114,8 +331863,8 @@ self: {
       pname = "hledger-iadd";
       version = "1.3.21";
       sha256 = "00x0vbfp08kqs1nbknndk9h56hcidf6xnrk0ldz45dvjrmgcv3w2";
-      revision = "8";
-      editedCabalFile = "166vkhghms83x0c03m6kg6v5fx3x8wyr445zjy6vxfsbni6ks4h7";
+      revision = "9";
+      editedCabalFile = "0fhkk8gsqiv7mxjk8jlz43i2h0cqampr8w5f1lxcnfz9g4k0bv5l";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -330195,8 +331944,8 @@ self: {
       pname = "hledger-interest";
       version = "1.6.7";
       sha256 = "1jirygghw82zi8z160j45qzfcj1l89vckqr7hrv78h3f3pim6np4";
-      revision = "1";
-      editedCabalFile = "1hl3vgwhlk15xrhafmp5y017cm4y7zkn2n8l9frsc0xz67h9571z";
+      revision = "2";
+      editedCabalFile = "1inrlrz2rgk99sspm33r7rnfiycx8pllsh95ais9x05fp88cxhcf";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -330413,7 +332162,7 @@ self: {
     }
   ) { };
 
-  "hledger-lib_1_42_1" = callPackage (
+  "hledger-lib_1_43_2" = callPackage (
     {
       mkDerivation,
       aeson,
@@ -330421,7 +332170,6 @@ self: {
       ansi-terminal,
       array,
       base,
-      base-compat,
       blaze-html,
       blaze-markup,
       bytestring,
@@ -330468,17 +332216,14 @@ self: {
     }:
     mkDerivation {
       pname = "hledger-lib";
-      version = "1.42.1";
-      sha256 = "0c59vxi9w809vhw0gzpkl8iv0qbd6wv5xq6lvllxz0y7axkw7vnl";
-      revision = "1";
-      editedCabalFile = "1lpnp61hfscjx01krypqlm08zsjgxgwd400wphg70yk7ay4zg981";
+      version = "1.43.2";
+      sha256 = "18037qwz7d0h4i86ac0w3hkrvx22vdxf04fjbg0qjlizgb3dlazf";
       libraryHaskellDepends = [
         aeson
         aeson-pretty
         ansi-terminal
         array
         base
-        base-compat
         blaze-html
         blaze-markup
         bytestring
@@ -330528,7 +332273,6 @@ self: {
         ansi-terminal
         array
         base
-        base-compat
         blaze-html
         blaze-markup
         bytestring
@@ -330574,7 +332318,7 @@ self: {
         utf8-string
       ];
       description = "A library providing the core functionality of hledger";
-      license = lib.licenses.gpl3Only;
+      license = lib.licenses.gpl3Plus;
       hydraPlatforms = lib.platforms.none;
     }
   ) { };
@@ -330783,7 +332527,7 @@ self: {
     }
   ) { };
 
-  "hledger-ui_1_42_1" = callPackage (
+  "hledger-ui_1_43_2" = callPackage (
     {
       mkDerivation,
       ansi-terminal,
@@ -330819,10 +332563,8 @@ self: {
     }:
     mkDerivation {
       pname = "hledger-ui";
-      version = "1.42.1";
-      sha256 = "1grj5j2lndyxzbfbr9mp29qy2l4gs7pcqgbmrkdb2l8qcdm83nwm";
-      revision = "1";
-      editedCabalFile = "0db3yzr818m458ddlfkhbypsyjfkgmlbqyl9vyqdmvklxlnap0j5";
+      version = "1.43.2";
+      sha256 = "1xz5ndkg5mci689n82dnmwhhr8a08qw12czsf4b82ha7zlmbkmnv";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -330859,7 +332601,7 @@ self: {
       ];
       executableHaskellDepends = [ base ];
       description = "Terminal interface for the hledger accounting system";
-      license = lib.licenses.gpl3Only;
+      license = lib.licenses.gpl3Plus;
       hydraPlatforms = lib.platforms.none;
       mainProgram = "hledger-ui";
       maintainers = [ lib.maintainers.maralorn ];
@@ -331021,12 +332763,11 @@ self: {
     }
   ) { };
 
-  "hledger-web_1_42_1" = callPackage (
+  "hledger-web_1_43_2" = callPackage (
     {
       mkDerivation,
       aeson,
       base,
-      base-compat,
       base64,
       blaze-html,
       blaze-markup,
@@ -331041,6 +332782,7 @@ self: {
       Decimal,
       directory,
       extra,
+      file-embed,
       filepath,
       githash,
       hjsmin,
@@ -331076,16 +332818,13 @@ self: {
     }:
     mkDerivation {
       pname = "hledger-web";
-      version = "1.42.1";
-      sha256 = "13z1fzvfdacdcaabhc68ic93rbh2kw983nhcm7jzkipnp559lvnj";
-      revision = "1";
-      editedCabalFile = "1mf2g5j8jqfdnvs1qnq58bb2d6yzi9bc3kh0zz00f0wbqhwiih30";
+      version = "1.43.2";
+      sha256 = "0d4sv9k3m7s0764lbq2l8w9p2p47cby177l0avl5w3fa9y8d0gyd";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
         aeson
         base
-        base-compat
         base64
         blaze-html
         blaze-markup
@@ -331100,6 +332839,7 @@ self: {
         Decimal
         directory
         extra
+        file-embed
         filepath
         githash
         hjsmin
@@ -331133,16 +332873,10 @@ self: {
         yesod-static
         yesod-test
       ];
-      executableHaskellDepends = [
-        base
-        base-compat
-      ];
-      testHaskellDepends = [
-        base
-        base-compat
-      ];
+      executableHaskellDepends = [ base ];
+      testHaskellDepends = [ base ];
       description = "Web user interface for the hledger accounting system";
-      license = lib.licenses.gpl3Only;
+      license = lib.licenses.gpl3Plus;
       hydraPlatforms = lib.platforms.none;
       mainProgram = "hledger-web";
       maintainers = [ lib.maintainers.maralorn ];
@@ -331328,82 +333062,6 @@ self: {
       license = lib.licenses.mit;
     }
   ) { inherit (pkgs) libsass; };
-
-  "hlint_3_4_1" = callPackage (
-    {
-      mkDerivation,
-      aeson,
-      ansi-terminal,
-      base,
-      bytestring,
-      cmdargs,
-      containers,
-      cpphs,
-      data-default,
-      deriving-aeson,
-      directory,
-      extra,
-      file-embed,
-      filepath,
-      filepattern,
-      ghc-lib-parser,
-      ghc-lib-parser-ex,
-      hscolour,
-      process,
-      refact,
-      text,
-      transformers,
-      uniplate,
-      unordered-containers,
-      utf8-string,
-      vector,
-      yaml,
-    }:
-    mkDerivation {
-      pname = "hlint";
-      version = "3.4.1";
-      sha256 = "0bkk03c9hacvfd73dk89g4r81b50g7pjgw5pavldali4qwss34cz";
-      revision = "1";
-      editedCabalFile = "1rdaffg5n179yfcn5zjwjb0bki09qy13gz2ijky455y9pbaz8yz9";
-      isLibrary = true;
-      isExecutable = true;
-      enableSeparateDataOutput = true;
-      libraryHaskellDepends = [
-        aeson
-        ansi-terminal
-        base
-        bytestring
-        cmdargs
-        containers
-        cpphs
-        data-default
-        deriving-aeson
-        directory
-        extra
-        file-embed
-        filepath
-        filepattern
-        ghc-lib-parser
-        ghc-lib-parser-ex
-        hscolour
-        process
-        refact
-        text
-        transformers
-        uniplate
-        unordered-containers
-        utf8-string
-        vector
-        yaml
-      ];
-      executableHaskellDepends = [ base ];
-      description = "Source code suggestions";
-      license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      mainProgram = "hlint";
-      maintainers = [ lib.maintainers.maralorn ];
-    }
-  ) { };
 
   "hlint_3_6_1" = callPackage (
     {
@@ -332691,8 +334349,8 @@ self: {
     }:
     mkDerivation {
       pname = "hls-graph";
-      version = "2.10.0.0";
-      sha256 = "1q2ix901k3b0a05nax5lcrqnjllm6zvv63lh027mmrhg976vl0l2";
+      version = "2.11.0.0";
+      sha256 = "1mpf9vfnvxd03xhsywzb77g8rkvzj012jn6mz0rfmgvcls7kbgiw";
       enableSeparateDataOutput = true;
       libraryHaskellDepends = [
         aeson
@@ -332977,8 +334635,8 @@ self: {
     }:
     mkDerivation {
       pname = "hls-plugin-api";
-      version = "2.10.0.0";
-      sha256 = "1xl2vh9jsydjsw6faij5w5amplz6qmgjadc5rp9ffl4lnd1fvvl6";
+      version = "2.11.0.0";
+      sha256 = "1jn75zq4nqaml6rzzilaszqy0z4nj6bz5y9svddpl276qw1mcbm8";
       libraryHaskellDepends = [
         aeson
         base
@@ -333510,8 +335168,8 @@ self: {
     }:
     mkDerivation {
       pname = "hls-test-utils";
-      version = "2.10.0.0";
-      sha256 = "0kzqri1xslvi699gm2nasvs3zygk0y06w3x9mppksrgfs5961p0z";
+      version = "2.11.0.0";
+      sha256 = "11rswiw1zlsgjjfs78hl73axrwr9lmd334iyla4k98ak6gxllqr6";
       libraryHaskellDepends = [
         aeson
         async
@@ -334702,8 +336360,8 @@ self: {
       pname = "hmm-lapack";
       version = "0.5.0.1";
       sha256 = "0im754fgqzi28snwf9bxkj4i1g69c0q8knzjvpmbrs79d5rncpxk";
-      revision = "2";
-      editedCabalFile = "1jg5qpdwi186vm87b0dm5gzqivlpc1q2lwi9vangxah1lfhd898r";
+      revision = "3";
+      editedCabalFile = "0gqmrl8raa38rnrdbh4nyfrl5csb9l5rgk0w1i1laazxqd8wl49y";
       libraryHaskellDepends = [
         base
         comfort-array
@@ -337315,8 +338973,8 @@ self: {
     }:
     mkDerivation {
       pname = "hoist-error";
-      version = "0.3.0.0";
-      sha256 = "160967zsp8rzsvs12crsxh3854lnhxiidv8adixb4nf9hxvdnka6";
+      version = "0.3.1.0";
+      sha256 = "12hq6xz6jrsjd6nc03iv033abx73m1b2baszlk6b7k6r850fw4q5";
       libraryHaskellDepends = [
         base
         mtl
@@ -339895,8 +341553,8 @@ self: {
       pname = "horizontal-rule";
       version = "0.7.0.0";
       sha256 = "0s4hf7frj1gc41v83qk8fgdfn49msmvhcfw6vjklx6w7b6pkfx9x";
-      revision = "1";
-      editedCabalFile = "1jb71y6mxkrcnps1jdh6rkkrznhzcsyl8c7s565xjalabql56nkq";
+      revision = "2";
+      editedCabalFile = "02cql9yvsvbi6xf7kplidmxay7n70lxb1z2499vngn7197b6d5kh";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -340943,139 +342601,6 @@ self: {
       testToolDepends = [ hspec-discover ];
       description = "A modern format for Haskell packages";
       license = lib.licenses.mit;
-      mainProgram = "hpack";
-    }
-  ) { };
-
-  "hpack_0_38_0" = callPackage (
-    {
-      mkDerivation,
-      aeson,
-      base,
-      bifunctors,
-      bytestring,
-      Cabal,
-      containers,
-      crypton,
-      deepseq,
-      directory,
-      filepath,
-      Glob,
-      hspec,
-      hspec-discover,
-      http-client,
-      http-client-tls,
-      http-types,
-      HUnit,
-      infer-license,
-      interpolate,
-      mockery,
-      mtl,
-      pretty,
-      QuickCheck,
-      scientific,
-      template-haskell,
-      temporary,
-      text,
-      transformers,
-      unordered-containers,
-      vector,
-      yaml,
-    }:
-    mkDerivation {
-      pname = "hpack";
-      version = "0.38.0";
-      sha256 = "0iysz3xnxhjj49hjz9gv56awaldamrbidkiw0xd873g5yfyhyljp";
-      revision = "1";
-      editedCabalFile = "02pqfqqijvr2z3ki2rnb9nlavhzm59qbbvhq89bfdvhcicfgmmf4";
-      isLibrary = true;
-      isExecutable = true;
-      libraryHaskellDepends = [
-        aeson
-        base
-        bifunctors
-        bytestring
-        Cabal
-        containers
-        crypton
-        deepseq
-        directory
-        filepath
-        Glob
-        http-client
-        http-client-tls
-        http-types
-        infer-license
-        mtl
-        pretty
-        scientific
-        text
-        transformers
-        unordered-containers
-        vector
-        yaml
-      ];
-      executableHaskellDepends = [
-        aeson
-        base
-        bifunctors
-        bytestring
-        Cabal
-        containers
-        crypton
-        deepseq
-        directory
-        filepath
-        Glob
-        http-client
-        http-client-tls
-        http-types
-        infer-license
-        mtl
-        pretty
-        scientific
-        text
-        transformers
-        unordered-containers
-        vector
-        yaml
-      ];
-      testHaskellDepends = [
-        aeson
-        base
-        bifunctors
-        bytestring
-        Cabal
-        containers
-        crypton
-        deepseq
-        directory
-        filepath
-        Glob
-        hspec
-        http-client
-        http-client-tls
-        http-types
-        HUnit
-        infer-license
-        interpolate
-        mockery
-        mtl
-        pretty
-        QuickCheck
-        scientific
-        template-haskell
-        temporary
-        text
-        transformers
-        unordered-containers
-        vector
-        yaml
-      ];
-      testToolDepends = [ hspec-discover ];
-      description = "A modern format for Haskell packages";
-      license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "hpack";
     }
   ) { };
@@ -342780,7 +344305,7 @@ self: {
     }
   ) { };
 
-  "hpqtypes-extras_1_17_0_1" = callPackage (
+  "hpqtypes-extras_1_18_0_0" = callPackage (
     {
       mkDerivation,
       base,
@@ -342804,8 +344329,8 @@ self: {
     }:
     mkDerivation {
       pname = "hpqtypes-extras";
-      version = "1.17.0.1";
-      sha256 = "1f2ipf4hwp3iqfb79bbx8h97l1cy8vyc1w5h0q1fvg2yvxl52szp";
+      version = "1.18.0.0";
+      sha256 = "1vqyb1izw6ascmkkqkm33iahydrabpb7rq2r3qkhxkjbhrgfk5j5";
       libraryHaskellDepends = [
         base
         base16-bytestring
@@ -343519,6 +345044,26 @@ self: {
       ];
       description = "HQuantLib Time is a business calendar functions extracted from HQuantLib";
       license = "LGPL";
+    }
+  ) { };
+
+  "hquantlib-time_0_1_2" = callPackage (
+    {
+      mkDerivation,
+      base,
+      time,
+    }:
+    mkDerivation {
+      pname = "hquantlib-time";
+      version = "0.1.2";
+      sha256 = "0i0klg4l4vipw8802ghb2ddd1fpn7wrg027pqfh1yf6x1m1r2k8z";
+      libraryHaskellDepends = [
+        base
+        time
+      ];
+      description = "HQuantLib Time is a business calendar functions extracted from HQuantLib";
+      license = lib.licenses.lgpl3Plus;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -346181,12 +347726,16 @@ self: {
       aeson,
       attoparsec,
       base,
+      binary,
       bytestring,
       conduit,
+      conduit-extra,
       directory,
-      filesystem-conduit,
       old-locale,
       random,
+      resourcet,
+      scientific,
+      shakespeare,
       shakespeare-text,
       shelly,
       system-filepath,
@@ -346199,18 +347748,22 @@ self: {
     }:
     mkDerivation {
       pname = "hs-pkpass";
-      version = "0.4";
-      sha256 = "01jcl2ia8p29gg5yazpxm6cdxyskl6z895lmgh888qkf9jlzf5mf";
+      version = "0.6";
+      sha256 = "1yq8mm2j3p3fc7siqbglz8fdlyvpkgp3svklnbyw09gaq3mwall0";
       libraryHaskellDepends = [
         aeson
         attoparsec
         base
+        binary
         bytestring
         conduit
+        conduit-extra
         directory
-        filesystem-conduit
         old-locale
         random
+        resourcet
+        scientific
+        shakespeare
         shakespeare-text
         shelly
         system-filepath
@@ -346223,7 +347776,6 @@ self: {
       ];
       description = "A library for Passbook pass creation & signing";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
       maintainers = [ lib.maintainers.mpscholten ];
     }
   ) { };
@@ -346615,14 +348167,15 @@ self: {
       base,
       extra,
       ghc-events,
+      machines,
       optparse-applicative,
       text,
       vector,
     }:
     mkDerivation {
       pname = "hs-speedscope";
-      version = "0.2.1";
-      sha256 = "1qzmcn718mbg5pckvbcw2n36srmbixkyp45hrkdcdnqcsvf5agln";
+      version = "0.3.0";
+      sha256 = "089mg3q9f6pkvkx4zxgnv69hyzs06cr4ljkaij5kzgq35i12l4x3";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -346630,6 +348183,7 @@ self: {
         base
         extra
         ghc-events
+        machines
         optparse-applicative
         text
         vector
@@ -346637,9 +348191,7 @@ self: {
       executableHaskellDepends = [ base ];
       description = "Convert an eventlog into the speedscope json format";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "hs-speedscope";
-      broken = true;
     }
   ) { };
 
@@ -350214,6 +351766,7 @@ self: {
       ];
       description = "sendxmpp clone, sending XMPP messages via CLI";
       license = lib.licenses.agpl3Only;
+      hydraPlatforms = lib.platforms.none;
       mainProgram = "hsendxmpp";
     }
   ) { };
@@ -350506,7 +352059,6 @@ self: {
       cmdargs,
       directory,
       filepath,
-      filepath-bytestring,
       libssh2,
       mtl,
       tasty,
@@ -350519,8 +352071,8 @@ self: {
     }:
     mkDerivation {
       pname = "hsftp";
-      version = "1.3.1";
-      sha256 = "0027bmn11fl3lbyd4aw77w5b4xdf53izpxnnpp1qnwpxd8j92w82";
+      version = "1.4.0";
+      sha256 = "01fzgrk9w6xy7wxkpg2znw5g2wkqrcz6vj1f0pdffvg0bslfn4g0";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -350530,7 +352082,6 @@ self: {
         cmdargs
         directory
         filepath
-        filepath-bytestring
         libssh2
         mtl
         time
@@ -350543,7 +352094,6 @@ self: {
         cmdargs
         directory
         filepath
-        filepath-bytestring
         libssh2
         mtl
         time
@@ -350556,7 +352106,6 @@ self: {
         cmdargs
         directory
         filepath
-        filepath-bytestring
         libssh2
         mtl
         tasty
@@ -351470,6 +353019,56 @@ self: {
     }
   ) { };
 
+  "hslua_2_4_0" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      exceptions,
+      hslua-aeson,
+      hslua-classes,
+      hslua-core,
+      hslua-marshalling,
+      hslua-objectorientation,
+      hslua-packaging,
+      hslua-typing,
+      tasty,
+      tasty-hslua,
+      tasty-hunit,
+      text,
+    }:
+    mkDerivation {
+      pname = "hslua";
+      version = "2.4.0";
+      sha256 = "093cjgrzxyvd7kg7ap5bszbfpgzcggwsnypm2q2ij6hyqz8x8gqk";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        base
+        hslua-aeson
+        hslua-classes
+        hslua-core
+        hslua-marshalling
+        hslua-objectorientation
+        hslua-packaging
+        hslua-typing
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        exceptions
+        hslua-core
+        tasty
+        tasty-hslua
+        tasty-hunit
+        text
+      ];
+      description = "Bindings to Lua, an embeddable scripting language";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "hslua-aeson" = callPackage (
     {
       mkDerivation,
@@ -351783,8 +353382,8 @@ self: {
     }:
     mkDerivation {
       pname = "hslua-module-doclayout";
-      version = "1.2.0";
-      sha256 = "1x3znkdz1l8p8gsvazz85936p107xscsaah1ac3padyiswhair1j";
+      version = "1.2.0.1";
+      sha256 = "139l4sh9pllm0zjgv3w7scbpd0cgn23r95fdlchavsdfwkpvcx17";
       libraryHaskellDepends = [
         base
         doclayout
@@ -351855,6 +353454,7 @@ self: {
       hslua-core,
       hslua-marshalling,
       hslua-packaging,
+      process,
       tasty,
       tasty-hunit,
       tasty-lua,
@@ -351863,8 +353463,8 @@ self: {
     }:
     mkDerivation {
       pname = "hslua-module-system";
-      version = "1.1.2";
-      sha256 = "1pi1yp5ch83b74diimbrq09gd9wq8cjpxwjzv9jvchf2xrz8winl";
+      version = "1.1.3";
+      sha256 = "0skdgb21x2zdyv1m3ai4n8axnk85i3s08pvsrkjwwsfcr7v3r432";
       libraryHaskellDepends = [
         base
         directory
@@ -351872,6 +353472,7 @@ self: {
         hslua-core
         hslua-marshalling
         hslua-packaging
+        process
         temporary
         text
       ];
@@ -351886,6 +353487,55 @@ self: {
       ];
       description = "Lua module wrapper around Haskell's System module";
       license = lib.licenses.mit;
+    }
+  ) { };
+
+  "hslua-module-system_1_2_0" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      directory,
+      exceptions,
+      hslua-core,
+      hslua-marshalling,
+      hslua-packaging,
+      process,
+      tasty,
+      tasty-hunit,
+      tasty-lua,
+      temporary,
+      text,
+      time,
+    }:
+    mkDerivation {
+      pname = "hslua-module-system";
+      version = "1.2.0";
+      sha256 = "0wbbz0h33wrhdpxz40gqgijkra19jg0zyy4snmj75qxcq2cc9dw2";
+      libraryHaskellDepends = [
+        base
+        bytestring
+        directory
+        exceptions
+        hslua-core
+        hslua-marshalling
+        hslua-packaging
+        process
+        temporary
+        text
+        time
+      ];
+      testHaskellDepends = [
+        base
+        hslua-core
+        hslua-packaging
+        tasty
+        tasty-hunit
+        tasty-lua
+      ];
+      description = "Lua module wrapper around Haskell's System module";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -351971,8 +353621,6 @@ self: {
     {
       mkDerivation,
       base,
-      bytestring,
-      filepath,
       hslua-core,
       hslua-list,
       hslua-marshalling,
@@ -351988,14 +353636,10 @@ self: {
     }:
     mkDerivation {
       pname = "hslua-module-zip";
-      version = "1.1.3";
-      sha256 = "1fws5jwf1zwqilgm05y28ywgxavygnjpdlj43nhfg8cmng1p0kyq";
-      revision = "1";
-      editedCabalFile = "1ml14hycwh4wg8351b8dq94qyppkzhw8jk0b0dgahqvy7p5w86y3";
+      version = "1.1.4";
+      sha256 = "1ij2rmy8m4pw7k7w5vvb3g934kms60vhzhhp8kryknbi6bsg8lsy";
       libraryHaskellDepends = [
         base
-        bytestring
-        filepath
         hslua-core
         hslua-list
         hslua-marshalling
@@ -352007,20 +353651,12 @@ self: {
       ];
       testHaskellDepends = [
         base
-        bytestring
-        filepath
         hslua-core
-        hslua-list
-        hslua-marshalling
         hslua-module-system
         hslua-packaging
-        hslua-typing
         tasty
         tasty-hunit
         tasty-lua
-        text
-        time
-        zip-archive
       ];
       description = "Lua module to work with file zips";
       license = lib.licenses.mit;
@@ -352085,6 +353721,46 @@ self: {
     }
   ) { };
 
+  "hslua-objectorientation_2_4_0" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      containers,
+      hslua-core,
+      hslua-marshalling,
+      hslua-typing,
+      tasty,
+      tasty-hslua,
+      text,
+    }:
+    mkDerivation {
+      pname = "hslua-objectorientation";
+      version = "2.4.0";
+      sha256 = "0gm7l5gqbxrvniivz82wl9rmwgmrg2swji3q0wk43s2xxhajbihs";
+      libraryHaskellDepends = [
+        base
+        containers
+        hslua-core
+        hslua-marshalling
+        hslua-typing
+        text
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        hslua-core
+        hslua-marshalling
+        hslua-typing
+        tasty
+        tasty-hslua
+      ];
+      description = "Object orientation tools for HsLua";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "hslua-packaging" = callPackage (
     {
       mkDerivation,
@@ -352130,6 +353806,50 @@ self: {
       ];
       description = "Utilities to build Lua modules";
       license = lib.licenses.mit;
+    }
+  ) { };
+
+  "hslua-packaging_2_3_2" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      containers,
+      hslua-core,
+      hslua-marshalling,
+      hslua-objectorientation,
+      hslua-typing,
+      tasty,
+      tasty-hslua,
+      tasty-hunit,
+      text,
+    }:
+    mkDerivation {
+      pname = "hslua-packaging";
+      version = "2.3.2";
+      sha256 = "1w7929fr6pkwm9x25ags1nk5xrfq9kn3g113wi5c02a8m8zqwh8s";
+      libraryHaskellDepends = [
+        base
+        containers
+        hslua-core
+        hslua-marshalling
+        hslua-objectorientation
+        hslua-typing
+        text
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        hslua-core
+        hslua-marshalling
+        tasty
+        tasty-hslua
+        tasty-hunit
+        text
+      ];
+      description = "Utilities to build Lua modules";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -352982,32 +354702,6 @@ self: {
     }
   ) { };
 
-  "hspec_2_7_10" = callPackage (
-    {
-      mkDerivation,
-      base,
-      hspec-core,
-      hspec-discover,
-      hspec-expectations,
-      QuickCheck,
-    }:
-    mkDerivation {
-      pname = "hspec";
-      version = "2.7.10";
-      sha256 = "0z0lwrmrqkglr78n6k2c36n4h68142bh785ys0x4jaibjshvs6rw";
-      libraryHaskellDepends = [
-        base
-        hspec-core
-        hspec-discover
-        hspec-expectations
-        QuickCheck
-      ];
-      description = "A Testing Framework for Haskell";
-      license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
-    }
-  ) { };
-
   "hspec" = callPackage (
     {
       mkDerivation,
@@ -353029,6 +354723,33 @@ self: {
         QuickCheck
       ];
       description = "A Testing Framework for Haskell";
+      license = lib.licenses.mit;
+    }
+  ) { };
+
+  "hspec-annotated-exception" = callPackage (
+    {
+      mkDerivation,
+      annotated-exception,
+      base,
+      hspec,
+      HUnit,
+      lens,
+      text,
+    }:
+    mkDerivation {
+      pname = "hspec-annotated-exception";
+      version = "0.0.0.0";
+      sha256 = "0cmhplcqqbn9ggv5fwdij3kmj52jvkm8j4z3gbrgyd66y1i9wmhb";
+      libraryHaskellDepends = [
+        annotated-exception
+        base
+        hspec
+        HUnit
+        lens
+        text
+      ];
+      description = "Hspec hook that unwraps test failures from AnnotatedException";
       license = lib.licenses.mit;
     }
   ) { };
@@ -353177,90 +354898,6 @@ self: {
     }
   ) { };
 
-  "hspec-core_2_7_10" = callPackage (
-    {
-      mkDerivation,
-      ansi-terminal,
-      array,
-      base,
-      call-stack,
-      clock,
-      deepseq,
-      directory,
-      filepath,
-      hspec-expectations,
-      hspec-meta,
-      HUnit,
-      process,
-      QuickCheck,
-      quickcheck-io,
-      random,
-      setenv,
-      silently,
-      stm,
-      temporary,
-      tf-random,
-      transformers,
-    }:
-    mkDerivation {
-      pname = "hspec-core";
-      version = "2.7.10";
-      sha256 = "12k9yp5gznrda449ir60d5wv3xl7nnyffkb5mhfc0svw9f8lxlv1";
-      revision = "2";
-      editedCabalFile = "0l16mgxgapnihrvbwvhbz9i60v5fx68mhpv6zww9b68bdj6cpbsk";
-      libraryHaskellDepends = [
-        ansi-terminal
-        array
-        base
-        call-stack
-        clock
-        deepseq
-        directory
-        filepath
-        hspec-expectations
-        HUnit
-        QuickCheck
-        quickcheck-io
-        random
-        setenv
-        stm
-        tf-random
-        transformers
-      ];
-      testHaskellDepends = [
-        ansi-terminal
-        array
-        base
-        call-stack
-        clock
-        deepseq
-        directory
-        filepath
-        hspec-expectations
-        hspec-meta
-        HUnit
-        process
-        QuickCheck
-        quickcheck-io
-        random
-        setenv
-        silently
-        stm
-        temporary
-        tf-random
-        transformers
-      ];
-      testToolDepends = [ hspec-meta ];
-      testFlags = [
-        "--skip"
-        "'Test.Hspec.Core.Runner.hspecResult runs specs in parallel'"
-      ];
-      description = "A Testing Framework for Haskell";
-      license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
-    }
-  ) { };
-
   "hspec-core" = callPackage (
     {
       mkDerivation,
@@ -353292,6 +354929,8 @@ self: {
       pname = "hspec-core";
       version = "2.11.12";
       sha256 = "030400w95775jrivbi7n1nnx6j5z717rqd3986ggklb8h9hjalfc";
+      revision = "1";
+      editedCabalFile = "0yq9nnawcgbgxiz4ymfa8k66jrvgrhmv8j7g880x8k6q8q4ncqlq";
       libraryHaskellDepends = [
         ansi-terminal
         array
@@ -353386,47 +355025,6 @@ self: {
       description = "Helper functions to simplify adding integration tests";
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
-    }
-  ) { };
-
-  "hspec-discover_2_7_10" = callPackage (
-    {
-      mkDerivation,
-      base,
-      directory,
-      filepath,
-      hspec-meta,
-      QuickCheck,
-    }:
-    mkDerivation {
-      pname = "hspec-discover";
-      version = "2.7.10";
-      sha256 = "13yzvd3b679skvs1insk4s0wc4zvmz6hs38kc8q0j6vzqq06smqa";
-      isLibrary = true;
-      isExecutable = true;
-      libraryHaskellDepends = [
-        base
-        directory
-        filepath
-      ];
-      executableHaskellDepends = [
-        base
-        directory
-        filepath
-      ];
-      testHaskellDepends = [
-        base
-        directory
-        filepath
-        hspec-meta
-        QuickCheck
-      ];
-      testToolDepends = [ hspec-meta ];
-      description = "Automatically discover and run Hspec tests";
-      license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
-      mainProgram = "hspec-discover";
-      maintainers = [ lib.maintainers.maralorn ];
     }
   ) { };
 
@@ -354127,72 +355725,6 @@ self: {
     }
   ) { };
 
-  "hspec-meta_2_7_8" = callPackage (
-    {
-      mkDerivation,
-      ansi-terminal,
-      array,
-      base,
-      call-stack,
-      clock,
-      deepseq,
-      directory,
-      filepath,
-      QuickCheck,
-      quickcheck-io,
-      random,
-      setenv,
-      stm,
-      time,
-      transformers,
-    }:
-    mkDerivation {
-      pname = "hspec-meta";
-      version = "2.7.8";
-      sha256 = "0sfj0n2hy1r8ifysgbcmfdygcd7vyzr13ldkcp0l2ml337f8j0si";
-      isLibrary = true;
-      isExecutable = true;
-      libraryHaskellDepends = [
-        ansi-terminal
-        array
-        base
-        call-stack
-        clock
-        deepseq
-        directory
-        filepath
-        QuickCheck
-        quickcheck-io
-        random
-        setenv
-        stm
-        time
-        transformers
-      ];
-      executableHaskellDepends = [
-        ansi-terminal
-        array
-        base
-        call-stack
-        clock
-        deepseq
-        directory
-        filepath
-        QuickCheck
-        quickcheck-io
-        random
-        setenv
-        stm
-        time
-        transformers
-      ];
-      description = "A version of Hspec which is used to test Hspec itself";
-      license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
-      mainProgram = "hspec-meta-discover";
-    }
-  ) { };
-
   "hspec-meta" = callPackage (
     {
       mkDerivation,
@@ -354220,6 +355752,8 @@ self: {
       pname = "hspec-meta";
       version = "2.11.12";
       sha256 = "1612pg5gihqjxrzqqvbbgckaqiwq3rmz3rg07lrjhzklg975nj69";
+      revision = "2";
+      editedCabalFile = "1jrk14s51psb0zjici56220iyb98i3q06sd3rsyx594s3cddgn5d";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -355465,6 +356999,8 @@ self: {
       pname = "hsql";
       version = "1.8.2";
       sha256 = "0i53n42ynq22fzlz4kpmri4q4abmi4dz8bz0izn307is1pmk4bby";
+      revision = "1";
+      editedCabalFile = "1awgp83xxza0j9lillndsk6c2gm9paymk3mhphc9fcj6m0f6is7n";
       libraryHaskellDepends = [
         base
         old-time
@@ -355572,55 +357108,69 @@ self: {
     }
   ) { inherit (pkgs) sqlite; };
 
-  "hsqml" = callPackage (
-    {
-      mkDerivation,
-      base,
-      c2hs,
-      Cabal,
-      containers,
-      directory,
-      filepath,
-      qt5,
-      QuickCheck,
-      tagged,
-      template-haskell,
-      text,
-      transformers,
-    }:
-    mkDerivation {
-      pname = "hsqml";
-      version = "0.3.5.1";
-      sha256 = "046inz0pa5s052w653pk2km9finj44c6y2yx7iqihn4h4vnqbim0";
-      setupHaskellDepends = [
-        base
-        Cabal
-        filepath
-        template-haskell
-      ];
-      libraryHaskellDepends = [
-        base
-        containers
-        filepath
-        tagged
-        text
-        transformers
-      ];
-      libraryPkgconfigDepends = [ qt5 ];
-      libraryToolDepends = [ c2hs ];
-      testHaskellDepends = [
-        base
-        containers
-        directory
-        QuickCheck
-        tagged
-        text
-      ];
-      description = "Haskell binding for Qt Quick";
-      license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-    }
-  ) { qt5 = null; };
+  "hsqml" =
+    callPackage
+      (
+        {
+          mkDerivation,
+          base,
+          bytestring,
+          c2hs,
+          Cabal,
+          containers,
+          directory,
+          filepath,
+          qt5,
+          Qt5Network,
+          QuickCheck,
+          tagged,
+          template-haskell,
+          text,
+          transformers,
+        }:
+        mkDerivation {
+          pname = "hsqml";
+          version = "0.3.6.1";
+          sha256 = "0wvnxc3kad9ja4s16n9nj6nqknckal93ifbprq6nwd0x5i6zvknm";
+          setupHaskellDepends = [
+            base
+            Cabal
+            filepath
+            template-haskell
+          ];
+          libraryHaskellDepends = [
+            base
+            bytestring
+            containers
+            directory
+            filepath
+            QuickCheck
+            tagged
+            text
+            transformers
+          ];
+          libraryPkgconfigDepends = [
+            qt5
+            Qt5Network
+          ];
+          libraryToolDepends = [ c2hs ];
+          testHaskellDepends = [
+            base
+            containers
+            directory
+            QuickCheck
+            tagged
+            text
+          ];
+          description = "Haskell binding for Qt Quick";
+          license = lib.licenses.bsd3;
+          hydraPlatforms = lib.platforms.none;
+        }
+      )
+      {
+        Qt5Network = null;
+        qt5 = null;
+      };
 
   "hsqml-datamodel" = callPackage (
     {
@@ -355685,8 +357235,8 @@ self: {
     }:
     mkDerivation {
       pname = "hsqml-demo-manic";
-      version = "0.3.4.0";
-      sha256 = "09lnd6am51z98j4kwwidj4jw0bcrx8904r526w50y38afngysqx6";
+      version = "0.3.5.0";
+      sha256 = "1y5wfqdilmgkshvd5zz0ajpjx41rn68n6gp43nx1qamz036plklv";
       isLibrary = false;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -355717,8 +357267,8 @@ self: {
     }:
     mkDerivation {
       pname = "hsqml-demo-morris";
-      version = "0.3.1.1";
-      sha256 = "166r06yhnmg063d48dh7973wg85nfmvp1c5gmy79ilycc8xgvmhm";
+      version = "0.3.2.0";
+      sha256 = "0bc0ll794bmz0m12y2s6pcwxlm16ppcldhr0gbs4xfwcb2mylrd2";
       isLibrary = false;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -355750,8 +357300,8 @@ self: {
     }:
     mkDerivation {
       pname = "hsqml-demo-notes";
-      version = "0.3.3.0";
-      sha256 = "0gjlsqlspchav6lvc4ld15192x70j8cyzw903dgla7g9sj8fg813";
+      version = "0.3.4.0";
+      sha256 = "1k15v0wyv59dkd7wgzpkv8qy8g0i3sw5dpsjf003cy59rl8g8y3q";
       isLibrary = false;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -355780,8 +357330,8 @@ self: {
     }:
     mkDerivation {
       pname = "hsqml-demo-samples";
-      version = "0.3.4.0";
-      sha256 = "0y82caz4fb4cz4qfmdg7h5zr959yw2q162zz980jz179188a8pr2";
+      version = "0.3.5.0";
+      sha256 = "0xihibxfy86ml20hhzr66mzygk0lhwhwjpz09ig47fvdlhs0239d";
       isLibrary = false;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -361492,8 +363042,8 @@ self: {
     }:
     mkDerivation {
       pname = "http2";
-      version = "5.3.9";
-      sha256 = "0wcv9ziz0865j66avlax7f4i9l5k7ydcn96bacy78snmvcciblqf";
+      version = "5.3.10";
+      sha256 = "0rs21pgnmd0qcg1j360pm8r9c4hm18bcivhnq3krqjl32zb1frpl";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -361778,6 +363328,7 @@ self: {
       base,
       bytestring,
       crypton-x509-store,
+      crypton-x509-system,
       crypton-x509-validation,
       http2,
       network,
@@ -361790,14 +363341,15 @@ self: {
     }:
     mkDerivation {
       pname = "http2-tls";
-      version = "0.4.5";
-      sha256 = "0kc7g8ldgm40fsh73r881pxjb87x0m00xnjd0zsl0baaa85f7r4y";
+      version = "0.4.8";
+      sha256 = "1sy2q6zyc68fjk03fc9pnd6sshjwr6djbyw45gningpfcrw41qv6";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
         base
         bytestring
         crypton-x509-store
+        crypton-x509-system
         crypton-x509-validation
         http2
         network
@@ -361837,6 +363389,8 @@ self: {
       iproute,
       network,
       network-byte-order,
+      network-control,
+      psqueues,
       quic,
       QuickCheck,
       sockaddr,
@@ -361847,8 +363401,8 @@ self: {
     }:
     mkDerivation {
       pname = "http3";
-      version = "0.0.23";
-      sha256 = "1xqs4k81758cwpdr7r3qdhv7hscv8yy8vaikq2i4wdyaa85cda56";
+      version = "0.1.0";
+      sha256 = "1ygm1a6ph24a84vsdqb7l2bn1ylzd3dl0bc6blvpqq6yhhm34cpa";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -361864,6 +363418,8 @@ self: {
         iproute
         network
         network-byte-order
+        network-control
+        psqueues
         quic
         sockaddr
         stm
@@ -361876,8 +363432,10 @@ self: {
         base
         base16-bytestring
         bytestring
+        case-insensitive
         conduit
         conduit-extra
+        containers
         crypton
         hspec
         http-semantics
@@ -366156,8 +367714,8 @@ self: {
     }:
     mkDerivation {
       pname = "hw-prelude";
-      version = "0.0.4.4";
-      sha256 = "03lc5yx0ybqi1fz3x1fs9bvnn4j0w9zg54x2jlwl1lsf8jg63z3j";
+      version = "0.0.5.0";
+      sha256 = "1ikvmhfi57c96l9vnr3kfwxn2wq7nl8iphiayz4kc6nyg8185ar3";
       libraryHaskellDepends = [
         aeson
         async
@@ -371946,6 +373504,8 @@ self: {
       doHaddock = false;
       description = "Branch on whether a constraint is satisfied";
       license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -373021,7 +374581,6 @@ self: {
       testToolDepends = [ hspec-discover ];
       description = "IHaskell extension for making the use of Symtegration more seamless";
       license = lib.licenses.asl20;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -374294,8 +375853,8 @@ self: {
     }:
     mkDerivation {
       pname = "imp";
-      version = "1.0.3.1";
-      sha256 = "0p427yii4z9sg0cdvi7lq4r0ilq6xxlicvw8h831ya0m4d60j417";
+      version = "1.0.3.3";
+      sha256 = "1ybhn2cyca928q8yshsf0yvwi7s2gqqwd0k542prdm2ip45hizmj";
       libraryHaskellDepends = [
         base
         Cabal-syntax
@@ -378271,8 +379830,8 @@ self: {
     }:
     mkDerivation {
       pname = "insert-ordered-containers";
-      version = "0.2.6";
-      sha256 = "17y4s31v6l1330i8ga2phf28myh5h3i889w2wll0hjkf2x5yalpg";
+      version = "0.2.7";
+      sha256 = "05rncapknzx8yii2mzfbg0hvack4jx11jwgh0pmqlng6fqdvpvbp";
       libraryHaskellDepends = [
         aeson
         base
@@ -378390,7 +379949,7 @@ self: {
     }
   ) { };
 
-  "inspection-testing_0_6" = callPackage (
+  "inspection-testing_0_6_2" = callPackage (
     {
       mkDerivation,
       base,
@@ -378402,8 +379961,8 @@ self: {
     }:
     mkDerivation {
       pname = "inspection-testing";
-      version = "0.6";
-      sha256 = "13j6bqybkqd1nrhx648j0nmsjgyqnmbgssm5pxynmkqw62yylbry";
+      version = "0.6.2";
+      sha256 = "0zi1q86sd9jy5dpqfs2j71acdl7kvik0ps78xirpdhyldhwwyqws";
       libraryHaskellDepends = [
         base
         containers
@@ -379092,8 +380651,8 @@ self: {
       pname = "int-cast";
       version = "0.2.0.0";
       sha256 = "0s8rqm5d9f4y2sskajsw8ff7q8xp52vwqa18m6bajldp11m9a1p0";
-      revision = "7";
-      editedCabalFile = "0z1bffrx787f2697a6gfkmbxkj3ymgs88kid9ckcla08n11zw2ql";
+      revision = "8";
+      editedCabalFile = "10a33fvsy4qkckw6ciqiigy4r5f1pflw16l284scsdas56lk1pqq";
       libraryHaskellDepends = [ base ];
       testHaskellDepends = [
         base
@@ -379191,8 +380750,8 @@ self: {
     }:
     mkDerivation {
       pname = "int-like";
-      version = "0.1.4";
-      sha256 = "0djf0p2k0ayzxbabx0r2hwcm2rm7llfjhrd718c7n2zkqz297hfm";
+      version = "0.3.1";
+      sha256 = "093kq89lj49wmr878i3nx4yw7x0csh7wmnbil4w7whcy7zfmfabx";
       libraryHaskellDepends = [
         algebraic-graphs
         base
@@ -380436,8 +381995,8 @@ self: {
       pname = "interpolation";
       version = "0.1.1.2";
       sha256 = "0y61hwm4xfa1wna4xk61c5p3b3z8i589lz6cxkk2pbaifydccxy0";
-      revision = "1";
-      editedCabalFile = "179papjalxxl2nsmcv95xz9kjdha148ljyz4syr581f1fn5vklzd";
+      revision = "2";
+      editedCabalFile = "0m4rc3ybwljrc6wp0vqahrrl67n8m06rfw8kfqkyp3k11fy11rfn";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -380724,6 +382283,7 @@ self: {
       hashable,
       heaps,
       hspec,
+      indexed-traversable,
       lattices,
       parsec,
       QuickCheck,
@@ -380734,8 +382294,8 @@ self: {
     }:
     mkDerivation {
       pname = "interval-patterns";
-      version = "0.8.0";
-      sha256 = "1paciwq4wzl0kqkl5zzj486dsq5pg6275nj15gicv1czj7m9ncg9";
+      version = "0.8.1";
+      sha256 = "1wq080qvc1xbw6kd86ffl7017prz27g5658yyyvmjrshv5krxrhx";
       libraryHaskellDepends = [
         base
         containers
@@ -380743,6 +382303,7 @@ self: {
         groups
         hashable
         heaps
+        indexed-traversable
         lattices
         semirings
         time
@@ -380756,6 +382317,7 @@ self: {
         hashable
         heaps
         hspec
+        indexed-traversable
         lattices
         parsec
         QuickCheck
@@ -380766,8 +382328,6 @@ self: {
       ];
       description = "Intervals, and monoids thereof";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -381625,10 +383185,8 @@ self: {
     }:
     mkDerivation {
       pname = "io-classes";
-      version = "1.7.0.0";
-      sha256 = "1lnp09xmkl63zfy3ly5lmy1fsidngzksh35ws753s9287wc9fxbh";
-      revision = "5";
-      editedCabalFile = "0zd603cliv8hp739wwfijrwi8kw0phafiqjjxi8kg063pfjrdd88";
+      version = "1.8.0.1";
+      sha256 = "0ivhs0wpl2i8fw5g2ch3ck5adzwsp1dlfl1j3vy872i3cfygcbdi";
       libraryHaskellDepends = [
         array
         async
@@ -381828,6 +383386,7 @@ self: {
       criterion,
       deepseq,
       exceptions,
+      hashable,
       io-classes,
       nothunks,
       parallel,
@@ -381842,15 +383401,14 @@ self: {
     }:
     mkDerivation {
       pname = "io-sim";
-      version = "1.6.0.0";
-      sha256 = "0ripyhcmvvlqhb2v2gnbvbmb6bi7pqlcnly7cs7a5rxb9iww4qla";
-      revision = "4";
-      editedCabalFile = "105pab3q504r31wpbj54dwl0fwqvca5r81w4b0bxycxgffghcpqq";
+      version = "1.8.0.1";
+      sha256 = "1xv0j1l46n0wv76sll796avrvl3aaxnf0dsqjkp66fw0yprdbh5n";
       libraryHaskellDepends = [
         base
         containers
         deepseq
         exceptions
+        hashable
         io-classes
         nothunks
         parallel
@@ -381878,8 +383436,6 @@ self: {
       ];
       description = "A pure simulator for monadic concurrency with STM";
       license = lib.licenses.asl20;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -382455,8 +384011,8 @@ self: {
     }:
     mkDerivation {
       pname = "ip6addr";
-      version = "2.0.0";
-      sha256 = "1drhjv6xmwfnx2yvxxs03ds415gxdgylzkmb5wy9g7b12q91kxf5";
+      version = "2.0.0.1";
+      sha256 = "18g1y923ll8sh1flg9ddf5nyi7ndngf99p3d39q6icimffnyqkfh";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -384282,14 +385838,15 @@ self: {
       bytestring-lexing,
       hspec,
       hspec-core,
+      hspec-discover,
       QuickCheck,
       quickcheck-instances,
       time,
     }:
     mkDerivation {
       pname = "iso8601-duration";
-      version = "0.1.2.0";
-      sha256 = "1hzzcgc1k3dn4l5yxzqq9d62n2hfkrcg0ag14dly7ak3gx9l8l3n";
+      version = "0.1.2.1";
+      sha256 = "0swdzv13y0ww4vlddcfwlwdcp0n5v824dcn5hfa5lxlp06xvy86h";
       libraryHaskellDepends = [
         attoparsec
         base
@@ -384306,10 +385863,9 @@ self: {
         quickcheck-instances
         time
       ];
+      testToolDepends = [ hspec-discover ];
       description = "Types and parser for ISO8601 durations";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -386369,10 +387925,8 @@ self: {
     }:
     mkDerivation {
       pname = "jacinda";
-      version = "3.3.0.3";
-      sha256 = "1r3niy2zppimx0gn603x7gxwng11rn37776ddaa4vn0bvcy5spji";
-      revision = "1";
-      editedCabalFile = "1h4hqvv8bwbksgzmz77q0a3zdv3hwb5z01i748kzcqp2015fs6dp";
+      version = "3.3.0.4";
+      sha256 = "1ma3aa4sx4ybqgkclfjh8yz0ql0av6qflddyfsp90jaky3ryw54h";
       isLibrary = false;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -386449,8 +388003,8 @@ self: {
       pname = "jack";
       version = "0.7.2.2";
       sha256 = "0f47cyhsjw57k4cgbmwvawn02v9dvx4x1pn7k2z612srf5l1igb5";
-      revision = "2";
-      editedCabalFile = "1hjk165kmdryyr5j50dgk59sa6kqvhhp6g5i31b2kzif9glbmq3s";
+      revision = "3";
+      editedCabalFile = "18w4v7psxkfgfi5hzms9v2myia18nxm7vdrrirdrkfnjwkbqsh7f";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -389596,6 +391150,36 @@ self: {
     }
   ) { };
 
+  "jpeg-turbo" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      tasty,
+      tasty-discover,
+      tasty-hunit,
+    }:
+    mkDerivation {
+      pname = "jpeg-turbo";
+      version = "0.1.0.0";
+      sha256 = "1rln3w7iia5rp5awh4pvqzq68bak5hy9s7dkdwlykrf97sxh9lla";
+      libraryHaskellDepends = [
+        base
+        bytestring
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        tasty
+        tasty-discover
+        tasty-hunit
+      ];
+      testToolDepends = [ tasty-discover ];
+      description = "FFI bindings to libjpeg-turbo";
+      license = lib.licenses.bsd3;
+    }
+  ) { };
+
   "jpl-horizons-api" = callPackage (
     {
       mkDerivation,
@@ -389961,8 +391545,8 @@ self: {
     }:
     mkDerivation {
       pname = "jsaddle-warp";
-      version = "0.9.9.4";
-      sha256 = "0lx2vn0hlr8b27p3lg2fcpc22q8qazgpwa4yx8553xa540idi7g8";
+      version = "0.9.9.5";
+      sha256 = "1w7i64aaqisvk25f7p1qgxk1krqdh8ii9phapw0wyk7jcn6ybar2";
       enableSeparateDataOutput = true;
       libraryHaskellDepends = [
         aeson
@@ -390009,15 +391593,17 @@ self: {
       base,
       bytestring,
       jsaddle,
+      template-haskell,
     }:
     mkDerivation {
       pname = "jsaddle-wasm";
-      version = "0.1.1.0";
-      sha256 = "0srdxphbx4f70z97l1v64xdww2ggxap7wb1lyplacrml3pq7qr5d";
+      version = "0.1.2.0";
+      sha256 = "1anr6gg5900mcywwkx8s5j4wpq7hs0zgxc8b2mxf9nlagjjparfz";
       libraryHaskellDepends = [
         base
         bytestring
         jsaddle
+        template-haskell
       ];
       doHaddock = false;
       description = "Run JSaddle JSM with the GHC Wasm backend";
@@ -390880,8 +392466,8 @@ self: {
     }:
     mkDerivation {
       pname = "json-feed";
-      version = "2.0.0.13";
-      sha256 = "0yn4fknlvir85zkyj1l51pi7rmn10v5mdqp26qky1p8xjlyryjc6";
+      version = "2.0.0.15";
+      sha256 = "0rkcwd61j4bfp4jmhjj34nsid6mwgzyf715cn9jrm0xsxwcx5bx9";
       libraryHaskellDepends = [
         aeson
         base
@@ -391360,8 +392946,8 @@ self: {
     }:
     mkDerivation {
       pname = "json-rpc";
-      version = "1.1.1";
-      sha256 = "0m382rfyswqgzpdk2qzp71r1mhaj8frf9ii9xabai0zwpxxxprm7";
+      version = "1.1.2";
+      sha256 = "0jsyyn5vnc7ks96skxqkppry5h0ss4axma47zsrrychh652qc2kc";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -391637,6 +393223,7 @@ self: {
       description = "Types and type classes for defining JSON schemas";
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -393907,8 +395494,8 @@ self: {
     }:
     mkDerivation {
       pname = "jukebox";
-      version = "0.5.5";
-      sha256 = "1rv21hdgjmmd6mynv8prfdcn48by3zch9qz6clmkjijvph0zg0nl";
+      version = "0.5.8";
+      sha256 = "1pb7z95cmqaxbmba2grrbf8dm56821y40v12l4402milnahzl3k9";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -395147,10 +396734,8 @@ self: {
     }:
     mkDerivation {
       pname = "kan-extensions";
-      version = "5.2.6";
-      sha256 = "1k7cxqj9hl1b4axlw5903hrxh4vg5rdrzjmpa44xrhws3hy2i0ps";
-      revision = "1";
-      editedCabalFile = "0cq87wbjx4zppyxamqqcy2hsahs3n3k23qnp6q7lrh5303wp5fg0";
+      version = "5.2.7";
+      sha256 = "0n716zyihbnq3s1zhqbh3fm0qzhgy2hk79ziy8b6bvydjpzsq8y3";
       libraryHaskellDepends = [
         adjunctions
         array
@@ -397857,8 +399442,8 @@ self: {
     }:
     mkDerivation {
       pname = "keid-core";
-      version = "0.1.9.1";
-      sha256 = "0chyw6l1vzjdgn5mwfp39g2fhsxqs61xyxva2apvbk1xj8qm955g";
+      version = "0.1.10.0";
+      sha256 = "1rq6fry1lwaqki4jr28nhvh27xfg3b3528dda4iahgvd8hq5zvpf";
       libraryHaskellDepends = [
         base
         binary
@@ -398099,6 +399684,8 @@ self: {
       binary,
       bytestring,
       dear-imgui,
+      geomancy,
+      geomancy-layout,
       GLFW-b,
       keid-core,
       resourcet,
@@ -398112,13 +399699,15 @@ self: {
     }:
     mkDerivation {
       pname = "keid-ui-dearimgui";
-      version = "0.1.3.1";
-      sha256 = "196w7mwj6wr95p88ij1zadz4908ivrqx5nwgrkc6hqybc4pa7ygh";
+      version = "0.1.3.2";
+      sha256 = "0wahzr2sjnggafymfyqr1h16rlhs8f01rbz8fg00arqxbgqsvlph";
       libraryHaskellDepends = [
         base
         binary
         bytestring
         dear-imgui
+        geomancy
+        geomancy-layout
         GLFW-b
         keid-core
         resourcet
@@ -400302,6 +401891,7 @@ self: {
       ];
       description = "Repa-like array processing using LLVM JIT";
       license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -400686,6 +402276,65 @@ self: {
         simple-cmd
         simple-cmd-args
         simple-prompt
+        text
+        time
+        utf8-string
+        xdg-userdirs
+      ];
+      testHaskellDepends = [
+        base
+        simple-cmd
+      ];
+      description = "Koji CLI tool for querying tasks and installing builds";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "koji-tool";
+    }
+  ) { };
+
+  "koji-tool_1_3" = callPackage (
+    {
+      mkDerivation,
+      base,
+      directory,
+      extra,
+      filepath,
+      formatting,
+      http-conduit,
+      http-directory,
+      koji,
+      pretty-simple,
+      rpm-nvr,
+      safe,
+      select-rpms,
+      simple-cmd,
+      simple-cmd-args,
+      text,
+      time,
+      utf8-string,
+      xdg-userdirs,
+    }:
+    mkDerivation {
+      pname = "koji-tool";
+      version = "1.3";
+      sha256 = "0ibbkl0lvgfwh16hihgqbc9gsgxdlz2w1ra7kfjs9cmx5l8w1gpg";
+      isLibrary = false;
+      isExecutable = true;
+      executableHaskellDepends = [
+        base
+        directory
+        extra
+        filepath
+        formatting
+        http-conduit
+        http-directory
+        koji
+        pretty-simple
+        rpm-nvr
+        safe
+        select-rpms
+        simple-cmd
+        simple-cmd-args
         text
         time
         utf8-string
@@ -401576,8 +403225,8 @@ self: {
     }:
     mkDerivation {
       pname = "kubernetes-api-client";
-      version = "0.6.0.0";
-      sha256 = "0bnv702pyc14msnqs1p4k7s7pzsxfk1n389w7mcf43r3cjwkzi73";
+      version = "0.6.1.1";
+      sha256 = "0f3sfs6z9xwf7811s7mbh03a4jsyfcvjx1lvycs7gv1ak1jhm27z";
       libraryHaskellDepends = [
         aeson
         attoparsec
@@ -401660,7 +403309,6 @@ self: {
       testToolDepends = [ hspec-discover ];
       description = "Client library for Kubernetes";
       license = lib.licenses.asl20;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -402593,8 +404241,8 @@ self: {
     }:
     mkDerivation {
       pname = "lackey";
-      version = "2.0.0.9";
-      sha256 = "18kz3yvqh9g8sz8h06hwnd636236b1hvhviiig53zvcy9nn5fi3m";
+      version = "2.0.0.11";
+      sha256 = "0k9mad0kdjbpi2i2i8vfmp6y2cfkk0fvh3iara4m6rrdn2vy0h27";
       libraryHaskellDepends = [
         base
         servant-foreign
@@ -404373,8 +406021,8 @@ self: {
     }:
     mkDerivation {
       pname = "lambdasound";
-      version = "1.2.0";
-      sha256 = "0x16hv0pmsmxnzkpvch25qzsg7qgznpl34lxnd9y5dwm3jdgvhhg";
+      version = "1.2.1";
+      sha256 = "08x2y7dd356w9sidvpl72zbp36qyzkgcmrfr3rmrvd0ds64fj0kk";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -404822,6 +406470,8 @@ self: {
       pname = "langchain-hs";
       version = "0.0.2.0";
       sha256 = "0gh3gmmppfms1jg5zaxksalh90675r4pl6lmz63szkpwl9rmc9kz";
+      revision = "2";
+      editedCabalFile = "0qk56yswclxrf903c34ifadd8ja2l3zxfc0b2vzlgf1x7zf4cikl";
       libraryHaskellDepends = [
         aeson
         async
@@ -406226,8 +407876,8 @@ self: {
       pname = "language-gemini";
       version = "0.1.0.1";
       sha256 = "1vnl280ld0wazffzx19an5d6gybx4396z57idcfvdvzkap97qbh9";
-      revision = "2";
-      editedCabalFile = "0z1i9i3w6ymlhaa4r8fs6iks94rwx25zwwrk1gkyczhv1ah1vaqi";
+      revision = "3";
+      editedCabalFile = "1r378bjzwdbki99lbm7gb6j5bhizps0nqdrmc4j3cyqwgddxjp2v";
       libraryHaskellDepends = [
         base
         text
@@ -406241,8 +407891,6 @@ self: {
       ];
       description = "Datatypes and parsing/printing functions to represent the Gemini markup language";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -408206,6 +409854,8 @@ self: {
       pname = "lapack";
       version = "0.5.2";
       sha256 = "02slhxbg0ijcx2msrf17ymh17h14j95ia0nhb5mfiqdsxi8rwnda";
+      revision = "1";
+      editedCabalFile = "1xqylv8569f320dm67lab4idrjdl18ymxfs1sci19bi44k2hnm8d";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -408363,6 +410013,8 @@ self: {
       pname = "lapack-ffi-tools";
       version = "0.1.3.2";
       sha256 = "0y30qwxzbggn3aqr437j3bi1yfa1fpdq96xq7vxbi1fnll8a9432";
+      revision = "2";
+      editedCabalFile = "0k96wssmadcjrhdzcd6q3n7qx9kpb2wb3i9c61xygwx6x9q13wm3";
       isLibrary = false;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -408947,8 +410599,8 @@ self: {
       pname = "latex";
       version = "0.1.0.4";
       sha256 = "10m0l0wlrkkl474sdmi7cl6w6kqyqzcp05h7jdacxhzbxyf8nahw";
-      revision = "1";
-      editedCabalFile = "0ryjw2rsw979b9i7i23b6qf4y192za09f1yhi49czgsf4184sccb";
+      revision = "2";
+      editedCabalFile = "0m1y5c7dlqnfrr0p36dp5jy0g50w3mqhmzv8sawk0l1qrpiznq1k";
       libraryHaskellDepends = [
         base
         containers
@@ -409327,8 +410979,8 @@ self: {
       pname = "lattices";
       version = "2.2.1";
       sha256 = "0rknzbzwcbg87hjiz4jwqb81w14pywkipxjrrlrp0m5i8ciky1i7";
-      revision = "2";
-      editedCabalFile = "1y01fx2d3ad601zg13n52k8d4lcx1s3b6hhbwmyblhdj7x9xyl2i";
+      revision = "3";
+      editedCabalFile = "0ry6d23sy0pqgzn2cfbr0yrsxcf1mix2irhv1x9bzv99cz2az3qm";
       libraryHaskellDepends = [
         base
         containers
@@ -409679,8 +411331,8 @@ self: {
     }:
     mkDerivation {
       pname = "lawful-conversions";
-      version = "0.1.6.1";
-      sha256 = "18dp73b63wvzznvk1v47jxalpbfc9zjh184p88pjrjq3y6m514dg";
+      version = "0.1.7";
+      sha256 = "0ly64ng1lqm1czfcmsdkvnljzbr6z7cxdn6yl2bxbi09826ha1i3";
       libraryHaskellDepends = [
         base
         bytestring
@@ -411178,8 +412830,8 @@ self: {
     }:
     mkDerivation {
       pname = "leancheck-instances";
-      version = "0.0.5";
-      sha256 = "111dgr7ivd36v5fqcvnx2jq7iyn9akz5css6mzb5h72rc0sxwq6q";
+      version = "0.0.8";
+      sha256 = "0xgywj1hpzrxnyg2yx28mlx2ds59g8scdxfw4chm1clg8ljapp45";
       libraryHaskellDepends = [
         array
         base
@@ -412043,7 +413695,6 @@ self: {
       ];
       description = "Haskell IDE written in Haskell";
       license = "GPL";
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "leksah";
     }
   ) { inherit (pkgs) gtk3; };
@@ -412244,7 +413895,6 @@ self: {
       generic-deriving,
       ghc-prim,
       hashable,
-      HUnit,
       indexed-traversable,
       indexed-traversable-instances,
       kan-extensions,
@@ -412257,10 +413907,10 @@ self: {
       simple-reflect,
       strict,
       tagged,
+      tasty,
+      tasty-hunit,
+      tasty-quickcheck,
       template-haskell,
-      test-framework,
-      test-framework-hunit,
-      test-framework-quickcheck2,
       text,
       th-abstraction,
       these,
@@ -412271,8 +413921,8 @@ self: {
     }:
     mkDerivation {
       pname = "lens";
-      version = "5.3.4";
-      sha256 = "12n8jdwlpa5lcp2yi26a4fwncn1v1lyznaa9fasszk6qp0afvdpi";
+      version = "5.3.5";
+      sha256 = "1s0ziznj60l9z3z5dacq58kaq8cdfxcz0r75f5hwj25ivzrsrszg";
       libraryHaskellDepends = [
         array
         assoc
@@ -412314,13 +413964,12 @@ self: {
         bytestring
         containers
         deepseq
-        HUnit
         mtl
         QuickCheck
         simple-reflect
-        test-framework
-        test-framework-hunit
-        test-framework-quickcheck2
+        tasty
+        tasty-hunit
+        tasty-quickcheck
         text
         transformers
       ];
@@ -412581,8 +414230,8 @@ self: {
     }:
     mkDerivation {
       pname = "lens-family-th";
-      version = "0.5.3.1";
-      sha256 = "0fhv44qb3gdwiay3imhwhqhdpiczncjz2w6jiiqk11qn4a63rv7l";
+      version = "0.5.3.2";
+      sha256 = "1lkzrnajlgnxd5wmxaa8z4j3kxry5iwarc15n9jkxygb0b20x3rh";
       libraryHaskellDepends = [
         base
         template-haskell
@@ -412818,8 +414467,8 @@ self: {
       pname = "lens-properties";
       version = "4.11.1";
       sha256 = "1caciyn75na3f25q9qxjl7ibjam22xlhl5k2pqfiak10lxsmnz2g";
-      revision = "7";
-      editedCabalFile = "14n9yzar4zfqigyayxhi11a0g954nb4jcz0fahgpxyl2vbg7h1ch";
+      revision = "8";
+      editedCabalFile = "0lp0nkbm38v2i361w79dmqq20v3gn95bh1xixbs20549k73cxxj3";
       libraryHaskellDepends = [
         base
         lens
@@ -413324,8 +414973,8 @@ self: {
       pname = "lentil";
       version = "1.5.8.0";
       sha256 = "08g15kzynync0kl9f247sifzqpkjyvigc5r31w2n3vivi3pdcafn";
-      revision = "1";
-      editedCabalFile = "0n991bjlcjchmjlgfxg709sp6vsi6c5igzs7904i6hfabq3z47q5";
+      revision = "2";
+      editedCabalFile = "0qcibmqkw96658fx3dcfy90k8w4a7xdvllb8h0hk14v0lwvi4cmm";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -414529,8 +416178,8 @@ self: {
     }:
     mkDerivation {
       pname = "libfuse3";
-      version = "0.2.0.1";
-      sha256 = "1d9bn7hajkis2xh7q9v0w6y2a0bgr36qxkr30z9hnnvyihd6r01n";
+      version = "0.2.1.0";
+      sha256 = "1nnncas8z22cz2l1799wf1gg00awhkxff7xwhhfi2s56d3nmpqbj";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -414561,8 +416210,6 @@ self: {
       description = "A Haskell binding for libfuse-3.x";
       license = lib.licenses.mit;
       platforms = lib.platforms.linux;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { inherit (pkgs) fuse3; };
 
@@ -416406,8 +418053,8 @@ self: {
     }:
     mkDerivation {
       pname = "libsodium-bindings";
-      version = "0.0.2.0";
-      sha256 = "12zg8ckvv8qhdmw6pdwfyif23y6iw5hgwcyhb4hlhfk8q7qv2av3";
+      version = "0.0.3.0";
+      sha256 = "1m00bqk0ppbpm8vd2dkbnbb01gmy4h30sjkc5as2yamlldr4c9bw";
       libraryHaskellDepends = [ base ];
       librarySystemDepends = [ libsodium ];
       description = "FFI bindings to libsodium";
@@ -416712,8 +418359,8 @@ self: {
         }:
         mkDerivation {
           pname = "libtorch-ffi";
-          version = "2.0.1.3";
-          sha256 = "0hamxxlf69r3m826a3x59k11cmlv4m2340mr3xmcbyqga2zs04a6";
+          version = "2.0.1.5";
+          sha256 = "0qk8wdfp2c3xwn8ydszxn5zpifcgbp5ns75rinyyqybz0rls1xk8";
           libraryHaskellDepends = [
             async
             base
@@ -418594,7 +420241,6 @@ self: {
       distributive,
       ghc-prim,
       hashable,
-      HUnit,
       indexed-traversable,
       lens,
       QuickCheck,
@@ -418603,10 +420249,10 @@ self: {
       semigroupoids,
       simple-reflect,
       tagged,
+      tasty,
+      tasty-hunit,
+      tasty-quickcheck,
       template-haskell,
-      test-framework,
-      test-framework-hunit,
-      test-framework-quickcheck2,
       transformers,
       transformers-compat,
       unordered-containers,
@@ -418615,8 +420261,8 @@ self: {
     }:
     mkDerivation {
       pname = "linear";
-      version = "1.23.1";
-      sha256 = "0ybch2f4yc7mhxryr5f29i7j8ryq1i1n69fgldskxjrj825qkb3x";
+      version = "1.23.2";
+      sha256 = "05v91is8rwm34a86gra2q03d5f1klj4nmlxx8r3cx0gbkdhrvmmv";
       libraryHaskellDepends = [
         adjunctions
         base
@@ -418647,13 +420293,12 @@ self: {
         binary
         bytestring
         deepseq
-        HUnit
         QuickCheck
         reflection
         simple-reflect
-        test-framework
-        test-framework-hunit
-        test-framework-quickcheck2
+        tasty
+        tasty-hunit
+        tasty-quickcheck
         vector
       ];
       description = "Linear Algebra";
@@ -418907,8 +420552,8 @@ self: {
       pname = "linear-circuit";
       version = "0.1.0.4";
       sha256 = "0pyja29w1vrsi8vi65qdbc3c1vajiqgf5gff2zqh368k3hd4zpi4";
-      revision = "1";
-      editedCabalFile = "0gcz827i0jd9cnswrai36isdrga0y8vdlyb4nn2xjcpzy6zz6bfd";
+      revision = "2";
+      editedCabalFile = "1k21ln97x5ix02773ww765z50yy6d5dla2qcmfqi086jsrcbkr54";
       libraryHaskellDepends = [
         base
         comfort-array
@@ -420936,142 +422581,125 @@ self: {
     }
   ) { };
 
-  "liquid-fixpoint" =
-    callPackage
-      (
-        {
-          mkDerivation,
-          aeson,
-          ansi-terminal,
-          array,
-          ascii-progress,
-          async,
-          attoparsec,
-          base,
-          binary,
-          boxes,
-          bytestring,
-          cereal,
-          cmdargs,
-          containers,
-          deepseq,
-          directory,
-          fgl,
-          filepath,
-          git,
-          hashable,
-          intern,
-          lens-family,
-          megaparsec,
-          mtl,
-          nettools,
-          optparse-applicative,
-          parallel,
-          parser-combinators,
-          pretty,
-          process,
-          rest-rewrite,
-          smtlib-backends,
-          smtlib-backends-process,
-          stm,
-          store,
-          syb,
-          tagged,
-          tasty,
-          tasty-ant-xml,
-          tasty-hunit,
-          tasty-quickcheck,
-          tasty-rerun,
-          text,
-          transformers,
-          unordered-containers,
-          vector,
-          z3,
-        }:
-        mkDerivation {
-          pname = "liquid-fixpoint";
-          version = "0.9.6.3.3";
-          sha256 = "07dpgi5iwi1kf182vpcy5h3xq3bjxsvp16ayafbr0wv8wxg6l5ib";
-          configureFlags = [ "-fbuild-external" ];
-          isLibrary = true;
-          isExecutable = true;
-          libraryHaskellDepends = [
-            aeson
-            ansi-terminal
-            array
-            ascii-progress
-            async
-            attoparsec
-            base
-            binary
-            boxes
-            bytestring
-            cereal
-            cmdargs
-            containers
-            deepseq
-            directory
-            fgl
-            filepath
-            hashable
-            intern
-            lens-family
-            megaparsec
-            mtl
-            parallel
-            parser-combinators
-            pretty
-            process
-            rest-rewrite
-            smtlib-backends
-            smtlib-backends-process
-            stm
-            store
-            syb
-            text
-            transformers
-            unordered-containers
-            vector
-          ];
-          executableHaskellDepends = [ base ];
-          testHaskellDepends = [
-            base
-            containers
-            directory
-            filepath
-            hashable
-            mtl
-            optparse-applicative
-            process
-            stm
-            tagged
-            tasty
-            tasty-ant-xml
-            tasty-hunit
-            tasty-quickcheck
-            tasty-rerun
-            text
-            transformers
-            unordered-containers
-          ];
-          testSystemDepends = [
-            git
-            nettools
-            z3
-          ];
-          doCheck = false;
-          description = "Predicate Abstraction-based Horn-Clause/Implication Constraint Solver";
-          license = lib.licenses.bsd3;
-          hydraPlatforms = lib.platforms.none;
-          mainProgram = "fixpoint";
-          broken = true;
-        }
-      )
-      {
-        inherit (pkgs) git;
-        inherit (pkgs) nettools;
-        inherit (pkgs) z3;
-      };
+  "liquid-fixpoint" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      ansi-terminal,
+      array,
+      ascii-progress,
+      async,
+      attoparsec,
+      base,
+      binary,
+      boxes,
+      bytestring,
+      cereal,
+      cmdargs,
+      containers,
+      deepseq,
+      directory,
+      fgl,
+      filepath,
+      hashable,
+      intern,
+      lens-family,
+      megaparsec,
+      mtl,
+      optparse-applicative,
+      parallel,
+      parser-combinators,
+      pretty,
+      process,
+      rest-rewrite,
+      smtlib-backends,
+      smtlib-backends-process,
+      stm,
+      store,
+      syb,
+      tagged,
+      tasty,
+      tasty-ant-xml,
+      tasty-hunit,
+      tasty-quickcheck,
+      tasty-rerun,
+      text,
+      transformers,
+      unordered-containers,
+      vector,
+    }:
+    mkDerivation {
+      pname = "liquid-fixpoint";
+      version = "0.9.6.3.3";
+      sha256 = "07dpgi5iwi1kf182vpcy5h3xq3bjxsvp16ayafbr0wv8wxg6l5ib";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        ansi-terminal
+        array
+        ascii-progress
+        async
+        attoparsec
+        base
+        binary
+        boxes
+        bytestring
+        cereal
+        cmdargs
+        containers
+        deepseq
+        directory
+        fgl
+        filepath
+        hashable
+        intern
+        lens-family
+        megaparsec
+        mtl
+        parallel
+        parser-combinators
+        pretty
+        process
+        rest-rewrite
+        smtlib-backends
+        smtlib-backends-process
+        stm
+        store
+        syb
+        text
+        transformers
+        unordered-containers
+        vector
+      ];
+      executableHaskellDepends = [ base ];
+      testHaskellDepends = [
+        base
+        containers
+        directory
+        filepath
+        hashable
+        mtl
+        optparse-applicative
+        process
+        stm
+        tagged
+        tasty
+        tasty-ant-xml
+        tasty-hunit
+        tasty-quickcheck
+        tasty-rerun
+        text
+        transformers
+        unordered-containers
+      ];
+      description = "Predicate Abstraction-based Horn-Clause/Implication Constraint Solver";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "fixpoint";
+      broken = true;
+    }
+  ) { };
 
   "liquid-ghc-prim" = callPackage (
     {
@@ -422149,22 +423777,14 @@ self: {
   ) { };
 
   "list1" = callPackage (
-    {
-      mkDerivation,
-      base,
-      smash,
-    }:
+    { mkDerivation, base }:
     mkDerivation {
       pname = "list1";
-      version = "0.0.2";
-      sha256 = "0lxx1m2vrf14fb8r4qzfp6y8iqxai3cdpg2dzh9az383qxhy0zmh";
-      libraryHaskellDepends = [
-        base
-        smash
-      ];
+      version = "0.1.0";
+      sha256 = "1kyl7gg0prq7cyr0radwqcwdmqj3d0w2rjs1406nkryjfibsxgkh";
+      libraryHaskellDepends = [ base ];
       description = "Helpers for working with NonEmpty lists";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -422532,6 +424152,8 @@ self: {
       pname = "literatex";
       version = "0.4.0.0";
       sha256 = "06whn0rx1gy2pzl4678z087pfragy2sjaw34ljx6sfvxg0wn03bx";
+      revision = "1";
+      editedCabalFile = "1kqa99vrq35hk0n58cj5sgp6s87jgwhafz78jzrwi67v94w3hi01";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -422874,6 +424496,40 @@ self: {
       license = lib.licenses.agpl3Only;
     }
   ) { };
+
+  "llama-cpp-hs" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      derive-storable,
+      llama-cpp,
+      tasty,
+      tasty-hunit,
+    }:
+    mkDerivation {
+      pname = "llama-cpp-hs";
+      version = "0.1.0.0";
+      sha256 = "1zm3zkjx1n58dzjac3iln63a1x0kz5k7b5sxa1x6ahndvzy142qj";
+      libraryHaskellDepends = [
+        base
+        bytestring
+        derive-storable
+      ];
+      librarySystemDepends = [ llama-cpp ];
+      testHaskellDepends = [
+        base
+        bytestring
+        derive-storable
+        tasty
+        tasty-hunit
+      ];
+      description = "Haskell FFI bindings to the llama.cpp LLM inference library";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { inherit (pkgs) llama-cpp; };
 
   "llrbtree" = callPackage (
     { mkDerivation, base }:
@@ -423311,6 +424967,7 @@ self: {
       ];
       description = "Support for writing an EDSL with LLVM-JIT as target";
       license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -423412,6 +425069,8 @@ self: {
       doHaddock = false;
       description = "Utility functions for the llvm interface";
       license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -423420,24 +425079,24 @@ self: {
       mkDerivation,
       base,
       enumset,
-      LLVM,
+      LLVM-21git,
     }:
     mkDerivation {
       pname = "llvm-ffi";
-      version = "16.0";
-      sha256 = "14cf6qhdq69ggx41259ih55g6z1vn0694wrh3s8m6f7adq990ra9";
+      version = "21.0";
+      sha256 = "1dfl6zxcghhyyp49lgkknlq8nkvii7aag7y8b38ny93cpcczgx0g";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
         base
         enumset
       ];
-      librarySystemDepends = [ LLVM ];
+      librarySystemDepends = [ LLVM-21git ];
       description = "FFI bindings to the LLVM compiler toolkit";
       license = lib.licenses.bsd3;
       maintainers = [ lib.maintainers.thielema ];
     }
-  ) { LLVM = null; };
+  ) { LLVM-21git = null; };
 
   "llvm-ffi-tools" = callPackage (
     {
@@ -424103,8 +425762,8 @@ self: {
     }:
     mkDerivation {
       pname = "llvm-tf";
-      version = "16.0";
-      sha256 = "1nscccmk0nf52p9r0af354p4n4vr1fbaym4x164wwwid7xc1x65g";
+      version = "21.0";
+      sha256 = "108a6kw5xfbxq4y613702r79bix6djyn3szi188d38vmwzs4a8qx";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -425279,8 +426938,8 @@ self: {
     }:
     mkDerivation {
       pname = "log-base";
-      version = "0.12.0.1";
-      sha256 = "021chwkggy7q5c3hysfg3aj6pv60wla1cv8iyppibx70ilqpzqs4";
+      version = "0.12.1.0";
+      sha256 = "1c4dimdgzbia8h201prbl1w8g4qixn9fr100d7aawr256xhi7jci";
       libraryHaskellDepends = [
         aeson
         aeson-pretty
@@ -425457,7 +427116,7 @@ self: {
       bytestring,
       deepseq,
       http-client,
-      http-client-openssl,
+      http-client-tls,
       http-types,
       log-base,
       network-uri,
@@ -425472,8 +427131,8 @@ self: {
     }:
     mkDerivation {
       pname = "log-elasticsearch";
-      version = "0.13.0.1";
-      sha256 = "1l9p4zpf18rkwkv485swrlwyx2l3iqd332273mkz64ybjqllsdkx";
+      version = "0.13.0.2";
+      sha256 = "1hnd866bcp5fqnxlh3z39d2kn9mza9vp554sm34cmaclmkzfp0cw";
       libraryHaskellDepends = [
         aeson
         aeson-pretty
@@ -425482,7 +427141,7 @@ self: {
         bytestring
         deepseq
         http-client
-        http-client-openssl
+        http-client-tls
         http-types
         log-base
         network-uri
@@ -428374,6 +430033,43 @@ self: {
     }
   ) { };
 
+  "lr-acts" = callPackage (
+    {
+      mkDerivation,
+      base,
+      criterion,
+      data-default,
+      groups,
+      hspec,
+      QuickCheck,
+    }:
+    mkDerivation {
+      pname = "lr-acts";
+      version = "0.0.1";
+      sha256 = "0v9j5zkb5bxvrl7h27f3nibpd3bjiypjw8jxkx77jfjqq8nnmp86";
+      libraryHaskellDepends = [
+        base
+        data-default
+        groups
+      ];
+      testHaskellDepends = [
+        base
+        data-default
+        groups
+        hspec
+        QuickCheck
+      ];
+      benchmarkHaskellDepends = [
+        base
+        criterion
+        data-default
+        groups
+      ];
+      description = "Left and right actions, semidirect products and torsors";
+      license = lib.licenses.bsd3;
+    }
+  ) { };
+
   "lrucache" = callPackage (
     {
       mkDerivation,
@@ -431079,8 +432775,8 @@ self: {
     }:
     mkDerivation {
       pname = "lz4-bytes";
-      version = "0.1.2.0";
-      sha256 = "1jgsz96n7n7g4403w0h3zjvlhdh11vy4s7wqka0ppsikjjl7f1ni";
+      version = "0.2.0.0";
+      sha256 = "10g253lwwmiz7ci70lyxfjln8mczj5r3m2nmcgidh4r9h31x30yv";
       libraryHaskellDepends = [
         base
         byte-order
@@ -433083,7 +434779,6 @@ self: {
       ];
       description = "Preconfigured email connection pool on top of smtp";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "exe";
     }
   ) { };
@@ -435482,6 +437177,57 @@ self: {
     }
   ) { };
 
+  "mappings_0_3_2_0" = callPackage (
+    {
+      mkDerivation,
+      base,
+      cond,
+      containers,
+      formatting,
+      hspec,
+      hspec-discover,
+      indexed-traversable,
+      partialord,
+    }:
+    mkDerivation {
+      pname = "mappings";
+      version = "0.3.2.0";
+      sha256 = "0xmdcrc3bs0lvlp9jia5bfvppj0zcgdaic1zr7p5c3gnlw16d739";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        base
+        cond
+        containers
+        formatting
+        indexed-traversable
+        partialord
+      ];
+      executableHaskellDepends = [
+        base
+        cond
+        containers
+        formatting
+        indexed-traversable
+        partialord
+      ];
+      testHaskellDepends = [
+        base
+        cond
+        containers
+        formatting
+        hspec
+        indexed-traversable
+        partialord
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "Types which represent functions k -> v";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "view";
+    }
+  ) { };
+
   "mappy" = callPackage (
     {
       mkDerivation,
@@ -435982,8 +437728,8 @@ self: {
       pname = "markov-chain";
       version = "0.0.3.4";
       sha256 = "1kcjgfdwca4arngbj7w2g8bpmk5p44dyzrwcw8xmja0s200bhlbf";
-      revision = "1";
-      editedCabalFile = "10qpqdpnkjw72hxkrbxxwwjaf4lxk3shhippwkpn6m5s80fgzlwg";
+      revision = "2";
+      editedCabalFile = "0rvycamhqvwbh1gqc9s037ijly5jz8z43n4m2wfmiswm6738a62i";
       libraryHaskellDepends = [
         base
         containers
@@ -436191,6 +437937,48 @@ self: {
       ];
       description = "A markup parser";
       license = lib.licenses.bsd3;
+    }
+  ) { };
+
+  "markup-parse_0_2_0_0" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      containers,
+      deepseq,
+      Diff,
+      doctest-parallel,
+      flatparse,
+      string-interpolate,
+      tasty,
+      tasty-golden,
+      these,
+    }:
+    mkDerivation {
+      pname = "markup-parse";
+      version = "0.2.0.0";
+      sha256 = "1z08d3chvgl9zk9y2crfjih0crh5dv7pih6x0n7af38l6lhsgkhz";
+      libraryHaskellDepends = [
+        base
+        bytestring
+        containers
+        deepseq
+        flatparse
+        string-interpolate
+        these
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        Diff
+        doctest-parallel
+        tasty
+        tasty-golden
+      ];
+      description = "A markup parser";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -436781,8 +438569,8 @@ self: {
     }:
     mkDerivation {
       pname = "massiv";
-      version = "1.0.4.1";
-      sha256 = "11gvl0z49aariw3vy8g46di1x5xibf6l7zf6b3l701hvg0hffyn7";
+      version = "1.0.5.0";
+      sha256 = "138y8kk2qxprlwd8isb6h7wigiymmin1sip255060ql5gzjaawcw";
       libraryHaskellDepends = [
         base
         bytestring
@@ -438649,8 +440437,8 @@ self: {
     }:
     mkDerivation {
       pname = "mattermost-api";
-      version = "90000.0.0";
-      sha256 = "1ka3r4bnfwlbjnkws8vkg8i9gj8wzsyss137p7hxrx4sr75s6iyv";
+      version = "90000.1.0";
+      sha256 = "0mp2qch4amgiixmx7zv158fb3ld1dpfad17sb43gxwadrj9afxdh";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -438712,8 +440500,8 @@ self: {
     }:
     mkDerivation {
       pname = "mattermost-api-qc";
-      version = "90000.0.0";
-      sha256 = "0lrb8l8nbrdp4y2ala8hchr8ikv5hqw710ffiiw1sz6z2dqiqbxm";
+      version = "90000.1.0";
+      sha256 = "08ifm97c80a8vp9cqlwk7jb7105y2q6w77zvy2p42vk1l1p6yq4m";
       libraryHaskellDepends = [
         base
         containers
@@ -439579,6 +441367,149 @@ self: {
     }
   ) { };
 
+  "mcp" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      async,
+      base,
+      base64-bytestring,
+      bytestring,
+      containers,
+      cryptonite,
+      http-conduit,
+      http-types,
+      jose,
+      memory,
+      mtl,
+      optparse-applicative,
+      random,
+      scientific,
+      servant,
+      servant-auth,
+      servant-auth-server,
+      servant-server,
+      stm,
+      text,
+      time,
+      transformers,
+      unordered-containers,
+      uuid,
+      wai,
+      wai-extra,
+      warp,
+    }:
+    mkDerivation {
+      pname = "mcp";
+      version = "0.2.0.1";
+      sha256 = "0mmm890m86dv16hw7mjbznswhw1jrm7kbn45qqhfp661k3kwlw1j";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        async
+        base
+        base64-bytestring
+        bytestring
+        containers
+        cryptonite
+        http-conduit
+        http-types
+        jose
+        memory
+        mtl
+        random
+        servant
+        servant-auth
+        servant-auth-server
+        servant-server
+        stm
+        text
+        time
+        transformers
+        unordered-containers
+        uuid
+        wai
+        wai-extra
+        warp
+      ];
+      executableHaskellDepends = [
+        aeson
+        base
+        containers
+        optparse-applicative
+        scientific
+        text
+        time
+      ];
+      testHaskellDepends = [ base ];
+      description = "A Haskell implementation of the Model Context Protocol (MCP)";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { };
+
+  "mcp-server" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      containers,
+      hspec,
+      http-types,
+      network-uri,
+      QuickCheck,
+      template-haskell,
+      text,
+      vector,
+      wai,
+      warp,
+    }:
+    mkDerivation {
+      pname = "mcp-server";
+      version = "0.1.0.14";
+      sha256 = "0lyr19sg5cjsgiq16v0cfkf1rkwgvyacz4siflf4wapllrkr82fz";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        containers
+        http-types
+        network-uri
+        template-haskell
+        text
+        vector
+        wai
+        warp
+      ];
+      executableHaskellDepends = [
+        base
+        containers
+        network-uri
+        text
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        bytestring
+        containers
+        hspec
+        network-uri
+        QuickCheck
+        template-haskell
+        text
+      ];
+      description = "Library for building Model Context Protocol (MCP) servers";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { };
+
   "mcpi" = callPackage (
     {
       mkDerivation,
@@ -440000,8 +441931,8 @@ self: {
       pname = "med-module";
       version = "0.1.3";
       sha256 = "04p1aj85hsr3wpnnfg4nxbqsgq41ga63mrg2w39d8ls8ljvajvna";
-      revision = "1";
-      editedCabalFile = "0m69cvm2nzx2g0y8jfkymap529fm0k65wg82dycj0dc60p9fj66r";
+      revision = "2";
+      editedCabalFile = "0b557rrqki2rjb922s1yqkd7gbm9cjhzg52f0h5mp19v53nds3vz";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -440896,6 +442827,8 @@ self: {
       pname = "megaparsec-tests";
       version = "9.7.0";
       sha256 = "17jwz62f8lnrfmmfrsv1jcvn9wmpk4jlhmxjwk5qqx2iyijnrpb1";
+      revision = "1";
+      editedCabalFile = "108nv4c045xg3ks0v7c0figqrl7v90l87cahhmn5mc24vdpxhkrj";
       libraryHaskellDepends = [
         base
         bytestring
@@ -441442,7 +443375,7 @@ self: {
     }
   ) { };
 
-  "mem-info_0_4_1_0" = callPackage (
+  "mem-info_0_4_1_1" = callPackage (
     {
       mkDerivation,
       base,
@@ -441467,8 +443400,8 @@ self: {
     }:
     mkDerivation {
       pname = "mem-info";
-      version = "0.4.1.0";
-      sha256 = "0613k5qil4j1cfh335gyjf708md9cicbhm5xji7v8fzfmzsqxx1c";
+      version = "0.4.1.1";
+      sha256 = "10b3lmqh4nbyfpglgjb04xx0wd65vxfyc53m3l89linhvij61kmc";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -444184,8 +446117,8 @@ self: {
       pname = "microaeson";
       version = "0.1.0.2";
       sha256 = "025vnzs4j2nmkin5x8h5hbrj25spamqppg68wfqlnbrr1519lxfz";
-      revision = "1";
-      editedCabalFile = "1faq5mjz8jy739lbaizy1v5wrvkxsjzp6lhjmb06a3yv71h6m594";
+      revision = "2";
+      editedCabalFile = "04kq6sh1fl0xgkai0d055s7hkwf21vlksgqizh4xfvsb2xbakgiz";
       libraryHaskellDepends = [
         array
         base
@@ -445281,8 +447214,8 @@ self: {
       pname = "midi-music-box";
       version = "0.0.1.2";
       sha256 = "0rnjwis6y0lnyfjxnxqk3zsh78ylccq5v21avb97vybmj0pld1l9";
-      revision = "5";
-      editedCabalFile = "0j0dcd8x75dgx0rgj70hxl5p4wnmhg2zdw1wm0lvg43mazclkw0z";
+      revision = "7";
+      editedCabalFile = "02xnldnw5ci6chpbj18mz82m8pp582zpy9z3bdy5yi7q7k415h0p";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -445429,6 +447362,8 @@ self: {
       pname = "midimory";
       version = "0.0.2.3";
       sha256 = "1k9pm0ai9i66c7l4px84cf5db3nsq5ab9ndplcyfh05snbdy70vz";
+      revision = "1";
+      editedCabalFile = "1sq7xipm92nfcbf6cad1yclzl36gghqlnnvs1r0579njjcchbgl5";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -445825,9 +447760,11 @@ self: {
       directory,
       filepath,
       hspec,
+      hspec-discover,
       http-client,
       http-date,
       http-types,
+      http2,
       network,
       old-locale,
       parsec,
@@ -445848,8 +447785,8 @@ self: {
     }:
     mkDerivation {
       pname = "mighttpd2";
-      version = "4.0.8";
-      sha256 = "0yqj3m7y493bzjmx1ycyid4s40h11l46w8lv1783drlw7wpakmya";
+      version = "4.0.9";
+      sha256 = "1qd43hlyvhnslxrvy4h0rj5qs6nbxnz8d23myqjspa9jl8rzb1bg";
       isLibrary = true;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -445867,6 +447804,7 @@ self: {
         filepath
         http-date
         http-types
+        http2
         network
         parsec
         resourcet
@@ -445906,6 +447844,7 @@ self: {
         hspec
         http-client
       ];
+      testToolDepends = [ hspec-discover ];
       description = "High performance web server on WAI/warp";
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
@@ -445987,8 +447926,6 @@ self: {
       ];
       description = "Semi-automatic database schema migrations";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -446034,7 +447971,6 @@ self: {
       ];
       description = "Semi-automatic database schema migrations";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -446078,8 +448014,6 @@ self: {
       ];
       description = "Semi-automatic database schema migrations";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -446119,7 +448053,6 @@ self: {
       ];
       description = "Semi-automatic database schema migrations";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -446786,6 +448719,7 @@ self: {
   "minici" = callPackage (
     {
       mkDerivation,
+      ansi-terminal,
       base,
       bytestring,
       containers,
@@ -446807,11 +448741,12 @@ self: {
     }:
     mkDerivation {
       pname = "minici";
-      version = "0.1.6";
-      sha256 = "0ljr1wx46ijxrw39cv34a07p642f7693lppnvwpnan9pfaibq670";
+      version = "0.1.8";
+      sha256 = "0fady7w644gcrjd9yy7ngbi1dj2rp87lnzmxjr307w8kdb2aqdcj";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
+        ansi-terminal
         base
         bytestring
         containers
@@ -448796,25 +450731,28 @@ self: {
       bytestring,
       concurrent-output,
       containers,
+      data-default,
       directory,
+      extra,
       filepath,
       filepattern,
-      ghc-prim,
       hspec,
       HsYAML,
+      MissingH,
       monad-parallel,
       process,
       SafeSemaphore,
       text,
+      text-builder-linear,
+      text-display,
       time,
       unix-compat,
-      unordered-containers,
       xdg-basedir,
     }:
     mkDerivation {
       pname = "miv";
-      version = "0.4.8";
-      sha256 = "1b3lplsnjf992rvidj48swccl8f8aqdik1sf481g7vwv2mz7d7m6";
+      version = "0.4.9";
+      sha256 = "1z3hwvg3jb82hf6hrlzl9vv1fqy1llgfj2rps27fbccz50i6v6ps";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -448823,33 +450761,26 @@ self: {
         bytestring
         concurrent-output
         containers
+        data-default
         directory
+        extra
         filepath
         filepattern
-        ghc-prim
         HsYAML
+        MissingH
         monad-parallel
         process
         SafeSemaphore
         text
+        text-builder-linear
+        text-display
         time
         unix-compat
-        unordered-containers
         xdg-basedir
       ];
       testHaskellDepends = [
         base
-        bytestring
-        containers
-        directory
-        ghc-prim
         hspec
-        HsYAML
-        monad-parallel
-        process
-        text
-        time
-        unordered-containers
       ];
       description = "Vim plugin manager written in Haskell";
       license = lib.licenses.mit;
@@ -449319,6 +451250,8 @@ self: {
       pname = "mmark-cli";
       version = "0.0.5.2";
       sha256 = "05i8wy3zls6fp1qmdz4ayydhgvq6jnhh2rj4r3frvp8nl70kkv26";
+      revision = "1";
+      editedCabalFile = "1p1ia1vxaa8qpbc4hclmavjnk8xj1b6qqzprq3gysy5l38s340aj";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -449399,10 +451332,8 @@ self: {
     }:
     mkDerivation {
       pname = "mmorph";
-      version = "1.2.0";
-      sha256 = "1022d8mm523dihkf85mqsqxpm9rnyicmv91c8rm4csv7xdc80cv1";
-      revision = "3";
-      editedCabalFile = "1582vcpjiyimb1vwnhgq8gp805iziwa8sivv2frir0cgq4z236yz";
+      version = "1.2.1";
+      sha256 = "1rjclyxyr5ajnpmkrlwap77h5fmdwys8bpwfj0n87v33hh1dcn8f";
       libraryHaskellDepends = [
         base
         mtl
@@ -455776,6 +457707,35 @@ self: {
     }
   ) { };
 
+  "monoid-extras_0_7" = callPackage (
+    {
+      mkDerivation,
+      base,
+      criterion,
+      groups,
+      semigroupoids,
+      semigroups,
+    }:
+    mkDerivation {
+      pname = "monoid-extras";
+      version = "0.7";
+      sha256 = "0c25hcvsw6xqdgy6p8q5jdgxmnqhiq7z2hm43cn0yh9nk2y294ws";
+      libraryHaskellDepends = [
+        base
+        groups
+        semigroupoids
+      ];
+      benchmarkHaskellDepends = [
+        base
+        criterion
+        semigroups
+      ];
+      description = "Various extra monoid-related definitions and utilities";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "monoid-insertleft" = callPackage (
     { mkDerivation, base }:
     mkDerivation {
@@ -456166,8 +458126,8 @@ self: {
     }:
     mkDerivation {
       pname = "monoidmap-aeson";
-      version = "0.0.0.5";
-      sha256 = "1m5pw94lrybjvf6hnfzl0v974fg2i53r5s8aw4qv9cbxizhh68ag";
+      version = "0.0.0.6";
+      sha256 = "0fd2cd4a8ncb3hibfknq0sf7j8nmmisr4bwc42yp6l0ddfsdbbd6";
       libraryHaskellDepends = [
         aeson
         base
@@ -456208,8 +458168,8 @@ self: {
     }:
     mkDerivation {
       pname = "monoidmap-examples";
-      version = "0.0.0.0";
-      sha256 = "1pqswi2r41r7hrrzwg4ygj67jsgmmsyyqyn7n47lnf4q331l1hv6";
+      version = "0.0.0.1";
+      sha256 = "1q7vssgknncjq1f187zvg6630r6kk12mdmq1985skm98ynl1n8wx";
       libraryHaskellDepends = [
         base
         containers
@@ -456252,8 +458212,8 @@ self: {
     }:
     mkDerivation {
       pname = "monoidmap-internal";
-      version = "0.0.0.0";
-      sha256 = "0di3b4x4f5mkmi71rpfa0zv5048z4hkzzdy1zw1qla46sn1646jg";
+      version = "0.0.0.1";
+      sha256 = "1khqa1pnxfngbay9gzjvls7hy7pddr8pd32c0z1na9mj8q8hz63c";
       libraryHaskellDepends = [
         base
         containers
@@ -456286,8 +458246,6 @@ self: {
       ];
       description = "Internal support for monoidmap";
       license = lib.licenses.asl20;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -456302,8 +458260,8 @@ self: {
     }:
     mkDerivation {
       pname = "monoidmap-quickcheck";
-      version = "0.0.0.2";
-      sha256 = "0sqgd61a6abwr7rdiqm25cs2kl496v8ji0rax9dw0sdc3zh6m4j2";
+      version = "0.0.0.3";
+      sha256 = "065b7rk64yg89ll546n338jny9d3y0pmp2alwf5z7z5n25nf40cq";
       libraryHaskellDepends = [
         base
         containers
@@ -459827,6 +461785,7 @@ self: {
       badPlatforms = lib.platforms.darwin;
       hydraPlatforms = lib.platforms.none;
       mainProgram = "mptcp-pm";
+      broken = true;
     }
   ) { };
 
@@ -460512,8 +462471,8 @@ self: {
       pname = "msgpack";
       version = "1.0.1.0";
       sha256 = "1ljb9rdhdbxqs32brrwd42c8v3z7yrl6pr4mzmid1rfqdipard77";
-      revision = "2";
-      editedCabalFile = "07m8xrwfxp0p6dgg7bz1vwsypcwi9ix84bxva462261ncyaayd9p";
+      revision = "3";
+      editedCabalFile = "10qhv3v617zq8r3b08mqb3h1h6vzmvyq2rps6kdvs8gvqb5mkiss";
       libraryHaskellDepends = [
         base
         binary
@@ -460537,8 +462496,6 @@ self: {
       ];
       description = "A Haskell implementation of MessagePack";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -460582,6 +462539,7 @@ self: {
       description = "Aeson adapter for MessagePack";
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -460858,6 +462816,7 @@ self: {
       description = "A MessagePack-RPC Implementation";
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -464042,8 +466001,8 @@ self: {
       pname = "multistate";
       version = "0.8.0.4";
       sha256 = "0y42c21ha0chqhrn40a4bikdbirsw7aqg4i866frpagz1ivr915q";
-      revision = "1";
-      editedCabalFile = "0m1wv2yv1isw1qkzfa2fgjx0md7irp9djcgy16739wvl8hnj1ciq";
+      revision = "2";
+      editedCabalFile = "1gdxarys4x4bws8d8smw219z7zrjbyl8k7d2fqv1ray1x52zxr3n";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -464390,8 +466349,8 @@ self: {
     }:
     mkDerivation {
       pname = "murmur3";
-      version = "1.0.5";
-      sha256 = "0ldmhprzldcxdbv5cd7nm7dfaavns4iv4z6mi1prnx1yn41lp6d0";
+      version = "1.0.6";
+      sha256 = "1lw3h5mzi7g2mipc4czbsgn08cnvkv3p30i5x6klb7vzzy40wkhb";
       libraryHaskellDepends = [
         base
         bytestring
@@ -465304,8 +467263,8 @@ self: {
     }:
     mkDerivation {
       pname = "mustache";
-      version = "2.4.2";
-      sha256 = "14hgfryg77ms5isqfz07w8p81jn1qzg0yp5myjq50pj5zqsw11i2";
+      version = "2.4.3.1";
+      sha256 = "0par311bk001jj00r7kiwv82v0s2lj6y4kvhrr9jfhnd22kzzl0g";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -465543,6 +467502,38 @@ self: {
         vector
       ];
       description = "Abstactions and concrete implementations of mutable containers";
+      license = lib.licenses.mit;
+    }
+  ) { };
+
+  "mutable-fenwick" = callPackage (
+    {
+      mkDerivation,
+      array,
+      base,
+      commutative-semigroups,
+      hspec,
+      monoid-subclasses,
+      vector,
+    }:
+    mkDerivation {
+      pname = "mutable-fenwick";
+      version = "0.1.1.0";
+      sha256 = "1c29azj3fs797la6cgnbkz9z5znpqqx9vf5ps9fxhrxp0rn6vj5r";
+      libraryHaskellDepends = [
+        array
+        base
+        commutative-semigroups
+        monoid-subclasses
+        vector
+      ];
+      testHaskellDepends = [
+        array
+        base
+        hspec
+        vector
+      ];
+      description = "Mutable Fenwick trees";
       license = lib.licenses.mit;
     }
   ) { };
@@ -466470,8 +468461,8 @@ self: {
     }:
     mkDerivation {
       pname = "myers-diff";
-      version = "0.3.0.0";
-      sha256 = "1zkhax2wha1cv9zzw7hvk4dnnkd8p6iskd7lf8d7kmkjv88bxjsa";
+      version = "0.3.0.2";
+      sha256 = "0w0y53qnkja4dpzxsvydg6w5ymwdwwlm6x1yfij24inpycdhjhkw";
       libraryHaskellDepends = [
         base
         containers
@@ -466512,8 +468503,6 @@ self: {
         weigh
       ];
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -469313,8 +471302,8 @@ self: {
     }:
     mkDerivation {
       pname = "natural-arithmetic";
-      version = "0.2.2.0";
-      sha256 = "1ps6lcp0s3izphp3hx73p2v91cs1r2iz4rh1hwrmxd9pfar815ya";
+      version = "0.2.3.0";
+      sha256 = "1lf7v804lnvb63mw232qkyqrhdrbk37s6icx4wysiw8z90v6c10j";
       libraryHaskellDepends = [
         base
         unlifted
@@ -472754,6 +474743,50 @@ self: {
     }
   ) { };
 
+  "network-can" = callPackage (
+    {
+      mkDerivation,
+      attoparsec,
+      base,
+      bytestring,
+      containers,
+      data-default-class,
+      hspec,
+      hspec-discover,
+      mtl,
+      network,
+      QuickCheck,
+      transformers,
+      unliftio,
+    }:
+    mkDerivation {
+      pname = "network-can";
+      version = "0.1.0.0";
+      sha256 = "1rx3xv0g7w9vq2jqhcfzdarykd6fnsixzyswiip08mmqn7jd0qca";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        attoparsec
+        base
+        bytestring
+        containers
+        data-default-class
+        mtl
+        network
+        QuickCheck
+        transformers
+        unliftio
+      ];
+      testHaskellDepends = [
+        base
+        hspec
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "CAN bus networking";
+      license = lib.licenses.bsd3;
+    }
+  ) { };
+
   "network-carbon" = callPackage (
     {
       mkDerivation,
@@ -472894,8 +474927,8 @@ self: {
     }:
     mkDerivation {
       pname = "network-control";
-      version = "0.1.6";
-      sha256 = "18cgla6n1s773zzbk9h5lgx36bb52if44h8m3xs5w0b22jnql9gl";
+      version = "0.1.7";
+      sha256 = "042vg6v81m5s97c0xrl0535gnmxlfwlfidq9nbpvwwjw3qw0vm05";
       libraryHaskellDepends = [
         base
         psqueues
@@ -473646,8 +475679,8 @@ self: {
     }:
     mkDerivation {
       pname = "network-protocol-xmpp";
-      version = "0.5.1";
-      sha256 = "1fd8rq235lbpkdlashsqk01ymxbbh6q1hng706h5lw0v49wpvd7i";
+      version = "0.5.2";
+      sha256 = "0jm46pkhys8a2rvyss8dv1b61im56il0kkwswg521xv6mfqk1csm";
       libraryHaskellDepends = [
         base
         bytestring
@@ -477104,8 +479137,8 @@ self: {
     }:
     mkDerivation {
       pname = "nix-narinfo";
-      version = "0.1.1.1";
-      sha256 = "1hc4w1wdnzjynvyxschglssfhxpqcgfx56vwblv17y7fc2qqk3xc";
+      version = "0.1.1.2";
+      sha256 = "09mmkbq8g359f5myixcavz3fsjdxmsbasinix44hqbnhgppmizyn";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -477436,8 +479469,8 @@ self: {
     }:
     mkDerivation {
       pname = "nix-tree";
-      version = "0.6.1";
-      sha256 = "1bnfdymkqpjr19c64my9zzmiggh7jy1fhkx109aj2mkaz4m0w4gi";
+      version = "0.6.3";
+      sha256 = "06dzf87vckd11yiq2ng6l80rd17p920lajykn1vy2azyhivkp59j";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -479223,8 +481256,8 @@ self: {
     }:
     mkDerivation {
       pname = "nonempty-containers";
-      version = "0.3.4.5";
-      sha256 = "0a241kdg3spbcj9ajwgwribh5pxfdix8ixp8nm4dik5wq1garskf";
+      version = "0.3.5.0";
+      sha256 = "1dpapwar5392222zr9hz78swk8x7514jmxsf58ak0a6ha9c3ir89";
       libraryHaskellDepends = [
         aeson
         base
@@ -480075,8 +482108,8 @@ self: {
         }:
         mkDerivation {
           pname = "notmuch";
-          version = "0.3.1.1";
-          sha256 = "18z8pbqagdyd5rqv42i6060vv40gv84dx3sf52vvrayga19k1ydw";
+          version = "0.3.2";
+          sha256 = "0yx7lkncs7xn3w3sdplwj7ghsblm9q4w97af9vw9rszhpd50b1cd";
           isLibrary = true;
           isExecutable = true;
           libraryHaskellDepends = [
@@ -480096,7 +482129,7 @@ self: {
           ];
           libraryToolDepends = [ c2hs ];
           description = "Haskell binding to Notmuch, the mail indexer";
-          license = lib.licenses.gpl3Only;
+          license = lib.licenses.gpl3Plus;
         }
       )
       {
@@ -480568,8 +482601,8 @@ self: {
     }:
     mkDerivation {
       pname = "nqe";
-      version = "0.6.5";
-      sha256 = "0k8p8sgmw9xl9v76h817zi0dmqkf8wkh8g1h4p481f7psqj82x55";
+      version = "0.6.6";
+      sha256 = "192w1l3i3cnmxxv2zq02ky31q4vsk6cy5bxih8767gfccn9kgkgi";
       libraryHaskellDepends = [
         base
         conduit
@@ -482105,8 +484138,8 @@ self: {
       pname = "numeric-prelude";
       version = "0.4.4";
       sha256 = "04x6ry2sxr5hsiz4098dn2gqyjqywiq2xk0anf6wc4xrvasgccjs";
-      revision = "3";
-      editedCabalFile = "0nr7jpr2rzi2w0ffn4nrvzb8s4281kdslshcgp3xwkiz9daij2vb";
+      revision = "4";
+      editedCabalFile = "0mlhgwq3wiknhvn1d4r7iv3g84vgrlknnhdp66l5wk4sgsw9bw9f";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -482348,6 +484381,29 @@ self: {
       ];
       description = "A numeric class hierarchy";
       license = lib.licenses.bsd3;
+    }
+  ) { };
+
+  "numhask_0_13_0_0" = callPackage (
+    {
+      mkDerivation,
+      base,
+      doctest-parallel,
+      QuickCheck,
+    }:
+    mkDerivation {
+      pname = "numhask";
+      version = "0.13.0.0";
+      sha256 = "13174w30c9pmmfjc5gn9yfzvlyr6ljm0diyh0q0gysiq0wspx2ni";
+      libraryHaskellDepends = [ base ];
+      testHaskellDepends = [
+        base
+        doctest-parallel
+        QuickCheck
+      ];
+      description = "A numeric class hierarchy";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -485030,6 +487086,8 @@ self: {
       pname = "ods2csv";
       version = "0.1.0.1";
       sha256 = "1a1qrknqh24hgv5v46vnxnaqcnx3n92rcwgh3b6h6k27kassx4xa";
+      revision = "1";
+      editedCabalFile = "0sb7k4sw64ld5jdsx1g522q911d4z9c92mh0vfjb0p7h4r1h71hm";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -485918,6 +487976,8 @@ self: {
       pname = "oidc-client";
       version = "0.8.0.0";
       sha256 = "0fmffnf6gg99d15nn84ih36lr7qasa1zfkb62sgb0icik8dwv83m";
+      revision = "1";
+      editedCabalFile = "1zaaldni8i7kdxpmbpd2nlva0ygycn9955yh9qvcm08cd2wvq15d";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -485955,8 +488015,6 @@ self: {
       ];
       description = "OpenID Connect 1.0 library for RP";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -486166,6 +488224,75 @@ self: {
     }
   ) { };
 
+  "ollama-haskell_0_2_0_0" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      base64-bytestring,
+      bytestring,
+      containers,
+      directory,
+      filepath,
+      http-client,
+      http-client-tls,
+      http-types,
+      mtl,
+      scientific,
+      silently,
+      stm,
+      tasty,
+      tasty-hunit,
+      text,
+      time,
+    }:
+    mkDerivation {
+      pname = "ollama-haskell";
+      version = "0.2.0.0";
+      sha256 = "00vgffjzhyc060x59gxrqazzclkm3bspmvzva5kc2c2319l93wy8";
+      libraryHaskellDepends = [
+        aeson
+        base
+        base64-bytestring
+        bytestring
+        containers
+        directory
+        filepath
+        http-client
+        http-client-tls
+        http-types
+        mtl
+        stm
+        text
+        time
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        base64-bytestring
+        bytestring
+        containers
+        directory
+        filepath
+        http-client
+        http-client-tls
+        http-types
+        mtl
+        scientific
+        silently
+        stm
+        tasty
+        tasty-hunit
+        text
+        time
+      ];
+      description = "Haskell client for ollama";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { };
+
   "ollama-holes-plugin" = callPackage (
     {
       mkDerivation,
@@ -486325,45 +488452,6 @@ self: {
     }:
     mkDerivation {
       pname = "om-elm";
-      version = "2.0.0.8";
-      sha256 = "094yrsxv9fnag30azj0gm4vnb5s29516q35pgr7jyz13i06fjx5w";
-      libraryHaskellDepends = [
-        base
-        bytestring
-        Cabal
-        containers
-        directory
-        http-types
-        safe
-        safe-exceptions
-        template-haskell
-        text
-        unix
-        wai
-      ];
-      description = "Haskell utilities for building embedded Elm programs";
-      license = lib.licenses.mit;
-    }
-  ) { };
-
-  "om-elm_2_0_1_0" = callPackage (
-    {
-      mkDerivation,
-      base,
-      bytestring,
-      Cabal,
-      containers,
-      directory,
-      http-types,
-      safe,
-      safe-exceptions,
-      template-haskell,
-      text,
-      unix,
-      wai,
-    }:
-    mkDerivation {
-      pname = "om-elm";
       version = "2.0.1.0";
       sha256 = "0gi6frmdlv2sqhy63jjvswiahppxmapsrf1z66y3hdxi8dwhv2gm";
       libraryHaskellDepends = [
@@ -486382,7 +488470,6 @@ self: {
       ];
       description = "Haskell utilities for building embedded Elm programs";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -487292,15 +489379,14 @@ self: {
       tasty-hunit,
       tasty-quickcheck,
       text,
+      text-builder-linear,
       text-display,
       torsor,
     }:
     mkDerivation {
       pname = "one-time-password";
-      version = "3.0.0.0";
-      sha256 = "0yark6agy421mk7zblzy4vpccbd1i53gpiysa0a7s9sh0szy4bql";
-      revision = "3";
-      editedCabalFile = "0dbck4bw97w1ci6yjgvgzzgbpr9xlnc8kghndigipxxy77sx5nqg";
+      version = "3.0.1.0";
+      sha256 = "0f8gdw9gjpyyh1a4d4rcl5pdhmyn6nkzspsc1bcjvjzvvx9adfdq";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -487312,6 +489398,7 @@ self: {
         network-uri
         sel
         text
+        text-builder-linear
         text-display
       ];
       executableHaskellDepends = [
@@ -487341,7 +489428,6 @@ self: {
       ];
       description = "HMAC-Based and Time-Based One-Time Passwords";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "one-time-password";
     }
   ) { };
@@ -488858,8 +490944,8 @@ self: {
       pname = "openapi3";
       version = "3.2.4";
       sha256 = "182bl4z9npcci85771adg7iar1377b5clgzs6wya04j79d391jyv";
-      revision = "2";
-      editedCabalFile = "1y7is2q6jfq1k35swnw9yv2h122pd5f6zchxl8zah0laafkm03vq";
+      revision = "3";
+      editedCabalFile = "0ajcly73d6q8vvc5syds7qwqvgr6zd278izg455nbd2rk958c2bk";
       isLibrary = true;
       isExecutable = true;
       setupHaskellDepends = [
@@ -489074,8 +491160,8 @@ self: {
     }:
     mkDerivation {
       pname = "opencascade-hs";
-      version = "0.5.0.1";
-      sha256 = "1a397mxry4k5hq6gwnjn1lc3q8fz5pg7ff6imr1fwyf9b6rhls9j";
+      version = "0.5.1.0";
+      sha256 = "12c77xnh0h0h2sw23q5v891iddnmsq5j1853b90wypm6p18kpnsw";
       libraryHaskellDepends = [
         base
         resourcet
@@ -489098,8 +491184,8 @@ self: {
     }:
     mkDerivation {
       pname = "opencc";
-      version = "0.1.1.0";
-      sha256 = "06jz04352bgqnfvzds75n65x352x07ffj8aan01q6m2mjs3xidfa";
+      version = "0.1.2.0";
+      sha256 = "0vl57aglagq0zpxld3hhp4sda783m5sncdxwyxyjypl433yjyzgq";
       libraryHaskellDepends = [
         base
         bytestring
@@ -489193,7 +491279,7 @@ self: {
       JuicyPixels,
       lens,
       linear,
-      opencv3,
+      opencv,
       primitive,
       QuickCheck,
       repa,
@@ -489233,7 +491319,7 @@ self: {
         transformers
         vector
       ];
-      libraryPkgconfigDepends = [ opencv3 ];
+      libraryPkgconfigDepends = [ opencv ];
       testHaskellDepends = [
         base
         bytestring
@@ -489262,13 +491348,12 @@ self: {
         criterion
         repa
       ];
-      hardeningDisable = [ "bindnow" ];
       description = "Haskell binding to OpenCV-3.x";
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
       broken = true;
     }
-  ) { inherit (pkgs) opencv3; };
+  ) { inherit (pkgs) opencv; };
 
   "opencv-extra" = callPackage (
     {
@@ -490487,8 +492572,8 @@ self: {
     }:
     mkDerivation {
       pname = "opentelemetry-plugin";
-      version = "1.1.1";
-      sha256 = "1sp6bzy0is704x18522b2kmbbsw3nbfz9x69rvidmpz0x52cpwbg";
+      version = "1.1.2";
+      sha256 = "12lm7b4kjqlvc3j2i4q7xqavr0d98wazfaqyvph20afvfq90zwf8";
       libraryHaskellDepends = [
         base
         bytestring
@@ -490506,8 +492591,6 @@ self: {
       ];
       description = "GHC plugin for open telemetry";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -492131,7 +494214,7 @@ self: {
     }
   ) { };
 
-  "optima_0_4_0_6" = callPackage (
+  "optima_0_4_0_7" = callPackage (
     {
       mkDerivation,
       attoparsec,
@@ -492144,8 +494227,8 @@ self: {
     }:
     mkDerivation {
       pname = "optima";
-      version = "0.4.0.6";
-      sha256 = "06wy9d3zidly70d3n9bbxfl9yx2hx03xw8k9p8vhjb0xj526vpgk";
+      version = "0.4.0.7";
+      sha256 = "0cqy4ifddmyjmp8hj5ksi7f1b2bvxlwljm6q2cjxfpp3ig6alzr6";
       libraryHaskellDepends = [
         attoparsec
         attoparsec-data
@@ -492438,41 +494521,6 @@ self: {
     }
   ) { };
 
-  "optparse-applicative_0_15_1_0" = callPackage (
-    {
-      mkDerivation,
-      ansi-wl-pprint,
-      base,
-      bytestring,
-      process,
-      QuickCheck,
-      transformers,
-      transformers-compat,
-    }:
-    mkDerivation {
-      pname = "optparse-applicative";
-      version = "0.15.1.0";
-      sha256 = "1ws6y3b3f6hsgv0ff0yp6lw4hba1rps4dnvry3yllng0s5gngcsd";
-      revision = "1";
-      editedCabalFile = "0zmhqkd96v2z1ilhqdkd9z4jgsnsxb8yi2479ind8m5zm9363zr9";
-      libraryHaskellDepends = [
-        ansi-wl-pprint
-        base
-        process
-        transformers
-        transformers-compat
-      ];
-      testHaskellDepends = [
-        base
-        bytestring
-        QuickCheck
-      ];
-      description = "Utilities and combinators for parsing command line options";
-      license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-    }
-  ) { };
-
   "optparse-applicative" = callPackage (
     {
       mkDerivation,
@@ -492506,6 +494554,39 @@ self: {
       ];
       description = "Utilities and combinators for parsing command line options";
       license = lib.licenses.bsd3;
+    }
+  ) { };
+
+  "optparse-applicative_0_19_0_0" = callPackage (
+    {
+      mkDerivation,
+      base,
+      prettyprinter,
+      prettyprinter-ansi-terminal,
+      process,
+      QuickCheck,
+      text,
+      transformers,
+    }:
+    mkDerivation {
+      pname = "optparse-applicative";
+      version = "0.19.0.0";
+      sha256 = "0waq6i6jk0zj9vb00m62khfcm9xdnz3afzs471vhqwr1v3psw5ng";
+      libraryHaskellDepends = [
+        base
+        prettyprinter
+        prettyprinter-ansi-terminal
+        process
+        text
+        transformers
+      ];
+      testHaskellDepends = [
+        base
+        QuickCheck
+      ];
+      description = "Utilities and combinators for parsing command line options";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -494854,6 +496935,8 @@ self: {
       pname = "os-string";
       version = "2.0.7";
       sha256 = "186b4swiga0nk05np512iw50pz9w88l3bqz47pr241997bykb71k";
+      revision = "1";
+      editedCabalFile = "0504jf7wa84z3a8gd60cx7df6232xq31wqc532jcxrxh3hl0hm6b";
       libraryHaskellDepends = [
         base
         bytestring
@@ -495412,8 +497495,8 @@ self: {
     }:
     mkDerivation {
       pname = "oughta";
-      version = "0.2.0.0";
-      sha256 = "1ls97l94jpv5mlmiqccm4z8p80vnk8z0mv2937zcl1c7bx67ra3j";
+      version = "0.3.0.0";
+      sha256 = "1153jnvscsc3i8zz0sih7vy42vlsgynw0hvjvh0zxxqcyx4cc27i";
       libraryHaskellDepends = [
         base
         bytestring
@@ -495795,6 +497878,64 @@ self: {
       ];
       description = "Turn any English text into nonsensical babyspeaks";
       license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { };
+
+  "ox-arrays" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      deepseq,
+      ghc-typelits-knownnat,
+      ghc-typelits-natnormalise,
+      hedgehog,
+      hmatrix,
+      orthotope,
+      random,
+      tasty,
+      tasty-bench,
+      tasty-hedgehog,
+      template-haskell,
+      vector,
+    }:
+    mkDerivation {
+      pname = "ox-arrays";
+      version = "0.1.0.0";
+      sha256 = "0kix255p5n1dg9y3s00il3x4s1r4d3fn1v6ljm6zgy8j40lg1nzh";
+      libraryHaskellDepends = [
+        base
+        deepseq
+        ghc-typelits-knownnat
+        ghc-typelits-natnormalise
+        orthotope
+        template-haskell
+        vector
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        ghc-typelits-knownnat
+        ghc-typelits-natnormalise
+        hedgehog
+        orthotope
+        random
+        tasty
+        tasty-hedgehog
+        vector
+      ];
+      benchmarkHaskellDepends = [
+        base
+        hmatrix
+        orthotope
+        tasty-bench
+        vector
+      ];
+      doHaddock = false;
+      description = "An efficient CPU-based multidimensional array (tensor) library";
+      license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
       broken = true;
     }
@@ -496327,6 +498468,7 @@ self: {
       extra,
       filepath,
       hspec,
+      linear-base,
       listsafe,
       mtl,
       optparse-applicative,
@@ -496338,16 +498480,16 @@ self: {
     }:
     mkDerivation {
       pname = "packed-data";
-      version = "0.1.0.3";
-      sha256 = "1h0aqcpfygj29mij5ln7zaypf4a6v37ycnlhh5shb7pvh0nfajn3";
+      version = "0.2.0.0";
+      sha256 = "07hkm3a98aadihm3zvvq299xmswf8xzdyzx06qcs7nbdqwkqx2zk";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
         base
         bytestring
-        bytestring-strict-builder
         deepseq
         extra
+        linear-base
         mtl
         template-haskell
       ];
@@ -496376,7 +498518,9 @@ self: {
         vector
       ];
       license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
       mainProgram = "examples";
+      broken = true;
     }
   ) { };
 
@@ -497412,22 +499556,47 @@ self: {
   "palindromes" = callPackage (
     {
       mkDerivation,
-      array,
       base,
-      bytestring,
-      containers,
+      conduit,
+      criterion,
+      deepseq,
+      directory,
+      filepath,
+      HUnit,
+      levenshtein,
+      QuickCheck,
+      strict,
+      vector,
     }:
     mkDerivation {
       pname = "palindromes";
-      version = "0.4";
-      sha256 = "1k0kvd8p1ivwmpmf8khwmb4vyk8z0di74xn5840zy9jhf1cwx4kn";
+      version = "1.1.0.0";
+      sha256 = "1dfq0b2f11xwbdn9hyrrr4ywzz415nb32n4yfjrqf35myaqdbfcz";
       isLibrary = true;
       isExecutable = true;
-      executableHaskellDepends = [
-        array
+      libraryHaskellDepends = [
         base
-        bytestring
-        containers
+        conduit
+        vector
+      ];
+      executableHaskellDepends = [
+        base
+        directory
+      ];
+      testHaskellDepends = [
+        base
+        HUnit
+        levenshtein
+        QuickCheck
+        vector
+      ];
+      benchmarkHaskellDepends = [
+        base
+        criterion
+        deepseq
+        directory
+        filepath
+        strict
       ];
       description = "Finding palindromes in strings";
       license = lib.licenses.bsd3;
@@ -497807,7 +499976,7 @@ self: {
     }
   ) { };
 
-  "pandoc_3_6_4" = callPackage (
+  "pandoc_3_7_0_2" = callPackage (
     {
       mkDerivation,
       aeson,
@@ -497892,8 +500061,8 @@ self: {
     }:
     mkDerivation {
       pname = "pandoc";
-      version = "3.6.4";
-      sha256 = "1igqsbzvgkrwb8k9ycjha9cynz5j50gfsc050j93k4bg3yd9c0lp";
+      version = "3.7.0.2";
+      sha256 = "1l33amh5dkbxbgicvk4hh231b8x36fb90jlpxmgqwfqldk7j3lmz";
       configureFlags = [ "-f-trypandoc" ];
       enableSeparateDataOutput = true;
       libraryHaskellDepends = [
@@ -498145,7 +500314,6 @@ self: {
         text
         yaml
       ];
-      doCheck = false;
       description = "Supports using pandoc with citeproc";
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
@@ -498223,7 +500391,7 @@ self: {
     }
   ) { };
 
-  "pandoc-cli_3_6_4" = callPackage (
+  "pandoc-cli_3_7_0_2" = callPackage (
     {
       mkDerivation,
       base,
@@ -498239,8 +500407,8 @@ self: {
     }:
     mkDerivation {
       pname = "pandoc-cli";
-      version = "3.6.4";
-      sha256 = "046jdqg3ysgap89npr613zzccxhd2hga33d8i588fr8x9r1syvya";
+      version = "3.7.0.2";
+      sha256 = "0g9x7h2aimiffnv03pcvai64kpwxykz18kd126x92lpsdjwclkgz";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -498323,8 +500491,8 @@ self: {
     }:
     mkDerivation {
       pname = "pandoc-crossref";
-      version = "0.3.18.2";
-      sha256 = "0ikgh6sdi2ny6yb65sx2zy6rs35q5qy2qpqiy8sz4b1j8i784w9g";
+      version = "0.3.19";
+      sha256 = "0zzdnv8prz1jkksrmfr3gz23483mkbj1vkjpxda97qld3n8zkdhb";
       isLibrary = true;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -498383,7 +500551,100 @@ self: {
       description = "Pandoc filter for cross-references";
       license = lib.licenses.gpl2Only;
       mainProgram = "pandoc-crossref";
-      maintainers = [ lib.maintainers.maralorn ];
+    }
+  ) { };
+
+  "pandoc-crossref_0_3_20" = callPackage (
+    {
+      mkDerivation,
+      base,
+      containers,
+      criterion,
+      data-default,
+      deepseq,
+      directory,
+      filepath,
+      gitrev,
+      hspec,
+      microlens,
+      microlens-ghc,
+      microlens-mtl,
+      microlens-th,
+      mtl,
+      open-browser,
+      optparse-applicative,
+      pandoc,
+      pandoc-cli,
+      pandoc-types,
+      syb,
+      template-haskell,
+      temporary,
+      text,
+      utility-ht,
+    }:
+    mkDerivation {
+      pname = "pandoc-crossref";
+      version = "0.3.20";
+      sha256 = "10fgmddlyva8yyqh9m5c8d417bcyxvfqgw9l0q77lp6b161593ya";
+      isLibrary = true;
+      isExecutable = true;
+      enableSeparateDataOutput = true;
+      libraryHaskellDepends = [
+        base
+        containers
+        data-default
+        directory
+        filepath
+        microlens
+        microlens-ghc
+        microlens-mtl
+        microlens-th
+        mtl
+        pandoc
+        pandoc-types
+        syb
+        template-haskell
+        text
+        utility-ht
+      ];
+      executableHaskellDepends = [
+        base
+        deepseq
+        gitrev
+        open-browser
+        optparse-applicative
+        pandoc
+        pandoc-types
+        template-haskell
+        temporary
+        text
+      ];
+      testHaskellDepends = [
+        base
+        containers
+        data-default
+        directory
+        filepath
+        hspec
+        microlens
+        mtl
+        pandoc
+        pandoc-types
+        text
+      ];
+      testToolDepends = [ pandoc-cli ];
+      benchmarkHaskellDepends = [
+        base
+        criterion
+        pandoc
+        pandoc-types
+        text
+      ];
+      doHaddock = false;
+      description = "Pandoc filter for cross-references";
+      license = lib.licenses.gpl2Only;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "pandoc-crossref";
     }
   ) { };
 
@@ -499034,6 +501295,94 @@ self: {
     }
   ) { };
 
+  "pandoc-lua-engine_0_4_3" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      citeproc,
+      containers,
+      crypton,
+      data-default,
+      directory,
+      doclayout,
+      doctemplates,
+      exceptions,
+      filepath,
+      hslua,
+      hslua-module-doclayout,
+      hslua-module-path,
+      hslua-module-system,
+      hslua-module-text,
+      hslua-module-version,
+      hslua-module-zip,
+      hslua-repl,
+      lpeg,
+      mtl,
+      pandoc,
+      pandoc-lua-marshal,
+      pandoc-types,
+      parsec,
+      tasty,
+      tasty-golden,
+      tasty-hunit,
+      tasty-lua,
+      text,
+    }:
+    mkDerivation {
+      pname = "pandoc-lua-engine";
+      version = "0.4.3";
+      sha256 = "1s5g1mvl13pa411kyd2jp5jz0lw8alxqpv984nnfnq17d2nj4mkw";
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        citeproc
+        containers
+        crypton
+        data-default
+        doclayout
+        doctemplates
+        exceptions
+        hslua
+        hslua-module-doclayout
+        hslua-module-path
+        hslua-module-system
+        hslua-module-text
+        hslua-module-version
+        hslua-module-zip
+        hslua-repl
+        lpeg
+        mtl
+        pandoc
+        pandoc-lua-marshal
+        pandoc-types
+        parsec
+        text
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        data-default
+        directory
+        exceptions
+        filepath
+        hslua
+        pandoc
+        pandoc-types
+        tasty
+        tasty-golden
+        tasty-hunit
+        tasty-lua
+        text
+      ];
+      description = "Lua engine to power custom pandoc conversions";
+      license = lib.licenses.gpl2Plus;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "pandoc-lua-marshal" = callPackage (
     {
       mkDerivation,
@@ -499056,8 +501405,8 @@ self: {
     }:
     mkDerivation {
       pname = "pandoc-lua-marshal";
-      version = "0.3.0";
-      sha256 = "0d8vfbmgd107b9lq9dq0b39v3dhznqh11j0ci0i8hsb7g3dkks5g";
+      version = "0.3.1";
+      sha256 = "0869amr9w5s90dha694vy6rwfni7p1wp9dyjyyk2jvh8h22gcpr0";
       libraryHaskellDepends = [
         aeson
         base
@@ -499286,6 +501635,8 @@ self: {
       pname = "pandoc-plot";
       version = "1.9.1";
       sha256 = "0d6lknjnlzg4a7sx311kpdi94yq7fp19lhvwbsf7rvc3ykx0hjm3";
+      revision = "1";
+      editedCabalFile = "0ykgv0cxiwvcx0pkkmx841cdwv2sas033mq928mg6dlcbvw32nx1";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -499497,8 +501848,8 @@ self: {
     }:
     mkDerivation {
       pname = "pandoc-server";
-      version = "0.1.0.10";
-      sha256 = "1rsrdx76llipa9xb624d953rinyhm7nfs53ps4qd343yqw8npjjl";
+      version = "0.1.0.11";
+      sha256 = "1686kl05pr6bqrmg5dda1d7m9dmk0c087fpg54r9v5iy1x732gws";
       libraryHaskellDepends = [
         aeson
         base
@@ -499696,8 +502047,8 @@ self: {
       pname = "pandoc-types";
       version = "1.23.1";
       sha256 = "1hd18l1c5yh7x24gsligkbraadq12hn7mim16xyjnicdsa1s03xd";
-      revision = "2";
-      editedCabalFile = "1whymq4w5z08l5ng829kn8aslczda6svi6c6q72cnv200mlq7d1c";
+      revision = "3";
+      editedCabalFile = "0w2n4vzxs3jasrivaq49clxdlccnfv2gh4mkp8s7krxa1arambrz";
       libraryHaskellDepends = [
         aeson
         base
@@ -501628,6 +503979,8 @@ self: {
       pname = "parallel-io";
       version = "0.3.5";
       sha256 = "0b67rjz80n58grz7hcb1lvk15lmww41967kv7f85vlpacfykng49";
+      revision = "1";
+      editedCabalFile = "0vl317jp2agpd1qjvmmmcqkbp2mrlbwcn5y4c2fzyxwwrr11azp6";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -502204,8 +504557,8 @@ self: {
       pname = "park-bench";
       version = "0.1.1.0";
       sha256 = "15vbhljsnqjm3hjqxlzifvkbcysmwz3fqw2hmdlwkzsyncz4p6j9";
-      revision = "2";
-      editedCabalFile = "0yqb96vd1dgid4fprny49zmn8p26k9m15n1qgp2nwm2bnv6a7mpx";
+      revision = "3";
+      editedCabalFile = "028bmgxn98jps3pmc18qhlsm1f4rsy27a8vx59kywpb7lj8x7faz";
       libraryHaskellDepends = [
         array
         base
@@ -503095,8 +505448,8 @@ self: {
       pname = "parser-combinators-tests";
       version = "1.3.0";
       sha256 = "0sw6ws7za93y3lbmxp6jp1k17zi3wdg7698ab133kcw82f6mzba2";
-      revision = "1";
-      editedCabalFile = "0h6lwj0mdlirlwcadjvyblvgqg6yksw2bnp77qkjxm2kk3rw56hn";
+      revision = "2";
+      editedCabalFile = "1b038wk6b1kria8627qb0nfrz4v67j2yq5rx01m3vigfxf6h4422";
       isLibrary = false;
       isExecutable = false;
       testHaskellDepends = [
@@ -503954,7 +506307,7 @@ self: {
     }
   ) { };
 
-  "partialord_0_0_3" = callPackage (
+  "partialord_0_1_1" = callPackage (
     {
       mkDerivation,
       base,
@@ -503963,8 +506316,8 @@ self: {
     }:
     mkDerivation {
       pname = "partialord";
-      version = "0.0.3";
-      sha256 = "08qgjqvkxj7xqm3v8n7g7j5cvd9489jhf7m2rrzp92xyqhshilli";
+      version = "0.1.1";
+      sha256 = "0ibbjsm2rwm3s9vmg87lp1rv9dg50nndrklg379p226fz0lr630d";
       libraryHaskellDepends = [
         base
         containers
@@ -505630,6 +507983,7 @@ self: {
       exceptions,
       hspec,
       http-client,
+      http-client-tls,
       http-types,
       network-uri,
       text,
@@ -505638,8 +507992,8 @@ self: {
     }:
     mkDerivation {
       pname = "patrol";
-      version = "1.0.0.9";
-      sha256 = "177ir2a0c3cg0xawzi8frkdfpzfv7m8mi9l8rbn2pj6rv8m6s0mb";
+      version = "1.0.1.0";
+      sha256 = "1yk90shi4idxdzf82mvxpsbgslx3psrwpxgwhnqpcl0kj4sdblf1";
       libraryHaskellDepends = [
         aeson
         base
@@ -505648,6 +508002,63 @@ self: {
         containers
         exceptions
         http-client
+        http-client-tls
+        http-types
+        network-uri
+        text
+        time
+        uuid
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        bytestring
+        case-insensitive
+        containers
+        hspec
+        http-client
+        http-types
+        network-uri
+        text
+        time
+        uuid
+      ];
+      description = "Sentry SDK";
+      license = lib.licenses.mit;
+    }
+  ) { };
+
+  "patrol_1_1_0_0" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      case-insensitive,
+      containers,
+      exceptions,
+      hspec,
+      http-client,
+      http-client-tls,
+      http-types,
+      network-uri,
+      text,
+      time,
+      uuid,
+    }:
+    mkDerivation {
+      pname = "patrol";
+      version = "1.1.0.0";
+      sha256 = "0ijfflc9gv3ks5y3irng0mpsbcfwx41v59xgm8840310sz6kj4p1";
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        case-insensitive
+        containers
+        exceptions
+        http-client
+        http-client-tls
         http-types
         network-uri
         text
@@ -505671,6 +508082,7 @@ self: {
       ];
       description = "Sentry SDK";
       license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -506606,45 +509018,6 @@ self: {
       base,
       base-compat,
       bytestring,
-      doctest,
-      Glob,
-      pcre-light,
-      semigroups,
-      string-conversions,
-      template-haskell,
-    }:
-    mkDerivation {
-      pname = "pcre-heavy";
-      version = "1.0.0.3";
-      sha256 = "03wqr7q242j23g910l0qgagqyy8fi3b5gv7xsaym7m41zki1bw9y";
-      revision = "1";
-      editedCabalFile = "0wa517agsib2q658bfsb9fdm12yz3pqzj204v9jf9rz4fm4y8q81";
-      libraryHaskellDepends = [
-        base
-        base-compat
-        bytestring
-        pcre-light
-        semigroups
-        string-conversions
-        template-haskell
-      ];
-      testHaskellDepends = [
-        base
-        doctest
-        Glob
-      ];
-      description = "A regexp (regex) library on top of pcre-light you can actually use";
-      license = lib.licenses.publicDomain;
-      maintainers = [ lib.maintainers.mpscholten ];
-    }
-  ) { };
-
-  "pcre-heavy_1_0_0_4" = callPackage (
-    {
-      mkDerivation,
-      base,
-      base-compat,
-      bytestring,
       pcre-light,
       string-conversions,
       template-haskell,
@@ -506663,7 +509036,6 @@ self: {
       ];
       description = "A regexp (regex) library on top of pcre-light you can actually use";
       license = lib.licenses.publicDomain;
-      hydraPlatforms = lib.platforms.none;
       maintainers = [ lib.maintainers.mpscholten ];
     }
   ) { };
@@ -507553,6 +509925,28 @@ self: {
       ];
       description = "Lazy Peano numbers including observable infinity value";
       license = lib.licenses.bsd3;
+    }
+  ) { };
+
+  "pear" = callPackage (
+    {
+      mkDerivation,
+      base,
+      doctest,
+      markdown-unlit,
+    }:
+    mkDerivation {
+      pname = "pear";
+      version = "1.0.0.1";
+      sha256 = "1svbmj1v7y3hq9f43x4szvs6h83zz085y1h5lncci4i4yx7qfrhj";
+      libraryHaskellDepends = [ base ];
+      testHaskellDepends = [
+        base
+        doctest
+      ];
+      testToolDepends = [ markdown-unlit ];
+      description = "Pear Trees: An indexed type using type-level binary numbers";
+      license = lib.licenses.mit;
     }
   ) { };
 
@@ -509732,7 +512126,7 @@ self: {
     }
   ) { };
 
-  "persistent_2_15_1_0" = callPackage (
+  "persistent_2_17_0_0" = callPackage (
     {
       mkDerivation,
       aeson,
@@ -509751,14 +512145,17 @@ self: {
       hspec,
       http-api-data,
       lift-type,
+      megaparsec,
       monad-logger,
       mtl,
       path-pieces,
       QuickCheck,
       quickcheck-instances,
+      replace-megaparsec,
       resource-pool,
       resourcet,
       scientific,
+      semigroupoids,
       shakespeare,
       silently,
       template-haskell,
@@ -509774,8 +512171,8 @@ self: {
     }:
     mkDerivation {
       pname = "persistent";
-      version = "2.15.1.0";
-      sha256 = "142c91xplnm9fbzm7gkd1dl3p5da74nxr4bv5a921hhpsrwm0p9g";
+      version = "2.17.0.0";
+      sha256 = "0y0rmg4xfqmkndckz2a8ndl8djmdc9zab36qb56g9as1zpm91wfn";
       libraryHaskellDepends = [
         aeson
         attoparsec
@@ -509790,12 +512187,15 @@ self: {
         fast-logger
         http-api-data
         lift-type
+        megaparsec
         monad-logger
         mtl
         path-pieces
+        replace-megaparsec
         resource-pool
         resourcet
         scientific
+        semigroupoids
         silently
         template-haskell
         text
@@ -509821,6 +512221,7 @@ self: {
         fast-logger
         hspec
         http-api-data
+        megaparsec
         monad-logger
         mtl
         path-pieces
@@ -510075,8 +512476,8 @@ self: {
     }:
     mkDerivation {
       pname = "persistent-documentation";
-      version = "0.1.0.5";
-      sha256 = "032mfnsz5kpy1022gc2w9y0g4fjhqwq07zb2r8arjdhzzhbirwk2";
+      version = "0.1.0.6";
+      sha256 = "1v07vhjmim4bycl7ygg2my3qwqqz36ajm8x8gwqh0g0i83sjh5ks";
       libraryHaskellDepends = [
         base
         containers
@@ -511195,6 +513596,105 @@ self: {
     }
   ) { };
 
+  "persistent-postgresql_2_13_7_0" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      attoparsec,
+      base,
+      blaze-builder,
+      bytestring,
+      conduit,
+      containers,
+      fast-logger,
+      hspec,
+      hspec-expectations,
+      hspec-expectations-lifted,
+      http-api-data,
+      HUnit,
+      monad-logger,
+      mtl,
+      path-pieces,
+      persistent,
+      persistent-qq,
+      persistent-test,
+      postgresql-libpq,
+      postgresql-simple,
+      QuickCheck,
+      quickcheck-instances,
+      resource-pool,
+      resourcet,
+      string-conversions,
+      text,
+      time,
+      transformers,
+      unliftio,
+      unliftio-core,
+      unordered-containers,
+      vault,
+      vector,
+    }:
+    mkDerivation {
+      pname = "persistent-postgresql";
+      version = "2.13.7.0";
+      sha256 = "1774fh28jls2r692164ln66ipa6gl3sqj8pb04nf3sl1m498qjd7";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        attoparsec
+        base
+        blaze-builder
+        bytestring
+        conduit
+        containers
+        monad-logger
+        mtl
+        persistent
+        postgresql-libpq
+        postgresql-simple
+        resource-pool
+        resourcet
+        string-conversions
+        text
+        time
+        transformers
+        unliftio-core
+        vault
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        bytestring
+        containers
+        fast-logger
+        hspec
+        hspec-expectations
+        hspec-expectations-lifted
+        http-api-data
+        HUnit
+        monad-logger
+        path-pieces
+        persistent
+        persistent-qq
+        persistent-test
+        QuickCheck
+        quickcheck-instances
+        resourcet
+        text
+        time
+        transformers
+        unliftio
+        unliftio-core
+        unordered-containers
+        vector
+      ];
+      description = "Backend for the persistent library using postgresql";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "persistent-postgresql-streaming" = callPackage (
     {
       mkDerivation,
@@ -511652,6 +514152,94 @@ self: {
     }
   ) { inherit (pkgs) sqlite; };
 
+  "persistent-sqlite_2_13_3_1" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      conduit,
+      containers,
+      exceptions,
+      fast-logger,
+      hspec,
+      HUnit,
+      microlens,
+      microlens-th,
+      monad-logger,
+      mtl,
+      persistent,
+      persistent-test,
+      QuickCheck,
+      resource-pool,
+      resourcet,
+      sqlite,
+      system-fileio,
+      system-filepath,
+      temporary,
+      text,
+      time,
+      transformers,
+      unliftio-core,
+      unordered-containers,
+    }:
+    mkDerivation {
+      pname = "persistent-sqlite";
+      version = "2.13.3.1";
+      sha256 = "14yn3a5nqjq1b7ss6xl2455nwq92kbwc94q675jiyi4gzh85xfd0";
+      configureFlags = [ "-fsystemlib" ];
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        conduit
+        containers
+        microlens-th
+        monad-logger
+        mtl
+        persistent
+        resource-pool
+        resourcet
+        text
+        time
+        transformers
+        unliftio-core
+        unordered-containers
+      ];
+      librarySystemDepends = [ sqlite ];
+      testHaskellDepends = [
+        base
+        bytestring
+        conduit
+        containers
+        exceptions
+        fast-logger
+        hspec
+        HUnit
+        microlens
+        monad-logger
+        mtl
+        persistent
+        persistent-test
+        QuickCheck
+        resourcet
+        system-fileio
+        system-filepath
+        temporary
+        text
+        time
+        transformers
+        unliftio-core
+      ];
+      description = "Backend for the persistent library using sqlite3";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+      maintainers = [ lib.maintainers.psibi ];
+    }
+  ) { inherit (pkgs) sqlite; };
+
   "persistent-stm" = callPackage (
     {
       mkDerivation,
@@ -511822,6 +514410,78 @@ self: {
     }
   ) { };
 
+  "persistent-test_2_13_1_4" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      blaze-html,
+      bytestring,
+      conduit,
+      containers,
+      exceptions,
+      hspec,
+      hspec-expectations,
+      http-api-data,
+      HUnit,
+      monad-control,
+      monad-logger,
+      mtl,
+      path-pieces,
+      persistent,
+      QuickCheck,
+      quickcheck-instances,
+      random,
+      resourcet,
+      text,
+      time,
+      transformers,
+      transformers-base,
+      unliftio,
+      unliftio-core,
+      unordered-containers,
+    }:
+    mkDerivation {
+      pname = "persistent-test";
+      version = "2.13.1.4";
+      sha256 = "1k2wq6ag4jvqr1krdjfx84mmx0mg09hy38w569zxwdrd03ffcjpy";
+      revision = "1";
+      editedCabalFile = "1kzqhvs4h8xpx2x153gh64rc006mvjxv6fzsyxvnfknmqcx8xn19";
+      libraryHaskellDepends = [
+        aeson
+        base
+        blaze-html
+        bytestring
+        conduit
+        containers
+        exceptions
+        hspec
+        hspec-expectations
+        http-api-data
+        HUnit
+        monad-control
+        monad-logger
+        mtl
+        path-pieces
+        persistent
+        QuickCheck
+        quickcheck-instances
+        random
+        resourcet
+        text
+        time
+        transformers
+        transformers-base
+        unliftio
+        unliftio-core
+        unordered-containers
+      ];
+      description = "Tests for Persistent";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "persistent-typed-db" = callPackage (
     {
       mkDerivation,
@@ -511846,8 +514506,8 @@ self: {
       pname = "persistent-typed-db";
       version = "0.1.0.7";
       sha256 = "0fkshbf35mnlx4aqkij0lzzmpfxw34zkwgq8s2lm3rrrqw7gw59l";
-      revision = "1";
-      editedCabalFile = "19l1nfd82l8lsjsi00virsapwlnany5cdwgzw9hmm9bkwxfsk9v8";
+      revision = "2";
+      editedCabalFile = "0m5ajvfcj10k1mnlwdyd1n9s3py70g4sinzh0gkvch9q1bl6qiwz";
       libraryHaskellDepends = [
         aeson
         base
@@ -512368,7 +515028,6 @@ self: {
       aeson,
       base,
       bytestring,
-      colourista,
       containers,
       envparse,
       hedgehog,
@@ -512392,14 +515051,12 @@ self: {
     }:
     mkDerivation {
       pname = "pg-entity";
-      version = "0.0.5.1";
-      sha256 = "1cb3x7vl2g2wmhrvfm6ajyrhb6whfzndq5zqd9acay9i3l26m014";
+      version = "0.0.6.0";
+      sha256 = "0710ipshbpmkci944ms2gvd8mk6f9ikz5nmp1l6g19w6wq1ab72f";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
         base
-        bytestring
-        colourista
         parsec
         pg-transact
         postgresql-simple
@@ -513297,6 +515954,88 @@ self: {
       ];
       description = "FAT filesystem sort utility";
       license = lib.licenses.mit;
+    }
+  ) { };
+
+  "phino" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      binary-ieee754,
+      bytestring,
+      containers,
+      directory,
+      file-embed,
+      filepath,
+      hspec,
+      hspec-core,
+      hspec-discover,
+      megaparsec,
+      optparse-applicative,
+      prettyprinter,
+      process,
+      random,
+      scientific,
+      silently,
+      text,
+      time,
+      utf8-string,
+      vector,
+      xml-conduit,
+      yaml,
+    }:
+    mkDerivation {
+      pname = "phino";
+      version = "0.0.0.14";
+      sha256 = "1nl2n0y636bdppxc29p4zyxlyra2zjiy3a1s6xw2yin64q3gqrim";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        base
+        binary-ieee754
+        bytestring
+        containers
+        directory
+        file-embed
+        filepath
+        megaparsec
+        optparse-applicative
+        prettyprinter
+        random
+        scientific
+        text
+        time
+        utf8-string
+        vector
+        xml-conduit
+        yaml
+      ];
+      executableHaskellDepends = [ base ];
+      testHaskellDepends = [
+        aeson
+        base
+        containers
+        directory
+        filepath
+        hspec
+        hspec-core
+        megaparsec
+        optparse-applicative
+        prettyprinter
+        process
+        silently
+        text
+        xml-conduit
+        yaml
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "Command-Line Manipulator of 𝜑-Calculus Expressions";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "phino";
+      broken = true;
     }
   ) { };
 
@@ -518695,8 +521434,8 @@ self: {
       pname = "pipes-safe";
       version = "2.3.5";
       sha256 = "13npagy597g6zfr2f3vj4a98h2ssg2ps7lmdzrgdsvm8m28x3cph";
-      revision = "3";
-      editedCabalFile = "1wic8km3c17g2xrmxd4qj5qmppb76k7srxrgj8jg1vs6g2l7v6cs";
+      revision = "4";
+      editedCabalFile = "1x0p9fiilz21ck5n52lg2p17qi7n0mkk566qzzwd4jnvhbcsb8jf";
       libraryHaskellDepends = [
         base
         containers
@@ -521666,6 +524405,735 @@ self: {
     }
   ) { };
 
+  "pms-application-service" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      async,
+      async-pool,
+      base,
+      data-default,
+      fast-logger,
+      hspec,
+      hspec-discover,
+      lens,
+      monad-logger,
+      mtl,
+      pms-domain-model,
+      safe-exceptions,
+      stm,
+      text,
+      unix,
+      yaml,
+    }:
+    mkDerivation {
+      pname = "pms-application-service";
+      version = "0.0.4.0";
+      sha256 = "0a91pa5rs2vplixky8bap4gl8i8mm3j7454w7s4pihyf4h7wfhpl";
+      libraryHaskellDepends = [
+        aeson
+        async
+        async-pool
+        base
+        data-default
+        fast-logger
+        lens
+        monad-logger
+        mtl
+        pms-domain-model
+        safe-exceptions
+        text
+        yaml
+      ];
+      testHaskellDepends = [
+        async
+        base
+        data-default
+        hspec
+        hspec-discover
+        lens
+        monad-logger
+        pms-domain-model
+        stm
+        unix
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "pms-application-service";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
+  "pms-domain-model" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      async,
+      base,
+      bytestring,
+      data-default,
+      fast-logger,
+      filepath,
+      hspec,
+      hspec-discover,
+      lens,
+      monad-logger,
+      mtl,
+      safe-exceptions,
+      stm,
+      strip-ansi-escape,
+      text,
+      transformers,
+      unix,
+    }:
+    mkDerivation {
+      pname = "pms-domain-model";
+      version = "0.0.5.0";
+      sha256 = "0z0a04j6x4jrq6xpfdd6jnbq7q7p71y51gar6i6g0apfliiydq9w";
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        data-default
+        fast-logger
+        filepath
+        lens
+        monad-logger
+        mtl
+        safe-exceptions
+        stm
+        strip-ansi-escape
+        text
+        transformers
+      ];
+      testHaskellDepends = [
+        aeson
+        async
+        base
+        data-default
+        hspec
+        hspec-discover
+        lens
+        monad-logger
+        stm
+        unix
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "pms-domain-model";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { };
+
+  "pms-domain-service" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      async,
+      base,
+      bytestring,
+      conduit,
+      data-default,
+      directory,
+      fast-logger,
+      filepath,
+      hspec,
+      hspec-discover,
+      lens,
+      monad-logger,
+      mtl,
+      mustache,
+      network-uri,
+      pms-domain-model,
+      safe-exceptions,
+      stm,
+      template-haskell,
+      text,
+      transformers,
+      unix,
+      unordered-containers,
+    }:
+    mkDerivation {
+      pname = "pms-domain-service";
+      version = "0.0.4.0";
+      sha256 = "1akacdrh2ngyvik46sjhag8kp9hyyr7rv9grswx7i3ngy6pk64yn";
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        conduit
+        data-default
+        directory
+        fast-logger
+        filepath
+        lens
+        monad-logger
+        mtl
+        mustache
+        network-uri
+        pms-domain-model
+        safe-exceptions
+        stm
+        template-haskell
+        text
+        transformers
+        unordered-containers
+      ];
+      testHaskellDepends = [
+        async
+        base
+        data-default
+        hspec
+        hspec-discover
+        lens
+        monad-logger
+        pms-domain-model
+        stm
+        unix
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "pms-domain-service";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
+  "pms-infra-cmdrun" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      async,
+      base,
+      bytestring,
+      conduit,
+      data-default,
+      directory,
+      fast-logger,
+      filepath,
+      hspec,
+      hspec-discover,
+      lens,
+      monad-logger,
+      mtl,
+      pms-domain-model,
+      process,
+      safe-exceptions,
+      stm,
+      text,
+      transformers,
+      unix,
+    }:
+    mkDerivation {
+      pname = "pms-infra-cmdrun";
+      version = "0.0.2.0";
+      sha256 = "0c4jhci5im04ks49if7ncbqipbln2ixw2f262qw64ir5a5hdygzy";
+      libraryHaskellDepends = [
+        aeson
+        async
+        base
+        bytestring
+        conduit
+        data-default
+        directory
+        fast-logger
+        filepath
+        lens
+        monad-logger
+        mtl
+        pms-domain-model
+        process
+        safe-exceptions
+        stm
+        text
+        transformers
+      ];
+      testHaskellDepends = [
+        async
+        base
+        data-default
+        hspec
+        hspec-discover
+        lens
+        monad-logger
+        pms-domain-model
+        stm
+        unix
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "pms-infra-cmdrun";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
+  "pms-infra-procspawn" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      async,
+      base,
+      bytestring,
+      conduit,
+      data-default,
+      directory,
+      fast-logger,
+      filepath,
+      hspec,
+      hspec-discover,
+      lens,
+      monad-logger,
+      mtl,
+      pms-domain-model,
+      process,
+      safe-exceptions,
+      stm,
+      text,
+      transformers,
+      unix,
+    }:
+    mkDerivation {
+      pname = "pms-infra-procspawn";
+      version = "0.0.1.0";
+      sha256 = "1wg0508h2svl0pk9yrwrnmssrqnm2vnlws9w9nm5ydqlqibdr282";
+      libraryHaskellDepends = [
+        aeson
+        async
+        base
+        bytestring
+        conduit
+        data-default
+        directory
+        fast-logger
+        filepath
+        lens
+        monad-logger
+        mtl
+        pms-domain-model
+        process
+        safe-exceptions
+        stm
+        text
+        transformers
+      ];
+      testHaskellDepends = [
+        async
+        base
+        data-default
+        hspec
+        hspec-discover
+        lens
+        monad-logger
+        pms-domain-model
+        stm
+        unix
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "pms-infra-procspawn";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
+  "pms-infra-socket" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      async,
+      base,
+      base16-bytestring,
+      bytestring,
+      conduit,
+      data-default,
+      directory,
+      fast-logger,
+      filepath,
+      hspec,
+      hspec-discover,
+      lens,
+      monad-logger,
+      mtl,
+      network,
+      pms-domain-model,
+      process,
+      safe-exceptions,
+      stm,
+      text,
+      transformers,
+      unix,
+    }:
+    mkDerivation {
+      pname = "pms-infra-socket";
+      version = "0.0.1.0";
+      sha256 = "01iz8ws1wc04k52djy37wrlyrr8g33n7zvd03md06wjycahhrri5";
+      libraryHaskellDepends = [
+        aeson
+        async
+        base
+        base16-bytestring
+        bytestring
+        conduit
+        data-default
+        directory
+        fast-logger
+        filepath
+        lens
+        monad-logger
+        mtl
+        network
+        pms-domain-model
+        process
+        safe-exceptions
+        stm
+        text
+        transformers
+      ];
+      testHaskellDepends = [
+        async
+        base
+        data-default
+        hspec
+        hspec-discover
+        lens
+        monad-logger
+        pms-domain-model
+        stm
+        unix
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "pms-infra-socket";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
+  "pms-infra-watch" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      async,
+      base,
+      bytestring,
+      conduit,
+      data-default,
+      directory,
+      fast-logger,
+      filepath,
+      fsnotify,
+      hspec,
+      hspec-discover,
+      lens,
+      monad-logger,
+      mtl,
+      pms-domain-model,
+      process,
+      safe-exceptions,
+      stm,
+      text,
+      transformers,
+      unix,
+    }:
+    mkDerivation {
+      pname = "pms-infra-watch";
+      version = "0.0.3.0";
+      sha256 = "0lwiydxf9p7pvri6s3p0wg0lya9imp6rpggb2mrpb49nqknnpxpx";
+      libraryHaskellDepends = [
+        aeson
+        async
+        base
+        bytestring
+        conduit
+        data-default
+        directory
+        fast-logger
+        filepath
+        fsnotify
+        lens
+        monad-logger
+        mtl
+        pms-domain-model
+        process
+        safe-exceptions
+        stm
+        text
+        transformers
+      ];
+      testHaskellDepends = [
+        async
+        base
+        data-default
+        hspec
+        hspec-discover
+        lens
+        monad-logger
+        pms-domain-model
+        stm
+        unix
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "pms-infra-watch";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
+  "pms-infrastructure" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      async,
+      base,
+      bytestring,
+      conduit,
+      data-default,
+      directory,
+      fast-logger,
+      filepath,
+      hie-bios,
+      hspec,
+      hspec-discover,
+      lens,
+      monad-logger,
+      mtl,
+      pms-domain-model,
+      posix-pty,
+      process,
+      safe-exceptions,
+      stm,
+      strip-ansi-escape,
+      text,
+      transformers,
+      unix,
+    }:
+    mkDerivation {
+      pname = "pms-infrastructure";
+      version = "0.0.4.0";
+      sha256 = "1vawlgs6i1rpw2266zbzxwykjsf5p61w88vi2lyj69dgl3dd0kiz";
+      libraryHaskellDepends = [
+        aeson
+        async
+        base
+        bytestring
+        conduit
+        data-default
+        directory
+        fast-logger
+        filepath
+        hie-bios
+        lens
+        monad-logger
+        mtl
+        pms-domain-model
+        posix-pty
+        process
+        safe-exceptions
+        stm
+        strip-ansi-escape
+        text
+        transformers
+      ];
+      testHaskellDepends = [
+        async
+        base
+        data-default
+        hspec
+        hspec-discover
+        lens
+        monad-logger
+        pms-domain-model
+        stm
+        unix
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "pms-infrastructure";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
+  "pms-ui-notification" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      async,
+      base,
+      bytestring,
+      conduit,
+      data-default,
+      fast-logger,
+      hspec,
+      hspec-discover,
+      lens,
+      monad-logger,
+      mtl,
+      pms-domain-model,
+      safe-exceptions,
+      stm,
+      text,
+      transformers,
+      unix,
+    }:
+    mkDerivation {
+      pname = "pms-ui-notification";
+      version = "0.0.3.0";
+      sha256 = "1fq1kasqmghbic59v815032spcl9wahm9wqjyjmg93di92xz8mm3";
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        conduit
+        data-default
+        fast-logger
+        lens
+        monad-logger
+        mtl
+        pms-domain-model
+        safe-exceptions
+        stm
+        text
+        transformers
+      ];
+      testHaskellDepends = [
+        async
+        base
+        data-default
+        hspec
+        hspec-discover
+        lens
+        monad-logger
+        pms-domain-model
+        stm
+        unix
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "pms-ui-notification";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
+  "pms-ui-request" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      async,
+      base,
+      bytestring,
+      conduit,
+      data-default,
+      fast-logger,
+      hspec,
+      hspec-discover,
+      lens,
+      monad-logger,
+      mtl,
+      pms-domain-model,
+      safe-exceptions,
+      stm,
+      text,
+      transformers,
+      unix,
+    }:
+    mkDerivation {
+      pname = "pms-ui-request";
+      version = "0.0.4.0";
+      sha256 = "1yg42dy0jrv0xhz657kys41i0prr2xn417ji2p6wahgnlfkiy6am";
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        conduit
+        data-default
+        fast-logger
+        lens
+        monad-logger
+        mtl
+        pms-domain-model
+        safe-exceptions
+        stm
+        text
+        transformers
+      ];
+      testHaskellDepends = [
+        async
+        base
+        data-default
+        hspec
+        hspec-discover
+        lens
+        monad-logger
+        pms-domain-model
+        stm
+        unix
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "pms-ui-request";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
+  "pms-ui-response" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      async,
+      base,
+      bytestring,
+      conduit,
+      data-default,
+      fast-logger,
+      hspec,
+      hspec-discover,
+      lens,
+      monad-logger,
+      mtl,
+      pms-domain-model,
+      safe-exceptions,
+      stm,
+      text,
+      transformers,
+      unix,
+    }:
+    mkDerivation {
+      pname = "pms-ui-response";
+      version = "0.0.4.0";
+      sha256 = "0045ddj3v34aycvnh72fvy9159iv4vad1jghd1ndslhphav1d91b";
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        conduit
+        data-default
+        fast-logger
+        lens
+        monad-logger
+        mtl
+        pms-domain-model
+        safe-exceptions
+        stm
+        text
+        transformers
+      ];
+      testHaskellDepends = [
+        async
+        base
+        data-default
+        hspec
+        hspec-discover
+        lens
+        monad-logger
+        pms-domain-model
+        stm
+        unix
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "pms-ui-response";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "png-file" = callPackage (
     {
       mkDerivation,
@@ -524288,7 +527756,6 @@ self: {
       ];
       description = "Colog adapters for polysemy-log";
       license = "BSD-2-Clause-Patent";
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -525747,7 +529214,7 @@ self: {
     {
       mkDerivation,
       base,
-      data-default,
+      data-default-class,
       pontarius-xmpp,
       text,
       time,
@@ -525755,11 +529222,11 @@ self: {
     }:
     mkDerivation {
       pname = "pontarius-xmpp-extras";
-      version = "0.1.0.11";
-      sha256 = "1dmayp87yjfxjvi1a2saiwinbks8vj14pydlsm2in552rs5wk6i1";
+      version = "0.1.0.12";
+      sha256 = "1a2a35zvs803qpxnvz4z2j667h9h8rhrlcrgm36vk5jb39m5n6w1";
       libraryHaskellDepends = [
         base
-        data-default
+        data-default-class
         pontarius-xmpp
         text
         time
@@ -525767,6 +529234,8 @@ self: {
       ];
       description = "XEPs implementation on top of pontarius-xmpp";
       license = "unknown";
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -525871,32 +529340,30 @@ self: {
   "poolboy" = callPackage (
     {
       mkDerivation,
-      async,
       base,
       hspec,
       hspec-core,
-      stm,
+      timeit,
       unliftio,
+      unordered-containers,
     }:
     mkDerivation {
       pname = "poolboy";
-      version = "0.2.2.0";
-      sha256 = "0d0lxqyf73w7nvgydbgv692zzc0zg2hk8sdd3lb6xyzdqkkd0vf3";
+      version = "0.4.0.1";
+      sha256 = "0ifdp2p2c257k52c9prm072c1gmfx55a40gaanba083viq6cxzal";
       libraryHaskellDepends = [
-        async
         base
-        stm
         unliftio
+        unordered-containers
       ];
       testHaskellDepends = [
         base
         hspec
         hspec-core
+        timeit
       ];
       description = "Simple work queue for bounded concurrency";
       license = lib.licenses.isc;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -525915,8 +529382,8 @@ self: {
       pname = "pooled-io";
       version = "0.0.2.3";
       sha256 = "0ysgfwlppilj21sqhbcq7xbyc5hnc26mzb58y7mm9rd5piw3v7mc";
-      revision = "1";
-      editedCabalFile = "1c2ggwlgr22zwc15x175hl08ql3fls278nwzdb3igqggdv5kx6cz";
+      revision = "2";
+      editedCabalFile = "17p76x90fz5bvn1y4mn7q00r2p6ssahmb84kycfkq0mhcjsdgch6";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -527239,6 +530706,18 @@ self: {
     }
   ) { };
 
+  "positive-integer" = callPackage (
+    { mkDerivation, base }:
+    mkDerivation {
+      pname = "positive-integer";
+      version = "0.1.2.0";
+      sha256 = "0m0l02v3ybsilkcvyc82ma57bbha4rhncsf5574b0m3zmxq17kaq";
+      libraryHaskellDepends = [ base ];
+      description = "Type of positive integers";
+      license = lib.licenses.mit;
+    }
+  ) { };
+
   "positron" = callPackage (
     {
       mkDerivation,
@@ -527322,8 +530801,8 @@ self: {
     }:
     mkDerivation {
       pname = "posix-api";
-      version = "0.7.2.0";
-      sha256 = "019znszq7n2bvpkhxikcr8pdqi5s3m7hvvlrss0c0m7l0rl3m58l";
+      version = "0.7.3.0";
+      sha256 = "03qizcbaxj4mmxv6ap9l9rll732jd3z2kk61jx6dnic3kdp056h0";
       libraryHaskellDepends = [
         base
         byte-order
@@ -527813,6 +531292,7 @@ self: {
       mkDerivation,
       aeson,
       alarmclock,
+      async,
       auto-update,
       base,
       base64-bytestring,
@@ -527827,9 +531307,9 @@ self: {
       jose,
       lens,
       lens-aeson,
+      mtl,
       network,
       postgresql-libpq,
-      protolude,
       retry,
       stm,
       stm-containers,
@@ -527846,13 +531326,14 @@ self: {
     }:
     mkDerivation {
       pname = "postgres-websockets";
-      version = "0.11.2.3";
-      sha256 = "1r4ws0bydwvp3cgy588yh0f9y9ifgrplcdk66mrzvpcp65ssd412";
+      version = "0.11.2.4";
+      sha256 = "1xckjdkzzbd4kqx6ciyagz1zy6i09zvpg1dkmn4ymr8xvm8rk2d7";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
         aeson
         alarmclock
+        async
         auto-update
         base
         base64-bytestring
@@ -527865,8 +531346,8 @@ self: {
         http-types
         jose
         lens
+        mtl
         postgresql-libpq
-        protolude
         retry
         stm
         stm-containers
@@ -527881,10 +531362,7 @@ self: {
         warp-tls
         websockets
       ];
-      executableHaskellDepends = [
-        base
-        protolude
-      ];
+      executableHaskellDepends = [ base ];
       testHaskellDepends = [
         aeson
         base
@@ -527896,7 +531374,6 @@ self: {
         lens
         lens-aeson
         network
-        protolude
         stm
         time
         unordered-containers
@@ -528446,6 +531923,37 @@ self: {
       description = "PostgreSQL Schema Migrations";
       license = lib.licenses.bsd3;
       mainProgram = "migrate";
+    }
+  ) { };
+
+  "postgresql-migration-persistent" = callPackage (
+    {
+      mkDerivation,
+      base,
+      mtl,
+      persistent,
+      persistent-postgresql,
+      postgresql-migration,
+      postgresql-simple,
+      resource-pool,
+      text,
+    }:
+    mkDerivation {
+      pname = "postgresql-migration-persistent";
+      version = "1.1.0";
+      sha256 = "0n7i0hgk9wrjskbxh7b811j3iqm12bj0w911544n8628rhqr8zrm";
+      libraryHaskellDepends = [
+        base
+        mtl
+        persistent
+        persistent-postgresql
+        postgresql-migration
+        postgresql-simple
+        resource-pool
+        text
+      ];
+      description = "A PostgreSQL persistent schema migration utility";
+      license = lib.licenses.mit;
     }
   ) { };
 
@@ -530925,6 +534433,7 @@ self: {
       base,
       bytestring,
       criterion,
+      deepseq,
       ppad-base16,
       ppad-chacha,
       ppad-poly1305,
@@ -530935,8 +534444,8 @@ self: {
     }:
     mkDerivation {
       pname = "ppad-aead";
-      version = "0.1.0";
-      sha256 = "1vvz39m852yp3j0mdm1mx3i5rgl78z0limlgm70al34gv1gxv3mh";
+      version = "0.2.0";
+      sha256 = "1s14bplwjfavg50xfyy65r2f8lg4man31jc83m3l32k6h4jvg983";
       libraryHaskellDepends = [
         base
         bytestring
@@ -530957,6 +534466,7 @@ self: {
         base
         bytestring
         criterion
+        deepseq
         ppad-base16
       ];
       description = "A pure AEAD-ChaCha20-Poly1305 construction";
@@ -531024,8 +534534,8 @@ self: {
     }:
     mkDerivation {
       pname = "ppad-base58";
-      version = "0.2.0";
-      sha256 = "1bn0fv1vmsc698lpl8x1brgi00bl9rcnh7r8v81rcxnjqf9xfdcb";
+      version = "0.2.1";
+      sha256 = "0s94985p1d1zh0ip404pgi12bj97naydr525i45aac64w8iis03y";
       libraryHaskellDepends = [
         base
         bytestring
@@ -531065,8 +534575,8 @@ self: {
     }:
     mkDerivation {
       pname = "ppad-bech32";
-      version = "0.2.2";
-      sha256 = "1bp4p6adfi7awy3k2fbi3akjqr5gyiijilgxg5r0hzpnzmzpxvzr";
+      version = "0.2.3";
+      sha256 = "0g8fk0bwx88zr4k4mijd8zn5jhi6gcsn6hvdp8jxb3r4a97a4yyv";
       libraryHaskellDepends = [
         base
         bytestring
@@ -531109,8 +534619,8 @@ self: {
     }:
     mkDerivation {
       pname = "ppad-bip32";
-      version = "0.1.1";
-      sha256 = "0q76ffxzrbr0fiv18ghgfjrv0y61nvsb6971pl49377c2835qa1l";
+      version = "0.2.0";
+      sha256 = "1h7i6km0ai3wvyrhfhl31gpaq21vcggrgk0gvr0cjhkmmscd3d5w";
       libraryHaskellDepends = [
         base
         bytestring
@@ -531166,8 +534676,8 @@ self: {
     }:
     mkDerivation {
       pname = "ppad-bip39";
-      version = "0.2.1";
-      sha256 = "1aqcjq1xika89qhxf54z25shg4kz8pmr6k70k48w7lyk85h3l97b";
+      version = "0.3.0";
+      sha256 = "18bshwr4hpnxk2v73kqxcsjbjffpss41whmd3scm20wq3al2xvva";
       libraryHaskellDepends = [
         base
         bytestring
@@ -531210,6 +534720,7 @@ self: {
       base,
       bytestring,
       criterion,
+      deepseq,
       ppad-base16,
       primitive,
       tasty,
@@ -531217,8 +534728,8 @@ self: {
     }:
     mkDerivation {
       pname = "ppad-chacha";
-      version = "0.1.0";
-      sha256 = "15idv1nrl2rl5rmx42dw1zwpdr7wvrr08j0k4vwy0s12cc40aka6";
+      version = "0.2.0";
+      sha256 = "1zqrg1af6rlflq74lamxd9f0p8sfhvmhjv3ii89mkckhizr8fqrc";
       libraryHaskellDepends = [
         base
         bytestring
@@ -531236,6 +534747,7 @@ self: {
         base
         bytestring
         criterion
+        deepseq
         ppad-base16
       ];
       description = "A pure ChaCha20 stream cipher";
@@ -531259,8 +534771,8 @@ self: {
     }:
     mkDerivation {
       pname = "ppad-hkdf";
-      version = "0.2.1";
-      sha256 = "1y5rmkaq8wgibsx6bvppbaqp13fb9al5yn4ni9x2ll685545m398";
+      version = "0.3.0";
+      sha256 = "194nwcjpdals55wf5khvl393d0q4fzdmx9424s9j2n0z70ry29pw";
       libraryHaskellDepends = [
         base
         bytestring
@@ -531351,8 +534863,8 @@ self: {
     }:
     mkDerivation {
       pname = "ppad-pbkdf";
-      version = "0.1.1";
-      sha256 = "05g3k4gyjkpn9k5fhz37lq10qgzlwayf4xiy5m4kjijv7l1wcxqp";
+      version = "0.2.0";
+      sha256 = "1zir2zm4bgimrgiv94dzqvn794dhwywl63b4im9sg9c61gh91r9m";
       libraryHaskellDepends = [
         base
         bytestring
@@ -531394,8 +534906,8 @@ self: {
     }:
     mkDerivation {
       pname = "ppad-poly1305";
-      version = "0.2.0";
-      sha256 = "1vv3ln9lzszx3h0dji4fqznh86qh40sl34msljddgyj3h709lzk6";
+      version = "0.3.0";
+      sha256 = "06db9qvi688nyhw8fqk8vqxhl6sddfkrg5ap15xd2lf75rl1v7kw";
       libraryHaskellDepends = [
         base
         bytestring
@@ -531528,8 +535040,8 @@ self: {
     }:
     mkDerivation {
       pname = "ppad-secp256k1";
-      version = "0.3.0";
-      sha256 = "1k2glxrrpgdngzy0j5mgbkh9a0a5b0cp5c1lmvaiwipik50n9rb3";
+      version = "0.4.0";
+      sha256 = "0wrmbz0s19g7b6qardn7isgmkrl5svw5nf360ksvhwagicv51g7l";
       libraryHaskellDepends = [
         base
         bytestring
@@ -531936,8 +535448,8 @@ self: {
     }:
     mkDerivation {
       pname = "pragmatic-show";
-      version = "0.1.2.1";
-      sha256 = "1i3yj11vdnca6klnn698fdwpjw356r87zbp7jlc4f4v76qhllfrm";
+      version = "0.2.0.0";
+      sha256 = "0aa9rdbnv93i7ibrp6v5ggyk4c3qh57k580gfpwlxz91nwnp122f";
       libraryHaskellDepends = [
         base
         containers
@@ -531987,6 +535499,49 @@ self: {
       ];
       description = "A first class record field library";
       license = lib.licenses.bsd3;
+    }
+  ) { };
+
+  "prairie_0_1_0_0" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      constraints,
+      containers,
+      foldable1-classes-compat,
+      hspec,
+      lens,
+      mtl,
+      semigroupoids,
+      template-haskell,
+      text,
+    }:
+    mkDerivation {
+      pname = "prairie";
+      version = "0.1.0.0";
+      sha256 = "06qmm3f0zfa31909vz09fanra9nhmgr4f686raif272hpxiayznp";
+      libraryHaskellDepends = [
+        aeson
+        base
+        constraints
+        containers
+        foldable1-classes-compat
+        mtl
+        semigroupoids
+        template-haskell
+        text
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        hspec
+        lens
+        semigroupoids
+      ];
+      description = "A first class record field library";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -536290,8 +539845,8 @@ self: {
       pname = "probability";
       version = "0.2.8";
       sha256 = "06vaq2wsy63vnsprpz0921v5mdqnhp58h1ly721lwrxyd8lg57hg";
-      revision = "2";
-      editedCabalFile = "0986cz4yd1c8rwf67klswg4v3cbn67pvckw1cd7vk7qzk9ayndk2";
+      revision = "3";
+      editedCabalFile = "02703w7680va0gicxjx4s644i0y3jm6f20wqkk90hhk3l33yp4y8";
       libraryHaskellDepends = [
         base
         containers
@@ -536321,8 +539876,8 @@ self: {
       pname = "probability-polynomial";
       version = "1.0.0.1";
       sha256 = "1f06x4d2cbd9j7rxgwdpxn8ff8w32xag96qk86mwggnzlw091gib";
-      revision = "1";
-      editedCabalFile = "10avhbz8k3yg1hzjp5qbkhv3mmmhrvii5mpjcxqcw9pq635x0kc8";
+      revision = "2";
+      editedCabalFile = "039np4z6lzz81n90k1sqbr7n8bxfmh8v4xvbppzzpgk6kp5fxpfm";
       libraryHaskellDepends = [
         base
         containers
@@ -536451,7 +540006,7 @@ self: {
     }
   ) { };
 
-  "process_1_6_26_0" = callPackage (
+  "process_1_6_26_1" = callPackage (
     {
       mkDerivation,
       base,
@@ -536462,8 +540017,8 @@ self: {
     }:
     mkDerivation {
       pname = "process";
-      version = "1.6.26.0";
-      sha256 = "18gxjw88qs4vgxyiq7srxmj0jy6kn2c5dwpq8a1wdgbbpwd920ys";
+      version = "1.6.26.1";
+      sha256 = "1w58md2dv4ijprjgd3v3imxn7f052l1g6bxlhkx8cyb0fyxd4cdl";
       libraryHaskellDepends = [
         base
         deepseq
@@ -537730,10 +541285,8 @@ self: {
     }:
     mkDerivation {
       pname = "profunctors";
-      version = "5.6.2";
-      sha256 = "0an9v003ivxmjid0s51qznbjhd5fsa1dkcfsrhxllnjja1xmv5b5";
-      revision = "3";
-      editedCabalFile = "0y2g5dhmvkbd8zsckpgxd1g4hr3g56g0iqi6crjjc8wqd12bly71";
+      version = "5.6.3";
+      sha256 = "1wqf3isrrgmqxz5h42phsa7lawl6442r1da89hg82bld6qkz9imr";
       libraryHaskellDepends = [
         base
         base-orphans
@@ -538994,8 +542547,8 @@ self: {
     }:
     mkDerivation {
       pname = "prometheus-proc";
-      version = "0.1.6.0";
-      sha256 = "0rpbpyl1gy08cbcb3d1sdkpvva7jmr8pwbcp0xmdm9k3xh1pj2ng";
+      version = "0.1.6.1";
+      sha256 = "1v1y3mp2j0j11dbf2sp4j2dpwgp0fhk84jjn51ihjf67x2vlab9b";
       libraryHaskellDepends = [
         base
         directory
@@ -539009,6 +542562,36 @@ self: {
       description = "Export metrics from /proc for the current process";
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
+  "prometheus-wai" = callPackage (
+    {
+      mkDerivation,
+      autoexporter,
+      base,
+      bytestring,
+      containers,
+      http-types,
+      prometheus,
+      text,
+      wai,
+    }:
+    mkDerivation {
+      pname = "prometheus-wai";
+      version = "0.0.0.0";
+      sha256 = "027i17zyxk3wgzw7161h57rnmgb5iqqnlnlcg129q28dw005wg9h";
+      libraryHaskellDepends = [
+        base
+        bytestring
+        containers
+        http-types
+        prometheus
+        text
+        wai
+      ];
+      libraryToolDepends = [ autoexporter ];
+      license = lib.licenses.mit;
     }
   ) { };
 
@@ -539133,8 +542716,8 @@ self: {
     }:
     mkDerivation {
       pname = "prompt-hs";
-      version = "1.0.0.0";
-      sha256 = "1xl7da4jzbnyiw4qjsbzhmc0wxa0y1wa204knlhi3g2dr3dzhj7g";
+      version = "1.0.1.0";
+      sha256 = "1yarj087xyardxpf7ibv2bpfkaiyikzpzcpa1sf76lfd6v5rwr7s";
       libraryHaskellDepends = [
         base
         microlens
@@ -539970,8 +543553,8 @@ self: {
     }:
     mkDerivation {
       pname = "proto-lens";
-      version = "0.7.1.5";
-      sha256 = "042wn6dw4jg0j9gfp4pgzm86j3hq0vkv02rlnp77v13b87q75lfs";
+      version = "0.7.1.6";
+      sha256 = "13jwrqynj0yq5j5gb4z84b7j5jr0d862cqyyqsdix673wvhsw7dx";
       enableSeparateDataOutput = true;
       libraryHaskellDepends = [
         base
@@ -541129,8 +544712,8 @@ self: {
     }:
     mkDerivation {
       pname = "protolude";
-      version = "0.3.4";
-      sha256 = "0lkh2m58fphnqdfk33fd4f24c6s3bnjq1qvhbmfy83a72a19jf7q";
+      version = "0.3.5";
+      sha256 = "11q4qivjsqxfmb93nzxabipsxmmcpdajrkb8n5hx53awkx15j2n8";
       libraryHaskellDepends = [
         array
         async
@@ -542288,6 +545871,53 @@ self: {
       libraryHaskellDepends = [ base ];
       description = "Type-checked pointer diffs";
       license = "(BSD-2-Clause OR Apache-2.0)";
+    }
+  ) { };
+
+  "pty-mcp-server" = callPackage (
+    {
+      mkDerivation,
+      base,
+      optparse-applicative,
+      pms-application-service,
+      pms-domain-model,
+      pms-domain-service,
+      pms-infra-cmdrun,
+      pms-infra-procspawn,
+      pms-infra-socket,
+      pms-infra-watch,
+      pms-infrastructure,
+      pms-ui-notification,
+      pms-ui-request,
+      pms-ui-response,
+      safe-exceptions,
+    }:
+    mkDerivation {
+      pname = "pty-mcp-server";
+      version = "0.0.5.0";
+      sha256 = "0vra3p8cfzijkz3m5aw3m97vf3awqfc5ga72ks7hmk4fbf7hiwkq";
+      isLibrary = false;
+      isExecutable = true;
+      executableHaskellDepends = [
+        base
+        optparse-applicative
+        pms-application-service
+        pms-domain-model
+        pms-domain-service
+        pms-infra-cmdrun
+        pms-infra-procspawn
+        pms-infra-socket
+        pms-infra-watch
+        pms-infrastructure
+        pms-ui-notification
+        pms-ui-request
+        pms-ui-response
+        safe-exceptions
+      ];
+      description = "pty-mcp-server";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "pty-mcp-server";
     }
   ) { };
 
@@ -544555,8 +548185,8 @@ self: {
     }:
     mkDerivation {
       pname = "push-notify-apn";
-      version = "0.4.0.3";
-      sha256 = "024xanv7wcpmbd2mv4v8gw281gsnx5z15a39zh0v07bgiq7q04wb";
+      version = "0.5.0.0";
+      sha256 = "128k7awxxs07lymqln224lnxvcqwcc263jzpsbsadzp6zpwpg641";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -545883,11 +549513,11 @@ self: {
       bytestring,
       containers,
       cryptonite,
+      extra,
       hspec,
       optparse-applicative,
       process,
       simple-sql-parser,
-      split,
       sqlite-simple,
       syb,
       text,
@@ -545895,38 +549525,32 @@ self: {
     }:
     mkDerivation {
       pname = "qhs";
-      version = "0.3.3";
-      sha256 = "1wm11y9gnfrjrq5i5nl74vkg242mr08223kw6cracnmr4n6xqm0q";
+      version = "0.4.0";
+      sha256 = "10b996ymvsmcmjyiaw567idr52mc017cgppma9va8yw94xqgdx7s";
       isLibrary = false;
       isExecutable = true;
-      executableHaskellDepends = [
+      libraryHaskellDepends = [
         base
         bytestring
         containers
         cryptonite
+        extra
         optparse-applicative
         simple-sql-parser
-        split
         sqlite-simple
         syb
         text
         zlib
       ];
+      executableHaskellDepends = [ base ];
       testHaskellDepends = [
         base
-        bytestring
         containers
-        cryptonite
+        extra
         hspec
-        optparse-applicative
         process
-        simple-sql-parser
-        split
-        sqlite-simple
-        syb
-        text
-        zlib
       ];
+      doHaddock = false;
       description = "Command line tool qhs, SQL queries on CSV and TSV files";
       license = lib.licenses.mit;
       hydraPlatforms = lib.platforms.none;
@@ -546813,8 +550437,8 @@ self: {
       pname = "quaalude";
       version = "0.0.0.1";
       sha256 = "0wwsrpm2s7gs2c4fwh4qvhnjywxfyf94dw715bz34q7bzyyk3lc6";
-      revision = "2";
-      editedCabalFile = "1danjjnb38pnz5x4xdqas5fr9xb703i6a4jx49kq5q311v8dccva";
+      revision = "3";
+      editedCabalFile = "0pqi04fvyclnx4lfq8ifax6l4kayay6xbmwp0k0h7yjz14k252gn";
       libraryHaskellDepends = [ base ];
       description = "Extremely minimal prelude";
       license = lib.licenses.asl20;
@@ -547021,6 +550645,8 @@ self: {
       pname = "quantification";
       version = "0.8";
       sha256 = "1dw47hy0pvar4mkdp6xjz8ywpic2zs3q0xah9zlbnfpibhjjc1a9";
+      revision = "1";
+      editedCabalFile = "1abpn4sz7g9ih4c3iclpqnwng15dwa7553pxyvwvgy19x6sfgck2";
       libraryHaskellDepends = [
         base
         binary
@@ -547711,6 +551337,8 @@ self: {
       pname = "queue-sheet";
       version = "0.8.0.1";
       sha256 = "1s7j51542j4in10ihb47jflwkf6m4gsi1z1aq9mzs2ksj65n1yc9";
+      revision = "1";
+      editedCabalFile = "0bq0abf3qzlpcy6kxrhbzm9zg9fa2ps5fj27i9c67nyc5y520ana";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -547862,6 +551490,7 @@ self: {
       crypton,
       crypton-x509,
       crypton-x509-system,
+      crypton-x509-validation,
       fast-logger,
       filepath,
       hspec,
@@ -547880,8 +551509,8 @@ self: {
     }:
     mkDerivation {
       pname = "quic";
-      version = "0.2.12";
-      sha256 = "1x5326bmf8pz74dxjdlgf5a6mjf2v2358lmr4x94smbr5gscmlxx";
+      version = "0.2.17";
+      sha256 = "15fk5786rkryjixqiqk9y7zh5wazwakp6gkk5jr4ryckjdgjyyjj";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -547895,6 +551524,7 @@ self: {
         crypton
         crypton-x509
         crypton-x509-system
+        crypton-x509-validation
         fast-logger
         filepath
         iproute
@@ -547945,6 +551575,158 @@ self: {
       ];
       description = "Generator random test data for QuickCheck";
       license = lib.licenses.bsd3;
+    }
+  ) { };
+
+  "quick-process" = callPackage (
+    {
+      mkDerivation,
+      array,
+      attoparsec,
+      base,
+      base-orphans,
+      bytestring,
+      casing,
+      conduit,
+      conduit-combinators,
+      conduit-extra,
+      containers,
+      deepseq,
+      directory,
+      either,
+      exceptions,
+      filepath,
+      generic-data,
+      generic-deriving,
+      generic-lens,
+      generic-random,
+      ghc-prim,
+      hashable,
+      lens,
+      mmorph,
+      monad-control,
+      monad-time,
+      mtl,
+      pretty-simple,
+      process,
+      profunctors,
+      QuickCheck,
+      quickcheck-instances,
+      regex-compat,
+      regex-posix,
+      regex-tdfa,
+      relude,
+      resourcet,
+      safe-exceptions,
+      sbv,
+      semigroups,
+      streaming-commons,
+      tagged,
+      tasty,
+      tasty-discover,
+      tasty-hunit,
+      tasty-quickcheck,
+      template-haskell,
+      temporary,
+      text,
+      th-lift-instances,
+      th-utilities,
+      these-skinny,
+      time,
+      trace-embrace,
+      transformers,
+      transformers-base,
+      transformers-either,
+      unix,
+      unix-compat,
+      unliftio,
+      unliftio-core,
+      wl-pprint-text,
+    }:
+    mkDerivation {
+      pname = "quick-process";
+      version = "0.0.3";
+      sha256 = "180zxzsg2xh24nw7gdzmk134hx7vl61hfc3dsvrdr0rwkp1xmngi";
+      libraryHaskellDepends = [
+        array
+        attoparsec
+        base
+        base-orphans
+        bytestring
+        casing
+        conduit
+        conduit-combinators
+        conduit-extra
+        containers
+        deepseq
+        directory
+        either
+        exceptions
+        filepath
+        generic-data
+        generic-deriving
+        generic-lens
+        generic-random
+        ghc-prim
+        hashable
+        lens
+        mmorph
+        monad-control
+        monad-time
+        mtl
+        pretty-simple
+        process
+        profunctors
+        QuickCheck
+        regex-compat
+        regex-posix
+        regex-tdfa
+        relude
+        resourcet
+        safe-exceptions
+        sbv
+        semigroups
+        streaming-commons
+        tagged
+        template-haskell
+        temporary
+        text
+        th-utilities
+        these-skinny
+        time
+        trace-embrace
+        transformers
+        transformers-base
+        transformers-either
+        unix
+        unix-compat
+        unliftio-core
+        wl-pprint-text
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        directory
+        generic-lens
+        lens
+        QuickCheck
+        quickcheck-instances
+        relude
+        tasty
+        tasty-discover
+        tasty-hunit
+        tasty-quickcheck
+        template-haskell
+        temporary
+        th-lift-instances
+        th-utilities
+        unliftio
+      ];
+      testToolDepends = [ tasty-discover ];
+      doHaddock = false;
+      description = "Run external processes verified at compilation/installation";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -548360,8 +552142,8 @@ self: {
     }:
     mkDerivation {
       pname = "quickcheck-groups";
-      version = "0.0.1.4";
-      sha256 = "1k1pbxcp8ppzyym2wavvpn6p5d74cddh1ldlg1kv55ypfszzzf21";
+      version = "0.0.1.5";
+      sha256 = "1ibchcgj1bqfsc6dx3n4bii6dhylxjn8zl9vhhvk48zsk99q4jaz";
       libraryHaskellDepends = [
         base
         groups
@@ -548444,10 +552226,10 @@ self: {
     }:
     mkDerivation {
       pname = "quickcheck-instances";
-      version = "0.3.32";
-      sha256 = "10zz62j1jplk392c90hkg9mfk8piyp5ify94jp3rld722phg5xa8";
+      version = "0.3.33";
+      sha256 = "0rl8y3rb4fm4nqz122bp5f2aya4f8bc9m9i9n2vwlyq2gdacs0v8";
       revision = "1";
-      editedCabalFile = "0d7vgsvvkipa1d1gh7z7ha12fv49frcv81dz09qy0m6kvn5lawl7";
+      editedCabalFile = "1xkc7rsfgya4rwiizh0yfincws3knpdnh08m280v1dgik4kv37vh";
       libraryHaskellDepends = [
         array
         base
@@ -548525,16 +552307,15 @@ self: {
       QuickCheck,
       quickcheck-dynamic,
       tasty,
+      tasty-golden,
       tasty-hunit,
       tasty-quickcheck,
       temporary,
     }:
     mkDerivation {
       pname = "quickcheck-lockstep";
-      version = "0.6.0";
-      sha256 = "1s1z146l00v5hlcmwq9w9dpvs0mblld8h15xicxb619fbl1hrg5x";
-      revision = "1";
-      editedCabalFile = "00mlph661br03khrpzl9f1wvwmr2mrv6y3hqp7i371rm1dl83xd5";
+      version = "0.8.0";
+      sha256 = "1y3icjvd9qbv38q1cxkn48d6fp4b7c0j0j0l3mwkfi8ph8qjg2y6";
       libraryHaskellDepends = [
         base
         constraints
@@ -548553,14 +552334,13 @@ self: {
         QuickCheck
         quickcheck-dynamic
         tasty
+        tasty-golden
         tasty-hunit
         tasty-quickcheck
         temporary
       ];
       description = "Library for lockstep-style testing with 'quickcheck-dynamic'";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -548577,15 +552357,14 @@ self: {
       pretty-show,
       QuickCheck,
       quickcheck-classes,
-      quickcheck-instances,
       semigroupoids,
       text,
       vector,
     }:
     mkDerivation {
       pname = "quickcheck-monoid-subclasses";
-      version = "0.3.0.5";
-      sha256 = "0hnrm69vavc2b1h4cishdvn7j0x8l8mk8fggbai3kn77w6cnf3il";
+      version = "0.3.0.6";
+      sha256 = "03gngckzwhln7c86dixg8szrnqwgdl9svy6hfnzgyjpn4qfqwcmv";
       libraryHaskellDepends = [
         base
         containers
@@ -548593,7 +552372,6 @@ self: {
         pretty-show
         QuickCheck
         quickcheck-classes
-        quickcheck-instances
         semigroupoids
       ];
       testHaskellDepends = [
@@ -548605,7 +552383,6 @@ self: {
         monoid-subclasses
         QuickCheck
         quickcheck-classes
-        quickcheck-instances
         text
         vector
       ];
@@ -548725,8 +552502,8 @@ self: {
     }:
     mkDerivation {
       pname = "quickcheck-quid";
-      version = "0.0.1.7";
-      sha256 = "1r0ip3a281dgvy6bplhr76wg5n0l4qz0k6i6r3fzh4848r6z9say";
+      version = "0.0.1.8";
+      sha256 = "0qx08f6z1y21qn63z5hkhlvj1rgn921ads03lrppmggg9kvrk5x0";
       libraryHaskellDepends = [
         base
         containers
@@ -551836,8 +555613,8 @@ self: {
     }:
     mkDerivation {
       pname = "rampart";
-      version = "2.0.0.9";
-      sha256 = "0fdzika3dzxcw39v2lj1sz3nlahxi8swfn3sl1br178sp2bd075j";
+      version = "2.0.0.11";
+      sha256 = "04hj1sh0ad3fg10d7w9fz4xvic6kfxi6iacci63g4m2151w9l7gl";
       libraryHaskellDepends = [ base ];
       testHaskellDepends = [
         base
@@ -553815,8 +557592,8 @@ self: {
     }:
     mkDerivation {
       pname = "ratel";
-      version = "2.0.0.13";
-      sha256 = "0y6zr7i8xkv7qpnh3pcy9v3z9gav0km81gsd3zhbm3jzb8iqngkx";
+      version = "2.0.0.15";
+      sha256 = "1d074x3vdnkdrh2m7z0iswbiihgafbm8ik2nf56ipry27pvkjfq3";
       libraryHaskellDepends = [
         aeson
         base
@@ -553851,8 +557628,8 @@ self: {
     }:
     mkDerivation {
       pname = "ratel-wai";
-      version = "2.0.0.8";
-      sha256 = "1hg7187y9r6zy557zy0nrc187529zk9lccqh0jgdfgq2y3siab7f";
+      version = "2.0.0.10";
+      sha256 = "06wdcy1zych0lwwddznnrgapmzmxmahy98yqcfikqrrf85nd73ng";
       libraryHaskellDepends = [
         base
         bytestring
@@ -554165,8 +557942,8 @@ self: {
     }:
     mkDerivation {
       pname = "rattletrap";
-      version = "14.1.1";
-      sha256 = "1qibszp7fyrd452q1nms7hqx3k1kp2551qyxli37khrx3f33q7y5";
+      version = "14.1.3";
+      sha256 = "0x6n149s39kas2wivnpnpdbwa4v1r1wiyima1vca2bj8h33mbmp4";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -554383,23 +558160,17 @@ self: {
       mtl,
       nothunks,
       QuickCheck,
-      strict-mvar,
-      strict-stm,
       tasty,
       tasty-quickcheck,
     }:
     mkDerivation {
       pname = "rawlock";
-      version = "0.1.1.0";
-      sha256 = "1hd62m0r6wiwpzm70pydrkvw2ln78436vak1jd0wiqvdh9z35szj";
-      revision = "2";
-      editedCabalFile = "0p2cf0v6xxq1gmi74iapy1wnhk8bsid1gj6s24mjdnv4np7cbvrm";
+      version = "0.1.2.0";
+      sha256 = "0prw2sbhf78grggw90bc5wclycd86m6v7wpw1s5hqx9vv0y4ssfi";
       libraryHaskellDepends = [
         base
         io-classes
         nothunks
-        strict-mvar
-        strict-stm
       ];
       testHaskellDepends = [
         base
@@ -554407,13 +558178,13 @@ self: {
         io-sim
         mtl
         QuickCheck
-        strict-stm
         tasty
         tasty-quickcheck
       ];
       description = "A writer-biased RAW lock";
       license = lib.licenses.asl20;
       hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -554472,8 +558243,8 @@ self: {
     }:
     mkDerivation {
       pname = "rawstring-qm";
-      version = "0.2.3.0";
-      sha256 = "1zk82akj2p4hl9hqwr30fixqfkjlpnb02qwhhflvcpv8gnxpg88i";
+      version = "0.2.3.1";
+      sha256 = "18kf70h0xwwd814952wkxx9xqcxcxvxga43rnhizd760kg5l808b";
       libraryHaskellDepends = [
         base
         bytestring
@@ -554920,8 +558691,8 @@ self: {
     }:
     mkDerivation {
       pname = "rdf4h";
-      version = "5.2.0";
-      sha256 = "03f1dcw4zii4yvq7azhcgpkf59wibjdlvkifb88jp8maiaadzr75";
+      version = "5.2.1";
+      sha256 = "1jah12gcmc85qpbhw6igi28rvmww38fqmj1waqw7c16y0lxnkvxb";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -555061,7 +558832,6 @@ self: {
       mkDerivation,
       aeson,
       aeson-pretty,
-      amazonka,
       amazonka-core,
       amazonka-rds,
       amazonka-rds-data,
@@ -555073,21 +558843,12 @@ self: {
       generic-lens,
       hedgehog,
       hedgehog-extras,
-      http-client,
-      hw-polysemy,
       hw-prelude,
       microlens,
       mtl,
-      optparse-applicative,
-      polysemy-log,
-      polysemy-plugin,
-      polysemy-time,
-      resourcet,
-      stm,
       tasty,
       tasty-discover,
       tasty-hedgehog,
-      testcontainers,
       text,
       time,
       transformers,
@@ -555096,13 +558857,10 @@ self: {
     }:
     mkDerivation {
       pname = "rds-data";
-      version = "0.1.1.4";
-      sha256 = "08q90rdpkdif5d8q22kwjk9yby2kmfsh2s80dgm55dascqsp95hr";
-      isLibrary = false;
-      isExecutable = true;
+      version = "0.2.0.1";
+      sha256 = "1kfi9qmq07v9bvs7a08221r4c7r4hl74f1iavnk6d5gaqms38sfz";
       libraryHaskellDepends = [
         aeson
-        amazonka
         amazonka-core
         amazonka-rds
         amazonka-rds-data
@@ -555112,64 +558870,27 @@ self: {
         bytestring
         contravariant
         generic-lens
-        hw-polysemy
         hw-prelude
         microlens
         mtl
-        polysemy-log
-        polysemy-plugin
         text
         time
         transformers
         ulid
         uuid
       ];
-      executableHaskellDepends = [
-        aeson
-        amazonka
-        amazonka-rds-data
-        base
-        bytestring
-        generic-lens
-        hedgehog
-        http-client
-        hw-polysemy
-        hw-prelude
-        microlens
-        optparse-applicative
-        polysemy-log
-        polysemy-plugin
-        polysemy-time
-        resourcet
-        stm
-        testcontainers
-        text
-        time
-        ulid
-        uuid
-      ];
       testHaskellDepends = [
         aeson
         aeson-pretty
-        amazonka
-        amazonka-core
-        amazonka-rds
         amazonka-rds-data
-        amazonka-secretsmanager
         base
-        base64-bytestring
         bytestring
         generic-lens
         hedgehog
         hedgehog-extras
-        hw-polysemy
         microlens
-        polysemy-log
-        polysemy-plugin
         tasty
-        tasty-discover
         tasty-hedgehog
-        testcontainers
         text
         time
         ulid
@@ -555180,7 +558901,7 @@ self: {
       description = "Codecs for use with AWS rds-data";
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
-      mainProgram = "rds-data";
+      broken = true;
     }
   ) { };
 
@@ -555278,6 +558999,138 @@ self: {
       hydraPlatforms = lib.platforms.none;
       mainProgram = "rds-data-codecs";
       broken = true;
+    }
+  ) { };
+
+  "rds-data-polysemy" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      aeson-pretty,
+      amazonka,
+      amazonka-core,
+      amazonka-rds,
+      amazonka-rds-data,
+      amazonka-secretsmanager,
+      base,
+      base64-bytestring,
+      bytestring,
+      contravariant,
+      generic-lens,
+      hedgehog,
+      hedgehog-extras,
+      http-client,
+      hw-polysemy,
+      hw-prelude,
+      microlens,
+      mtl,
+      optparse-applicative,
+      polysemy-log,
+      polysemy-plugin,
+      polysemy-time,
+      rds-data,
+      resourcet,
+      stm,
+      tasty,
+      tasty-discover,
+      tasty-hedgehog,
+      testcontainers,
+      text,
+      time,
+      transformers,
+      ulid,
+      uuid,
+    }:
+    mkDerivation {
+      pname = "rds-data-polysemy";
+      version = "0.1.0.0";
+      sha256 = "13anncaj8yw3y4csg7kbda6wrb9s8g5spd9k5h1ygrwy1az697sr";
+      isLibrary = false;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        amazonka
+        amazonka-core
+        amazonka-rds
+        amazonka-rds-data
+        amazonka-secretsmanager
+        base
+        base64-bytestring
+        bytestring
+        contravariant
+        generic-lens
+        hw-polysemy
+        hw-prelude
+        microlens
+        mtl
+        polysemy-log
+        polysemy-plugin
+        rds-data
+        text
+        time
+        transformers
+        ulid
+        uuid
+      ];
+      executableHaskellDepends = [
+        aeson
+        amazonka
+        amazonka-rds-data
+        base
+        bytestring
+        generic-lens
+        hedgehog
+        http-client
+        hw-polysemy
+        hw-prelude
+        microlens
+        optparse-applicative
+        polysemy-log
+        polysemy-plugin
+        polysemy-time
+        rds-data
+        resourcet
+        stm
+        testcontainers
+        text
+        time
+        ulid
+        uuid
+      ];
+      testHaskellDepends = [
+        aeson
+        aeson-pretty
+        amazonka
+        amazonka-core
+        amazonka-rds
+        amazonka-rds-data
+        amazonka-secretsmanager
+        base
+        base64-bytestring
+        bytestring
+        generic-lens
+        hedgehog
+        hedgehog-extras
+        hw-polysemy
+        microlens
+        polysemy-log
+        polysemy-plugin
+        rds-data
+        tasty
+        tasty-discover
+        tasty-hedgehog
+        testcontainers
+        text
+        time
+        ulid
+        uuid
+      ];
+      testToolDepends = [ tasty-discover ];
+      doHaddock = false;
+      description = "Codecs for use with AWS rds-data";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "rds-data";
     }
   ) { };
 
@@ -555623,8 +559476,8 @@ self: {
       pname = "reactive-balsa";
       version = "0.4.0.1";
       sha256 = "1fhn7bxfrwaa5xb2ckfy2v4aw5cdzclayprjr40zg09s77qxclc1";
-      revision = "2";
-      editedCabalFile = "1l5mvm1b4y8r1r6lg7h2imrfzl4y1jcc23cjm5bpcrci46n0z006";
+      revision = "3";
+      editedCabalFile = "0bpy0z1gcj52jqirbhl909vnvjarj4x2lyvxx3c4f2v8h67a069d";
       libraryHaskellDepends = [
         alsa-core
         alsa-seq
@@ -556032,8 +559885,8 @@ self: {
       pname = "reactive-jack";
       version = "0.4.1.2";
       sha256 = "1ckm95dr3y14bh73nxapm9rl39bz1lpxmclgcnd9n2mkn0b1q54w";
-      revision = "1";
-      editedCabalFile = "045aivc9nivky6pgfwdfyffglg6v3i1zv5alk9abj5jmrz6d3pyw";
+      revision = "2";
+      editedCabalFile = "08y0czlc8pkrzbc0x8qiw3q3412pbz2m00vc9gqs02mr24vrsbm9";
       libraryHaskellDepends = [
         base
         containers
@@ -556077,8 +559930,8 @@ self: {
       pname = "reactive-midyim";
       version = "0.4.1.1";
       sha256 = "1hsa7d79mf7r36grl9i41x84kg3s9j5gj2fy40mb1mhvr221pi9v";
-      revision = "2";
-      editedCabalFile = "131mg8w6dcjzlmrhr8pmlbk2x4qfnza3chik4ylfzi90bqc147gx";
+      revision = "3";
+      editedCabalFile = "1i4syy9vs2frgl8b92r62yjzzbz8dxx91v5823kf9nrcm7prqffw";
       libraryHaskellDepends = [
         base
         containers
@@ -559756,8 +563609,8 @@ self: {
     }:
     mkDerivation {
       pname = "reflex";
-      version = "0.9.3.3";
-      sha256 = "0iklqcszxmj3dian0mjpz75483084ar8i328ydcx68xk9l9rlqbf";
+      version = "0.9.3.4";
+      sha256 = "1qh2xbg4q2gif25hinz72j8ka2w976lccklknwgijxaayh92if4a";
       libraryHaskellDepends = [
         base
         bifunctors
@@ -560114,7 +563967,6 @@ self: {
       ];
       description = "Use colonnade with reflex-dom";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -560238,8 +564090,8 @@ self: {
     }:
     mkDerivation {
       pname = "reflex-dom-core";
-      version = "0.8.1.3";
-      sha256 = "0g2sg068mchc0di8agxdcj1wxrc1qfhcnz4qcl3p0sc6h298sf0n";
+      version = "0.8.1.4";
+      sha256 = "02wzvmhqplhxz4przxmbs4brckap3x8n0p46g62zwygkgbkhqclw";
       libraryHaskellDepends = [
         aeson
         base
@@ -561123,7 +564975,6 @@ self: {
       description = "Helper widgets for reflex-localize";
       license = lib.licenses.mit;
       badPlatforms = [ "aarch64-linux" ] ++ lib.platforms.darwin;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -562829,8 +566680,8 @@ self: {
     }:
     mkDerivation {
       pname = "regex-tdfa";
-      version = "1.3.2.3";
-      sha256 = "0vyw69nyx1gdy4l54f5d0vnwrp2xzilbizyjd33h7r95b3wbqwc5";
+      version = "1.3.2.4";
+      sha256 = "15x7pisdvi0afg7ybxpga8aa4q38x9pz9ml7nhz1f7s4nw9w72q7";
       libraryHaskellDepends = [
         array
         base
@@ -563523,8 +567374,8 @@ self: {
     }:
     mkDerivation {
       pname = "registry";
-      version = "0.6.3.1";
-      sha256 = "1a0vrl9ji8k7mzgh431wqv9az4kx1qx76abprm9ablrhxhmqryy5";
+      version = "0.6.3.2";
+      sha256 = "0av7jira1cvbc1cj570fp5d31vqxkb4w9s4hxlqj4hna5h9s5898";
       libraryHaskellDepends = [
         base
         containers
@@ -563600,8 +567451,8 @@ self: {
     }:
     mkDerivation {
       pname = "registry-aeson";
-      version = "0.3.1.1";
-      sha256 = "06cfbrplf0qpvfmc0fr73vhf95zqf0lwhphfm10378qdlanp5z10";
+      version = "0.3.1.2";
+      sha256 = "1i529ckgbxsbaz8j1ycbc49d4n19xmvdv4ngq827r8nsxxqdwgyv";
       libraryHaskellDepends = [
         aeson
         base
@@ -563660,8 +567511,8 @@ self: {
     }:
     mkDerivation {
       pname = "registry-hedgehog";
-      version = "0.8.2.1";
-      sha256 = "17y9sp91qdxzvwbvngk9lidljjg84b64sk3y82n05r76ld57wh5m";
+      version = "0.8.2.2";
+      sha256 = "12szgvyfhplcbq8d2fs2ssa3jlli692kgvy26zcxsfx8pyc9w9sd";
       libraryHaskellDepends = [
         base
         containers
@@ -563730,8 +567581,8 @@ self: {
     }:
     mkDerivation {
       pname = "registry-hedgehog-aeson";
-      version = "0.3.1.1";
-      sha256 = "0g1pvj8990c6zfb54m70z3bylzsz9vbm0ggpxnccinlgjl42igdq";
+      version = "0.3.1.2";
+      sha256 = "1svrpfhv2igp2lwmgsz81xdkkk6hjbgsmhzalp6zwajgs1iad469";
       libraryHaskellDepends = [
         aeson
         base
@@ -563829,6 +567680,7 @@ self: {
       description = "MessagePack encoders / decoders";
       license = lib.licenses.mit;
       hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -563857,8 +567709,8 @@ self: {
     }:
     mkDerivation {
       pname = "registry-options";
-      version = "0.2.1.0";
-      sha256 = "1fdmy2822n81ikbrnfwhm96jb8fwa1bckidjvkk2v26l4fh2m06d";
+      version = "0.2.1.1";
+      sha256 = "1zgdkw5byjzar5kjkhnzm2z271xfh2yqv6v3y5h6m2a9qsfmdq25";
       libraryHaskellDepends = [
         base
         boxes
@@ -566630,8 +570482,8 @@ self: {
     }:
     mkDerivation {
       pname = "repline";
-      version = "0.4.2.0";
-      sha256 = "0nldn02yqqmrxkzwzrx3v6hkb4y2hch48jkcr2qrw1dl0vqv70b1";
+      version = "0.4.3.0";
+      sha256 = "04iy7z3cmkwjhf90jdjqfv2cjcmn2206p4xmjshfn3fda4sawrcl";
       libraryHaskellDepends = [
         base
         containers
@@ -568033,6 +571885,34 @@ self: {
     }
   ) { };
 
+  "resource-pool_0_5_0_0" = callPackage (
+    {
+      mkDerivation,
+      base,
+      hashable,
+      primitive,
+      stm,
+      text,
+      time,
+    }:
+    mkDerivation {
+      pname = "resource-pool";
+      version = "0.5.0.0";
+      sha256 = "1l0l26fgwjilqh55z7vylw9i735hich8amwgl1a63dgcwyvhlxgs";
+      libraryHaskellDepends = [
+        base
+        hashable
+        primitive
+        stm
+        text
+        time
+      ];
+      description = "A high-performance striped resource pooling implementation";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "resource-pool-catchio" = callPackage (
     {
       mkDerivation,
@@ -568137,19 +572017,14 @@ self: {
       nothunks,
       QuickCheck,
       quickcheck-state-machine,
-      si-timers,
-      strict-mvar,
-      strict-stm,
       tasty,
       tasty-quickcheck,
       tree-diff,
     }:
     mkDerivation {
       pname = "resource-registry";
-      version = "0.1.0.0";
-      sha256 = "0mkx8hf6k0117c15kq3cyqgxbfwjjk0yywp5xf6svdi5g2xpkg5p";
-      revision = "1";
-      editedCabalFile = "0iz6imzg017jf2kn88ir4aqq9ca1aa4xx8h7nfx5dqgj9ps05j7w";
+      version = "0.1.1.0";
+      sha256 = "0zwhnidckc9541sasvxlvysl7qjka1g9cq80h4lzv46kqwagmv9p";
       libraryHaskellDepends = [
         base
         bimap
@@ -568157,7 +572032,6 @@ self: {
         io-classes
         mtl
         nothunks
-        strict-stm
       ];
       testHaskellDepends = [
         base
@@ -568167,9 +572041,6 @@ self: {
         mtl
         QuickCheck
         quickcheck-state-machine
-        si-timers
-        strict-mvar
-        strict-stm
         tasty
         tasty-quickcheck
         tree-diff
@@ -568177,6 +572048,7 @@ self: {
       description = "Track allocated resources";
       license = lib.licenses.asl20;
       hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -568775,10 +572647,8 @@ self: {
         }:
         mkDerivation {
           pname = "rest-rewrite";
-          version = "0.4.4";
-          sha256 = "03jn5wclljkfdj1nvzbs5jvgsh343g1qr864pivgmxbc5ngrdk91";
-          revision = "1";
-          editedCabalFile = "1hhwgph984x1xsqz94myd6cf8530c4pay2qa4kg4zd2g2ka7ymm8";
+          version = "0.4.5";
+          sha256 = "0yxg3wfwxcrg036cxqcf601vfc5472vx9zwl21y23kpx031h7ny4";
           libraryHaskellDepends = [
             base
             containers
@@ -570598,8 +574468,8 @@ self: {
     }:
     mkDerivation {
       pname = "rfc1751";
-      version = "0.1.3";
-      sha256 = "1f68rss3y64g2s7dmzb635986vf682gb1yvv4x720b29gh65dahk";
+      version = "0.1.4";
+      sha256 = "0jzs3fx30i3hq60vww4y12slb6wikxka38kw66y7rxd397lx23yh";
       libraryHaskellDepends = [
         base
         bytestring
@@ -571848,8 +575718,8 @@ self: {
     }:
     mkDerivation {
       pname = "richenv";
-      version = "0.1.0.2";
-      sha256 = "0yxl6cnhg7n29f93mj4a5wkp1v1i2y38824n2bg8b64ik1hlg876";
+      version = "0.1.0.3";
+      sha256 = "0v6ymwypp6023srv9axh0rc98bsvkhk29nwhap9rb33x8ibb8vr9";
       libraryHaskellDepends = [
         aeson
         base
@@ -573808,8 +577678,8 @@ self: {
     }:
     mkDerivation {
       pname = "roc-id";
-      version = "0.2.0.4";
-      sha256 = "126ijgk7wi06694xcqvjz9amg61pzi2hnx7gq631zwxa6d98czzk";
+      version = "0.2.0.5";
+      sha256 = "1a70y8l45lyglq6rrxrp20jfpwg87gkga4wdxdf15nzh0p1a417f";
       libraryHaskellDepends = [
         base
         MonadRandom
@@ -573951,8 +577821,8 @@ self: {
     }:
     mkDerivation {
       pname = "rocksdb-haskell-jprupp";
-      version = "2.1.6";
-      sha256 = "0hr7wzhhbbhcvghjbc80c1kba62xkja5ghar7sd0grckzan7maq7";
+      version = "2.1.7";
+      sha256 = "0djdq4h34v1sfxyb9n6yyqxx7jsi6bgi20dr2ff47xy37dz263mi";
       libraryHaskellDepends = [
         base
         bytestring
@@ -573992,8 +577862,8 @@ self: {
     }:
     mkDerivation {
       pname = "rocksdb-query";
-      version = "0.4.2";
-      sha256 = "1sh88q0vq0b13ig6vmwi8wa73d45qxdkbbc29zphch6p2z4n81wq";
+      version = "0.4.3";
+      sha256 = "1ldly7rj1cs3y04zbxxc6dxw09pknqzxf3dbsa2igydsshs9q9f8";
       libraryHaskellDepends = [
         base
         bytestring
@@ -580196,8 +584066,8 @@ self: {
     }:
     mkDerivation {
       pname = "salve";
-      version = "2.0.0.6";
-      sha256 = "0rw93gc76sjl1hnjy3jrpdbp9jjya53mpgz8d4695k4875gzvlcn";
+      version = "2.0.0.8";
+      sha256 = "1nnzsfqyls0kfrb0fcfg88hg4nscydvc6kzk7gd8ryv4hr2g7xy7";
       libraryHaskellDepends = [ base ];
       testHaskellDepends = [
         base
@@ -580887,7 +584757,6 @@ self: {
       exceptions,
       filepath,
       free,
-      haskell-src-exts,
       microlens,
       microlens-th,
       monad-control,
@@ -580914,8 +584783,8 @@ self: {
     }:
     mkDerivation {
       pname = "sandwich";
-      version = "0.3.0.3";
-      sha256 = "0j53b68vgidwahmbbhcrshh9043k1g230lypyfavcwbpcgrzxkpb";
+      version = "0.3.0.4";
+      sha256 = "1j6xlnhb58kg776jl1bp82lfi95a9xy27haqanbx67mw7n471gc6";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -580932,7 +584801,6 @@ self: {
         exceptions
         filepath
         free
-        haskell-src-exts
         microlens
         microlens-th
         monad-control
@@ -580971,7 +584839,6 @@ self: {
         exceptions
         filepath
         free
-        haskell-src-exts
         microlens
         microlens-th
         monad-control
@@ -581010,7 +584877,6 @@ self: {
         exceptions
         filepath
         free
-        haskell-src-exts
         microlens
         microlens-th
         monad-control
@@ -581070,7 +584936,6 @@ self: {
       string-interpolate,
       temporary,
       text,
-      time,
       transformers,
       unix-compat,
       unliftio,
@@ -581079,8 +584944,8 @@ self: {
     }:
     mkDerivation {
       pname = "sandwich-contexts";
-      version = "0.3.0.2";
-      sha256 = "01klfrf9n1z6h1iqgb3ccch1dxihp28lh60d44xj3xmfz2q4y5iq";
+      version = "0.3.0.3";
+      sha256 = "0bd0a3akg7rbpp94cwyrpjjw104468y7caxnvl6iwl3fnc6gvy7c";
       libraryHaskellDepends = [
         aeson
         base
@@ -581108,7 +584973,6 @@ self: {
         string-interpolate
         temporary
         text
-        time
         transformers
         unix-compat
         unliftio
@@ -581142,8 +585006,8 @@ self: {
       exceptions,
       filepath,
       http-client,
-      kubernetes-client,
-      kubernetes-client-core,
+      kubernetes-api,
+      kubernetes-api-client,
       lens,
       lens-aeson,
       minio-hs,
@@ -581169,8 +585033,8 @@ self: {
     }:
     mkDerivation {
       pname = "sandwich-contexts-kubernetes";
-      version = "0.1.0.0";
-      sha256 = "04p2g6jjra3bh4a4zb00lidckm91ba3cvwvrvjh28i3flh15b6wr";
+      version = "0.1.1.0";
+      sha256 = "00g2fq9xnk8icrvfjmqkhl3g7pz7159kqajx10vgy4xgdxp25zfz";
       libraryHaskellDepends = [
         aeson
         base
@@ -581179,8 +585043,8 @@ self: {
         exceptions
         filepath
         http-client
-        kubernetes-client
-        kubernetes-client-core
+        kubernetes-api
+        kubernetes-api-client
         lens
         lens-aeson
         minio-hs
@@ -581538,8 +585402,8 @@ self: {
     }:
     mkDerivation {
       pname = "sandwich-webdriver";
-      version = "0.3.0.0";
-      sha256 = "1s4j2i91csn1wplw1vnz7s8kin5v580a7m98yfas8p7nlm9bihp4";
+      version = "0.3.0.1";
+      sha256 = "18vb8vdcpdy6zkqynhqwzy2217lbz0jrdhd2c21wr6ly4rfmf0jr";
       libraryHaskellDepends = [
         aeson
         base
@@ -581603,6 +585467,7 @@ self: {
         sandwich
         sandwich-contexts
         string-interpolate
+        temporary
         text
         time
         transformers
@@ -582120,8 +585985,8 @@ self: {
     }:
     mkDerivation {
       pname = "saturn";
-      version = "1.0.0.6";
-      sha256 = "0nwpxfkm24dwdbak00mid4bl6bx125flva9adxs3ma6jlw0bgblw";
+      version = "1.0.0.8";
+      sha256 = "00aakwr06ygbidbawr60lq07vk5gp74fp7wj71ndzc1ph6crivwp";
       libraryHaskellDepends = [
         base
         containers
@@ -582639,7 +586504,7 @@ self: {
     }
   ) { inherit (pkgs) z3; };
 
-  "sbv_11_5" = callPackage (
+  "sbv_12_0" = callPackage (
     {
       mkDerivation,
       array,
@@ -582652,6 +586517,8 @@ self: {
       deepseq,
       directory,
       filepath,
+      haskell-src-exts,
+      haskell-src-meta,
       libBF,
       mtl,
       pretty,
@@ -582668,13 +586535,14 @@ self: {
       text,
       time,
       transformers,
+      tree-view,
       uniplate,
       z3,
     }:
     mkDerivation {
       pname = "sbv";
-      version = "11.5";
-      sha256 = "14hhx9wj7f89l8df52izz6lb1xk51lyqql70p1gh4sq2f38axnwb";
+      version = "12.0";
+      sha256 = "14c9i9aa6rbm6kfxjcdbcy7vajh3v6bhsginhn1v6hg8430f93rp";
       enableSeparateDataOutput = true;
       libraryHaskellDepends = [
         array
@@ -582687,6 +586555,8 @@ self: {
         deepseq
         directory
         filepath
+        haskell-src-exts
+        haskell-src-meta
         libBF
         mtl
         pretty
@@ -582698,6 +586568,7 @@ self: {
         text
         time
         transformers
+        tree-view
         uniplate
       ];
       testHaskellDepends = [
@@ -587910,8 +591781,8 @@ self: {
     }:
     mkDerivation {
       pname = "search-algorithms";
-      version = "0.3.3";
-      sha256 = "00b1fxgjg57m6qm8017yvqbs6qvblw4iazir005flzjm6jls12kz";
+      version = "0.3.4";
+      sha256 = "1r6nnwb0ry95xqg8psdwgfx6h264kd437a3mr5z7gv7vdarb3r2h";
       libraryHaskellDepends = [
         base
         containers
@@ -588195,8 +592066,8 @@ self: {
     }:
     mkDerivation {
       pname = "secp256k1-haskell";
-      version = "1.4.2";
-      sha256 = "0b9xff4r63aqkdag7v67h9yxaa023i1mylih9wcjh1qa8lcb9zn6";
+      version = "1.4.6";
+      sha256 = "0vp8kxkkbqim6w89zy619x7sghp8i008qa7wdnzaf6kb70wr8j92";
       libraryHaskellDepends = [
         base
         base16
@@ -588613,21 +592484,23 @@ self: {
       tasty,
       tasty-hunit,
       text,
+      text-builder-linear,
       text-display,
+      transformers,
     }:
     mkDerivation {
       pname = "sel";
-      version = "0.0.2.0";
-      sha256 = "0gidvbkcjgyq47gh2p19iawv8jcs7ajvih4mk6pwwbkjs8iybpx4";
-      revision = "2";
-      editedCabalFile = "1p63gjj5m5yac2lcjlagmyn0ss0kvn1c0rsa8hh19885kw5xpqjy";
+      version = "0.1.0.0";
+      sha256 = "1rnn7wwhibbqcayc5zy1pjjcq2jafwfxpkkprdk6wzaqhk1j3cqj";
       libraryHaskellDepends = [
         base
         base16
         bytestring
         libsodium-bindings
         text
+        text-builder-linear
         text-display
+        transformers
       ];
       testHaskellDepends = [
         base
@@ -588642,9 +592515,7 @@ self: {
       ];
       description = "Cryptography for the casual user";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
       maintainers = [ lib.maintainers.mangoiv ];
-      broken = true;
     }
   ) { };
 
@@ -588820,6 +592691,42 @@ self: {
       ];
       description = "Select a subset of RPM packages";
       license = lib.licenses.mit;
+    }
+  ) { };
+
+  "select-rpms_0_3_0" = callPackage (
+    {
+      mkDerivation,
+      base,
+      directory,
+      extra,
+      filepath,
+      Glob,
+      rpm-nvr,
+      safe,
+      simple-cmd,
+      simple-cmd-args,
+      simple-prompt,
+    }:
+    mkDerivation {
+      pname = "select-rpms";
+      version = "0.3.0";
+      sha256 = "0xzhhic205nvh8n2mdb85675x8kdvlgjy0d4xxyw1nq8p078cn51";
+      libraryHaskellDepends = [
+        base
+        directory
+        extra
+        filepath
+        Glob
+        rpm-nvr
+        safe
+        simple-cmd
+        simple-cmd-args
+        simple-prompt
+      ];
+      description = "Select a subset of RPM packages";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -590908,7 +594815,7 @@ self: {
     }
   ) { };
 
-  "sequence-formats_1_11_0_1" = callPackage (
+  "sequence-formats_1_11_0_2" = callPackage (
     {
       mkDerivation,
       attoparsec,
@@ -590933,8 +594840,8 @@ self: {
     }:
     mkDerivation {
       pname = "sequence-formats";
-      version = "1.11.0.1";
-      sha256 = "1qzawb3qnn76j7dvb0q8jbblbayggr5hja0x723y09nv1y9lg6g5";
+      version = "1.11.0.2";
+      sha256 = "1y6sv7xlzbkvlrihmkclv1hp5g3nsrnz37xika3jzksqv4grv412";
       libraryHaskellDepends = [
         attoparsec
         base
@@ -591270,8 +595177,8 @@ self: {
     }:
     mkDerivation {
       pname = "serdoc-binary";
-      version = "0.3.0.0";
-      sha256 = "17a391d471n4rxjs64v6xcrg7czr6a8qiac2sw02f7583shpzigv";
+      version = "0.3.1.0";
+      sha256 = "1v8psfn9l2zagsxrpbmp63pkg4mqy86zlq5g0x33vygyflrlihqv";
       libraryHaskellDepends = [
         base
         binary
@@ -591311,8 +595218,8 @@ self: {
     }:
     mkDerivation {
       pname = "serdoc-core";
-      version = "0.3.0.0";
-      sha256 = "0n0lcm48irb1w95gi3fda7n2hcfli419kxzyw6hpjyaw724hgj4b";
+      version = "0.3.1.0";
+      sha256 = "03x18gcm3n5vgm82kp0b237pl5jgrlxim83zznlchdlx1scxdwzw";
       libraryHaskellDepends = [
         base
         bytestring
@@ -591483,8 +595390,8 @@ self: {
       pname = "serialise";
       version = "0.2.6.1";
       sha256 = "1x3p9vi6daf50xgv5xxjnclqcq9ynqg1qw7af3ppa1nizycrg533";
-      revision = "4";
-      editedCabalFile = "1ipcrg5g450a3aq15l5rhngpfck8krz7c7bvhhrd8fv3q645yjbh";
+      revision = "5";
+      editedCabalFile = "0kfai48gza3zzi3s3ll1gng2wbpdmr5z5isx8snlh49vafsqjzx6";
       libraryHaskellDepends = [
         array
         base
@@ -591880,6 +595787,7 @@ self: {
       constraints,
       containers,
       deepseq,
+      generics-sop,
       hspec,
       hspec-discover,
       http-api-data,
@@ -591898,10 +595806,8 @@ self: {
     }:
     mkDerivation {
       pname = "servant";
-      version = "0.20.2";
-      sha256 = "0rakyjrmn05sb2gxk4bkxlb23zfwm1pjkdg9mh7b4hjgsdwy4fba";
-      revision = "1";
-      editedCabalFile = "17n769vwyyc5hshm71r33ksvn26qcz19017wl9p8xj4igav790pa";
+      version = "0.20.3.0";
+      sha256 = "00k6pwqxpyjp5qm5pjl8qb75iqmpql5iv3ac43xdvikcixffcwzj";
       libraryHaskellDepends = [
         aeson
         attoparsec
@@ -591912,6 +595818,7 @@ self: {
         constraints
         containers
         deepseq
+        generics-sop
         http-api-data
         http-media
         http-types
@@ -591932,6 +595839,7 @@ self: {
         hspec
         http-media
         mtl
+        network-uri
         QuickCheck
         quickcheck-instances
         text
@@ -591990,13 +595898,12 @@ self: {
       containers,
       servant,
       servant-server,
-      template-haskell,
       text,
     }:
     mkDerivation {
       pname = "servant-activeresource";
-      version = "0.1.0.0";
-      sha256 = "0dcip0vbry344pv8za5ldxr9g71vyb63ks3jdpjc7z4vixp5rbsp";
+      version = "0.2.0.0";
+      sha256 = "0gxw9yxsr4ri2lwr4y0qhf0cgqknrdjgpqn87wy1n4pas2k6sc15";
       libraryHaskellDepends = [
         aeson
         base
@@ -592004,7 +595911,6 @@ self: {
         containers
         servant
         servant-server
-        template-haskell
         text
       ];
       testHaskellDepends = [
@@ -592014,10 +595920,9 @@ self: {
         containers
         servant
         servant-server
-        template-haskell
         text
       ];
-      description = "Servant endpoints compatible with Rails's ActiveResources";
+      description = "Servant endpoints compatible with Rails's ActiveResource";
       license = lib.licenses.bsd3;
     }
   ) { };
@@ -592539,7 +596444,7 @@ self: {
       bytestring,
       case-insensitive,
       cookie,
-      data-default-class,
+      data-default,
       entropy,
       hspec,
       hspec-discover,
@@ -592567,10 +596472,8 @@ self: {
     }:
     mkDerivation {
       pname = "servant-auth-server";
-      version = "0.4.9.0";
-      sha256 = "0fhk2z9n9ax4g7iisdgcd87wgj9wvazhl86kjh364gsj1g8a5y99";
-      revision = "1";
-      editedCabalFile = "0skvvqkyqzgjdg5b2l9fd1ri144s649g5yddpclwciraimip7gw1";
+      version = "0.4.9.1";
+      sha256 = "04sy2g81pp0pr31xi6h1hqm199z6r4xv3fy2x307dlydxmdm8qb3";
       libraryHaskellDepends = [
         aeson
         base
@@ -592579,7 +596482,7 @@ self: {
         bytestring
         case-insensitive
         cookie
-        data-default-class
+        data-default
         entropy
         http-types
         jose
@@ -593364,9 +597267,7 @@ self: {
       ];
       description = "Command line interface for Servant API clients";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "greet-cli";
-      broken = true;
     }
   ) { };
 
@@ -593381,6 +597282,7 @@ self: {
       deepseq,
       entropy,
       exceptions,
+      generics-sop,
       hspec,
       hspec-discover,
       http-api-data,
@@ -593409,10 +597311,10 @@ self: {
     }:
     mkDerivation {
       pname = "servant-client";
-      version = "0.20.2";
-      sha256 = "026bp0qk2bx672834yjxmqrfacyzzdssm89bd0niz1xzxzmw5r7g";
-      revision = "2";
-      editedCabalFile = "1sm0xspcsxn6n70nirpglcmx07sn6vmag8kvvw9i2dr2hcfkgk55";
+      version = "0.20.3.0";
+      sha256 = "0kxmixgv5nmir2bk3zfrhaal4969rf414wi2ccnngjm3395bqrwn";
+      revision = "1";
+      editedCabalFile = "0644af144zy4axv8hhqhv8mj7amnqd09fbz5rglr6l60d27hpqx1";
       libraryHaskellDepends = [
         base
         base-compat
@@ -593440,6 +597342,7 @@ self: {
         base-compat
         bytestring
         entropy
+        generics-sop
         hspec
         http-api-data
         http-client
@@ -593472,6 +597375,7 @@ self: {
     {
       mkDerivation,
       aeson,
+      attoparsec,
       base,
       base-compat,
       base64-bytestring,
@@ -593492,15 +597396,17 @@ self: {
       sop-core,
       template-haskell,
       text,
+      transformers,
     }:
     mkDerivation {
       pname = "servant-client-core";
-      version = "0.20.2";
-      sha256 = "10nv810ns8v1d9a2fkg9bgi7h9gm4yap1y6mg2r15d569i27rrvc";
+      version = "0.20.3.0";
+      sha256 = "1vv6xf340hyk60vv6jb1zxfpsb7x2ykacb84yrn3h1w4k075hlyn";
       revision = "1";
-      editedCabalFile = "13200adlbl8mydi35x1r8w4q9ra8y079figgjxl5jsrhvps54608";
+      editedCabalFile = "1g8arzgcqc9qp1fimrs8iwqvzgsp6br76kkh72hsz0nsg6gmlvc1";
       libraryHaskellDepends = [
         aeson
+        attoparsec
         base
         base-compat
         base64-bytestring
@@ -593522,9 +597428,12 @@ self: {
       testHaskellDepends = [
         base
         base-compat
+        bytestring
         deepseq
         hspec
         QuickCheck
+        servant
+        transformers
       ];
       testToolDepends = [ hspec-discover ];
       description = "Core functionality and class for client function generation for servant APIs";
@@ -594326,6 +598235,8 @@ self: {
       testHaskellDepends = [ base ];
       description = "Servant support for Server-Sent events";
       license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -595235,8 +599146,8 @@ self: {
       pname = "servant-js";
       version = "0.9.4.2";
       sha256 = "15n5s3i491cxjxj70wa8yhpipaz47q46s04l4ysc64wgijlnm8xy";
-      revision = "5";
-      editedCabalFile = "05iwi5q2hbaqc7n1zhw9zpj4qcw8mg849zjfxfv84c9wwh35nrxa";
+      revision = "7";
+      editedCabalFile = "042z84li3qw8zh8x1x4mgdv5iqaz72nk7cz2q315i6lgs30c3460";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -596121,8 +600032,8 @@ self: {
       pname = "servant-openapi3";
       version = "2.0.1.6";
       sha256 = "1hxz3n6l5l8p9s58sjilrn4lv1z17kfik0xdh05v5v1bzf0j2aij";
-      revision = "7";
-      editedCabalFile = "148mx2hi46l5mdlgikfgilwl3lrvbhqd651qxiky58nr32m07gk0";
+      revision = "8";
+      editedCabalFile = "0ghm39rrn27ss2dfff4ic48kwss71barrrx7qjss80inz8bpz2r2";
       setupHaskellDepends = [
         base
         Cabal
@@ -597268,8 +601179,8 @@ self: {
     }:
     mkDerivation {
       pname = "servant-routes";
-      version = "0.1.0.0";
-      sha256 = "1m17cpbmyi8y2h27p9y28193b2d46qmr8bhswvjn89nd5z42d6x2";
+      version = "0.1.1.0";
+      sha256 = "0r9db46gbi9rcsrdvqndfa9433szbp5a0c1ad3z3qchpf3i2dxfm";
       libraryHaskellDepends = [
         aeson
         aeson-pretty
@@ -597296,6 +601207,52 @@ self: {
       ];
       testToolDepends = [ hspec-discover ];
       description = "Generate route descriptions from Servant APIs";
+      license = lib.licenses.bsd3;
+    }
+  ) { };
+
+  "servant-routes-golden" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      aeson-pretty,
+      base,
+      hspec,
+      hspec-core,
+      hspec-discover,
+      hspec-golden,
+      QuickCheck,
+      servant,
+      servant-routes,
+      text,
+    }:
+    mkDerivation {
+      pname = "servant-routes-golden";
+      version = "0.1.0.0";
+      sha256 = "16kc5q0vc7hjy7dfd3smnlcs6308sligzgr3hcnx1mqxnfmv0svp";
+      libraryHaskellDepends = [
+        aeson
+        aeson-pretty
+        base
+        hspec-core
+        hspec-golden
+        servant-routes
+        text
+      ];
+      testHaskellDepends = [
+        aeson
+        aeson-pretty
+        base
+        hspec
+        hspec-core
+        hspec-golden
+        QuickCheck
+        servant
+        servant-routes
+        text
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "Golden test your Servant APIs using `servant-routes`";
       license = lib.licenses.bsd3;
     }
   ) { };
@@ -597576,10 +601533,10 @@ self: {
     }:
     mkDerivation {
       pname = "servant-server";
-      version = "0.20.2";
-      sha256 = "0fqgnzzgbj4w441h3v841lav7gxazakz04s354r24pq4rh6m1kqy";
+      version = "0.20.3.0";
+      sha256 = "05crwklbncd393zq00gi04zgnfyy2wk31s0xf5hy6yjrsbshlmih";
       revision = "1";
-      editedCabalFile = "0qjl1yrr0l7kynrndv8qmpzl0jz9nzb7c4v9r7kxq05nnb7xpqbz";
+      editedCabalFile = "1z2h1gmxphwd76chyah405ww4ciyxq7rvggghr6lh0z1m3p2k90h";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -598443,6 +602400,8 @@ self: {
       pname = "servant-swagger-ui";
       version = "0.3.5.5.0.1";
       sha256 = "0s0krm17addizhjm8033an4nnz27v9n03431gd5v86i5db879q24";
+      revision = "1";
+      editedCabalFile = "1dvsma62i3a6zmfb8aaw913xpi6imh37r2nnnqq8jc4sh88v5w1d";
       libraryHaskellDepends = [
         aeson
         base
@@ -598478,8 +602437,8 @@ self: {
       pname = "servant-swagger-ui-core";
       version = "0.3.5";
       sha256 = "0ckvrwrb3x39hfl2hixcj3fhibh0vqsh6y7n1lsm25yvzfrg02zd";
-      revision = "11";
-      editedCabalFile = "03wabrz068mf4vddlv8mvgvgijp7vqn7i85bqzr7aw7bx6kmkkv1";
+      revision = "12";
+      editedCabalFile = "1fl9g99iaiibh4355h8l2vk3xsmv7gb9fpg9s6i5a7f12as8lw5q";
       libraryHaskellDepends = [
         aeson
         base
@@ -598515,6 +602474,8 @@ self: {
       pname = "servant-swagger-ui-jensoleg";
       version = "0.3.5";
       sha256 = "1645lp9yw2z2mf6gn0h54wjmhdwbkng12s6gd9sr847nc1rahjqq";
+      revision = "1";
+      editedCabalFile = "1wmwvham6671w4whmj31qp68xn42bxpwwc6i95hbcqvszha2wbh2";
       libraryHaskellDepends = [
         aeson
         base
@@ -598546,6 +602507,8 @@ self: {
       pname = "servant-swagger-ui-redoc";
       version = "0.3.5";
       sha256 = "0wvv51mnwjycxgppqbb14kms1m77lf4b07jzgrsf0z0yhdfyn3nw";
+      revision = "1";
+      editedCabalFile = "1k485dxxjvvx69xzcqs4v7j8rrsqgk5gykpz37sv7h3pln3ds2jm";
       libraryHaskellDepends = [
         aeson
         base
@@ -598748,12 +602711,13 @@ self: {
       servant,
       servant-foreign,
       string-interpolate,
+      temporary,
       text,
     }:
     mkDerivation {
       pname = "servant-typescript";
-      version = "0.1.0.2";
-      sha256 = "03nf4gqiy7jpdaxmddv859im0czpjrdss72cgjhkd96vqf4g4kam";
+      version = "0.1.0.3";
+      sha256 = "0x10dsd16bjqkk7s8kb1yfhrvkzqw5v0smxm8vf3bm8q10anf2dp";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -598782,6 +602746,7 @@ self: {
         servant
         servant-foreign
         string-interpolate
+        temporary
         text
       ];
       testHaskellDepends = [
@@ -598800,9 +602765,7 @@ self: {
       ];
       description = "TypeScript client generation for Servant";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "servant-typescript-exe";
-      broken = true;
     }
   ) { };
 
@@ -600317,8 +604280,8 @@ self: {
       pname = "set-cover";
       version = "0.1.1.1";
       sha256 = "14j4ml7kglk667idd3qgsdkkzr8iikrj6jcr80wpnlk6wpi2cpnm";
-      revision = "1";
-      editedCabalFile = "0iiy3p2pkxjpl7vhylgmh76afxxwkix9h9w3vj62carz6vgymkid";
+      revision = "2";
+      editedCabalFile = "14mvjd4k8zlxh7g16n2bzkb84lx125ajdlmk05w4i7xijvvcw2c3";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -601536,8 +605499,8 @@ self: {
     }:
     mkDerivation {
       pname = "sha256";
-      version = "0.1.0.2";
-      sha256 = "0yzv1bf13dqb3g8n671f2db75kxb69nxdrnfz4j49950hr05mwh9";
+      version = "0.1.0.3";
+      sha256 = "041snznk4mia1jy1rjcdfwjvrr5dvdw0fndxm7bnsx0p9z381x4q";
       libraryHaskellDepends = [
         base
         bytestring
@@ -602904,84 +606867,6 @@ self: {
     }
   ) { };
 
-  "shakespeare_2_1_0_1" = callPackage (
-    {
-      mkDerivation,
-      aeson,
-      base,
-      blaze-html,
-      blaze-markup,
-      bytestring,
-      containers,
-      directory,
-      exceptions,
-      file-embed,
-      ghc-prim,
-      hspec,
-      HUnit,
-      parsec,
-      process,
-      scientific,
-      template-haskell,
-      text,
-      th-lift,
-      time,
-      transformers,
-      unordered-containers,
-      vector,
-    }:
-    mkDerivation {
-      pname = "shakespeare";
-      version = "2.1.0.1";
-      sha256 = "0byj0zhxi1pr8l5f18phzkwcf7z38lyk2zznz8hbkqadfgrmbdkc";
-      libraryHaskellDepends = [
-        aeson
-        base
-        blaze-html
-        blaze-markup
-        bytestring
-        containers
-        directory
-        exceptions
-        file-embed
-        ghc-prim
-        parsec
-        process
-        scientific
-        template-haskell
-        text
-        th-lift
-        time
-        transformers
-        unordered-containers
-        vector
-      ];
-      testHaskellDepends = [
-        aeson
-        base
-        blaze-html
-        blaze-markup
-        bytestring
-        containers
-        directory
-        exceptions
-        ghc-prim
-        hspec
-        HUnit
-        parsec
-        process
-        template-haskell
-        text
-        time
-        transformers
-      ];
-      description = "A toolkit for making compile-time interpolated templates";
-      license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
-      maintainers = [ lib.maintainers.psibi ];
-    }
-  ) { };
-
   "shakespeare" = callPackage (
     {
       mkDerivation,
@@ -603010,8 +606895,8 @@ self: {
     }:
     mkDerivation {
       pname = "shakespeare";
-      version = "2.1.1";
-      sha256 = "1j6jniy8d8dgc61h4n2kw668y8f30cqnsfwmgad1s4fqj1bplh0r";
+      version = "2.1.4";
+      sha256 = "1c9lvb0aw00r0wibm061c614phlwsrf888amjn9nc168ix0cxv6x";
       libraryHaskellDepends = [
         aeson
         base
@@ -604064,7 +607949,7 @@ self: {
     }
   ) { };
 
-  "shellify_0_14_0_0" = callPackage (
+  "shellify_0_14_0_1" = callPackage (
     {
       mkDerivation,
       base,
@@ -604086,8 +607971,8 @@ self: {
     }:
     mkDerivation {
       pname = "shellify";
-      version = "0.14.0.0";
-      sha256 = "09i55y57innmjbgb0x1bvrbpk0c5py0bb004wxnqpw4b8swxc60r";
+      version = "0.14.0.1";
+      sha256 = "1gnr4ii3wn7i0b8facg5a9d3b83lwm7nyk56576ll3nyywqh577i";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -605398,8 +609283,8 @@ self: {
     }:
     mkDerivation {
       pname = "shower";
-      version = "0.2.0.3";
-      sha256 = "0bxg88jbg5pj1nm48c1s04dl7l5psq35jsw60y3v1xpnszx95r1r";
+      version = "0.2.0.4";
+      sha256 = "0xjh9qhnl94d6pkg52lc3xw1gi1vflc7rs52xh6wj1dahm0nknkr";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -606343,6 +610228,7 @@ self: {
       description = "Hmac sha256 signature json and http payload";
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -606362,6 +610248,48 @@ self: {
       ];
       description = "Multisets with negative membership";
       license = lib.licenses.bsd3;
+    }
+  ) { };
+
+  "signet" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      case-insensitive,
+      crypton,
+      exceptions,
+      http-types,
+      memory,
+      tasty,
+      tasty-hunit,
+      text,
+      time,
+      transformers,
+    }:
+    mkDerivation {
+      pname = "signet";
+      version = "0.2025.5.21";
+      sha256 = "01rrc4l5a4vl2mmymckdl5shicgx7n909nzdqn8xnk8626whc93p";
+      libraryHaskellDepends = [
+        base
+        bytestring
+        case-insensitive
+        crypton
+        exceptions
+        http-types
+        memory
+        text
+        time
+      ];
+      testHaskellDepends = [
+        base
+        tasty
+        tasty-hunit
+        transformers
+      ];
+      description = "Standard Webhooks";
+      license = lib.licenses.bsd0;
     }
   ) { };
 
@@ -611565,6 +615493,8 @@ self: {
       ];
       description = "A very quick-and-dirty WebSocket server";
       license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -615550,8 +619480,8 @@ self: {
       pname = "snap";
       version = "1.1.3.3";
       sha256 = "1mqckzm9gasa04ls691zgw4c6m53mgcj86yd2p5qvy07mpn9rdvx";
-      revision = "3";
-      editedCabalFile = "1nzkb0jq359lpwz4a1ldx1fh8xs735wfwf2z6qq0z7y0c4zxb9da";
+      revision = "4";
+      editedCabalFile = "1zqvs7kx3jy8vmgwqc344cyv6f3zpx0vg9w5nb9lf5h23bl85k0i";
       libraryHaskellDepends = [
         aeson
         attoparsec
@@ -618474,8 +622404,8 @@ self: {
     }:
     mkDerivation {
       pname = "snappy";
-      version = "0.2.0.3";
-      sha256 = "0jy747dg58smzzr1mzrm751bkwvnaaghn65ppfkqbpqz6jw45qq2";
+      version = "0.2.0.4";
+      sha256 = "1marmb148hq6fnwmb5q1kqmzjsxpnqcgszmm4jdapiijlmms1b76";
       libraryHaskellDepends = [
         base
         bytestring
@@ -620077,6 +624007,67 @@ self: {
     }
   ) { };
 
+  "socks5" = callPackage (
+    {
+      mkDerivation,
+      async,
+      base,
+      binary,
+      bytestring,
+      data-default,
+      hspec,
+      iproute,
+      mtl,
+      network,
+      network-run,
+      optparse-applicative,
+      text,
+      tls,
+    }:
+    mkDerivation {
+      pname = "socks5";
+      version = "0.6.0.1";
+      sha256 = "1q4084wvfhyni3dw0xa5a08k3lkylr6g5bzv6d463iqwn5skjwsq";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        async
+        base
+        binary
+        bytestring
+        iproute
+        mtl
+        network
+        network-run
+        text
+        tls
+      ];
+      executableHaskellDepends = [
+        base
+        bytestring
+        data-default
+        network
+        optparse-applicative
+        text
+        tls
+      ];
+      testHaskellDepends = [
+        async
+        base
+        bytestring
+        data-default
+        hspec
+        network
+        network-run
+        tls
+      ];
+      description = "A SOCKS5 (RFC 1928) implementation";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { };
+
   "sodium" = callPackage (
     {
       mkDerivation,
@@ -620575,6 +624566,36 @@ self: {
     }
   ) { };
 
+  "sop-satisfier" = callPackage (
+    {
+      mkDerivation,
+      base,
+      containers,
+      tasty,
+      tasty-hunit,
+      transformers,
+    }:
+    mkDerivation {
+      pname = "sop-satisfier";
+      version = "0.3.4.5";
+      sha256 = "1q0w5syb0x04k6iy4rhssw7wnj1vy562lhw9lmvygi37wir6vjj1";
+      libraryHaskellDepends = [
+        base
+        containers
+        transformers
+      ];
+      testHaskellDepends = [
+        base
+        tasty
+        tasty-hunit
+      ];
+      description = "Check satisfiability of expressions on natural numbers";
+      license = lib.licenses.bsd2;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
+    }
+  ) { };
+
   "sophia" = callPackage (
     {
       mkDerivation,
@@ -621017,8 +625038,8 @@ self: {
       pname = "sound-collage";
       version = "0.2.1";
       sha256 = "09g63b3k0l30z3lxmcz0zpggqqhnr7m01wh2vpm5v561rbnl8rsi";
-      revision = "3";
-      editedCabalFile = "09slv6fqrkbhr1jn7h8xs0cxhdaq3r6cy1xar3vp8dil4hc6v3j8";
+      revision = "4";
+      editedCabalFile = "07innczhsry9nar0ry5h9fia7r6aiidqxdh8mppvk6d3bpvh04y6";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -621317,8 +625338,8 @@ self: {
       pname = "sox";
       version = "0.2.3.2";
       sha256 = "1ys6xm08gr3pvyrial2z1b3gvyd44b9510dpp4ifxqf882igkjgb";
-      revision = "1";
-      editedCabalFile = "1ncmbclz44grdvhx8lgizsp8g8sm97q6vs50sfiwxh1aqwjys7kd";
+      revision = "2";
+      editedCabalFile = "17a26iynli5jimjzlr10jllc4nm7944bzz2z155b4ynj7hy2g8hp";
       libraryHaskellDepends = [
         base
         containers
@@ -623194,8 +627215,8 @@ self: {
     }:
     mkDerivation {
       pname = "specup";
-      version = "0.2.0.5";
-      sha256 = "1b84drxgqaij48rwwannnkms1mzd5mw4i4r442am6wz4y7v45309";
+      version = "0.2.0.6";
+      sha256 = "1b7bvrb2ad1p78g82q7a3pzi4pgq2qrsas8vl9nglljyn2l259va";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -624115,6 +628136,7 @@ self: {
       math-functions,
       process,
       random,
+      template-haskell,
       test-framework,
       test-framework-hunit,
       testu01,
@@ -624123,8 +628145,8 @@ self: {
     }:
     mkDerivation {
       pname = "splitmix";
-      version = "0.1.1";
-      sha256 = "1iqjxg3jdjmpj6rchnab1scr6b12p1mk7y75ywn06qisc0dc8y6n";
+      version = "0.1.3.1";
+      sha256 = "0w32z3rhsnijb9s5k6h60rhbzgzkw8xq1glfbjbl1znlkgbx1g5n";
       libraryHaskellDepends = [
         base
         deepseq
@@ -624140,6 +628162,7 @@ self: {
         math-functions
         process
         random
+        template-haskell
         test-framework
         test-framework-hunit
         tf-random
@@ -624571,6 +628594,8 @@ self: {
       pname = "spreadsheet";
       version = "0.1.3.10";
       sha256 = "022q6an3jl0s8bnwgma8v03b6m4zq3q0drl6nsrcs0nav8n1z5r0";
+      revision = "2";
+      editedCabalFile = "1zw9lf90r43vnmybbzmgahw4w423zfjhz4b0nmssnvdbk2lj5yps";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -625699,6 +629724,8 @@ self: {
       pname = "sqlite";
       version = "0.5.5";
       sha256 = "1i2bkfyswmannwb1fx6y8ma3pzgx28nl05a35gz1gar28rsx7gyk";
+      revision = "1";
+      editedCabalFile = "0pp4b2z41n9rpln4zrc6d9100v8g60m3ggjrjbq5fk0xjan4gp7k";
       libraryHaskellDepends = [
         base
         bytestring
@@ -626689,11 +630716,10 @@ self: {
     }
   ) { inherit (pkgs) nlopt; };
 
-  "srtree_2_0_1_2" = callPackage (
+  "srtree_2_0_1_5" = callPackage (
     {
       mkDerivation,
       ad,
-      ansi-terminal,
       attoparsec,
       attoparsec-expr,
       base,
@@ -626713,11 +630739,9 @@ self: {
       nlopt,
       optparse-applicative,
       random,
-      repline,
       scheduler,
       split,
       statistics,
-      table-layout,
       transformers,
       unliftio,
       unliftio-core,
@@ -626727,8 +630751,8 @@ self: {
     }:
     mkDerivation {
       pname = "srtree";
-      version = "2.0.1.2";
-      sha256 = "102ii4lmix7crryci80f04mpyk2iw4wlwc81kqqq0xf9yd40ycfn";
+      version = "2.0.1.5";
+      sha256 = "0h856i6gsh01rpp08lkvdrigylhbf1h016xwkccmmyd20iz3023l";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -626760,7 +630784,6 @@ self: {
       ];
       librarySystemDepends = [ nlopt ];
       executableHaskellDepends = [
-        ansi-terminal
         attoparsec
         attoparsec-expr
         base
@@ -626778,11 +630801,9 @@ self: {
         mtl
         optparse-applicative
         random
-        repline
         scheduler
         split
         statistics
-        table-layout
         transformers
         unliftio
         unliftio-core
@@ -627590,8 +631611,8 @@ self: {
       pname = "stache";
       version = "2.3.4";
       sha256 = "0kgiyxws2kir8q8zrqkzmk103y7hl6nksxl70f6fy8m9fqkjga51";
-      revision = "4";
-      editedCabalFile = "03bgp2b2kpijnvdsvcr4adas7iyz3v12cp6j044b248cw6hklayd";
+      revision = "5";
+      editedCabalFile = "1kvqv42w223r53mjkj2am6j65qly8bvahr5fxvlbnx88bairp0zm";
       isLibrary = true;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -627722,8 +631743,8 @@ self: {
     }:
     mkDerivation {
       pname = "stack";
-      version = "3.5.1";
-      sha256 = "12423vw5k576c1yy0mg40cjia8j6b9jsf8p2489ixlvm192fza7f";
+      version = "3.7.1";
+      sha256 = "03n8191slbq9zs9h437qda1w24nnf73p7x48x8lqp8sbcn6plaj1";
       configureFlags = [
         "-fdisable-git-info"
         "-fhide-dependency-versions"
@@ -627998,6 +632019,51 @@ self: {
       ];
       description = "CLI tool for building over Stackage major versions";
       license = lib.licenses.bsd3;
+      mainProgram = "stack-all";
+    }
+  ) { };
+
+  "stack-all_0_7" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      cached-json-file,
+      config-ini,
+      directory,
+      extra,
+      filepath,
+      http-query,
+      process,
+      simple-cmd,
+      simple-cmd-args,
+      text,
+      yaml,
+    }:
+    mkDerivation {
+      pname = "stack-all";
+      version = "0.7";
+      sha256 = "12h5ddkfjv93h677gp2jd254viizbkcg09fflp9mlwxl30bghzdh";
+      isLibrary = false;
+      isExecutable = true;
+      executableHaskellDepends = [
+        aeson
+        base
+        cached-json-file
+        config-ini
+        directory
+        extra
+        filepath
+        http-query
+        process
+        simple-cmd
+        simple-cmd-args
+        text
+        yaml
+      ];
+      description = "CLI tool for building over Stackage major versions";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
       mainProgram = "stack-all";
     }
   ) { };
@@ -629833,8 +633899,8 @@ self: {
     }:
     mkDerivation {
       pname = "stackctl";
-      version = "1.7.3.4";
-      sha256 = "0y0prp85gf5yns5lb9285g2xqfy8w5ck2ajkpiljnmff2zqnlyzb";
+      version = "1.7.3.5";
+      sha256 = "1naf2n41d0vhhnkkc4bnkapzqdmap6kp8xh27dqjcg7kmv3hllhi";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -630120,6 +634186,7 @@ self: {
       cryptohash-sha1,
       dir-traverse,
       directory,
+      directory-ospath-streaming,
       extensions,
       filepath,
       ghc,
@@ -630144,8 +634211,10 @@ self: {
     }:
     mkDerivation {
       pname = "stan";
-      version = "0.2.0.0";
-      sha256 = "1cvn27xma3cqykqla5fid3hvh6q1bszfy7mdlcp00i967src2s1a";
+      version = "0.2.1.0";
+      sha256 = "1mf01bpy291131jfl4fcslv0jfn8i8jqwr29v1v48j6c6q49rias";
+      revision = "1";
+      editedCabalFile = "0b7lf7g8kg7xxxl3zgfxk86bs0pl9i9xm1cvn1n2bpmfvymm19qa";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -630160,6 +634229,7 @@ self: {
         cryptohash-sha1
         dir-traverse
         directory
+        directory-ospath-streaming
         extensions
         filepath
         ghc
@@ -631523,6 +635593,18 @@ self: {
     }
   ) { };
 
+  "stats-monad" = callPackage (
+    { mkDerivation, base }:
+    mkDerivation {
+      pname = "stats-monad";
+      version = "0.1.0.1";
+      sha256 = "1cg0db7malqm75rlxxcmp2w00pvlf1kki4fz5p7lc86qy7241vzb";
+      libraryHaskellDepends = [ base ];
+      description = "A discrete probability monad with statistics";
+      license = lib.licenses.bsd3;
+    }
+  ) { };
+
   "statsd" = callPackage (
     {
       mkDerivation,
@@ -631633,8 +635715,8 @@ self: {
     }:
     mkDerivation {
       pname = "statsd-rupp";
-      version = "0.5.0.0";
-      sha256 = "0clvpmg50p0f1ny9zz5q1niad1ahnkv0dqyphkyrc2snxh896avp";
+      version = "0.5.0.1";
+      sha256 = "0m9q0x25a1iwcfi3qfxcbcan569c0m4np25z36kjxvyh4v308vkw";
       libraryHaskellDepends = [
         base
         bytestring
@@ -632659,6 +636741,8 @@ self: {
       pname = "stm";
       version = "2.5.3.1";
       sha256 = "1rrh4s07vav9mlhpqsq9r6r0gh3f4k8g1gjlx63ngkpdj59ldc7b";
+      revision = "1";
+      editedCabalFile = "1pfrf0r1f3hl9x3nxv5nja6hrflm72z3cls4x5vljnzmrp4mf6s2";
       libraryHaskellDepends = [
         array
         base
@@ -632897,20 +636981,24 @@ self: {
   "stm-delay" = callPackage (
     {
       mkDerivation,
+      async,
       base,
       stm,
+      time,
     }:
     mkDerivation {
       pname = "stm-delay";
-      version = "0.1.1.1";
-      sha256 = "0cla21v89gcvmr1iwzibq13v1yq02xg4h6k9l6kcprj7mhd5hcmi";
+      version = "0.1.1.2";
+      sha256 = "0k60cpqzqy8c6xk5qw5135a7hlxnh670kb7fhjmz819hsi1n7vq5";
       libraryHaskellDepends = [
         base
         stm
       ];
       testHaskellDepends = [
+        async
         base
         stm
+        time
       ];
       description = "Updatable one-shot timer polled with STM";
       license = lib.licenses.bsd3;
@@ -636933,6 +641021,39 @@ self: {
     }
   ) { };
 
+  "strict-checked-vars" = callPackage (
+    {
+      mkDerivation,
+      base,
+      io-classes,
+      io-sim,
+      nothunks,
+      QuickCheck,
+      tasty,
+      tasty-quickcheck,
+    }:
+    mkDerivation {
+      pname = "strict-checked-vars";
+      version = "0.2.1.0";
+      sha256 = "12c4j4rlmxcdri2sgrb383nnvbjmvhxf8pp4mgmkfsipvwyv2clm";
+      libraryHaskellDepends = [
+        base
+        io-classes
+      ];
+      testHaskellDepends = [
+        base
+        io-classes
+        io-sim
+        nothunks
+        QuickCheck
+        tasty
+        tasty-quickcheck
+      ];
+      description = "Strict MVars and TVars with invariant checking for IO and IOSim";
+      license = lib.licenses.asl20;
+    }
+  ) { };
+
   "strict-concurrency" = callPackage (
     {
       mkDerivation,
@@ -637793,8 +641914,8 @@ self: {
       pname = "string-interpolate";
       version = "0.3.4.0";
       sha256 = "13hb3spabggr6gsn9xhwpwldjvpl2l7z4lgssis82c40n108b0w8";
-      revision = "2";
-      editedCabalFile = "0mw6ws7ixdcfhn7pkgci8v1pk26wnid123pi5f1y88hnmnrzs13k";
+      revision = "3";
+      editedCabalFile = "0grq9v023186gfq3a2as9974qlwcjx3dhxqczpq22bq2wfpw24x7";
       libraryHaskellDepends = [
         base
         bytestring
@@ -638987,7 +643108,7 @@ self: {
     }
   ) { };
 
-  "strive_6_0_0_15" = callPackage (
+  "strive_6_0_0_17" = callPackage (
     {
       mkDerivation,
       aeson,
@@ -639005,8 +643126,8 @@ self: {
     }:
     mkDerivation {
       pname = "strive";
-      version = "6.0.0.15";
-      sha256 = "0nflrrnk5kqpkmirziphg9lzb9qswfghkfwsgs1hmfs33nvr5l7k";
+      version = "6.0.0.17";
+      sha256 = "07sqrn4rx4y7pm82nmqayz4zl53cqq30a6a5zgiixj0h6szwlhdh";
       libraryHaskellDepends = [
         aeson
         base
@@ -640257,6 +644378,105 @@ self: {
       ];
       description = "Haskell code prettifier";
       license = lib.licenses.bsd3;
+      mainProgram = "stylish-haskell";
+    }
+  ) { };
+
+  "stylish-haskell_0_15_0_1" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      Cabal,
+      containers,
+      directory,
+      file-embed,
+      filepath,
+      ghc-lib-parser,
+      ghc-lib-parser-ex,
+      HsYAML,
+      HsYAML-aeson,
+      HUnit,
+      mtl,
+      optparse-applicative,
+      random,
+      regex-tdfa,
+      strict,
+      syb,
+      test-framework,
+      test-framework-hunit,
+      text,
+    }:
+    mkDerivation {
+      pname = "stylish-haskell";
+      version = "0.15.0.1";
+      sha256 = "02smg717ak2m5i7ciyz8vl91x39idmgd5d0ksljyak2jlj77ybr5";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        Cabal
+        containers
+        directory
+        file-embed
+        filepath
+        ghc-lib-parser
+        ghc-lib-parser-ex
+        HsYAML
+        HsYAML-aeson
+        mtl
+        regex-tdfa
+        syb
+        text
+      ];
+      executableHaskellDepends = [
+        aeson
+        base
+        bytestring
+        Cabal
+        containers
+        directory
+        file-embed
+        filepath
+        ghc-lib-parser
+        ghc-lib-parser-ex
+        HsYAML
+        HsYAML-aeson
+        mtl
+        optparse-applicative
+        regex-tdfa
+        strict
+        syb
+        text
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        bytestring
+        Cabal
+        containers
+        directory
+        file-embed
+        filepath
+        ghc-lib-parser
+        ghc-lib-parser-ex
+        HsYAML
+        HsYAML-aeson
+        HUnit
+        mtl
+        random
+        regex-tdfa
+        syb
+        test-framework
+        test-framework-hunit
+        text
+      ];
+      description = "Haskell code prettifier";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
       mainProgram = "stylish-haskell";
     }
   ) { };
@@ -641694,8 +645914,10 @@ self: {
     }:
     mkDerivation {
       pname = "sum-pyramid";
-      version = "0.0";
-      sha256 = "0jfz80iigdhhpa5fi2djyjzyrnarqvgdywni9785b6cqz3bv9a5n";
+      version = "0.0.1";
+      sha256 = "1zh7g16d345g8wffgj7wswfryrxxf7ik02fwrncqyc9yxmc7hm6y";
+      revision = "1";
+      editedCabalFile = "0pq6b89ygb0c2sd7b73zic7f8g589jz08ff0a1fpwr4xj5mawkmd";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -643201,8 +647423,8 @@ self: {
     }:
     mkDerivation {
       pname = "sv2v";
-      version = "0.0.13";
-      sha256 = "0gg8972im84gp60qavpmsdxcmjwzsbbg3va2f0fdxz5yqyc96cdn";
+      version = "0.0.13.1";
+      sha256 = "1idv0mm1n02k9qzqqshylp310bcjlg5m3dh7l6dvz575553r4d1l";
       isLibrary = false;
       isExecutable = true;
       executableHaskellDepends = [
@@ -644019,8 +648241,8 @@ self: {
     }:
     mkDerivation {
       pname = "swagger2";
-      version = "2.8.9";
-      sha256 = "18far6inavjcmfwdflgs2isrvp4bcnlj9pgqxnp6wba8pazpp8wj";
+      version = "2.8.10";
+      sha256 = "1ry3ml6svbmx2jq8cpmbxbbz48gsf0p7afn7h6shzf5yf8wfc5wj";
       setupHaskellDepends = [
         base
         Cabal
@@ -644125,6 +648347,7 @@ self: {
       boolexpr,
       brick,
       brick-list-skip,
+      brick-tabular-list,
       bytestring,
       clock,
       colour,
@@ -644144,6 +648367,7 @@ self: {
       fused-effects,
       fused-effects-lens,
       fuzzy,
+      generic-data,
       githash,
       hashable,
       hsnoise,
@@ -644157,24 +648381,30 @@ self: {
       megaparsec,
       minimorph,
       MissingH,
+      monad-logger,
+      monoidmap,
+      monoidmap-aeson,
       mtl,
       murmur3,
       natural-sort,
       nonempty-containers,
       optparse-applicative,
+      ordered-containers,
       palette,
       pandoc,
       pandoc-types,
       parser-combinators,
       prettyprinter,
       QuickCheck,
+      quickcheck-instances,
       random,
       scientific,
+      servant,
       servant-docs,
+      servant-JuicyPixels,
       servant-multipart,
       servant-server,
       SHA,
-      simple-enumeration,
       split,
       sqlite-simple,
       syb,
@@ -644208,8 +648438,8 @@ self: {
     }:
     mkDerivation {
       pname = "swarm";
-      version = "0.6.0.0";
-      sha256 = "0y2ijxfn8yns6fk87mj7nzlnq5k62mhc5xp8nhzzs5yf2v4p72j6";
+      version = "0.7.0.0";
+      sha256 = "0i0n5vrsz7d8x45lbjzmk1jln368bcz6cy3hn3yaafvhyacqii82";
       isLibrary = false;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -644222,6 +648452,7 @@ self: {
         boolexpr
         brick
         brick-list-skip
+        brick-tabular-list
         bytestring
         clock
         colour
@@ -644241,6 +648472,7 @@ self: {
         fused-effects
         fused-effects-lens
         fuzzy
+        generic-data
         githash
         hashable
         hsnoise
@@ -644253,10 +648485,14 @@ self: {
         lsp
         megaparsec
         minimorph
+        monad-logger
+        monoidmap
+        monoidmap-aeson
         mtl
         murmur3
         natural-sort
         nonempty-containers
+        ordered-containers
         palette
         pandoc
         pandoc-types
@@ -644264,11 +648500,12 @@ self: {
         prettyprinter
         random
         scientific
+        servant
         servant-docs
+        servant-JuicyPixels
         servant-multipart
         servant-server
         SHA
-        simple-enumeration
         split
         sqlite-simple
         syb
@@ -644295,10 +648532,17 @@ self: {
         yaml
       ];
       executableHaskellDepends = [
+        aeson
         base
         brick
+        bytestring
+        containers
+        extra
         fused-effects
         githash
+        http-client
+        http-client-tls
+        http-types
         lens
         optparse-applicative
         sqlite-simple
@@ -644328,6 +648572,7 @@ self: {
         mtl
         nonempty-containers
         QuickCheck
+        quickcheck-instances
         SHA
         tasty
         tasty-expected-failure
@@ -644344,6 +648589,7 @@ self: {
         base
         containers
         extra
+        fused-effects
         lens
         mtl
         tasty-bench
@@ -645079,6 +649325,74 @@ self: {
       ];
       description = "A modern testing framework for Haskell with good defaults and advanced testing features";
       license = "unknown";
+    }
+  ) { };
+
+  "sydtest_0_20_0_0" = callPackage (
+    {
+      mkDerivation,
+      async,
+      autodocodec,
+      base,
+      bytestring,
+      containers,
+      deepseq,
+      dlist,
+      fast-myers-diff,
+      filepath,
+      MonadRandom,
+      mtl,
+      opt-env-conf,
+      path,
+      path-io,
+      pretty-show,
+      QuickCheck,
+      quickcheck-io,
+      random,
+      random-shuffle,
+      safe,
+      safe-coloured-text,
+      safe-coloured-text-terminfo,
+      stm,
+      svg-builder,
+      text,
+      vector,
+    }:
+    mkDerivation {
+      pname = "sydtest";
+      version = "0.20.0.0";
+      sha256 = "0f1ipp6wqykkyiibn1prx61ysvydf4bybiqg5mlzgi5h1cnqh22i";
+      libraryHaskellDepends = [
+        async
+        autodocodec
+        base
+        bytestring
+        containers
+        deepseq
+        dlist
+        fast-myers-diff
+        filepath
+        MonadRandom
+        mtl
+        opt-env-conf
+        path
+        path-io
+        pretty-show
+        QuickCheck
+        quickcheck-io
+        random
+        random-shuffle
+        safe
+        safe-coloured-text
+        safe-coloured-text-terminfo
+        stm
+        svg-builder
+        text
+        vector
+      ];
+      description = "A modern testing framework for Haskell with good defaults and advanced testing features";
+      license = "unknown";
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -647391,8 +651705,6 @@ self: {
       testToolDepends = [ hspec-discover ];
       description = "Library for symbolic integration of mathematical expressions";
       license = lib.licenses.asl20;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -648263,8 +652575,8 @@ self: {
       pname = "synthesizer-core";
       version = "0.8.4";
       sha256 = "11m5zvnwzrsd5ylyc6xd4k56ypmmwzyhixvzc55hgjfpsx9snks9";
-      revision = "1";
-      editedCabalFile = "1q274hspisb2qi45dj01dcm2sxfcqib0i96jkc2jzlvaynnnqhlr";
+      revision = "2";
+      editedCabalFile = "0mryvkgdrhrgqvx4zy81kylfrg3nfggqmj93b009ymrj71d6fs1p";
       libraryHaskellDepends = [
         array
         base
@@ -648471,6 +652783,8 @@ self: {
       pname = "synthesizer-llvm";
       version = "1.1.0.1";
       sha256 = "166551a0g4m48f0mxccwcrgg488i4v8jpj6rjhd39mh6gxb874yr";
+      revision = "1";
+      editedCabalFile = "1kjiqwmfp2g7mqg6818qdhjjc5lw8hxf895763npjv5dx62b6dc3";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -648547,8 +652861,8 @@ self: {
       pname = "synthesizer-midi";
       version = "0.6.1.2";
       sha256 = "1xnpvk0mny8lbx17zdgl55wp86pqhfg9ckv41b3qd5vrki2dj6nc";
-      revision = "1";
-      editedCabalFile = "061dgdfrv1zrjpih29x50kpl57ghb3ys6wpra5ai9k0wxdpr9zqk";
+      revision = "2";
+      editedCabalFile = "1d2kivwhrvdqrjk7rhvd9csl0isdbybmf81r3bxzbf40fqlqfq8d";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -648871,8 +653185,8 @@ self: {
     }:
     mkDerivation {
       pname = "system-fileio";
-      version = "0.3.16.6";
-      sha256 = "0qmsvs5jpg6y82cqh0g37f7dz8172ikgiwcpgs72zwxq35xk271a";
+      version = "0.3.16.7";
+      sha256 = "16593sfb47snq4vixl0qv6119j3yva0nynygz24vcw3ggqmflhrp";
       libraryHaskellDepends = [
         base
         bytestring
@@ -649489,11 +653803,15 @@ self: {
       bytestring,
       extra,
       gi-ayatana-appindicator3,
-      gi-gdk,
+      gi-gdk3,
       gi-glib,
       gi-gobject,
-      gi-gtk,
+      gi-gtk3,
+      hspec-expectations,
       optparse-applicative,
+      tasty,
+      tasty-autocollect,
+      tasty-hunit-compat,
       text,
       typed-process,
       unliftio,
@@ -649501,31 +653819,45 @@ self: {
     }:
     mkDerivation {
       pname = "systranything";
-      version = "0.1.2.0";
-      sha256 = "1da3zqkknx9yg8spwjpaxx4sizwl598p2dwr2nnrl6dw033c6m1f";
-      isLibrary = false;
+      version = "0.1.3.0";
+      sha256 = "17y8zwbrxmbfr8g7gwbsvhxrwf330l6n2xqm6247ia8k5ap4drfy";
+      isLibrary = true;
       isExecutable = true;
-      executableHaskellDepends = [
+      enableSeparateDataOutput = true;
+      libraryHaskellDepends = [
         aeson
         base
         bytestring
         extra
         gi-ayatana-appindicator3
-        gi-gdk
+        gi-gdk3
         gi-glib
         gi-gobject
-        gi-gtk
-        optparse-applicative
+        gi-gtk3
         text
         typed-process
+      ];
+      executableHaskellDepends = [
+        base
+        gi-glib
+        gi-gtk3
+        optparse-applicative
         unliftio
         yaml
       ];
+      testHaskellDepends = [
+        base
+        hspec-expectations
+        tasty
+        tasty-autocollect
+        tasty-hunit-compat
+        text
+        yaml
+      ];
+      testToolDepends = [ tasty-autocollect ];
       description = "Let you put anything in the system tray";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "systranything";
-      broken = true;
     }
   ) { };
 
@@ -649801,8 +654133,8 @@ self: {
     }:
     mkDerivation {
       pname = "table-layout";
-      version = "1.0.0.1";
-      sha256 = "175qb6r0ircm4bpnzl7lr9jxsw08w57v650lh3ifz8w8rr23zylg";
+      version = "1.0.0.2";
+      sha256 = "0ddf1kz5zfv04x33gv7w4m710r9amdz2wchcjwsdjp64caqzb59q";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -650350,8 +654682,8 @@ self: {
       pname = "tagchup";
       version = "0.4.1.2";
       sha256 = "0zlrdlb0f6dhhx163i62ljh1spr0d5gcf0c96m5z7nzq529qq792";
-      revision = "2";
-      editedCabalFile = "0b4mkrablv5gdhvf5l1ni3qyibh9hrrscbi04jf2hxalxnk9by4b";
+      revision = "3";
+      editedCabalFile = "047zdpi2hzalypbafwvrz6g5n8fdz8fdygpg4nhjzjm86k3v4ma1";
       isLibrary = true;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -650497,10 +654829,8 @@ self: {
     }:
     mkDerivation {
       pname = "tagged-identity";
-      version = "0.1.4";
-      sha256 = "0mq4q4i16lzm1d0ckarwjk2a47y28lfrv0hc31y0xblb9q50xxwl";
-      revision = "1";
-      editedCabalFile = "03r7ys57zbyadkka5rzb418y5ksb88nnmvxjs58j0pmp71h0zfa6";
+      version = "0.1.5";
+      sha256 = "1n8zfgb80856rhizkclq6bfdcixbi0ymvx0f508x70crrvk38xdv";
       libraryHaskellDepends = [
         base
         mtl
@@ -653146,15 +657476,13 @@ self: {
     }:
     mkDerivation {
       pname = "targeted-quickcheck";
-      version = "0.1.0.1";
-      sha256 = "04b96vr01q19m4gvzim4nkrnmyz2lm7l8iirnw8m6vsglxc65fym";
-      isLibrary = true;
-      isExecutable = true;
+      version = "0.1.0.2";
+      sha256 = "0aw4lwgdbhik39v4fk99ja3c60kw0hmc7y2w5110jrzswdb13p3d";
       libraryHaskellDepends = [
         base
         QuickCheck
       ];
-      executableHaskellDepends = [
+      testHaskellDepends = [
         base
         containers
         hspec
@@ -653163,7 +657491,6 @@ self: {
       description = "Targeted generators for QuickCheck";
       license = lib.licenses.mit;
       hydraPlatforms = lib.platforms.none;
-      mainProgram = "targeted-examples";
       broken = true;
     }
   ) { };
@@ -653750,8 +658077,8 @@ self: {
       pname = "tasty";
       version = "1.5.3";
       sha256 = "10076vlklbcyiz7plakrihava5sy3dvwhskjldqzhfl18jvcg82l";
-      revision = "1";
-      editedCabalFile = "1l7nwf37v29qb1m2q3264473dzhvr6r764skzi9whkr7pjfylmlx";
+      revision = "2";
+      editedCabalFile = "04llcf1i3gawdik0bjhxdgls2wkiqlx0gi76nfh784nv2qzxlpbb";
       libraryHaskellDepends = [
         ansi-terminal
         base
@@ -654174,8 +658501,8 @@ self: {
     }:
     mkDerivation {
       pname = "tasty-discover";
-      version = "5.0.1";
-      sha256 = "143d0bcbvnvybbgrfdjr0wqmpdghjkn1297qmxk5ji33r8pqf4wc";
+      version = "5.0.2";
+      sha256 = "0hz6lhqqmcb157im2vpfihnms29367pcqg8mb6ww0c0bl1g0bf62";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -654418,8 +658745,8 @@ self: {
       pname = "tasty-golden-extra";
       version = "0.1.0.0";
       sha256 = "1bfd9ql3pws2vd37nbc5a8b49p7zbq3n48slxkrrwx1szaxkp8nj";
-      revision = "2";
-      editedCabalFile = "1vj6yr1ysnn5x76r3j824gdny121z69vr9367yi3mp4jxl1w44kw";
+      revision = "3";
+      editedCabalFile = "1hdkxsn075bc6f318vk81bddagxsyp390604v3azskfp52bwbl8r";
       libraryHaskellDepends = [
         aeson
         aeson-diff
@@ -654637,8 +658964,8 @@ self: {
       pname = "tasty-hspec";
       version = "1.2.0.4";
       sha256 = "1hk1nkjvhp89xxgzj6dhbgw0fknnghpng6afq4i39hjkwv5p78ni";
-      revision = "6";
-      editedCabalFile = "1i2zj9q7lxiaqs8mlwhw72ar7bnkr5k5y99pjalaisb6hp9380ds";
+      revision = "7";
+      editedCabalFile = "0s1y34i8g7fva0z10ws3ipcy2jmlvqk0v4hdbx8rqnby5n0l5kay";
       libraryHaskellDepends = [
         base
         hspec
@@ -655098,14 +659425,11 @@ self: {
       QuickCheck,
       tasty,
       tasty-hunit,
-      text,
     }:
     mkDerivation {
       pname = "tasty-lua";
-      version = "1.1.1";
-      sha256 = "186322a9gwndnpis4r7nzlca4iymrz712bbbxpm0pxsw63xary06";
-      revision = "1";
-      editedCabalFile = "180jy8dhr7mdfgj5xgnwddm5lh8ahbvs78y07g9zgpsxkdnm5ghn";
+      version = "1.1.1.1";
+      sha256 = "03b2n3gw2w70cnl57w3sh3cv5ka270sf07jlxpb4zs0z5gh83p1r";
       libraryHaskellDepends = [
         base
         bytestring
@@ -655115,11 +659439,9 @@ self: {
         lua-arbitrary
         QuickCheck
         tasty
-        text
       ];
       testHaskellDepends = [
         base
-        bytestring
         directory
         filepath
         hslua-core
@@ -655221,6 +659543,8 @@ self: {
       description = "Bencmarking using instruction counting";
       license = lib.licenses.bsd3;
       platforms = lib.platforms.linux;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { inherit (pkgs) papi; };
 
@@ -655389,8 +659713,8 @@ self: {
       pname = "tasty-quickcheck";
       version = "0.11.1";
       sha256 = "0si4ccgqlv8h33d6310rrqba7f4pz3g8cinqfj42yd7damsdxm73";
-      revision = "1";
-      editedCabalFile = "0l4ck9xqbylrdhyi0gwvws7jakn3qcyd146g9wwcqmjryzkzpj68";
+      revision = "3";
+      editedCabalFile = "1wzvha4xam8npx5mk33c056grmrqnjd6m38nnm6d7y99w2mn1a7w";
       libraryHaskellDepends = [
         base
         optparse-applicative
@@ -655462,6 +659786,8 @@ self: {
       pname = "tasty-rerun";
       version = "1.1.20";
       sha256 = "0px58jm1yqbg32qf2s0yk09d2qdjxkkz9df89f31q3nzw85jv2ky";
+      revision = "1";
+      editedCabalFile = "13xmx91hp7i0qzrhada9ckliqkynwlwa8x6pjbvxjcy1y0qsd7hk";
       libraryHaskellDepends = [
         base
         containers
@@ -655878,8 +660204,8 @@ self: {
       pname = "tasty-wai";
       version = "0.1.2.0";
       sha256 = "18yw2qzzg969c99rpa8p154hxbm9i4iq64pma3jkr2gfdm6j4vvg";
-      revision = "2";
-      editedCabalFile = "140kajnwrk614hswxyjymgpzy61m6riv5s25p4zkgv8aa1yhbk06";
+      revision = "3";
+      editedCabalFile = "0jxvhn4yasi1cl9rxwfpsdjh0bz79i4javy9qf4hqi7vzzxll6i4";
       libraryHaskellDepends = [
         base
         bytestring
@@ -655949,20 +660275,18 @@ self: {
       base,
       dollaridoos,
       profunctors,
-      semigroups,
     }:
     mkDerivation {
       pname = "tax";
-      version = "0.2.0.0";
-      sha256 = "13911rksr268v2jbdm7kkwlglni7s8lb417lryr7m2x9vfg31jqb";
+      version = "0.2.1.0";
+      sha256 = "1cgfvfi89rv4c12754hsah13ggfhq1hk4axs3sz7dvdwlw25swxr";
       libraryHaskellDepends = [
         base
         dollaridoos
         profunctors
-        semigroups
       ];
       description = "Types and combinators for taxes";
-      license = lib.licenses.agpl3Only;
+      license = lib.licenses.agpl3Plus;
     }
   ) { };
 
@@ -655977,8 +660301,8 @@ self: {
     }:
     mkDerivation {
       pname = "tax-ato";
-      version = "2024.1.0.1";
-      sha256 = "1mggzkkd4sxf7bccqwpz49jgxh36mbixl95j2sbsnyac91kgkmxa";
+      version = "2025.1";
+      sha256 = "0xg8wl83cgla3v2bjx4sk4szlyxam1223xrsa6v6ggwiqm9la5sq";
       libraryHaskellDepends = [
         base
         lens
@@ -657303,8 +661627,8 @@ self: {
     }:
     mkDerivation {
       pname = "telegram-bot-api";
-      version = "7.4.4";
-      sha256 = "1viyh5vkis6gydp7n1vrn3x17hjw3q872z6as54y7kfm9r07kp4h";
+      version = "7.4.5";
+      sha256 = "0fhn85s1xjba0dw1hcv9y75p19gpdqra4rc1d416p09xa75jnvxn";
       libraryHaskellDepends = [
         aeson
         base
@@ -657629,9 +661953,9 @@ self: {
       containers,
       effectful,
       exceptions,
-      fits-parse,
       libyaml,
       massiv,
+      massiv-io,
       megaparsec,
       resourcet-effectful,
       scientific,
@@ -657641,8 +661965,8 @@ self: {
     }:
     mkDerivation {
       pname = "telescope";
-      version = "0.2.0";
-      sha256 = "0ax9sk5910zi09wnyxc9zn4sf54bsvyycsj8faxrgf840wpw990f";
+      version = "0.4.0";
+      sha256 = "13bls8czlwk6df5p5i37cs4sdf0wmz4w4bnjjhpf8kk7bnglpr97";
       libraryHaskellDepends = [
         base
         binary
@@ -657652,9 +661976,9 @@ self: {
         conduit
         effectful
         exceptions
-        fits-parse
         libyaml
         massiv
+        massiv-io
         megaparsec
         resourcet-effectful
         scientific
@@ -657671,9 +661995,9 @@ self: {
         containers
         effectful
         exceptions
-        fits-parse
         libyaml
         massiv
+        massiv-io
         megaparsec
         resourcet-effectful
         scientific
@@ -660517,6 +664841,8 @@ self: {
       pname = "test-framework";
       version = "0.8.2.2";
       sha256 = "04ijf5x6xx8i5lqv9ir33zs1rfzc4qkwwz8c1fdycnzvydcv4dnp";
+      revision = "1";
+      editedCabalFile = "1yv1qsr6bxphxk9430id9bqhfmkffdqmfg0k017dp9pnn4pqj0zh";
       libraryHaskellDepends = [
         ansi-terminal
         ansi-wl-pprint
@@ -660726,6 +665052,8 @@ self: {
       pname = "test-framework-quickcheck2";
       version = "0.3.0.6";
       sha256 = "1d0w2q9sm8aayk0aj1zr2irpnqwpzixn6pdfq1i904vs1kkb2xin";
+      revision = "1";
+      editedCabalFile = "1af2gw9gvq143jdqmsnxj23cgss9ffdyr67951a5x151aps04y7z";
       libraryHaskellDepends = [
         base
         extensible-exceptions
@@ -661056,10 +665384,8 @@ self: {
     }:
     mkDerivation {
       pname = "test-lib";
-      version = "0.4";
-      sha256 = "0jp0k27vvdz4lfrdi7874j7gnnn051kvqfn1k3zg1ap4m9jzyb45";
-      revision = "4";
-      editedCabalFile = "1axgj0pxis513zxxxbjws9vf3zdx9y6djsvgpvi0miprvzr5qask";
+      version = "0.5";
+      sha256 = "1qc86qbq5rljql1010gibp8qd9rgylj8g5kl7jp5yb2ymwx65p92";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -661996,8 +666322,8 @@ self: {
     }:
     mkDerivation {
       pname = "texmath";
-      version = "0.12.10";
-      sha256 = "09gff44pz9jyz714jn4xgglkp31vfmsccdlbcf3n732z30y0h9wb";
+      version = "0.12.10.1";
+      sha256 = "0cxdwnfz61zpcwh2va1vmm4mi41zmh72i8c28v17mb1jwvlk59f1";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -662026,6 +666352,63 @@ self: {
       ];
       description = "Conversion between math formats";
       license = lib.licenses.gpl2Only;
+    }
+  ) { };
+
+  "texmath_0_12_10_3" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      containers,
+      directory,
+      filepath,
+      mtl,
+      pandoc-types,
+      parsec,
+      pretty-show,
+      split,
+      syb,
+      tagged,
+      tasty,
+      tasty-golden,
+      text,
+      typst-symbols,
+      xml,
+    }:
+    mkDerivation {
+      pname = "texmath";
+      version = "0.12.10.3";
+      sha256 = "0xpv5zxaixn2kkc3kn547jg7rkg6bl2mrmxiwvxf2r0qgj4kmr2p";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        base
+        containers
+        mtl
+        pandoc-types
+        parsec
+        split
+        syb
+        text
+        typst-symbols
+        xml
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        directory
+        filepath
+        pretty-show
+        tagged
+        tasty
+        tasty-golden
+        text
+        xml
+      ];
+      description = "Conversion between math formats";
+      license = lib.licenses.gpl2Only;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -662075,75 +666458,6 @@ self: {
       ];
       description = "Functions for running Tex from Haskell";
       license = lib.licenses.bsd3;
-    }
-  ) { };
-
-  "text_2_0_2" = callPackage (
-    {
-      mkDerivation,
-      array,
-      base,
-      binary,
-      bytestring,
-      containers,
-      deepseq,
-      directory,
-      filepath,
-      ghc-prim,
-      QuickCheck,
-      system-cxx-std-lib,
-      tasty,
-      tasty-bench,
-      tasty-hunit,
-      tasty-inspection-testing,
-      tasty-quickcheck,
-      template-haskell,
-      transformers,
-    }:
-    mkDerivation {
-      pname = "text";
-      version = "2.0.2";
-      sha256 = "1bggb4gq15r7z685w7c7hbm3w4n6day451ickz70d1l919jvwdf7";
-      revision = "1";
-      editedCabalFile = "1k25ba7hxgsj155yjmi218lhhyw640r4d4zr105gvhfkcj6gmdbi";
-      libraryHaskellDepends = [
-        array
-        base
-        binary
-        bytestring
-        deepseq
-        ghc-prim
-        system-cxx-std-lib
-        template-haskell
-      ];
-      testHaskellDepends = [
-        base
-        bytestring
-        deepseq
-        directory
-        ghc-prim
-        QuickCheck
-        tasty
-        tasty-hunit
-        tasty-inspection-testing
-        tasty-quickcheck
-        template-haskell
-        transformers
-      ];
-      benchmarkHaskellDepends = [
-        base
-        bytestring
-        containers
-        deepseq
-        directory
-        filepath
-        tasty-bench
-        transformers
-      ];
-      doCheck = false;
-      description = "An efficient packed Unicode text type";
-      license = lib.licenses.bsd2;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -662396,7 +666710,7 @@ self: {
     }
   ) { };
 
-  "text-builder_1_0_0_3" = callPackage (
+  "text-builder_1_0_0_4" = callPackage (
     {
       mkDerivation,
       base,
@@ -662415,8 +666729,8 @@ self: {
     }:
     mkDerivation {
       pname = "text-builder";
-      version = "1.0.0.3";
-      sha256 = "1r5v28029hwxl4pkyss5vrxm95ndz0ja4bmcglnsbgpqsj6ia96k";
+      version = "1.0.0.4";
+      sha256 = "1s4vc5fgf5xkwpia9r5gjngzrm2q4r081hf5zg553fg74jlg88wk";
       libraryHaskellDepends = [
         base
         bytestring
@@ -662591,6 +666905,45 @@ self: {
       description = "Edge of developments for \"text-builder\"";
       license = lib.licenses.mit;
       hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
+  "text-builder-lawful-conversions" = callPackage (
+    {
+      mkDerivation,
+      base,
+      hspec,
+      lawful-conversions,
+      QuickCheck,
+      quickcheck-instances,
+      text,
+      text-builder,
+      text-builder-core,
+    }:
+    mkDerivation {
+      pname = "text-builder-lawful-conversions";
+      version = "0.1.1";
+      sha256 = "0kjsznkn7l4m16z9m7l1i47yf4kygyyjpvdsjnwjdn6ix07nwd6d";
+      libraryHaskellDepends = [
+        base
+        lawful-conversions
+        text
+        text-builder
+        text-builder-core
+      ];
+      testHaskellDepends = [
+        base
+        hspec
+        lawful-conversions
+        QuickCheck
+        quickcheck-instances
+        text
+        text-builder
+      ];
+      description = "Orphan instances of \"lawful-conversions\" for \"text-builder\"";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -662772,6 +667125,36 @@ self: {
     }
   ) { };
 
+  "text-convert" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      hspec,
+      QuickCheck,
+      text,
+    }:
+    mkDerivation {
+      pname = "text-convert";
+      version = "0.1.0.1";
+      sha256 = "1jwckq3y4c964kviqrbk1x1gvp6hl97mb4pgl140cgh5nvz58dvl";
+      libraryHaskellDepends = [
+        base
+        bytestring
+        text
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        hspec
+        QuickCheck
+        text
+      ];
+      description = "Convert between various textual representations";
+      license = lib.licenses.bsd3;
+    }
+  ) { };
+
   "text-cp437" = callPackage (
     {
       mkDerivation,
@@ -662838,6 +667221,60 @@ self: {
       description = "A typeclass for user-facing output";
       license = lib.licenses.mit;
       maintainers = [ lib.maintainers.mangoiv ];
+    }
+  ) { };
+
+  "text-encode" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      bytestring,
+      casing,
+      cassava,
+      http-api-data,
+      http-types,
+      persistent,
+      postgresql-simple,
+      sqlite-simple,
+      text,
+      text-convert,
+    }:
+    mkDerivation {
+      pname = "text-encode";
+      version = "0.2.0.0";
+      sha256 = "0512n1l1xfnzknm4c917n7wylhh52jsk7szxy6fcb6dvl2cr9v41";
+      libraryHaskellDepends = [
+        aeson
+        base
+        bytestring
+        casing
+        cassava
+        http-api-data
+        http-types
+        persistent
+        postgresql-simple
+        sqlite-simple
+        text
+        text-convert
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        bytestring
+        casing
+        cassava
+        http-api-data
+        http-types
+        persistent
+        postgresql-simple
+        sqlite-simple
+        text
+        text-convert
+      ];
+      doHaddock = false;
+      description = "Classes and newtypes for deriving uniform textual encodings";
+      license = lib.licenses.bsd3;
     }
   ) { };
 
@@ -664141,10 +668578,8 @@ self: {
     }:
     mkDerivation {
       pname = "text-show";
-      version = "3.11.1";
-      sha256 = "18n4smbwwh9as0kpm2c18153y6lj5pbk2hy6ra9im0fwqk7xan6x";
-      revision = "1";
-      editedCabalFile = "1g96fwpf0y8hqbjiqdxz4ayyh9qwhacfynkmij80dksk7qxzwxml";
+      version = "3.11.2";
+      sha256 = "10nm8kj524hkl65qvxkrjjyykzgj85n3p96gv7zc7j3x90v9g1z2";
       libraryHaskellDepends = [
         array
         base
@@ -664236,8 +668671,8 @@ self: {
       pname = "text-show-instances";
       version = "3.9.10";
       sha256 = "09cb391gi0hgkjk4ap4d83vg13lczrghmb9db96a4ckw1bp9pbc1";
-      revision = "3";
-      editedCabalFile = "1ghlw5jwcxpclsvffn51lhc4i7mljg0jczg78kjghwnv0prjm8r8";
+      revision = "4";
+      editedCabalFile = "1k5h1lqc8z593cwnmy2yngh3nlq2b4zfbjwkmyqddg192xia8bbh";
       libraryHaskellDepends = [
         aeson
         base
@@ -667536,21 +671971,20 @@ self: {
       filepath,
       ghc-events,
       glib,
-      gtk,
+      gtk3,
       mtl,
       pango,
       template-haskell,
       temporary,
       text,
       time,
+      transformers,
       unix,
     }:
     mkDerivation {
       pname = "threadscope";
-      version = "0.2.14.1";
-      sha256 = "0hfn90299mp18p2bjj2bgfi1pk3ndxz4nv2ac6z52kvh00sr9drq";
-      revision = "3";
-      editedCabalFile = "1vrn7ccxh2r9sfg6qpvpd5rva442d1lhk3k3bs5d7cqj4dcpcg6x";
+      version = "0.2.15.0";
+      sha256 = "09cgxximn317ynd6gg5dhhvzc0zzvmdwm650p9bhf9ysah0rch4d";
       isLibrary = false;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -667566,13 +672000,14 @@ self: {
         filepath
         ghc-events
         glib
-        gtk
+        gtk3
         mtl
         pango
         template-haskell
         temporary
         text
         time
+        transformers
         unix
       ];
       description = "A graphical tool for profiling parallel Haskell programs";
@@ -668957,6 +673392,77 @@ self: {
     }
   ) { };
 
+  "tidal_1_10_0" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      clock,
+      colour,
+      containers,
+      criterion,
+      deepseq,
+      exceptions,
+      hosc,
+      hspec,
+      mtl,
+      network,
+      parsec,
+      primitive,
+      random,
+      text,
+      tidal-core,
+      tidal-link,
+      transformers,
+      weigh,
+    }:
+    mkDerivation {
+      pname = "tidal";
+      version = "1.10.0";
+      sha256 = "07ky2bj0hfm734sf4c2pymxlxs0rmgdd13q7fmb390p5m5fbxy54";
+      revision = "2";
+      editedCabalFile = "0pka2nxlmf2sh3c4cmpjzb9zmcmhqhf5bz8qprcmxvmzkwm5a4yz";
+      enableSeparateDataOutput = true;
+      libraryHaskellDepends = [
+        base
+        bytestring
+        clock
+        colour
+        containers
+        deepseq
+        exceptions
+        hosc
+        mtl
+        network
+        parsec
+        primitive
+        random
+        text
+        tidal-core
+        tidal-link
+        transformers
+      ];
+      testHaskellDepends = [
+        base
+        containers
+        deepseq
+        hosc
+        hspec
+        parsec
+        tidal-core
+      ];
+      benchmarkHaskellDepends = [
+        base
+        criterion
+        tidal-core
+        weigh
+      ];
+      description = "Pattern language for improvised music";
+      license = lib.licenses.gpl3Only;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "tidal-core" = callPackage (
     {
       mkDerivation,
@@ -668964,14 +673470,14 @@ self: {
       colour,
       containers,
       deepseq,
-      microspec,
+      hspec,
       parsec,
       text,
     }:
     mkDerivation {
       pname = "tidal-core";
-      version = "1.9.6";
-      sha256 = "0lny9f5crvx61cwlwbfl7xj34i2gl4j9wlvba8ga82hhysyxzg3i";
+      version = "1.10.0";
+      sha256 = "1dg6z0z52zxrqai4jfgqrp4ghsdkcflixwspcbnyrxq1d4jw0zdf";
       libraryHaskellDepends = [
         base
         colour
@@ -668984,7 +673490,7 @@ self: {
         base
         containers
         deepseq
-        microspec
+        hspec
       ];
       description = "Core pattern library for TidalCycles, a pattern language for improvised music";
       license = lib.licenses.gpl3Only;
@@ -669014,7 +673520,7 @@ self: {
     }
   ) { };
 
-  "tidal-link_1_1_0" = callPackage (
+  "tidal-link_1_2_0" = callPackage (
     {
       mkDerivation,
       base,
@@ -669025,8 +673531,8 @@ self: {
     }:
     mkDerivation {
       pname = "tidal-link";
-      version = "1.1.0";
-      sha256 = "0qd157gxdb06dwpmsimp9w49lqbpp93ms4bmxn1xwz3p2dhcwbrj";
+      version = "1.2.0";
+      sha256 = "15sqmdafz8ha2rlk4k327pjfc2kpcvq211avchanmmlvn7dflvsv";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -669346,6 +673852,8 @@ self: {
       pname = "tiktoken";
       version = "1.0.3";
       sha256 = "0hy3y9rdgjirk8ji7458qnc7h9d2b6yipfri25qkay96kq91kmj6";
+      revision = "1";
+      editedCabalFile = "0pwxqznjqbdsy99g4l1cyx8anns7wr92kpnbh19y9y99f1913jbn";
       enableSeparateDataOutput = true;
       libraryHaskellDepends = [
         base
@@ -669378,8 +673886,6 @@ self: {
       ];
       description = "Haskell implementation of tiktoken";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -669966,8 +674472,8 @@ self: {
     }:
     mkDerivation {
       pname = "time-manager";
-      version = "0.2.2";
-      sha256 = "1sm9rm2r45r535xc85xkzla6ym8rd84hs5aygpi1dr67z53d01fn";
+      version = "0.2.3";
+      sha256 = "1s387nka1nxii026ly4awrz74acs4ci141mh3mvsz4j47cyw7dzf";
       libraryHaskellDepends = [
         auto-update
         base
@@ -672926,7 +677432,7 @@ self: {
     }
   ) { };
 
-  "tls_2_1_9" = callPackage (
+  "tls_2_1_10" = callPackage (
     {
       mkDerivation,
       asn1-encoding,
@@ -672959,8 +677465,8 @@ self: {
     }:
     mkDerivation {
       pname = "tls";
-      version = "2.1.9";
-      sha256 = "0fp9mdvi0h1r6r345j5bh6lk8vz5vr9s9qh7j9nn1a3r5hhpfb8m";
+      version = "2.1.10";
+      sha256 = "18ffiz82a2jsdfliygynn50pxwndh7kykg7z4xq016p2si5nzxaq";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -674154,8 +678660,8 @@ self: {
     }:
     mkDerivation {
       pname = "token-limiter-concurrent";
-      version = "0.1.0.0";
-      sha256 = "09ai81x994snla1aq1245y6x3w3kblcgl4wjy70vm9yli8c2d064";
+      version = "0.2.0.1";
+      sha256 = "0a78y5wpv6l29n42d73lzy3998wm9yj115ia2zcl569hf1yybcpn";
       libraryHaskellDepends = [ base ];
       testHaskellDepends = [
         async
@@ -675625,7 +680131,9 @@ self: {
   "tools-yj" = callPackage (
     {
       mkDerivation,
+      array,
       base,
+      bytestring,
       containers,
       data-default,
       mono-traversable,
@@ -675634,10 +680142,12 @@ self: {
     }:
     mkDerivation {
       pname = "tools-yj";
-      version = "0.1.0.23";
-      sha256 = "0sj16z4aaiv6zaadmdavs5a6jm8vpfxb5kvlg1irfx5d1sybx3ys";
+      version = "0.1.0.45";
+      sha256 = "04n78afz82kmpyffy8vilfdw584qhhb5bfm3p1rnv9bjnrqv7jxn";
       libraryHaskellDepends = [
+        array
         base
+        bytestring
         containers
         data-default
         mono-traversable
@@ -675645,7 +680155,9 @@ self: {
         text
       ];
       testHaskellDepends = [
+        array
         base
+        bytestring
         containers
         data-default
         mono-traversable
@@ -676757,8 +681269,8 @@ self: {
     }:
     mkDerivation {
       pname = "tpdb";
-      version = "2.7.3";
-      sha256 = "10b03ixjmbhqbnqilyh4afs2mv6ss1p8fdvq9hwa84gsafq31cxz";
+      version = "2.8.1";
+      sha256 = "1y162ny5c37n58cqd057w8c8865205qi7xq8jsm7gjz3qr86izs8";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -676923,8 +681435,8 @@ self: {
     }:
     mkDerivation {
       pname = "trace-embrace";
-      version = "1.0.11";
-      sha256 = "0cnbw0yxaq3lpq8z66fkjsr3d9dss66l837mnbicfksbsn27m22i";
+      version = "1.2.0";
+      sha256 = "05wgj9pf9vqafa1h7sbjxzy2lx213qwrpr4f2dq7s7i2l9hf2a3k";
       libraryHaskellDepends = [
         aeson
         base
@@ -676947,6 +681459,7 @@ self: {
         yaml
       ];
       testHaskellDepends = [
+        aeson
         base
         bytestring
         containers
@@ -678783,7 +683296,6 @@ self: {
       ];
       description = "Reactive Type Safe Routing";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -679221,6 +683733,8 @@ self: {
       pname = "tree-diff";
       version = "0.3.4";
       sha256 = "0fqfyrab0bf98z251lsfvl2jdcaja6ikfn9q537jbxkx402fi6jy";
+      revision = "1";
+      editedCabalFile = "1nq6bx4zzp37vw7mmnab5nsc6z8x09xga4aqbfia8r6rp1zxbm10";
       libraryHaskellDepends = [
         aeson
         ansi-terminal
@@ -680307,8 +684821,8 @@ self: {
       pname = "trial-optparse-applicative";
       version = "0.0.0.0";
       sha256 = "1h8pfznf1dp9z3r2kl2ljgmxxkfp3va9yqba00fyvw85lna2aggn";
-      revision = "4";
-      editedCabalFile = "05rzzcsqvhil7wbsz23syd35h9jqbmmabx89v3h86ng7my3w1nc1";
+      revision = "5";
+      editedCabalFile = "0jvl3q2lh134z1r9zq2acpsilbjzpjia3xdh51szp6r708jnlpg1";
       libraryHaskellDepends = [
         base
         optparse-applicative
@@ -683001,7 +687515,9 @@ self: {
       ];
       description = "An equational theorem prover";
       license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
       mainProgram = "twee";
+      broken = true;
     }
   ) { };
 
@@ -686595,6 +691111,138 @@ self: {
     }
   ) { };
 
+  "typed-protocols" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      contra-tracer,
+      directory,
+      io-classes,
+      io-sim,
+      network,
+      primitive,
+      QuickCheck,
+      serialise,
+      singletons,
+      tasty,
+      tasty-quickcheck,
+      time,
+      unix,
+    }:
+    mkDerivation {
+      pname = "typed-protocols";
+      version = "1.0.0.0";
+      sha256 = "109503w2fsnfpnf0s1988c6km17pj56vlgwrcxi0d4yjy5n88462";
+      libraryHaskellDepends = [
+        base
+        bytestring
+        contra-tracer
+        io-classes
+        network
+        primitive
+        serialise
+        singletons
+        time
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        contra-tracer
+        directory
+        io-classes
+        io-sim
+        network
+        QuickCheck
+        tasty
+        tasty-quickcheck
+        unix
+      ];
+      doHaddock = false;
+      description = "A framework for strongly typed protocols";
+      license = lib.licenses.asl20;
+    }
+  ) { };
+
+  "typed-protocols-doc" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      base,
+      base64-bytestring,
+      blaze-html,
+      bytestring,
+      containers,
+      fgl,
+      filepath,
+      graphviz,
+      haddock-library,
+      knob,
+      mtl,
+      optparse-applicative,
+      serdoc-core,
+      tasty,
+      tasty-quickcheck,
+      template-haskell,
+      temporary,
+      text,
+      th-abstraction,
+      time,
+      typed-protocols,
+    }:
+    mkDerivation {
+      pname = "typed-protocols-doc";
+      version = "0.2.0.0";
+      sha256 = "0nn87n28dig216zfqv87bihvay83r76gwbr9qchhpk8crj3yrv5d";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        base
+        base64-bytestring
+        blaze-html
+        bytestring
+        containers
+        fgl
+        filepath
+        graphviz
+        haddock-library
+        knob
+        mtl
+        optparse-applicative
+        serdoc-core
+        template-haskell
+        temporary
+        text
+        th-abstraction
+        time
+        typed-protocols
+      ];
+      executableHaskellDepends = [
+        base
+        mtl
+        serdoc-core
+        text
+        typed-protocols
+      ];
+      testHaskellDepends = [
+        base
+        blaze-html
+        bytestring
+        mtl
+        serdoc-core
+        tasty
+        tasty-quickcheck
+        text
+        typed-protocols
+      ];
+      description = "Derive documentation from typed-protocols source code";
+      license = lib.licenses.asl20;
+      hydraPlatforms = lib.platforms.none;
+      mainProgram = "typed-protocols-doc-demo";
+    }
+  ) { };
+
   "typed-range" = callPackage (
     {
       mkDerivation,
@@ -687076,6 +691724,8 @@ self: {
       ];
       description = "Plugin to faciliate type-level let";
       license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -687196,8 +691846,8 @@ self: {
     }:
     mkDerivation {
       pname = "typelevel-tools-yj";
-      version = "0.1.0.8";
-      sha256 = "0fr0ilk99rij4b8m8jc9n09df5qc0xxck7cl87nrrkidyvmwh75w";
+      version = "0.1.0.9";
+      sha256 = "1fghcw13cjr8amwr1g7a0h8vi0cm0zcbw888kjcdchc6xj79wqiz";
       libraryHaskellDepends = [
         base
         template-haskell
@@ -687425,6 +692075,7 @@ self: {
       dlist,
       hspec,
       hspec-discover,
+      safe,
       template-haskell,
       text,
       th-data-compat,
@@ -687433,8 +692084,8 @@ self: {
     }:
     mkDerivation {
       pname = "typesafe-precure";
-      version = "0.11.1.1";
-      sha256 = "0zg4wwp5asnzz0n2yhrqb825dldr57m1j6w0l3sdxsi4jmibs4bj";
+      version = "0.12.0.1";
+      sha256 = "1cl6dq9mdm3caw3zzwpw7vcyv41apk0d0fxrxrm7d0vp4wvjckff";
       libraryHaskellDepends = [
         aeson
         aeson-pretty
@@ -687442,6 +692093,7 @@ self: {
         base
         bytestring
         dlist
+        safe
         template-haskell
         text
         th-data-compat
@@ -687905,7 +692557,7 @@ self: {
     }
   ) { };
 
-  "typst_0_7" = callPackage (
+  "typst_0_8_0_1" = callPackage (
     {
       mkDerivation,
       aeson,
@@ -687935,8 +692587,8 @@ self: {
     }:
     mkDerivation {
       pname = "typst";
-      version = "0.7";
-      sha256 = "1svcmksjvnmw38zy36fmclhjcx2k1y4h2wddgq9gbky2qdkz71mg";
+      version = "0.8.0.1";
+      sha256 = "00vqm67smsh4idp9506b3698k573p5h101ygff0wkrbkk7bmaf4v";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -687995,6 +692647,26 @@ self: {
       ];
       description = "Symbol and emoji lookup for typst language";
       license = lib.licenses.mit;
+    }
+  ) { };
+
+  "typst-symbols_0_1_8_1" = callPackage (
+    {
+      mkDerivation,
+      base,
+      text,
+    }:
+    mkDerivation {
+      pname = "typst-symbols";
+      version = "0.1.8.1";
+      sha256 = "1va29x72r0w0bms7wfsrhbnfn8cha1ghbaj33y62kflm50k9hwrg";
+      libraryHaskellDepends = [
+        base
+        text
+      ];
+      description = "Symbol and emoji lookup for typst language";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -689313,6 +693985,39 @@ self: {
     }
   ) { };
 
+  "uku" = callPackage (
+    {
+      mkDerivation,
+      base,
+      containers,
+      ilist,
+      protolude,
+      text,
+    }:
+    mkDerivation {
+      pname = "uku";
+      version = "0.0.2.0";
+      sha256 = "16hgrnhiy3xy3qizg9xpb6br7rqcwrxjxr750bcs9yds35lwqlpf";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        base
+        containers
+        ilist
+        protolude
+        text
+      ];
+      executableHaskellDepends = [
+        base
+        protolude
+        text
+      ];
+      description = "Display Ukulele fingering charts in the terminal";
+      license = lib.licenses.isc;
+      mainProgram = "uku";
+    }
+  ) { };
+
   "ulid" = callPackage (
     {
       mkDerivation,
@@ -690601,8 +695306,8 @@ self: {
       pname = "unicode";
       version = "0.0.1.1";
       sha256 = "1hgqnplpgaw0pwz0lfr59vmljcf4l5b4ynrhdcic94g18lpsmnvg";
-      revision = "1";
-      editedCabalFile = "00r1lx5zph98p7mw70hh0ibc2ns49qm6a1wnmv6lddi4sqjg7d6i";
+      revision = "2";
+      editedCabalFile = "0wmih9v4jpxwnhc93gwy890fdcw93wj245yndmr54zjc71gy3139";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -691785,6 +696490,8 @@ self: {
       ];
       description = "A union-find/map data structure";
       license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -692208,8 +696915,8 @@ self: {
       pname = "unique-logic-tf";
       version = "0.5.1";
       sha256 = "0a2hjkm7kwfnqyscxxdw2r2cq3gsydv5ny91vpxxd3paknqqr0cb";
-      revision = "3";
-      editedCabalFile = "18ksx28w58g0mdnsk0sr57n76r48dbig4dk4cks3kjzhgbix4wd2";
+      revision = "4";
+      editedCabalFile = "05dl9xbbd1zlynqzz0vmi41q2vhjj7jrgpdzb4jxdxkcg5xrxccr";
       libraryHaskellDepends = [
         base
         containers
@@ -693211,7 +697918,7 @@ self: {
     }
   ) { };
 
-  "unix_2_8_6_0" = callPackage (
+  "unix_2_8_7_0" = callPackage (
     {
       mkDerivation,
       base,
@@ -693224,10 +697931,10 @@ self: {
     }:
     mkDerivation {
       pname = "unix";
-      version = "2.8.6.0";
-      sha256 = "18pf0nsqzj4ciwrwbynx7r47aapgbb4gn2kiar31vap4nfdmj5w1";
+      version = "2.8.7.0";
+      sha256 = "10zv2vcq82vv56hll5mpvfwfsx6ymp2f75fwxvp5a1xgbafqgpfb";
       revision = "1";
-      editedCabalFile = "0ca08c8wsz4hfq7ajzaba45mxp9wak3x6vv37j63r747gbyqlzsv";
+      editedCabalFile = "1mvyq9qajqhjrv8m3zch07v8h0b3i4fj40d8jfcpbmqsq6h8sa9d";
       libraryHaskellDepends = [
         base
         bytestring
@@ -693539,8 +698246,8 @@ self: {
     }:
     mkDerivation {
       pname = "unix-time";
-      version = "0.4.16";
-      sha256 = "1s9qws7z2z9d9ayljz98zdlsja3zvrbcb00n4arzwi3kdl9agqmc";
+      version = "0.4.17";
+      sha256 = "130z416958xqd6yvjidmm66674y9vkwgxj965kvwhnncbnz0afpn";
       libraryHaskellDepends = [
         base
         binary
@@ -694936,6 +699643,29 @@ self: {
       libraryHaskellDepends = [ base ];
       description = "Unwrapping sums/products lifted to functors";
       license = lib.licenses.publicDomain;
+    }
+  ) { };
+
+  "unzip-traversable" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bifunctors,
+    }:
+    mkDerivation {
+      pname = "unzip-traversable";
+      version = "0.1.1";
+      sha256 = "0p5pf6rii89y9skms9a4qblj43b92bzym688q01w7zsa8y16dgv8";
+      libraryHaskellDepends = [
+        base
+        bifunctors
+      ];
+      testHaskellDepends = [
+        base
+        bifunctors
+      ];
+      description = "Unzip functions for general Traversable containers";
+      license = lib.licenses.bsd2;
     }
   ) { };
 
@@ -697397,8 +702127,8 @@ self: {
     }:
     mkDerivation {
       pname = "utxorpc";
-      version = "0.0.16.0";
-      sha256 = "0jhk3x5qbp2rvknbir8s6y4vq8sy5qcs0p9md1g8kbi872ipglng";
+      version = "0.0.17.0";
+      sha256 = "1jzb0v8gjy15b97a66gmjaxxf3mcxwigaavl5cnzga5z9kz8pyw1";
       libraryHaskellDepends = [
         base
         proto-lens
@@ -700000,6 +704730,36 @@ self: {
     }
   ) { };
 
+  "variety" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      containers,
+      exact-combinatorics,
+      HUnit,
+      QuickCheck,
+    }:
+    mkDerivation {
+      pname = "variety";
+      version = "0.1.0.2";
+      sha256 = "0bzavj283kraw1ffx1fi5ihxvk168mqs1s6j6vpl7qmxc0zmrn5a";
+      libraryHaskellDepends = [
+        base
+        bytestring
+        containers
+        exact-combinatorics
+      ];
+      testHaskellDepends = [
+        base
+        HUnit
+        QuickCheck
+      ];
+      description = "integer arithmetic codes";
+      license = lib.licenses.mit;
+    }
+  ) { };
+
   "vary" = callPackage (
     {
       mkDerivation,
@@ -700018,8 +704778,8 @@ self: {
     }:
     mkDerivation {
       pname = "vary";
-      version = "0.1.1.2";
-      sha256 = "1snil2rmlhbjrlazjycririwr9w4irznf5g4mgmjadb0xny9gwyx";
+      version = "0.1.1.3";
+      sha256 = "1rw05k5v0idr1ypcmfp7xxyqdaff12yc3x8csv2flspwmyvvlsn3";
       libraryHaskellDepends = [
         aeson
         base
@@ -700501,8 +705261,8 @@ self: {
     }:
     mkDerivation {
       pname = "vcr";
-      version = "0.0.0";
-      sha256 = "0h3rjrncjhh8b0lhpj3ilz8dqfrw3qj1qr7q9vpa098nkkvfyqxf";
+      version = "0.1.0";
+      sha256 = "1s6gp1m84izlsvw5z7ll39mw2r456xmbh7cx53f8gkwl2m2pyyrq";
       libraryHaskellDepends = [
         async
         base
@@ -701424,6 +706184,26 @@ self: {
     }
   ) { };
 
+  "vector-extras_0_3" = callPackage (
+    {
+      mkDerivation,
+      base,
+      vector,
+    }:
+    mkDerivation {
+      pname = "vector-extras";
+      version = "0.3";
+      sha256 = "0s84sa3y0whxkfdcwna2yaqh8vbyn22d9k627q2hxdmjkd3fhv9v";
+      libraryHaskellDepends = [
+        base
+        vector
+      ];
+      description = "Utilities for the \"vector\" library";
+      license = lib.licenses.mit;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "vector-fft" = callPackage (
     {
       mkDerivation,
@@ -701537,8 +706317,8 @@ self: {
     }:
     mkDerivation {
       pname = "vector-hashtables";
-      version = "0.1.2.0";
-      sha256 = "1s0c3d4f61rgvb0i8c2m3lazxbxg2cpv1pq4k4lnr7nga7sama9r";
+      version = "0.1.2.1";
+      sha256 = "1cdfvrpnia7bgqaw8yg0n23svbsdz72gss0hrkrvc5rwzxwhz49k";
       libraryHaskellDepends = [
         base
         hashable
@@ -701604,8 +706384,8 @@ self: {
     }:
     mkDerivation {
       pname = "vector-instances";
-      version = "3.4.2";
-      sha256 = "0rynfy4agx66mwslj50bfqdyrylr2zba3r6dg5yqykpnfxp2vn9l";
+      version = "3.4.3";
+      sha256 = "1ajc65vj5j02qzfx11zvgmfx4lh5r99h4hg8wacdkyk1vw1rh9b7";
       libraryHaskellDepends = [
         base
         comonad
@@ -702020,8 +706800,8 @@ self: {
     }:
     mkDerivation {
       pname = "vector-split";
-      version = "1.0.0.3";
-      sha256 = "1y2imndpyx15jmiajhabi34522jcayrz05zrxiv1srj4fssz56bd";
+      version = "1.0.0.4";
+      sha256 = "1m5b0v9izczkh3860a0l0lbwcygv9kf30552941gfmv8k931zq4d";
       libraryHaskellDepends = [
         base
         vector
@@ -702623,10 +707403,10 @@ self: {
       binary,
       blaze-html,
       bytestring,
+      containers,
       criterion,
       cryptonite,
       deepseq,
-      DRBG,
       exceptions,
       fgl,
       fgl-visualize,
@@ -702638,14 +707418,14 @@ self: {
       memory,
       monad-control,
       mtl,
+      mwc-probability,
       optparse-applicative,
       parsec,
       prettyprinter,
+      primitive,
       random,
       recursion-schemes,
-      shakespeare,
       shelly,
-      statistics,
       tasty,
       tasty-hedgehog,
       tasty-hunit,
@@ -702660,8 +707440,8 @@ self: {
     }:
     mkDerivation {
       pname = "verismith";
-      version = "1.0.0.2";
-      sha256 = "0lrc0idpxg4a7mlwb7s3j43zizinszpfwwqfm91cz3fkb5clv21h";
+      version = "1.1.0";
+      sha256 = "1jbgqxaydgskdm28x2c4cfw97azjdmv7kjf1czdfw6b8gnb1kyvk";
       isLibrary = true;
       isExecutable = true;
       enableSeparateDataOutput = true;
@@ -702671,9 +707451,9 @@ self: {
         binary
         blaze-html
         bytestring
+        containers
         cryptonite
         deepseq
-        DRBG
         exceptions
         fgl
         fgl-visualize
@@ -702685,14 +707465,14 @@ self: {
         memory
         monad-control
         mtl
+        mwc-probability
         optparse-applicative
         parsec
         prettyprinter
+        primitive
         random
         recursion-schemes
-        shakespeare
         shelly
-        statistics
         template-haskell
         text
         time
@@ -702710,7 +707490,6 @@ self: {
         hedgehog
         lens
         parsec
-        shakespeare
         tasty
         tasty-hedgehog
         tasty-hunit
@@ -702725,6 +707504,7 @@ self: {
       license = lib.licenses.gpl3Only;
       hydraPlatforms = lib.platforms.none;
       mainProgram = "verismith";
+      broken = true;
     }
   ) { };
 
@@ -702737,16 +707517,15 @@ self: {
       extra,
       mtl,
       safe,
+      stm,
       text,
       time,
       uuid,
     }:
     mkDerivation {
       pname = "verset";
-      version = "0.0.1.9";
-      sha256 = "1ygsqr6qhcfv71v0jgbh17ayrg1fkf63dl851zl3p745jjr2sxk2";
-      revision = "1";
-      editedCabalFile = "01dlq868938286b8a6ydvffzxaab9q8vg88mcavq25b6hfpr4ca1";
+      version = "0.0.1.11";
+      sha256 = "1124iagx8h4jw66sgh9f3ix3vw8x6iygyw48igip36dkj5dd6rwi";
       libraryHaskellDepends = [
         base
         bytestring
@@ -702754,6 +707533,7 @@ self: {
         extra
         mtl
         safe
+        stm
         text
         time
         uuid
@@ -703082,10 +707862,11 @@ self: {
     }:
     mkDerivation {
       pname = "vext";
-      version = "0.1.7.0";
-      sha256 = "0ynwgb2d3xs6qn99qhdz417p1pjc6y1mjllk6v17rvxiim88yd36";
+      version = "0.1.8.0";
+      sha256 = "05mw1mijpm1k7hjsr5xx6nwk2ipk2ghi8n1m60zarhlqwmbcvjms";
       libraryHaskellDepends = [
         base
+        byteslice
         natural-arithmetic
         primitive
         run-st
@@ -705840,8 +710621,8 @@ self: {
     }:
     mkDerivation {
       pname = "vty-windows";
-      version = "0.2.0.3";
-      sha256 = "12f91izwg4r18zvdbnkwd8jk7agdyy3w3bcljrm92hib43i210id";
+      version = "0.2.0.4";
+      sha256 = "1iisk8acjjibghw05yyc1w25hcs4d1cn1jlhl0iikz36kl0bbl8q";
       libraryHaskellDepends = [
         base
         blaze-builder
@@ -705885,8 +710666,8 @@ self: {
     }:
     mkDerivation {
       pname = "vulkan";
-      version = "3.26.2";
-      sha256 = "1y0yrcc2z43s98gyics9v56j0nkh6xk8knmqwslndsznzma6ga0c";
+      version = "3.26.4";
+      sha256 = "1s8gn6bnhxvbhwwscbh2x5fz2zvwqbgkhcz8pgx347lgcjzalc1r";
       libraryHaskellDepends = [
         base
         bytestring
@@ -705908,7 +710689,8 @@ self: {
       badPlatforms = [
         "i686-linux"
         "armv7l-linux"
-      ] ++ lib.platforms.darwin;
+      ]
+      ++ lib.platforms.darwin;
     }
   ) { inherit (pkgs) vulkan-loader; };
 
@@ -711430,8 +716212,8 @@ self: {
     }:
     mkDerivation {
       pname = "warp";
-      version = "3.4.7";
-      sha256 = "1s0kynqliqwn79gydrdxsgfdw6qffs5fmvhmxiydc379fxf07k7s";
+      version = "3.4.8";
+      sha256 = "0l67bz23l5sbhsmi9pz5vr0cf2mkkzpl0gjkf9309g0lxfq0mpyl";
       libraryHaskellDepends = [
         array
         async
@@ -711610,8 +716392,8 @@ self: {
     }:
     mkDerivation {
       pname = "warp-quic";
-      version = "0.0.2";
-      sha256 = "1hb9xv5v7l1iwhv7qgm9y3prrjkpvcd5snmw6xc9wsk3fr82xl1r";
+      version = "0.0.3";
+      sha256 = "0vbgbvkl5j8x0lrz568cd2viq0vl5dwzavfincz7a01v5w90qr9c";
       libraryHaskellDepends = [
         base
         bytestring
@@ -711685,8 +716467,8 @@ self: {
       pname = "warp-systemd";
       version = "0.3.0.0";
       sha256 = "1yvkg49wla7axk8vdh5c7d0pxlhyb66ka0xiqi6a3ra3zmw5xi3c";
-      revision = "2";
-      editedCabalFile = "09pkrig9xq95k3n1yrhfcfa8i3dkdim4nd03mgm22523jk9b3hbw";
+      revision = "3";
+      editedCabalFile = "1rb5qgfvyblpj15ikrlngyc87wdbp6xp90r7v7gyczshgdhnsg8d";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -712072,8 +716854,8 @@ self: {
     }:
     mkDerivation {
       pname = "waterfall-cad";
-      version = "0.5.0.1";
-      sha256 = "1869qwkbi3mlvciz916y6hv6l4h7z16fflf9xac4i0p9frly50jg";
+      version = "0.5.1.0";
+      sha256 = "173pv3a7n3jcf4j2jb7sirdib0x850qsifhlz858bkzamhqlxkr8";
       libraryHaskellDepends = [
         base
         filepath
@@ -712107,8 +716889,8 @@ self: {
     }:
     mkDerivation {
       pname = "waterfall-cad-examples";
-      version = "0.5.0.1";
-      sha256 = "1k9qs6jnh23d1r9xdpc07002a89rwn1zy5lgvbvlmmlsjny3v7fv";
+      version = "0.5.1.0";
+      sha256 = "0vrlhgvbkwgk2nvmw8h6sg3fygi3sxs7qllyvwkzzs91kavnkb4d";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -712161,8 +716943,8 @@ self: {
     }:
     mkDerivation {
       pname = "waterfall-cad-svg";
-      version = "0.5.0.1";
-      sha256 = "0vyq23iryzsqjjdyb9ws5jbjm3rkb00ssmabnzx6vlnvzf5cfb1s";
+      version = "0.5.1.0";
+      sha256 = "1gjm36f7w3xf7q8gfm6xk5ssj594z45vfkqkr3x9rgny8rn7w3p5";
       libraryHaskellDepends = [
         attoparsec
         base
@@ -712633,6 +717415,7 @@ self: {
       attoparsec,
       base,
       bytestring,
+      directory,
       hspec,
       http-client,
       QuickCheck,
@@ -712641,12 +717424,13 @@ self: {
     }:
     mkDerivation {
       pname = "web-cookiejar";
-      version = "0.1.0.0";
-      sha256 = "0hc9cpqs2h7kcxlrvlsmqm7xxq1cdi7zax3c7md5ldbzgzwiwr28";
+      version = "0.1.3.0";
+      sha256 = "0n8r23nk89hlp5z5zirj2yng818fba39f5yz0l351z7rpx0pi8vy";
       libraryHaskellDepends = [
         attoparsec
         base
         bytestring
+        directory
         http-client
         time
       ];
@@ -713512,7 +718296,6 @@ self: {
       bytestring,
       casing,
       containers,
-      Diff,
       effectful-core,
       file-embed,
       html-entities,
@@ -713523,8 +718306,8 @@ self: {
     }:
     mkDerivation {
       pname = "web-view";
-      version = "0.7.0";
-      sha256 = "062n3zff1frm38qzcylrp25krxx2nr5w68w71ijja2j87glj20kz";
+      version = "0.7.1";
+      sha256 = "1h481qzbi0pmdgzj6y93280wc50d5k8ja5y3cp1sjm7fdpsdw3g2";
       libraryHaskellDepends = [
         base
         bytestring
@@ -713542,7 +718325,6 @@ self: {
         bytestring
         casing
         containers
-        Diff
         effectful-core
         file-embed
         html-entities
@@ -714253,8 +719035,8 @@ self: {
     }:
     mkDerivation {
       pname = "webauthn";
-      version = "0.10.0.0";
-      sha256 = "0ndgwv8d7yndl9kb4fzvfp5wrz1pfshsp2xwhwnynd2a9mz3yqwp";
+      version = "0.11.0.0";
+      sha256 = "11fah0xsblggpnviggzpz18y8snhyn6wm7hng8665d7s4ylr9z4w";
       libraryHaskellDepends = [
         aeson
         asn1-encoding
@@ -714703,8 +719485,8 @@ self: {
     }:
     mkDerivation {
       pname = "webdriver-precore";
-      version = "0.1.0.1";
-      sha256 = "0c86dgnpg8rccmkjfzslvp6nppr9s2scxyy9g15xawaglrrm6xw2";
+      version = "0.1.0.2";
+      sha256 = "1ac3jnpfqay72y5d61zv7v0i43y293ny7h64iklj1bjlwcn6f1vq";
       libraryHaskellDepends = [
         aeson
         aeson-pretty
@@ -715209,8 +719991,8 @@ self: {
     }:
     mkDerivation {
       pname = "webfinger-client";
-      version = "0.2.1.0";
-      sha256 = "04m61f8274nnn81cddv66n5cm4s0lxlz5gyapw1w7yk3pq4xfx9w";
+      version = "0.2.2.1";
+      sha256 = "0rwfzjgx8g2ic6763sbv9ybnkcg84kgmmvw476sswaw2338spwd0";
       libraryHaskellDepends = [
         aeson
         base
@@ -715281,6 +720063,56 @@ self: {
     }
   ) { };
 
+  "webgear-core_1_4_0" = callPackage (
+    {
+      mkDerivation,
+      arrows,
+      base,
+      binary,
+      bytestring,
+      case-insensitive,
+      cookie,
+      http-api-data,
+      http-media,
+      http-types,
+      jose,
+      network,
+      tagged,
+      template-haskell,
+      text,
+      wai,
+      wai-app-static,
+      wai-extra,
+    }:
+    mkDerivation {
+      pname = "webgear-core";
+      version = "1.4.0";
+      sha256 = "0kda3yyg7w2ws2v303nsb9g6wrc743d8rd5lz6xpd71myiq5w5fx";
+      libraryHaskellDepends = [
+        arrows
+        base
+        binary
+        bytestring
+        case-insensitive
+        cookie
+        http-api-data
+        http-media
+        http-types
+        jose
+        network
+        tagged
+        template-haskell
+        text
+        wai
+        wai-app-static
+        wai-extra
+      ];
+      description = "Composable, type-safe library to build HTTP APIs";
+      license = lib.licenses.mpl20;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "webgear-openapi" = callPackage (
     {
       mkDerivation,
@@ -715313,6 +720145,42 @@ self: {
       ];
       description = "Composable, type-safe library to build HTTP API servers";
       license = lib.licenses.mpl20;
+    }
+  ) { };
+
+  "webgear-openapi_1_4_0" = callPackage (
+    {
+      mkDerivation,
+      arrows,
+      base,
+      http-media,
+      http-types,
+      insert-ordered-containers,
+      lens,
+      mtl,
+      openapi3,
+      text,
+      webgear-core,
+    }:
+    mkDerivation {
+      pname = "webgear-openapi";
+      version = "1.4.0";
+      sha256 = "0pm0v20spryxdl63fgrpzqvjx98awncxmxak4z6ma8fxnxvq14cb";
+      libraryHaskellDepends = [
+        arrows
+        base
+        http-media
+        http-types
+        insert-ordered-containers
+        lens
+        mtl
+        openapi3
+        text
+        webgear-core
+      ];
+      description = "Composable, type-safe library to build HTTP API servers";
+      license = lib.licenses.mpl20;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -715388,6 +720256,79 @@ self: {
     }
   ) { };
 
+  "webgear-server_1_4_0" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      arrows,
+      base,
+      base64-bytestring,
+      binary,
+      bytestring,
+      cookie,
+      http-api-data,
+      http-media,
+      http-types,
+      jose,
+      monad-time,
+      mtl,
+      QuickCheck,
+      quickcheck-instances,
+      resourcet,
+      tasty,
+      tasty-hunit,
+      tasty-quickcheck,
+      text,
+      text-conversions,
+      wai,
+      wai-extra,
+      webgear-core,
+    }:
+    mkDerivation {
+      pname = "webgear-server";
+      version = "1.4.0";
+      sha256 = "1453n5yga3880fzv7ziyy0sricgx4i7d18s2pg8idix3kj4r40xl";
+      libraryHaskellDepends = [
+        aeson
+        arrows
+        base
+        base64-bytestring
+        binary
+        bytestring
+        cookie
+        http-api-data
+        http-media
+        http-types
+        jose
+        monad-time
+        mtl
+        resourcet
+        text
+        text-conversions
+        wai
+        wai-extra
+        webgear-core
+      ];
+      testHaskellDepends = [
+        base
+        base64-bytestring
+        bytestring
+        http-types
+        QuickCheck
+        quickcheck-instances
+        tasty
+        tasty-hunit
+        tasty-quickcheck
+        text
+        wai
+        webgear-core
+      ];
+      description = "Composable, type-safe library to build HTTP API servers";
+      license = lib.licenses.mpl20;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "webgear-swagger" = callPackage (
     {
       mkDerivation,
@@ -715421,6 +720362,40 @@ self: {
     }
   ) { };
 
+  "webgear-swagger_1_4_0" = callPackage (
+    {
+      mkDerivation,
+      arrows,
+      base,
+      http-types,
+      insert-ordered-containers,
+      lens,
+      mtl,
+      swagger2,
+      text,
+      webgear-core,
+    }:
+    mkDerivation {
+      pname = "webgear-swagger";
+      version = "1.4.0";
+      sha256 = "0ca6smxgxa6ck0f914wj4ivrdpbqxy0v46di3lyl9kwnb0jia5vc";
+      libraryHaskellDepends = [
+        arrows
+        base
+        http-types
+        insert-ordered-containers
+        lens
+        mtl
+        swagger2
+        text
+        webgear-core
+      ];
+      description = "Composable, type-safe library to build HTTP API servers";
+      license = lib.licenses.mpl20;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "webgear-swagger-ui" = callPackage (
     {
       mkDerivation,
@@ -715447,6 +720422,36 @@ self: {
       ];
       description = "Host swagger UI based on WebGear API specifications";
       license = lib.licenses.mpl20;
+    }
+  ) { };
+
+  "webgear-swagger-ui_1_4_0" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      file-embed,
+      http-types,
+      text,
+      wai-app-static,
+      webgear-core,
+    }:
+    mkDerivation {
+      pname = "webgear-swagger-ui";
+      version = "1.4.0";
+      sha256 = "1qrf435pky7imwashh7f48z2agwjnyjw396w98jcg92k9cs6sisk";
+      libraryHaskellDepends = [
+        base
+        bytestring
+        file-embed
+        http-types
+        text
+        wai-app-static
+        webgear-core
+      ];
+      description = "Host swagger UI based on WebGear API specifications";
+      license = lib.licenses.mpl20;
+      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -715777,8 +720782,8 @@ self: {
     }:
     mkDerivation {
       pname = "webp";
-      version = "0.1.1.0";
-      sha256 = "0n1wb2xl1fb3y2wxhng7k39xb6pgc4l722f31zf0vgsnllk74kyr";
+      version = "0.1.2.0";
+      sha256 = "1yaza5a3y82kin58wjfbsf984h75fvhw6pq3nvcdpi0mwvv6z8sl";
       libraryHaskellDepends = [
         base
         binary
@@ -715991,8 +720996,8 @@ self: {
       pname = "websockets";
       version = "0.13.0.0";
       sha256 = "1da95b71akggyikbxdmja3gcaqrz8sp6ri5jrsyavc2ickvi9y4s";
-      revision = "4";
-      editedCabalFile = "1g6f94cn20a4073cbinv2sfwglbqlpjxgzgj7svi6ff4vkfn0ins";
+      revision = "5";
+      editedCabalFile = "0nm0lj8cv5z5y2d0bz0rfl3bz100swhind4wn95b7q2ma2x80dlv";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -716373,66 +721378,6 @@ self: {
       hydraPlatforms = lib.platforms.none;
       mainProgram = "wedged";
       broken = true;
-    }
-  ) { };
-
-  "weeder_2_2_0" = callPackage (
-    {
-      mkDerivation,
-      algebraic-graphs,
-      base,
-      bytestring,
-      containers,
-      dhall,
-      directory,
-      filepath,
-      generic-lens,
-      ghc,
-      lens,
-      mtl,
-      optparse-applicative,
-      regex-tdfa,
-      text,
-      transformers,
-    }:
-    mkDerivation {
-      pname = "weeder";
-      version = "2.2.0";
-      sha256 = "07ylcq8mza4429snaklhfszpg2c0xcp75hyf0jxhi32mpiz7a5v2";
-      isLibrary = true;
-      isExecutable = true;
-      libraryHaskellDepends = [
-        algebraic-graphs
-        base
-        bytestring
-        containers
-        dhall
-        directory
-        filepath
-        generic-lens
-        ghc
-        lens
-        mtl
-        optparse-applicative
-        regex-tdfa
-        text
-        transformers
-      ];
-      executableHaskellDepends = [
-        base
-        bytestring
-        containers
-        directory
-        filepath
-        ghc
-        optparse-applicative
-        transformers
-      ];
-      description = "Detect dead code";
-      license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      mainProgram = "weeder";
-      maintainers = [ lib.maintainers.maralorn ];
     }
   ) { };
 
@@ -717892,8 +722837,8 @@ self: {
     }:
     mkDerivation {
       pname = "wide-word";
-      version = "0.1.7.0";
-      sha256 = "01rx0bcc6kanyjp1vf9icymdgkmsx279m7rby2gpb1w0d6swnss8";
+      version = "0.1.7.1";
+      sha256 = "1h42k00inir628qb2r8966bhn354bnkgadpx5fgm6g1kh879y15a";
       libraryHaskellDepends = [
         base
         binary
@@ -718465,8 +723410,8 @@ self: {
     }:
     mkDerivation {
       pname = "wild-bind";
-      version = "0.1.2.11";
-      sha256 = "0mdwx0qwlmm22pajvg5s3rzm6xf83z14lfxwbwh8fiphxlgyhnin";
+      version = "0.1.2.12";
+      sha256 = "1bjm2vxa6xg7j6wl28rg8djxabpjss22z1w1ymlm2lw5fb148frn";
       libraryHaskellDepends = [
         base
         containers
@@ -719019,6 +723964,7 @@ self: {
       description = "Fast binary io-streams adapter";
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -719187,7 +724133,7 @@ self: {
     }
   ) { };
 
-  "witch_1_3_0_1" = callPackage (
+  "witch_1_3_0_6" = callPackage (
     {
       mkDerivation,
       base,
@@ -719202,8 +724148,8 @@ self: {
     }:
     mkDerivation {
       pname = "witch";
-      version = "1.3.0.1";
-      sha256 = "0nbk4vxqj3ljxi0ybj02rc74ff32v6351mrj4sn9h1iw6lv81w2m";
+      version = "1.3.0.6";
+      sha256 = "03sx7514g375gc9fdn4439zp967g7ysq94xp7lki5rlbj8rjid1l";
       libraryHaskellDepends = [
         base
         bytestring
@@ -720002,6 +724948,51 @@ self: {
     }
   ) { };
 
+  "wled-json_0_1_0_0" = callPackage (
+    {
+      mkDerivation,
+      aeson,
+      barbies,
+      base,
+      bytestring,
+      deriving-aeson,
+      hspec,
+      hspec-discover,
+      http-conduit,
+      QuickCheck,
+      rhine,
+    }:
+    mkDerivation {
+      pname = "wled-json";
+      version = "0.1.0.0";
+      sha256 = "0xh243hacxi04bsaj6xmbdyixvz3n4x8jgiym9pn5fym547n6abk";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        aeson
+        barbies
+        base
+        bytestring
+        deriving-aeson
+        http-conduit
+      ];
+      executableHaskellDepends = [
+        base
+        rhine
+      ];
+      testHaskellDepends = [
+        aeson
+        base
+        hspec
+        QuickCheck
+      ];
+      testToolDepends = [ hspec-discover ];
+      description = "Convenient interface for interacting with WLED devices";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
+    }
+  ) { };
+
   "wobsurv" = callPackage (
     {
       mkDerivation,
@@ -720681,6 +725672,8 @@ self: {
       pname = "word8set";
       version = "0.1.2";
       sha256 = "0jbr571rxw0vxxc95568kdxrw9d0kk6np9wrwjd6rj6ybh532zr7";
+      revision = "1";
+      editedCabalFile = "1w3w1f8kig5mvrl06y5f48lrr44zxwa0w8lvwa6vks4fvv1ia0lj";
       libraryHaskellDepends = [
         base
         deepseq
@@ -720834,8 +725827,8 @@ self: {
     }:
     mkDerivation {
       pname = "wordify";
-      version = "0.1.1.0";
-      sha256 = "06wfa63l2nxk39c50zyacrwh48053z0mj114i08q0ydf95lv44w5";
+      version = "0.5.0.0";
+      sha256 = "1az84h8c3n92b6y5ccq8mar18cbv1hqb76p37irn4a5lv2l05lsj";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -720859,6 +725852,8 @@ self: {
       executableHaskellDepends = [
         array
         base
+        bytestring
+        conduit
         containers
         errors
         listsafe
@@ -720868,12 +725863,15 @@ self: {
         safe
         semigroups
         split
+        text
         transformers
         unordered-containers
       ];
       testHaskellDepends = [
         array
         base
+        bytestring
+        conduit
         containers
         directory
         errors
@@ -720890,6 +725888,7 @@ self: {
         test-framework
         test-framework-hunit
         test-framework-quickcheck2
+        text
         transformers
         unordered-containers
       ];
@@ -721631,8 +726630,8 @@ self: {
       pname = "wraxml";
       version = "0.5";
       sha256 = "1zzslycz4hzg2l3pma0yfwdnqf08cw14b1ac5lzjm4z548bhzg0h";
-      revision = "1";
-      editedCabalFile = "0y0j420isc9cm1f2hl87fy33181w12cx0mn4m40ik8dld0npgbha";
+      revision = "2";
+      editedCabalFile = "183ih3x2jairigzasv6rz798czwndcbas26k4gb8vg5l4zw3fig3";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -722872,33 +727871,38 @@ self: {
       aeson,
       base,
       binary,
-      binary-parsers,
       bytestring,
       network,
+      postgresql-simple,
       text,
       time,
     }:
     mkDerivation {
       pname = "wsjtx-udp";
-      version = "0.1.3.5";
-      sha256 = "1x2975pj2i0c4w1s00s4qc24sa24y29magilfxbhy8v1w1hfqcv7";
+      version = "0.5.0.0";
+      sha256 = "0fz92fjynvaz73i8v229ibj9z7bjjc4v467hmakc1v7xcjdxajj7";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
         aeson
         base
         binary
-        binary-parsers
         bytestring
         network
         text
         time
       ];
-      executableHaskellDepends = [ base ];
+      executableHaskellDepends = [
+        aeson
+        base
+        bytestring
+        network
+        postgresql-simple
+      ];
       description = "WSJT-X UDP protocol";
       license = lib.licenses.bsd3;
       hydraPlatforms = lib.platforms.none;
-      mainProgram = "wsjtx-dump-udp";
+      broken = true;
     }
   ) { };
 
@@ -723307,7 +728311,7 @@ self: {
     }
   ) { };
 
-  "wuss_2_0_2_3" = callPackage (
+  "wuss_2_0_2_5" = callPackage (
     {
       mkDerivation,
       base,
@@ -723320,8 +728324,8 @@ self: {
     }:
     mkDerivation {
       pname = "wuss";
-      version = "2.0.2.3";
-      sha256 = "1kvkvzlg034gd9jjgja12n5byy5psj59ksmqal2shy95fvcbi9dp";
+      version = "2.0.2.5";
+      sha256 = "1ipr57cndcn1wnvd0j4b0x0f271kzy1gg049qwi397r9flrmh157";
       libraryHaskellDepends = [
         base
         bytestring
@@ -724283,8 +729287,8 @@ self: {
     }:
     mkDerivation {
       pname = "xcffib";
-      version = "1.8.0";
-      sha256 = "15jbxqmp12kraf7cnkw1wj6vxqw076wn0c1p22q5kpf8nzixrl3a";
+      version = "1.9.0";
+      sha256 = "11zy9lj2dka27s72d86lqdabpr4ij0yls6q33g2pqih6rhaqziya";
       isLibrary = true;
       isExecutable = true;
       libraryHaskellDepends = [
@@ -724327,6 +729331,37 @@ self: {
       license = lib.licenses.asl20;
       hydraPlatforms = lib.platforms.none;
       mainProgram = "xcffibgen";
+      broken = true;
+    }
+  ) { };
+
+  "xcframework" = callPackage (
+    {
+      mkDerivation,
+      base,
+      Cabal,
+      Cabal-hooks,
+      directory,
+      filepath,
+      process,
+      temporary,
+    }:
+    mkDerivation {
+      pname = "xcframework";
+      version = "0.1.0.0";
+      sha256 = "1pzgkijqmws848z5m6zizsywxydwxl3vzh47z4qjdy2b8z8m0qk0";
+      libraryHaskellDepends = [
+        base
+        Cabal
+        Cabal-hooks
+        directory
+        filepath
+        process
+        temporary
+      ];
+      description = "Cabal hooks for producing an XCFramework from a Haskell library";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
       broken = true;
     }
   ) { };
@@ -724715,6 +729750,47 @@ self: {
     }
   ) { };
 
+  "xenomorph" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      hspec,
+      hspec-discover,
+      html-entities,
+      text,
+      unordered-containers,
+      vector,
+      xeno,
+    }:
+    mkDerivation {
+      pname = "xenomorph";
+      version = "0.0.1.0";
+      sha256 = "1c7pdqk7758jzgfcmv2q6gbp9gwh1ka6hkfggiw5xmc2nky084bv";
+      libraryHaskellDepends = [
+        base
+        bytestring
+        html-entities
+        text
+        unordered-containers
+        vector
+        xeno
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        hspec
+        html-entities
+        text
+        unordered-containers
+        vector
+        xeno
+      ];
+      testToolDepends = [ hspec-discover ];
+      license = lib.licenses.bsd3;
+    }
+  ) { };
+
   "xenstore" = callPackage (
     {
       mkDerivation,
@@ -724826,7 +729902,8 @@ self: {
       badPlatforms = [
         "aarch64-linux"
         "armv7l-linux"
-      ] ++ lib.platforms.darwin;
+      ]
+      ++ lib.platforms.darwin;
       hydraPlatforms = lib.platforms.none;
       mainProgram = "xgb-agaricus";
       broken = true;
@@ -725632,6 +730709,8 @@ self: {
       pname = "xml-basic";
       version = "0.1.3.3";
       sha256 = "0rqran7gvn4p0fb6pdlsmav5nhsdli8dxnrh0rclbr14rw6xhzjy";
+      revision = "1";
+      editedCabalFile = "1ry7i2n9j8bp5g32rf9sh8gb5a9rgwrd3hrfzvq86q307clkywmi";
       libraryHaskellDepends = [
         base
         containers
@@ -726409,6 +731488,7 @@ self: {
       description = "Generate XML-isomorphic types";
       license = lib.licenses.mit;
       hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -726426,8 +731506,8 @@ self: {
       pname = "xml-lens";
       version = "0.3.1";
       sha256 = "0i6c4xqacinhxnyszzna7s9x79rrcs1c7jq6zimcwh4302l5d6cm";
-      revision = "3";
-      editedCabalFile = "1zwkii9klqaknnf06h56nvh9090xczqff1mq89mq7wk9y585qd3s";
+      revision = "4";
+      editedCabalFile = "1zicqdzvca53rg2ai14nkyq1f46w6kz6bd4mjmqzx778xn17d22f";
       libraryHaskellDepends = [
         base
         case-insensitive
@@ -726438,8 +731518,6 @@ self: {
       ];
       description = "Lenses, traversals, and prisms for xml-conduit";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -726892,6 +731970,8 @@ self: {
       pname = "xml-syntax";
       version = "0.1.0.2";
       sha256 = "1x0q55481rhj3rvlapx3dv1nc8rl0l2lyv3jmxv939xckcmk54is";
+      revision = "1";
+      editedCabalFile = "1a5s8i9ak8wn7m8i7jw0vyn245qc7daa1z4zmv7ws524r2pzxrg6";
       libraryHaskellDepends = [
         array-builder
         array-chunks
@@ -726909,8 +731989,6 @@ self: {
       ];
       description = "Parse XML from bytes";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -727693,8 +732771,8 @@ self: {
         }:
         mkDerivation {
           pname = "xmobar";
-          version = "0.49";
-          sha256 = "0mw01jxkcvm186csg71y21zig9rkxkp304i3ym4pgr3rilhp3p5z";
+          version = "0.50";
+          sha256 = "026s0q718z89vzjgva19vg58dm1l016i67mzi0wbj7kgai89w909";
           configureFlags = [
             "-fwith_alsa"
             "-fwith_conduit"
@@ -728497,6 +733575,8 @@ self: {
       description = "Text-based notification server for XMobar";
       license = lib.licenses.bsd3;
       badPlatforms = lib.platforms.darwin;
+      hydraPlatforms = lib.platforms.none;
+      broken = true;
     }
   ) { };
 
@@ -728516,6 +733596,8 @@ self: {
       pname = "xor";
       version = "0.0.1.3";
       sha256 = "12hqm6imp3qvnnrkds77jsi0zx2dza1h9g88adnxiksv62fybymv";
+      revision = "1";
+      editedCabalFile = "0n0mdli5qypi9khk42lqqkn464w22vjwx0dg2dg6mvdq0r37qwab";
       libraryHaskellDepends = [
         base
         bytestring
@@ -729372,13 +734454,13 @@ self: {
       deepseq,
       digest,
       hashable,
-      libxxhash,
       murmur-hash,
       QuickCheck,
       tasty,
       tasty-bench,
       tasty-quickcheck,
       text,
+      xxHash,
     }:
     mkDerivation {
       pname = "xxhash-ffi";
@@ -729392,7 +734474,7 @@ self: {
         hashable
         text
       ];
-      libraryPkgconfigDepends = [ libxxhash ];
+      libraryPkgconfigDepends = [ xxHash ];
       testHaskellDepends = [
         base
         bytestring
@@ -729416,7 +734498,7 @@ self: {
       hydraPlatforms = lib.platforms.none;
       broken = true;
     }
-  ) { libxxhash = null; };
+  ) { inherit (pkgs) xxHash; };
 
   "xz" = callPackage (
     {
@@ -734688,6 +739770,8 @@ self: {
       pname = "yesod-core";
       version = "1.6.27.0";
       sha256 = "104phivlhpb2b48cmvsj99x358z82xja9xz8i0mlhna40dcpx6cp";
+      revision = "1";
+      editedCabalFile = "1g96f40avs9cj2lsfbisa1bc53hdd4bmjicaj20xrvscngn4df62";
       libraryHaskellDepends = [
         aeson
         attoparsec-aeson
@@ -735320,7 +740404,6 @@ self: {
       ];
       description = "Useful glue functions between the fb library and Yesod";
       license = lib.licenses.bsd3;
-      hydraPlatforms = lib.platforms.none;
     }
   ) { };
 
@@ -737926,7 +743009,7 @@ self: {
     }
   ) { };
 
-  "yesod-test_1_6_19" = callPackage (
+  "yesod-test_1_6_23" = callPackage (
     {
       mkDerivation,
       aeson,
@@ -737940,6 +743023,7 @@ self: {
       conduit,
       containers,
       cookie,
+      directory,
       hspec,
       hspec-core,
       html-conduit,
@@ -737949,6 +743033,7 @@ self: {
       mtl,
       network,
       pretty-show,
+      process,
       text,
       time,
       transformers,
@@ -737963,8 +743048,8 @@ self: {
     }:
     mkDerivation {
       pname = "yesod-test";
-      version = "1.6.19";
-      sha256 = "0snq06yps28lkxfc1mhsvbv2kq0h0mi16zjdfrahm4zaz8axkqka";
+      version = "1.6.23";
+      sha256 = "1bisgnvfda16ryg9npdn4s041z7vvvgdmpkq9wqwccpw4vwylklv";
       libraryHaskellDepends = [
         aeson
         attoparsec
@@ -737977,6 +743062,7 @@ self: {
         conduit
         containers
         cookie
+        directory
         hspec-core
         html-conduit
         http-types
@@ -737985,6 +743071,7 @@ self: {
         mtl
         network
         pretty-show
+        process
         text
         time
         transformers
@@ -742348,6 +747435,8 @@ self: {
       pname = "zinza";
       version = "0.2.1";
       sha256 = "1k4k2yvijg0vwp3ykp9l77n3qdpivikqxx78ilvk6nx6w9sj58c8";
+      revision = "1";
+      editedCabalFile = "1ikbfa3g3636v70v7xa0x89xn91g2w8nngrxnaxwjyhaldskxvzc";
       libraryHaskellDepends = [
         base
         containers
@@ -742486,6 +747575,91 @@ self: {
       ];
       description = "Operations on zip archives";
       license = lib.licenses.bsd3;
+      mainProgram = "haskell-zip-app";
+      maintainers = [ lib.maintainers.mpscholten ];
+    }
+  ) { };
+
+  "zip_2_2_1" = callPackage (
+    {
+      mkDerivation,
+      base,
+      bytestring,
+      bzlib-conduit,
+      case-insensitive,
+      cereal,
+      conduit,
+      conduit-extra,
+      conduit-zstd,
+      containers,
+      digest,
+      directory,
+      dlist,
+      exceptions,
+      filepath,
+      hspec,
+      monad-control,
+      mtl,
+      QuickCheck,
+      resourcet,
+      temporary,
+      text,
+      time,
+      transformers,
+      transformers-base,
+      unix,
+    }:
+    mkDerivation {
+      pname = "zip";
+      version = "2.2.1";
+      sha256 = "1wq0nl034b2nknd627adzffj6rymykvkdn5b0smydcv5wp7i6p6j";
+      isLibrary = true;
+      isExecutable = true;
+      libraryHaskellDepends = [
+        base
+        bytestring
+        bzlib-conduit
+        case-insensitive
+        cereal
+        conduit
+        conduit-extra
+        conduit-zstd
+        containers
+        digest
+        directory
+        dlist
+        exceptions
+        filepath
+        monad-control
+        mtl
+        resourcet
+        text
+        time
+        transformers
+        transformers-base
+        unix
+      ];
+      executableHaskellDepends = [
+        base
+        filepath
+      ];
+      testHaskellDepends = [
+        base
+        bytestring
+        conduit
+        containers
+        directory
+        dlist
+        filepath
+        hspec
+        QuickCheck
+        temporary
+        text
+        time
+      ];
+      description = "Operations on zip archives";
+      license = lib.licenses.bsd3;
+      hydraPlatforms = lib.platforms.none;
       mainProgram = "haskell-zip-app";
       maintainers = [ lib.maintainers.mpscholten ];
     }

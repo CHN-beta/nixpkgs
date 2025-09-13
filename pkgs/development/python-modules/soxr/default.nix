@@ -46,20 +46,19 @@ buildPythonPackage rec {
 
   dontUseCmakeConfigure = true;
 
-  pypaBuildFlags = [
-    "--config=cmake.define.USE_SYSTEM_LIBSOXR=ON"
+  cmakeFlags = [
+    (lib.cmakeBool "USE_SYSTEM_LIBSOXR" true)
   ];
 
-  build-system =
-    [
-      scikit-build-core
-      nanobind
-      setuptools
-      setuptools-scm
-    ]
-    ++ lib.optionals (pythonOlder "3.11") [
-      typing-extensions
-    ];
+  build-system = [
+    scikit-build-core
+    nanobind
+    setuptools
+    setuptools-scm
+  ]
+  ++ lib.optionals (pythonOlder "3.11") [
+    typing-extensions
+  ];
 
   buildInputs = [ libsoxr ];
 

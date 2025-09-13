@@ -1,39 +1,51 @@
 {
   lib,
+  stdenv,
   rustPlatform,
   fetchFromGitHub,
+  installShellFiles,
   nix-update-script,
   pkg-config,
   openssl,
   versionCheckHook,
+  installShellCompletions ? stdenv.buildPlatform.canExecute stdenv.hostPlatform,
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "codex";
-  version = "0.2.0";
+  version = "0.31.0";
 
   src = fetchFromGitHub {
     owner = "openai";
     repo = "codex";
     tag = "rust-v${finalAttrs.version}";
-    hash = "sha256-lpZsECLWmoGJYafL3FlmR6WwOcynGgqWq6IUB+/y6lY=";
+    hash = "sha256-BGrSArFU/wl47Xad7dzOCL8aNgvISwF5gXUNTpKDBMY=";
   };
 
   sourceRoot = "${finalAttrs.src.name}/codex-rs";
 
-  useFetchCargoVendor = true;
-  cargoHash = "sha256-DIDAk5ibwEQ9mwOUS2JNFEA2npVK9TBph/TuwiJgfL4=";
+  cargoHash = "sha256-54eCWW+XJIiMbChvJ06o7SlFq7ZZVgovw2lUXUJem18=";
 
   nativeBuildInputs = [
+    installShellFiles
     pkg-config
   ];
-  buildInputs = [
-    openssl
-  ];
 
-  checkFlags = [
-    "--skip=keeps_previous_response_id_between_tasks" # Requires network access
-    "--skip=retries_on_early_close" # Requires network access
-  ];
+  buildInputs = [ openssl ];
+
+  # NOTE: part of the test suite requires access to networking, local shells,
+  # apple system configuration, etc. since this is a very fast moving target
+  # (for now), with releases happening every other day, constantly figuring out
+  # which tests need to be skipped, or finding workarounds, was too burdensome,
+  # and in practice not adding any real value. this decision may be reversed in
+  # the future once this software stabilizes.
+  doCheck = false;
+
+  postInstall = lib.optionalString installShellCompletions ''
+    installShellCompletion --cmd codex \
+      --bash <($out/bin/codex completion bash) \
+      --fish <($out/bin/codex completion fish) \
+      --zsh <($out/bin/codex completion zsh)
+  '';
 
   doInstallCheck = true;
   nativeInstallCheckInputs = [ versionCheckHook ];
