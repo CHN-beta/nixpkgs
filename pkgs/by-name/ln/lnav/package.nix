@@ -1,10 +1,10 @@
 {
   lib,
   stdenv,
+  fetchpatch,
   fetchFromGitHub,
   pcre2,
   sqlite,
-  ncurses,
   readline,
   zlib,
   bzip2,
@@ -34,6 +34,16 @@ stdenv.mkDerivation (finalAttrs: {
     hash = "sha256-XS3/km2sJwRnWloLKu9X9z07+qBFRfUsaRpZVYjoclI=";
   };
 
+  patches = [
+    # fixes lnav in tmux by patching vendored dependency notcurses
+    # https://github.com/tstack/lnav/issues/1390
+    # remove on next release
+    (fetchpatch {
+      url = "https://github.com/tstack/lnav/commit/5e0bfa483714f05397265a690960d23ae22e1838.patch";
+      hash = "sha256-dArPJik9KVI0KQjGw8W11oqGrbsBCNOr93gaH3yDPpo=";
+    })
+  ];
+
   enableParallelBuilding = true;
 
   separateDebugInfo = true;
@@ -42,34 +52,31 @@ stdenv.mkDerivation (finalAttrs: {
 
   depsBuildBuild = [ buildPackages.stdenv.cc ];
 
-  nativeBuildInputs =
-    [
-      autoconf
-      automake
-      zlib
-      curl.dev
-      re2c
-    ]
-    ++ lib.optionals prqlSupport [
-      cargo
-      rustPlatform.cargoSetupHook
-      rustc
-    ];
+  nativeBuildInputs = [
+    autoconf
+    automake
+    zlib
+    curl.dev
+    re2c
+  ]
+  ++ lib.optionals prqlSupport [
+    cargo
+    rustPlatform.cargoSetupHook
+    rustc
+  ];
 
-  buildInputs =
-    [
-      bzip2
-      ncurses
-      pcre2
-      readline
-      sqlite
-      curl
-      libarchive
-      libunistring
-    ]
-    ++ lib.optionals (!stdenv.hostPlatform.isDarwin) [
-      gpm
-    ];
+  buildInputs = [
+    bzip2
+    pcre2
+    readline
+    sqlite
+    curl
+    libarchive
+    libunistring
+  ]
+  ++ lib.optionals (!stdenv.hostPlatform.isDarwin) [
+    gpm
+  ];
 
   cargoDeps = rustPlatform.fetchCargoVendor {
     src = "${finalAttrs.src}/src/third-party/prqlc-c";

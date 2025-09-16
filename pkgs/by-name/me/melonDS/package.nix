@@ -9,6 +9,7 @@
   libarchive,
   libpcap,
   libslirp,
+  pipewire,
   pkg-config,
   qt6,
   stdenv,
@@ -43,21 +44,20 @@ stdenv.mkDerivation (finalAttrs: {
     wrapQtAppsHook
   ];
 
-  buildInputs =
-    [
-      SDL2
-      enet
-      libarchive
-      libslirp
-      libGL
-      qtbase
-      qtmultimedia
-      zstd
-    ]
-    ++ lib.optionals stdenv.hostPlatform.isLinux [
-      wayland
-      qtwayland
-    ];
+  buildInputs = [
+    SDL2
+    enet
+    libarchive
+    libslirp
+    libGL
+    qtbase
+    qtmultimedia
+    zstd
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isLinux [
+    wayland
+    qtwayland
+  ];
 
   cmakeFlags = [ (lib.cmakeBool "USE_QT6" true) ];
 
@@ -68,6 +68,7 @@ stdenv.mkDerivation (finalAttrs: {
       "--prefix LD_LIBRARY_PATH : ${
         lib.makeLibraryPath [
           libpcap
+          pipewire
           wayland
         ]
       }"

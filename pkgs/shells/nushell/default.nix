@@ -20,6 +20,9 @@
 }:
 
 let
+  # NOTE: when updating this to a new non-patch version, please also try to
+  # update the plugins. Plugins only work if they are compiled for the same
+  # major/minor version.
   version = "0.104.0";
 in
 
@@ -34,27 +37,26 @@ rustPlatform.buildRustPackage {
     hash = "sha256-F4nHCOpbcvmdXDX5KJc9MS3hIIrtMlZR8IjDU7Us/xs=";
   };
 
-  useFetchCargoVendor = true;
   cargoHash = "sha256-zem4HgxO0DD22Bxvs9KN3Zb5E991svV5qcw7MfDUOq4=";
 
-  nativeBuildInputs =
-    [ pkg-config ]
-    ++ lib.optionals (withDefaultFeatures && stdenv.hostPlatform.isLinux) [ python3 ]
-    ++ lib.optionals stdenv.hostPlatform.isDarwin [ rustPlatform.bindgenHook ];
+  nativeBuildInputs = [
+    pkg-config
+  ]
+  ++ lib.optionals (withDefaultFeatures && stdenv.hostPlatform.isLinux) [ python3 ]
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [ rustPlatform.bindgenHook ];
 
-  buildInputs =
-    [
-      openssl
-      zstd
-    ]
-    ++ lib.optionals stdenv.hostPlatform.isDarwin [
-      zlib
-    ]
-    ++ lib.optionals (withDefaultFeatures && stdenv.hostPlatform.isLinux) [ xorg.libX11 ]
-    ++ lib.optionals (withDefaultFeatures && stdenv.hostPlatform.isDarwin) [
-      nghttp2
-      libgit2
-    ];
+  buildInputs = [
+    openssl
+    zstd
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [
+    zlib
+  ]
+  ++ lib.optionals (withDefaultFeatures && stdenv.hostPlatform.isLinux) [ xorg.libX11 ]
+  ++ lib.optionals (withDefaultFeatures && stdenv.hostPlatform.isDarwin) [
+    nghttp2
+    libgit2
+  ];
 
   buildNoDefaultFeatures = !withDefaultFeatures;
   buildFeatures = additionalFeatures [ ];
@@ -95,6 +97,7 @@ rustPlatform.buildRustPackage {
       Br1ght0ne
       johntitor
       joaquintrinanes
+      ryan4yin
     ];
     mainProgram = "nu";
   };

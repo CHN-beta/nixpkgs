@@ -49,13 +49,12 @@ stdenv.mkDerivation rec {
     pkg-config
   ];
 
-  buildInputs =
-    [
-      ncurses
-      jansson
-    ]
-    ++ lib.optional withGtk gtk3
-    ++ lib.optional stdenv.hostPlatform.isLinux libcap;
+  buildInputs = [
+    ncurses
+    jansson
+  ]
+  ++ lib.optional withGtk gtk3
+  ++ lib.optional stdenv.hostPlatform.isLinux libcap;
 
   enableParallelBuilding = true;
 
@@ -68,6 +67,7 @@ stdenv.mkDerivation rec {
       orivej
       raskin
       globin
+      ryan4yin
     ];
     mainProgram = "mtr";
     platforms = platforms.unix;

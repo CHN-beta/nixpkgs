@@ -77,8 +77,11 @@ buildPythonPackage rec {
   # - atomicparsley: embedding thumbnails
   makeWrapperArgs =
     let
-      packagesToBinPath =
-        [ atomicparsley ] ++ lib.optional ffmpegSupport ffmpeg ++ lib.optional rtmpSupport rtmpdump;
+      packagesToBinPath = [
+        atomicparsley
+      ]
+      ++ lib.optional ffmpegSupport ffmpeg
+      ++ lib.optional rtmpSupport rtmpdump;
     in
     [ ''--prefix PATH : "${lib.makeBinPath packagesToBinPath}"'' ];
 
@@ -104,7 +107,6 @@ buildPythonPackage rec {
     '';
     license = licenses.publicDomain;
     maintainers = with maintainers; [
-      bluescreen303
       fpletz
     ];
     platforms = with platforms; linux ++ darwin;

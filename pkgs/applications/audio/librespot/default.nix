@@ -15,6 +15,8 @@
   libpulseaudio,
   withRodio ? true,
   withAvahi ? false,
+  withMDNS ? true,
+  withDNS-SD ? false,
   avahi-compat,
 }:
 
@@ -29,28 +31,29 @@ rustPlatform.buildRustPackage rec {
     sha256 = "sha256-dGQDRb7fgIkXelZKa+PdodIs9DxbgEMlVGJjK/hU3Mo=";
   };
 
-  useFetchCargoVendor = true;
   cargoHash = "sha256-SqvJSHkyd1IicT6c4pE96dBJNNodULhpyG14HRGVWCk=";
 
-  nativeBuildInputs =
-    [
-      pkg-config
-      makeWrapper
-    ]
-    ++ lib.optionals stdenv.hostPlatform.isDarwin [
-      rustPlatform.bindgenHook
-    ];
+  nativeBuildInputs = [
+    pkg-config
+    makeWrapper
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [
+    rustPlatform.bindgenHook
+  ];
 
-  buildInputs =
-    [ openssl ]
-    ++ lib.optional withALSA alsa-lib
-    ++ lib.optional withAvahi avahi-compat
-    ++ lib.optional withPortAudio portaudio
-    ++ lib.optional withPulseAudio libpulseaudio;
+  buildInputs = [
+    openssl
+  ]
+  ++ lib.optional withALSA alsa-lib
+  ++ lib.optional withDNS-SD avahi-compat
+  ++ lib.optional withPortAudio portaudio
+  ++ lib.optional withPulseAudio libpulseaudio;
 
   buildNoDefaultFeatures = true;
   buildFeatures =
     lib.optional withRodio "rodio-backend"
+    ++ lib.optional withMDNS "with-libmdns"
+    ++ lib.optional withDNS-SD "with-dns-sd"
     ++ lib.optional withALSA "alsa-backend"
     ++ lib.optional withAvahi "with-avahi"
     ++ lib.optional withPortAudio "portaudio-backend"

@@ -3,6 +3,7 @@
   stdenv,
   buildPythonPackage,
   fetchFromGitHub,
+  installShellFiles,
 
   # build-system
   setuptools,
@@ -64,43 +65,49 @@ buildPythonPackage rec {
     versioneer
   ];
 
-  dependencies =
-    [
-      attrs
-      autobahn
-      automat
-      click
-      cryptography
-      humanize
-      iterable-io
-      pynacl
-      qrcode
-      spake2
-      tqdm
-      twisted
-      txtorcon
-      zipstream-ng
-    ]
-    ++ autobahn.optional-dependencies.twisted
-    ++ twisted.optional-dependencies.tls;
+  dependencies = [
+    attrs
+    autobahn
+    automat
+    click
+    cryptography
+    humanize
+    iterable-io
+    pynacl
+    qrcode
+    spake2
+    tqdm
+    twisted
+    txtorcon
+    zipstream-ng
+  ]
+  ++ autobahn.optional-dependencies.twisted
+  ++ twisted.optional-dependencies.tls;
 
   optional-dependencies = {
     dilation = [ noiseprotocol ];
   };
 
-  nativeCheckInputs =
-    [
-      magic-wormhole-mailbox-server
-      magic-wormhole-transit-relay
-      pytestCheckHook
-    ]
-    ++ optional-dependencies.dilation
-    ++ lib.optionals stdenv.hostPlatform.isDarwin [ unixtools.locale ];
+  nativeBuildInputs = [
+    installShellFiles
+  ];
+
+  nativeCheckInputs = [
+    magic-wormhole-mailbox-server
+    magic-wormhole-transit-relay
+    pytestCheckHook
+  ]
+  ++ optional-dependencies.dilation
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [ unixtools.locale ];
 
   __darwinAllowLocalNetworking = true;
 
   postInstall = ''
     install -Dm644 docs/wormhole.1 $out/share/man/man1/wormhole.1
+    installShellCompletion --cmd ${meta.mainProgram} \
+      --bash wormhole_complete.bash \
+      --fish wormhole_complete.fish \
+      --zsh wormhole_complete.zsh
   '';
 
   meta = {

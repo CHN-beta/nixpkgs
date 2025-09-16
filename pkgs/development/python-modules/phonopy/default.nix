@@ -70,6 +70,9 @@ buildPythonPackage rec {
     homepage = "https://phonopy.github.io/phonopy/";
     changelog = "http://phonopy.github.io/phonopy/changelog.html";
     license = lib.licenses.bsd0;
-    maintainers = with lib.maintainers; [ psyanticy chn ];
+    maintainers = with lib.maintainers; [
+      psyanticy
+      chn
+    ];
   };
 }

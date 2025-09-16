@@ -35,11 +35,7 @@ let
       res = builtins.tryEval (
         if isDerivation value then
           value.meta.isBuildPythonPackage or [ ]
-        else if
-          value.recurseForDerivations or false
-          || value.recurseForRelease or false
-          || value.__recurseIntoDerivationForReleaseJobs or false
-        then
+        else if value.recurseForDerivations or false || value.recurseForRelease or false then
           packagePython value
         else
           [ ]
@@ -49,7 +45,7 @@ let
   );
 
   jobs = {
-    lib-tests = import ../../lib/tests/release.nix { inherit pkgs; };
+    # for pkgs.formats tests, which rely on remarshal
     pkgs-lib-tests = import ../pkgs-lib/tests { inherit pkgs; };
 
     tested = pkgs.releaseTools.aggregate {
@@ -67,6 +63,7 @@ let
       ];
     };
 
-  } // (mapTestOn (packagePython pkgs));
+  }
+  // (mapTestOn (packagePython pkgs));
 in
 jobs

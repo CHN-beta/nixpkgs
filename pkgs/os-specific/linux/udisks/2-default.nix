@@ -39,20 +39,21 @@
 
 stdenv.mkDerivation rec {
   pname = "udisks";
-  version = "2.10.1";
+  version = "2.10.2";
 
   src = fetchFromGitHub {
     owner = "storaged-project";
     repo = "udisks";
     rev = "${pname}-${version}";
-    sha256 = "sha256-L8jr1+SJWsCizkPXC8VKDy2eVa7/FpqdB8SkBYq6vwc=";
+    sha256 = "sha256-W0vZY6tYxAJbqxNF3F6F6J6h6XxLT+Fon+LqR6jwFUQ=";
   };
 
   outputs = [
     "out"
     "man"
     "dev"
-  ] ++ lib.optional (stdenv.hostPlatform == stdenv.buildPlatform) "devdoc";
+  ]
+  ++ lib.optional (stdenv.hostPlatform == stdenv.buildPlatform) "devdoc";
 
   patches = [
     (replaceVars ./fix-paths.patch {

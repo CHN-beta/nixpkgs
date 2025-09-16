@@ -27,6 +27,7 @@
   armTrustedFirmwareRK3568,
   armTrustedFirmwareRK3588,
   armTrustedFirmwareS905,
+  opensbi,
   buildPackages,
 }@pkgs:
 
@@ -72,7 +73,8 @@ let
 
         patches = [
           ./0001-configs-rpi-allow-for-bigger-kernels.patch
-        ] ++ extraPatches;
+        ]
+        ++ extraPatches;
 
         postPatch = ''
           ${lib.concatMapStrings (script: ''
@@ -97,7 +99,8 @@ let
           swig
           which # for scripts/dtc-version.sh
           perl # for oid build (secureboot)
-        ] ++ lib.optionals (!crossTools) toolsDeps;
+        ]
+        ++ lib.optionals (!crossTools) toolsDeps;
         depsBuildBuild = [ buildPackages.stdenv.cc ];
         buildInputs = lib.optionals crossTools toolsDeps;
 
@@ -108,7 +111,8 @@ let
         makeFlags = [
           "DTC=${lib.getExe buildPackages.dtc}"
           "CROSS_COMPILE=${stdenv.cc.targetPrefix}"
-        ] ++ extraMakeFlags;
+        ]
+        ++ extraMakeFlags;
 
         passAsFile = [ "extraConfig" ];
 
@@ -300,10 +304,12 @@ in
         meta.license = lib.licenses.unfreeRedistributableFirmware;
       };
     in
-    assert stdenv.buildPlatform.system == "x86_64-linux"; # aml_encrypt_gxl is a x86_64 binary
     buildUBoot {
       defconfig = "libretech-cc_defconfig";
-      extraMeta.platforms = [ "aarch64-linux" ];
+      extraMeta = {
+        broken = stdenv.buildPlatform.system != "x86_64-linux"; # aml_encrypt_gxl is a x86_64 binary
+        platforms = [ "aarch64-linux" ];
+      };
       filesToInstall = [ "u-boot.bin" ];
       postBuild = ''
         # Copy binary files & tools from LibreELEC/amlogic-boot-fip, and u-boot build to working dir
@@ -634,6 +640,18 @@ in
     ];
   };
 
+  ubootRadxaZero3W = buildUBoot {
+    defconfig = "radxa-zero-3-rk3566_defconfig";
+    extraMeta.platforms = [ "aarch64-linux" ];
+    BL31 = "${armTrustedFirmwareRK3568}/bl31.elf";
+    ROCKCHIP_TPL = rkbin.TPL_RK3566;
+    filesToInstall = [
+      "idbloader.img"
+      "u-boot.itb"
+      "u-boot-rockchip.bin"
+    ];
+  };
+
   ubootRaspberryPi = buildUBoot {
     defconfig = "rpi_defconfig";
     extraMeta.platforms = [ "armv6l-linux" ];
@@ -807,6 +825,26 @@ in
     # sata init; load sata 0 $loadaddr u-boot-with-nand-spl.imx
     # sf probe; sf update $loadaddr 0 80000
   };
+
+  ubootVisionFive2 =
+    let
+      opensbi_vf2 = opensbi.overrideAttrs (attrs: {
+        makeFlags = attrs.makeFlags ++ [
+          # Matches u-boot documentation: https://docs.u-boot.org/en/latest/board/starfive/visionfive2.html
+          "FW_TEXT_START=0x40000000"
+          "FW_OPTIONS=0"
+        ];
+      });
+    in
+    buildUBoot {
+      defconfig = "starfive_visionfive2_defconfig";
+      extraMeta.platforms = [ "riscv64-linux" ];
+      OPENSBI = "${opensbi_vf2}/share/opensbi/lp64/generic/firmware/fw_dynamic.bin";
+      filesToInstall = [
+        "spl/u-boot-spl.bin.normal.out"
+        "u-boot.itb"
+      ];
+    };
 
   ubootWandboard = buildUBoot {
     defconfig = "wandboard_defconfig";

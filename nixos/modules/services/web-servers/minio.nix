@@ -18,7 +18,10 @@ let
     '';
 in
 {
-  meta.maintainers = [ maintainers.bachp ];
+  meta.maintainers = with maintainers; [
+    bachp
+    ryan4yin
+  ];
 
   options.services.minio = {
     enable = mkEnableOption "Minio Object Storage";
@@ -108,11 +111,10 @@ in
 
     systemd = lib.mkMerge [
       {
-        tmpfiles.rules =
-          [
-            "d '${cfg.configDir}' - minio minio - -"
-          ]
-          ++ (map (x: "d '" + x + "' - minio minio - - ") (builtins.filter lib.types.path.check cfg.dataDir));
+        tmpfiles.rules = [
+          "d '${cfg.configDir}' - minio minio - -"
+        ]
+        ++ (map (x: "d '" + x + "' - minio minio - - ") (builtins.filter lib.types.path.check cfg.dataDir));
 
         services.minio = {
           description = "Minio Object Storage";

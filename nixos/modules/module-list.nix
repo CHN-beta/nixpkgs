@@ -180,6 +180,7 @@
   ./programs/cdemu.nix
   ./programs/cfs-zen-tweaks.nix
   ./programs/chromium.nix
+  ./programs/chrysalis.nix
   ./programs/clash-verge.nix
   ./programs/cnping.nix
   ./programs/command-not-found/command-not-found.nix
@@ -261,6 +262,7 @@
   ./programs/nano.nix
   ./programs/nautilus-open-any-terminal.nix
   ./programs/nbd.nix
+  ./programs/nekoray.nix
   ./programs/neovim.nix
   ./programs/nethoscope.nix
   ./programs/nexttrace.nix
@@ -352,7 +354,6 @@
   ./programs/xonsh.nix
   ./programs/xss-lock.nix
   ./programs/xwayland.nix
-  ./programs/yabar.nix
   ./programs/yazi.nix
   ./programs/ydotool.nix
   ./programs/yubikey-touch-detector.nix
@@ -673,6 +674,7 @@
   ./services/hardware/tlp.nix
   ./services/hardware/trezord.nix
   ./services/hardware/triggerhappy.nix
+  ./services/hardware/tuned.nix
   ./services/hardware/tuxedo-rs.nix
   ./services/hardware/udev.nix
   ./services/hardware/udisks2.nix
@@ -735,6 +737,7 @@
   ./services/mail/opendkim.nix
   ./services/mail/opensmtpd.nix
   ./services/mail/pfix-srsd.nix
+  ./services/mail/postfix-tlspol.nix
   ./services/mail/postfix.nix
   ./services/mail/postfixadmin.nix
   ./services/mail/postgrey.nix
@@ -749,12 +752,14 @@
   ./services/mail/spamassassin.nix
   ./services/mail/stalwart-mail.nix
   ./services/mail/sympa.nix
+  ./services/mail/tlsrpt.nix
   ./services/mail/zeyple.nix
   ./services/matrix/appservice-discord.nix
   ./services/matrix/appservice-irc.nix
   ./services/matrix/conduit.nix
   ./services/matrix/continuwuity.nix
   ./services/matrix/dendrite.nix
+  ./services/matrix/draupnir.nix
   ./services/matrix/hebbot.nix
   ./services/matrix/hookshot.nix
   ./services/matrix/lk-jwt-service.nix
@@ -792,6 +797,7 @@
   ./services/misc/clipcat.nix
   ./services/misc/clipmenu.nix
   ./services/misc/confd.nix
+  ./services/misc/conman.nix
   ./services/misc/cpuminer-cryptonight.nix
   ./services/misc/db-rest.nix
   ./services/misc/devmon.nix
@@ -1482,6 +1488,7 @@
   ./services/torrent/magnetico.nix
   ./services/torrent/opentracker.nix
   ./services/torrent/peerflix.nix
+  ./services/torrent/qbittorrent.nix
   ./services/torrent/rtorrent.nix
   ./services/torrent/torrentstream.nix
   ./services/torrent/transmission.nix
@@ -1515,6 +1522,7 @@
   ./services/web-apps/castopod.nix
   ./services/web-apps/changedetection-io.nix
   ./services/web-apps/chatgpt-retrieval-plugin.nix
+  ./services/web-apps/chhoto-url.nix
   ./services/web-apps/cloudlog.nix
   ./services/web-apps/code-server.nix
   ./services/web-apps/coder.nix
@@ -1549,6 +1557,7 @@
   ./services/web-apps/gerrit.nix
   ./services/web-apps/glance.nix
   ./services/web-apps/glitchtip.nix
+  ./services/web-apps/go-httpbin.nix
   ./services/web-apps/goatcounter.nix
   ./services/web-apps/gotify-server.nix
   ./services/web-apps/gotosocial.nix

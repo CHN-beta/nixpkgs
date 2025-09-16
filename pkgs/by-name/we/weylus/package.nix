@@ -34,51 +34,44 @@ rustPlatform.buildRustPackage rec {
     sha256 = "sha256-lx1ZVp5DkQiL9/vw6PAZ34Lge+K8dfEVh6vLnCUNf7M=";
   };
 
-  buildInputs =
-    [
-      ffmpeg
-      x264
-    ]
-    ++ lib.optionals stdenv.hostPlatform.isLinux [
-      dbus
-      libva
-      gst_all_1.gst-plugins-base
-      xorg.libXext
-      xorg.libXft
-      xorg.libXinerama
-      xorg.libXcursor
-      xorg.libXrender
-      xorg.libXfixes
-      xorg.libXtst
-      xorg.libXrandr
-      xorg.libXcomposite
-      xorg.libXi
-      xorg.libXv
-      pango
-      libdrm
-      wayland
-      libxkbcommon
-    ];
+  buildInputs = [
+    ffmpeg
+    x264
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isLinux [
+    dbus
+    libva
+    gst_all_1.gst-plugins-base
+    xorg.libXext
+    xorg.libXft
+    xorg.libXinerama
+    xorg.libXcursor
+    xorg.libXrender
+    xorg.libXfixes
+    xorg.libXtst
+    xorg.libXrandr
+    xorg.libXcomposite
+    xorg.libXi
+    xorg.libXv
+    pango
+    libdrm
+    wayland
+    libxkbcommon
+  ];
 
-  nativeBuildInputs =
-    [
-      cmake
-      git
-      typescript
-      makeWrapper
-    ]
-    ++ lib.optionals stdenv.hostPlatform.isLinux [
-      pkg-config
-      autoconf
-      libtool
-    ];
+  nativeBuildInputs = [
+    cmake
+    git
+    typescript
+    makeWrapper
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isLinux [
+    pkg-config
+    autoconf
+    libtool
+  ];
 
-  cargoLock = {
-    lockFile = ./Cargo.lock;
-    outputHashes = {
-      "autopilot-0.4.0" = "sha256-1DRuhAAXaIADUmXlDVr8UNbI/Ab2PYdrx9Qh0j9rTX8=";
-    };
-  };
+  cargoHash = "sha256-dLhlYOrLjoBSRGDJB0qTEIb+oGnp9X+ADHddpYITdl8=";
 
   cargoBuildFlags = [ "--features=ffmpeg-system" ];
   cargoTestFlags = [ "--features=ffmpeg-system" ];

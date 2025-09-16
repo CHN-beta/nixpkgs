@@ -66,6 +66,11 @@
   moonlight,
   withTTS ? true,
   enableAutoscroll ? false,
+  # Disabling this would normally break Discord.
+  # The intended use-case for this is when SKIP_HOST_UPDATE is enabled via other means,
+  # for example if a settings.json is linked declaratively (e.g., with home-manager).
+  disableUpdates ? true,
+  commandLineArgs ? "",
 }:
 assert lib.assertMsg (
   !(withMoonlight && withVencord)
@@ -180,7 +185,8 @@ stdenv.mkDerivation rec {
         ${lib.strings.optionalString enableAutoscroll "--add-flags \"--enable-blink-features=MiddleClickAutoscroll\""} \
         --prefix XDG_DATA_DIRS : "${gtk3}/share/gsettings-schemas/${gtk3.name}/" \
         --prefix LD_LIBRARY_PATH : ${libPath}:$out/opt/${binaryName} \
-        --run "${lib.getExe disableBreakingUpdates}"
+        ${lib.strings.optionalString disableUpdates "--run ${lib.getExe disableBreakingUpdates}"} \
+        --add-flags ${lib.escapeShellArg commandLineArgs}
 
     ln -s $out/opt/${binaryName}/${binaryName} $out/bin/
     # Without || true the install would fail on case-insensitive filesystems

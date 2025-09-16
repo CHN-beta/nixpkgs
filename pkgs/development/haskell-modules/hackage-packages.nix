@@ -45846,7 +45846,8 @@ self: {
       badPlatforms = [
         "i686-linux"
         "armv7l-linux"
-      ] ++ lib.platforms.darwin;
+      ]
+      ++ lib.platforms.darwin;
     }
   ) { };
 
@@ -52650,9 +52651,7 @@ self: {
       ];
       description = "Convert adblock config files to privoxy format";
       license = lib.licenses.gpl3Only;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "adblock2privoxy";
-      broken = true;
     }
   ) { };
 
@@ -430986,9 +430985,7 @@ self: {
       ];
       description = "Conduit implementing the official LZ4 frame streaming format";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
       mainProgram = "haskell-lz4c";
-      broken = true;
     }
   ) { };
 
@@ -588336,8 +588333,6 @@ self: {
       ];
       description = "SQLite backend for the Selda database EDSL";
       license = lib.licenses.mit;
-      hydraPlatforms = lib.platforms.none;
-      broken = true;
     }
   ) { };
 
@@ -704981,7 +704976,8 @@ self: {
       badPlatforms = [
         "i686-linux"
         "armv7l-linux"
-      ] ++ lib.platforms.darwin;
+      ]
+      ++ lib.platforms.darwin;
     }
   ) { inherit (pkgs) vulkan-loader; };
 
@@ -723850,7 +723846,8 @@ self: {
       badPlatforms = [
         "aarch64-linux"
         "armv7l-linux"
-      ] ++ lib.platforms.darwin;
+      ]
+      ++ lib.platforms.darwin;
       hydraPlatforms = lib.platforms.none;
       mainProgram = "xgb-agaricus";
       broken = true;

@@ -6,7 +6,7 @@
 }:
 
 rustPlatform.buildRustPackage rec {
-  pname = "nushell_plugin_net";
+  pname = "nu_plugin_net";
   version = "1.10.0";
 
   src = fetchFromGitHub {
@@ -16,10 +16,12 @@ rustPlatform.buildRustPackage rec {
     hash = "sha256-HiNydU40FprxVmRRZtnXom2kFYI04mbeuGTq8+BMh7o=";
   };
 
-  useFetchCargoVendor = true;
   cargoHash = "sha256-tq0XqY2B7tC2ep8vH6T3nkAqxqhniqzYnhbkfB3SbHU=";
 
   nativeBuildInputs = [ rustPlatform.bindgenHook ];
+
+  # there are no tests
+  doCheck = false;
 
   passthru.updateScript = nix-update-script { };
 

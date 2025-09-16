@@ -3,8 +3,8 @@
   lib,
   makeWrapper,
   patchelf,
-  stdenv,
   stdenvNoCC,
+  bintools,
 
   # Linked dynamic libraries.
   alsa-lib,
@@ -103,79 +103,78 @@ let
 
   opusWithCustomModes = libopus.override { withCustomModes = true; };
 
-  deps =
-    [
-      alsa-lib
-      at-spi2-atk
-      at-spi2-core
-      atk
-      bzip2
-      cairo
-      coreutils
-      cups
-      curl
-      dbus
-      expat
-      flac
-      fontconfig
-      freetype
-      gcc-unwrapped.lib
-      gdk-pixbuf
-      glib
-      harfbuzz
-      icu
-      libcap
-      libdrm
-      liberation_ttf
-      libexif
-      libglvnd
-      libkrb5
-      libpng
-      libX11
-      libxcb
-      libXcomposite
-      libXcursor
-      libXdamage
-      libXext
-      libXfixes
-      libXi
-      libxkbcommon
-      libXrandr
-      libXrender
-      libXScrnSaver
-      libxshmfence
-      libXtst
-      libgbm
-      nspr
-      nss
-      opusWithCustomModes
-      pango
-      pciutils
-      pipewire
-      snappy
-      speechd-minimal
-      systemd
-      util-linux
-      vulkan-loader
-      wayland
-      wget
-    ]
-    ++ lib.optional pulseSupport libpulseaudio
-    ++ lib.optional libvaSupport libva
-    ++ [
-      gtk3
-      gtk4
-      qt6.qtbase
-      qt6.qtwayland
-    ];
+  deps = [
+    alsa-lib
+    at-spi2-atk
+    at-spi2-core
+    atk
+    bzip2
+    cairo
+    coreutils
+    cups
+    curl
+    dbus
+    expat
+    flac
+    fontconfig
+    freetype
+    gcc-unwrapped.lib
+    gdk-pixbuf
+    glib
+    harfbuzz
+    icu
+    libcap
+    libdrm
+    liberation_ttf
+    libexif
+    libglvnd
+    libkrb5
+    libpng
+    libX11
+    libxcb
+    libXcomposite
+    libXcursor
+    libXdamage
+    libXext
+    libXfixes
+    libXi
+    libxkbcommon
+    libXrandr
+    libXrender
+    libXScrnSaver
+    libxshmfence
+    libXtst
+    libgbm
+    nspr
+    nss
+    opusWithCustomModes
+    pango
+    pciutils
+    pipewire
+    snappy
+    speechd-minimal
+    systemd
+    util-linux
+    vulkan-loader
+    wayland
+    wget
+  ]
+  ++ lib.optional pulseSupport libpulseaudio
+  ++ lib.optional libvaSupport libva
+  ++ [
+    gtk3
+    gtk4
+    qt6.qtbase
+    qt6.qtwayland
+  ];
 
-  linux = stdenv.mkDerivation (finalAttrs: {
+  linux = stdenvNoCC.mkDerivation (finalAttrs: {
     inherit pname meta passthru;
-    version = "136.0.7103.113";
+    version = "140.0.7339.127";
 
     src = fetchurl {
       url = "https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${finalAttrs.version}-1_amd64.deb";
-      hash = "sha256-BnKKu7X34g+zg4rDqjVXT3Kx2E8Gn5ELqs3LQS3GCkg=";
+      hash = "sha256-ZA23AsqHHznRoegQlDvPRvUfgA7bPQp2HMETFuAsqA8=";
     };
 
     # With strictDeps on, some shebangs were not being patched correctly
@@ -199,7 +198,7 @@ let
 
     unpackPhase = ''
       runHook preUnpack
-      ar x $src
+      ${lib.getExe' bintools "ar"} x $src
       tar xf data.tar.xz
       runHook postUnpack
     '';
@@ -267,7 +266,7 @@ let
 
       for elf in $out/share/google/$appname/{chrome,chrome-sandbox,chrome_crashpad_handler}; do
         patchelf --set-rpath $rpath $elf
-        patchelf --set-interpreter "$(cat $NIX_CC/nix-support/dynamic-linker)" $elf
+        patchelf --set-interpreter ${bintools.dynamicLinker} $elf
       done
 
       runHook postInstall
@@ -276,11 +275,11 @@ let
 
   darwin = stdenvNoCC.mkDerivation (finalAttrs: {
     inherit pname meta passthru;
-    version = "137.0.7151.41";
+    version = "140.0.7339.133";
 
     src = fetchurl {
-      url = "http://dl.google.com/release2/chrome/acracoudzvaateoc4hi5umv6pobq_137.0.7151.41/GoogleChrome-137.0.7151.41.dmg";
-      hash = "sha256-egOl4mjsIxjWxYTLI38U2LqrIs85+cmZG9oEXe/bF7Q=";
+      url = "http://dl.google.com/release2/chrome/fzn7lmun4oavjxo5gnqutqwcny_140.0.7339.133/GoogleChrome-140.0.7339.133.dmg";
+      hash = "sha256-nnmQOzN0U8ZMl9/3iF6eTfC8LjkfCfYa8B5kQs36rmA=";
     };
 
     dontPatch = true;
@@ -319,7 +318,6 @@ let
     homepage = "https://www.google.com/chrome/browser/";
     license = lib.licenses.unfree;
     maintainers = with lib.maintainers; [
-      jnsgruk
       johnrtitor
     ];
     platforms = lib.platforms.darwin ++ [ "x86_64-linux" ];
@@ -327,4 +325,9 @@ let
     mainProgram = "google-chrome-stable";
   };
 in
-if stdenvNoCC.hostPlatform.isDarwin then darwin else linux
+if stdenvNoCC.hostPlatform.isDarwin then
+  darwin
+else if stdenvNoCC.hostPlatform.isLinux then
+  linux
+else
+  throw "Unsupported platform ${stdenvNoCC.hostPlatform.system}"

@@ -2,6 +2,7 @@
   lib,
   stdenv,
   fetchFromGitHub,
+  fetchpatch2,
   pkg-config,
   installShellFiles,
   buildGoModule,
@@ -57,19 +58,18 @@ let
     name = "podman-helper-binary-wrapper";
 
     # this only works for some binaries, others may need to be added to `binPath` or in the modules
-    paths =
-      [
-        gvproxy
-      ]
-      ++ lib.optionals stdenv.hostPlatform.isLinux [
-        aardvark-dns
-        catatonit # added here for the pause image and also set in `containersConf` for `init_path`
-        netavark
-        passt
-        conmon
-        crun
-      ]
-      ++ extraRuntimes;
+    paths = [
+      gvproxy
+    ]
+    ++ lib.optionals stdenv.hostPlatform.isLinux [
+      aardvark-dns
+      catatonit # added here for the pause image and also set in `containersConf` for `init_path`
+      netavark
+      passt
+      conmon
+      crun
+    ]
+    ++ extraRuntimes;
   };
 in
 buildGoModule rec {
@@ -86,6 +86,11 @@ buildGoModule rec {
   patches = [
     (replaceVars ./hardcode-paths.patch {
       bin_path = helpersBin;
+    })
+    (fetchpatch2 {
+      name = "CVE-2025-6032.patch";
+      url = "https://github.com/containers/podman/commit/726b506acc8a00d99f1a3a1357ecf619a1f798c3.patch?full_index=1";
+      hash = "sha256-QtlQJHDaoyh7ER7tLSUuuxgh6nV4xxivuC+Lh2RswAU=";
     })
 
     # we intentionally don't build and install the helper so we shouldn't display messages to users about it
@@ -165,21 +170,20 @@ buildGoModule rec {
     patchelf --set-rpath "${lib.makeLibraryPath [ systemd ]}":$RPATH $out/bin/.podman-wrapped
   '';
 
-  passthru.tests =
-    {
-      version = testers.testVersion {
-        package = podman;
-        command = "HOME=$TMPDIR podman --version";
-      };
-    }
-    // lib.optionalAttrs stdenv.hostPlatform.isLinux {
-      inherit (nixosTests) podman;
-      # related modules
-      inherit (nixosTests)
-        podman-tls-ghostunnel
-        ;
-      oci-containers-podman = nixosTests.oci-containers.podman;
+  passthru.tests = {
+    version = testers.testVersion {
+      package = podman;
+      command = "HOME=$TMPDIR podman --version";
     };
+  }
+  // lib.optionalAttrs stdenv.hostPlatform.isLinux {
+    inherit (nixosTests) podman;
+    # related modules
+    inherit (nixosTests)
+      podman-tls-ghostunnel
+      ;
+    oci-containers-podman = nixosTests.oci-containers.podman;
+  };
 
   meta = with lib; {
     homepage = "https://podman.io/";

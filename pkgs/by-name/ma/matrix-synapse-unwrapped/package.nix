@@ -17,19 +17,19 @@ let
 in
 python3.pkgs.buildPythonApplication rec {
   pname = "matrix-synapse";
-  version = "1.135.2";
+  version = "1.138.0";
   format = "pyproject";
 
   src = fetchFromGitHub {
     owner = "element-hq";
     repo = "synapse";
     rev = "v${version}";
-    hash = "sha256-4HAA9Xq4C3DHxz0BgqBitfM4wZwPSEu+IO/OPfHzLVw=";
+    hash = "sha256-mzBX5cLXF52p3SIq4rSvERbjyD07wRKVxL4yGsYNUaw=";
   };
 
   cargoDeps = rustPlatform.fetchCargoVendor {
     inherit pname version src;
-    hash = "sha256-4J92s6cSgsEIYQpbU6OOLI/USIJX2Gc7UdEHgWQgmXc=";
+    hash = "sha256-aUZUg8+1UlDzsxJN87Bk/DjD5WFcvHGVBRf1rIXKOZ4=";
   };
 
   postPatch = ''
@@ -59,13 +59,12 @@ python3.pkgs.buildPythonApplication rec {
     rustc
   ];
 
-  buildInputs =
-    [
-      openssl
-    ]
-    ++ lib.optionals stdenv.hostPlatform.isDarwin [
-      libiconv
-    ];
+  buildInputs = [
+    openssl
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [
+    libiconv
+  ];
 
   propagatedBuildInputs =
     with python3.pkgs;
@@ -140,15 +139,14 @@ python3.pkgs.buildPythonApplication rec {
     ];
   };
 
-  nativeCheckInputs =
-    [
-      openssl
-    ]
-    ++ (with python3.pkgs; [
-      mock
-      parameterized
-    ])
-    ++ builtins.filter (p: !p.meta.broken) (lib.flatten (lib.attrValues optional-dependencies));
+  nativeCheckInputs = [
+    openssl
+  ]
+  ++ (with python3.pkgs; [
+    mock
+    parameterized
+  ])
+  ++ builtins.filter (p: !p.meta.broken) (lib.flatten (lib.attrValues optional-dependencies));
 
   doCheck = !stdenv.hostPlatform.isDarwin;
 

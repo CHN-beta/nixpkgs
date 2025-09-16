@@ -30,40 +30,35 @@ def test_build_attr_to_attr() -> None:
     )
 
 
-def test_flake_parse(tmpdir: Path, monkeypatch: MonkeyPatch) -> None:
+@patch("platform.node", autospec=True, return_value=None)
+def test_flake_parse(mock_node: Mock, tmpdir: Path, monkeypatch: MonkeyPatch) -> None:
     assert m.Flake.parse("/path/to/flake#attr") == m.Flake(
-        Path("/path/to/flake"), "nixosConfigurations.attr"
+        Path("/path/to/flake"), 'nixosConfigurations."attr"'
     )
-    assert m.Flake.parse("/path/ to /flake", lambda: "hostname") == m.Flake(
-        Path("/path/ to /flake"), "nixosConfigurations.hostname"
+    assert m.Flake.parse("/path/ to /flake") == m.Flake(
+        Path("/path/ to /flake"), 'nixosConfigurations."default"'
     )
-    assert m.Flake.parse("/path/to/flake", lambda: "hostname") == m.Flake(
-        Path("/path/to/flake"), "nixosConfigurations.hostname"
-    )
-    # change directory to tmpdir
-    with monkeypatch.context() as patch_context:
-        patch_context.chdir(tmpdir)
-        assert m.Flake.parse(".#attr") == m.Flake(Path("."), "nixosConfigurations.attr")
-        assert m.Flake.parse("#attr") == m.Flake(Path("."), "nixosConfigurations.attr")
-        assert m.Flake.parse(".") == m.Flake(Path("."), "nixosConfigurations.default")
+    with patch(
+        get_qualified_name(m.run_wrapper, m),
+        autospec=True,
+        return_value=subprocess.CompletedProcess([], 0, stdout="remote\n"),
+    ):
+        target_host = m.Remote("target@remote", [], None)
+        assert m.Flake.parse("/path/to/flake", target_host) == m.Flake(
+            Path("/path/to/flake"), 'nixosConfigurations."remote"'
+        )
+    assert m.Flake.parse(".#attr") == m.Flake(Path("."), 'nixosConfigurations."attr"')
+    assert m.Flake.parse("#attr") == m.Flake(Path("."), 'nixosConfigurations."attr"')
+    assert m.Flake.parse(".") == m.Flake(Path("."), 'nixosConfigurations."default"')
     assert m.Flake.parse("path:/to/flake#attr") == m.Flake(
-        "path:/to/flake", "nixosConfigurations.attr"
-    )
-    assert m.Flake.parse("github:user/repo/branch") == m.Flake(
-        "github:user/repo/branch", "nixosConfigurations.default"
-    )
-    git_root = tmpdir / "git_root"
-    git_root.mkdir()
-    (git_root / ".git").mkdir()
-    assert m.Flake.parse(str(git_root)) == m.Flake(
-        f"git+file://{git_root}", "nixosConfigurations.default"
+        "path:/to/flake", 'nixosConfigurations."attr"'
     )
 
-    work_tree = tmpdir / "work_tree"
-    work_tree.mkdir()
-    (work_tree / ".git").write_text("gitdir: /path/to/git", "utf-8")
-    assert m.Flake.parse(str(work_tree)) == m.Flake(
-        "git+file:///path/to/git", "nixosConfigurations.default"
+    # from here on  we should return "hostname"
+    mock_node.return_value = "hostname"
+
+    assert m.Flake.parse("github:user/repo/branch") == m.Flake(
+        "github:user/repo/branch", 'nixosConfigurations."hostname"'
     )
 
 
@@ -84,7 +79,7 @@ def test_flake_from_arg(
 
     # Flake string
     assert m.Flake.from_arg("/path/to/flake#attr", None) == m.Flake(
-        Path("/path/to/flake"), "nixosConfigurations.attr"
+        Path("/path/to/flake"), 'nixosConfigurations."attr"'
     )
 
     # False
@@ -94,7 +89,7 @@ def test_flake_from_arg(
     with monkeypatch.context() as patch_context:
         patch_context.chdir(tmpdir)
         assert m.Flake.from_arg(True, None) == m.Flake(
-            Path("."), "nixosConfigurations.hostname"
+            Path("."), 'nixosConfigurations."hostname"'
         )
 
     # None when we do not have /etc/nixos/flake.nix
@@ -113,28 +108,18 @@ def test_flake_from_arg(
             return_value=True,
         ),
         patch(
-            "pathlib.Path.is_symlink",
+            "pathlib.Path.resolve",
             autospec=True,
-            return_value=False,
-        ),
-        patch(
-            get_qualified_name(m.discover_git),
-            autospec=True,
-            return_value="/etc/nixos",
+            return_value=Path("/etc/nixos/flake.nix"),
         ),
     ):
         assert m.Flake.from_arg(None, None) == m.Flake(
-            "git+file:///etc/nixos", "nixosConfigurations.hostname"
+            Path("/etc/nixos"), 'nixosConfigurations."hostname"'
         )
 
     with (
         patch(
             "pathlib.Path.exists",
-            autospec=True,
-            return_value=True,
-        ),
-        patch(
-            "pathlib.Path.is_symlink",
             autospec=True,
             return_value=True,
         ),
@@ -145,7 +130,7 @@ def test_flake_from_arg(
         ),
     ):
         assert m.Flake.from_arg(None, None) == m.Flake(
-            Path("/path/to"), "nixosConfigurations.hostname"
+            Path("/path/to"), 'nixosConfigurations."hostname"'
         )
 
     with (
@@ -156,7 +141,7 @@ def test_flake_from_arg(
         ),
     ):
         assert m.Flake.from_arg("/path/to", m.Remote("user@host", [], None)) == m.Flake(
-            Path("/path/to"), "nixosConfigurations.remote-hostname"
+            Path("/path/to"), 'nixosConfigurations."remote-hostname"'
         )
 
 

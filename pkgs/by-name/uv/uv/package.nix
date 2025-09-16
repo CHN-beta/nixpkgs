@@ -8,9 +8,7 @@
   rust-jemalloc-sys,
 
   # nativeBuildInputs
-  cmake,
   installShellFiles,
-  pkg-config,
 
   buildPackages,
   versionCheckHook,
@@ -20,29 +18,22 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "uv";
-  version = "0.7.4";
+  version = "0.7.22";
 
   src = fetchFromGitHub {
     owner = "astral-sh";
     repo = "uv";
     tag = finalAttrs.version;
-    hash = "sha256-Lj+qznkYIO7tu12Db2k6hzfh02Ph+Nj6n6j7ncTbPXE=";
+    hash = "sha256-949PYCKaZqaXFb2GFjTgpZr/b3R61Tf4lHSgGiZv0kA=";
   };
 
-  useFetchCargoVendor = true;
-  cargoHash = "sha256-awKbKDyU8r7pdPlce0a0mLavrfnvMssyf/VDD6LRm7Q=";
+  cargoHash = "sha256-ybhEzHlTuXoSV/3d1soA8Y7EpiphBEBXSlf2gWyiKnw=";
 
   buildInputs = [
     rust-jemalloc-sys
   ];
 
-  nativeBuildInputs = [
-    cmake
-    installShellFiles
-    pkg-config
-  ];
-
-  dontUseCmakeConfigure = true;
+  nativeBuildInputs = [ installShellFiles ];
 
   cargoBuildFlags = [
     "--package"
@@ -64,9 +55,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     ''
   );
 
-  nativeInstallCheckInputs = [
-    versionCheckHook
-  ];
+  nativeInstallCheckInputs = [ versionCheckHook ];
   versionCheckProgramArg = "--version";
   doInstallCheck = true;
 
