@@ -1,0 +1,341 @@
+diff --git a/lib/systems/examples.nix b/lib/systems/examples.nix
+index 3209ab6a1db5..335336be6806 100644
+--- a/lib/systems/examples.nix
++++ b/lib/systems/examples.nix
+@@ -346,6 +346,8 @@ rec {
+     libc = "msvcrt"; # This distinguishes the mingw (non posix) toolchain
+   };
+ 
++  mingwW64Static = mingwW64 // { isStatic = true; };
++
+   ucrt64 = {
+     config = "x86_64-w64-mingw32";
+     libc = "ucrt"; # This distinguishes the mingw (non posix) toolchain
+diff --git a/nixos/modules/services/databases/mysql.nix b/nixos/modules/services/databases/mysql.nix
+index 778c62035182..437723d3e24f 100644
+--- a/nixos/modules/services/databases/mysql.nix
++++ b/nixos/modules/services/databases/mysql.nix
+@@ -609,10 +609,10 @@ in
+           then
+               # While MariaDB comes with a 'mysql' super user account since 10.4.x, MySQL does not
+               # Since we don't want to run this service as 'root' we need to ensure the account exists on first run
+-              ( echo "CREATE USER IF NOT EXISTS '${cfg.user}'@'localhost' IDENTIFIED WITH ${
++              ( echo "CREATE USER IF NOT EXISTS '${cfg.user}' IDENTIFIED WITH ${
+                 if isMariaDB then "unix_socket" else "auth_socket"
+               };"
+-                echo "GRANT ALL PRIVILEGES ON *.* TO '${cfg.user}'@'localhost' WITH GRANT OPTION;"
++                echo "GRANT ALL PRIVILEGES ON *.* TO '${cfg.user}' WITH GRANT OPTION;"
+               ) | ${cfg.package}/bin/mysql -u ${superUser} -N
+ 
+               ${lib.concatMapStrings (database: ''
+@@ -676,12 +676,12 @@ in
+           ''}
+ 
+           ${lib.concatMapStrings (user: ''
+-            ( echo "CREATE USER IF NOT EXISTS '${user.name}'@'localhost' IDENTIFIED WITH ${
++            ( echo "CREATE USER IF NOT EXISTS '${user.name}' IDENTIFIED WITH ${
+               if isMariaDB then "unix_socket" else "auth_socket"
+             };"
+               ${lib.concatStringsSep "\n" (
+                 lib.mapAttrsToList (database: permission: ''
+-                  echo "GRANT ${permission} ON ${database} TO '${user.name}'@'localhost';"
++                  echo "GRANT ${permission} ON ${database} TO '${user.name}';"
+                 '') user.ensurePermissions
+               )}
+             ) | ${cfg.package}/bin/mysql -N
+diff --git a/nixos/modules/services/web-apps/peertube.nix b/nixos/modules/services/web-apps/peertube.nix
+index 6225c7ff8208..6a0cd42da7b8 100644
+--- a/nixos/modules/services/web-apps/peertube.nix
++++ b/nixos/modules/services/web-apps/peertube.nix
+@@ -504,7 +504,7 @@ in
+           secrets:
+             peertube: '$(cat ${cfg.secrets.secretsFile})'
+         ''}
+-        ${lib.optionalString ((!cfg.database.createLocally) && (cfg.database.passwordFile != null)) ''
++        ${lib.optionalString (cfg.database.passwordFile != null) ''
+           database:
+             password: '$(cat ${cfg.database.passwordFile})'
+         ''}
+diff --git a/nixos/modules/services/web-servers/nginx/default.nix b/nixos/modules/services/web-servers/nginx/default.nix
+index 310d8ae84dc9..66fcbb5ba30b 100644
+--- a/nixos/modules/services/web-servers/nginx/default.nix
++++ b/nixos/modules/services/web-servers/nginx/default.nix
+@@ -113,6 +113,14 @@ let
+     proxy_set_header        X-Forwarded-Server $host;
+   '';
+ 
++  recommendedProxyConfigNoHost = pkgs.writeText "nginx-recommended-proxy-headers-no-host.conf" ''
++    proxy_set_header        X-Real-IP $remote_addr;
++    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
++    proxy_set_header        X-Forwarded-Proto $scheme;
++    proxy_set_header        X-Forwarded-Host $host;
++    proxy_set_header        X-Forwarded-Server $host;
++  '';
++
+   proxyCachePathConfig = concatStringsSep "\n" (
+     mapAttrsToList (name: proxyCachePath: ''
+       proxy_cache_path ${
+@@ -262,6 +270,18 @@ let
+               include ${recommendedProxyConfig};
+             ''}
+ 
++            ${optionalString cfg.recommendedProxySettingsNoHost ''
++              proxy_redirect          off;
++              proxy_connect_timeout   ${cfg.proxyTimeout};
++              proxy_send_timeout      ${cfg.proxyTimeout};
++              proxy_read_timeout      ${cfg.proxyTimeout};
++              proxy_http_version      1.1;
++              # don't let clients close the keep-alive connection to upstream. See the nginx blog for details:
++              # https://www.nginx.com/blog/avoiding-top-10-nginx-configuration-mistakes/#no-keepalives
++              proxy_set_header        "Connection" "";
++              include ${recommendedProxyConfigNoHost};
++            ''}
++
+             ${optionalString cfg.recommendedUwsgiSettings ''
+               uwsgi_connect_timeout   ${cfg.uwsgiTimeout};
+               uwsgi_send_timeout      ${cfg.uwsgiTimeout};
+@@ -543,6 +563,7 @@ let
+           ${optionalString (
+             config.proxyPass != null && config.recommendedProxySettings
+           ) "include ${recommendedProxyConfig};"}
++          ${optionalString (config.proxyPass != null && config.recommendedProxySettingsNoHost) "include ${recommendedProxyConfigNoHost};"}
+           ${optionalString (
+             config.uwsgiPass != null && config.recommendedUwsgiSettings
+           ) "include ${cfg.package}/conf/uwsgi_params;"}
+@@ -649,6 +670,12 @@ in
+         '';
+       };
+ 
++      recommendedProxySettingsNoHost = mkOption {
++        default = false;
++        type = types.bool;
++        description = ''recommendedProxySettingsNoHost'';
++      };
++
+       proxyTimeout = mkOption {
+         type = types.str;
+         default = "60s";
+diff --git a/nixos/modules/services/web-servers/nginx/location-options.nix b/nixos/modules/services/web-servers/nginx/location-options.nix
+index 3a13291addd1..c92744de4682 100644
+--- a/nixos/modules/services/web-servers/nginx/location-options.nix
++++ b/nixos/modules/services/web-servers/nginx/location-options.nix
+@@ -150,6 +150,13 @@ with lib;
+       '';
+     };
+ 
++    recommendedProxySettingsNoHost = mkOption {
++      type = types.bool;
++      default = config.services.nginx.recommendedProxySettingsNoHost;
++      defaultText = literalExpression "config.services.nginx.recommendedProxySettingsNoHost";
++      description = ''recommendedProxySettingsNoHost'';
++    };
++
+     recommendedUwsgiSettings = mkOption {
+       type = types.bool;
+       default = config.services.nginx.recommendedUwsgiSettings;
+diff --git a/pkgs/applications/editors/vscode/with-extensions.nix b/pkgs/applications/editors/vscode/with-extensions.nix
+index 5097d177d624..cd066c69ef13 100644
+--- a/pkgs/applications/editors/vscode/with-extensions.nix
++++ b/pkgs/applications/editors/vscode/with-extensions.nix
+@@ -8,6 +8,7 @@
+   makeWrapper,
+   writeTextFile,
+   vscodeExtensions ? [ ],
++  extraFlags ? "",
+ }:
+ 
+ /*
+@@ -66,9 +67,7 @@ let
+     paths = vscodeExtensions ++ [ extensionJsonFile ];
+   };
+ 
+-  extensionsFlag = ''
+-    --add-flags "--extensions-dir ${combinedExtensionsDrv}/share/vscode/extensions"
+-  '';
++  extensionsFlag = ''--add-flags "--extensions-dir ${combinedExtensionsDrv}/share/vscode/extensions" '' + extraFlags;
+ in
+ 
+ runCommand "${wrappedPkgName}-with-extensions-${wrappedPkgVersion}"
+diff --git a/pkgs/by-name/db/dbus-broker/package.nix b/pkgs/by-name/db/dbus-broker/package.nix
+index 510810f90e28..e7a2022b44d8 100644
+--- a/pkgs/by-name/db/dbus-broker/package.nix
++++ b/pkgs/by-name/db/dbus-broker/package.nix
+@@ -2,6 +2,7 @@
+   lib,
+   stdenv,
+   fetchFromGitHub,
++  fetchpatch,
+   docutils,
+   meson,
+   ninja,
+@@ -117,6 +118,11 @@ stdenv.mkDerivation (finalAttrs: {
+   patches = [
+     ./paths.patch
+     ./disable-test.patch
++    (fetchpatch {
++      name = "backport-test-sockopt-6.16-fix.patch";
++      url = "https://github.com/bus1/dbus-broker/commit/fd5c6e191bffcf5b3e6c9abb8b0b03479accc04b.patch";
++      hash = "sha256-+QgZzm/qRnVSr0wDNw9Np3LRreRKl6CQXJextLPy6fc=";
++    })
+   ];
+ 
+   nativeBuildInputs = [
+diff --git a/pkgs/by-name/el/element-desktop/element-desktop-pin.nix b/pkgs/by-name/el/element-desktop/element-desktop-pin.nix
+index 5b5d3cf370f4..388357a8954c 100644
+--- a/pkgs/by-name/el/element-desktop/element-desktop-pin.nix
++++ b/pkgs/by-name/el/element-desktop/element-desktop-pin.nix
+@@ -1,7 +1,7 @@
+ {
+-  "version" = "1.11.111";
++  "version" = "1.11.110";
+   "hashes" = {
+-    "desktopSrcHash" = "sha256-QRnMHlq/gBoptJ/0iBdKUXbnR/oLVeA+ybF/0YFVBlo=";
+-    "desktopYarnHash" = "sha256-U+MuOe0N29AFrLCi7Xa9bDW70SmhQqqtjim+x7QAiJg=";
++    "desktopSrcHash" = "sha256-iWdNiihpU29nek+EQjHmRi7dXadPYYoIt6bhufauKf8=";
++    "desktopYarnHash" = "sha256-l/hclDXT1JeToQPnWFDXU8JSN+oEm5hPYm4OQ7QJONk=";
+   };
+ }
+diff --git a/pkgs/by-name/el/element-desktop/package.nix b/pkgs/by-name/el/element-desktop/package.nix
+index b20c6cf01126..1338f31f5874 100644
+--- a/pkgs/by-name/el/element-desktop/package.nix
++++ b/pkgs/by-name/el/element-desktop/package.nix
+@@ -105,6 +105,7 @@ stdenv.mkDerivation (
+       mkdir -p "$out/share/element"
+       ln -s '${element-web}' "$out/share/element/webapp"
+       cp -r '.' "$out/share/element/electron"
++      cp -r './res/img' "$out/share/element"
+       chmod -R "a+w" "$out/share/element/electron/node_modules"
+       rm -rf "$out/share/element/electron/node_modules"
+       cp -r './node_modules' "$out/share/element/electron"
+diff --git a/pkgs/by-name/gi/git-lfs-transfer/package.nix b/pkgs/by-name/gi/git-lfs-transfer/package.nix
+index 576a2b81f459..7ac5b9f61c1b 100644
+--- a/pkgs/by-name/gi/git-lfs-transfer/package.nix
++++ b/pkgs/by-name/gi/git-lfs-transfer/package.nix
+@@ -1,20 +1,25 @@
+ {
+   lib,
++  go,
+   buildGoModule,
+   fetchFromGitHub,
+ }:
+ buildGoModule {
+   pname = "git-lfs-transfer";
+-  version = "0.1.0-unstable-2024-10-07";
++  version = "0.1.0-unstable-2025-05-05";
+ 
+   src = fetchFromGitHub {
+     owner = "charmbracelet";
+     repo = "git-lfs-transfer";
+-    rev = "422d24414fe4b803849b3f6fe7c4d8ab1b40803b";
+-    hash = "sha256-YsplPW3i4W1RfkWQI1eGXFXb3JofQwKe+9LbjxeL1cM=";
++    rev = "0d51139d5979491e819ba4751235e2ab4b763c6e";
++    hash = "sha256-cufY0CdkTIVHFH3LesAxMDV4KNIqjxFO2m3dLoBNM9U=";
+   };
++  postPatch = ''
++    substituteInPlace go.mod \
++      --replace-fail "go 1.21" "go ${go.version}"
++  '';
+ 
+-  vendorHash = "sha256-1cGlhLdnU6yTqzcB3J1cq3gawncbtdgkb3LFh2ZmXbM=";
++  vendorHash = "sha256-Uz99CTBr6nOdtducBTRvYcPbtvzMiIWh895uRkRyIGI=";
+ 
+   meta = {
+     description = "Server-side implementation of the Git LFS pure-SSH protocol";
+diff --git a/pkgs/by-name/op/openmpi/package.nix b/pkgs/by-name/op/openmpi/package.nix
+index c32656f9810d..b51c7f23bfba 100644
+--- a/pkgs/by-name/op/openmpi/package.nix
++++ b/pkgs/by-name/op/openmpi/package.nix
+@@ -37,6 +37,7 @@
+   # note that opempi fails to build with AVX disabled, meaning that everything
+   # up to AVX is enabled by default.
+   avxOptions ? { },
++  enableSubstitute ? true,
+ }:
+ 
+ stdenv.mkDerivation (finalAttrs: {
+@@ -227,7 +228,7 @@ stdenv.mkDerivation (finalAttrs: {
+       # compilers at build time
+       ${lib.pipe wrapperDataFileNames [
+         (lib.mapCartesianProduct (
+-          { part1, part2 }:
++          { part1, part2 }: lib.optionalString enableSubstitute
+           ''
+             substituteInPlace "''${!outputDev}/share/openmpi/${part1}${part2}-wrapper-data.txt" \
+               --replace-fail \
+diff --git a/pkgs/by-name/sl/slurm/package.nix b/pkgs/by-name/sl/slurm/package.nix
+index feea898d472e..6b85352ceccb 100644
+--- a/pkgs/by-name/sl/slurm/package.nix
++++ b/pkgs/by-name/sl/slurm/package.nix
+@@ -41,7 +41,7 @@
+ 
+ stdenv.mkDerivation rec {
+   pname = "slurm";
+-  version = "24.11.5.1";
++  version = "24.05.4.1";
+ 
+   # N.B. We use github release tags instead of https://www.schedmd.com/downloads.php
+   # because the latter does not keep older releases.
+@@ -49,8 +49,8 @@ stdenv.mkDerivation rec {
+     owner = "SchedMD";
+     repo = "slurm";
+     # The release tags use - instead of .
+-    rev = "${pname}-${builtins.replaceStrings [ "." ] [ "-" ] version}";
+-    hash = "sha256-0c8b+quLeWpCyuCOcp/B8Yd0dxr90UtSV/tgeTi7tbk=";
++    rev = "${pname}-${builtins.replaceStrings ["."] ["-"] version}";
++    hash = "sha256-sviXuRJOpuSoOMNjGPRe11qlphk0Y1/YV/Y5M+QkWys=";
+   };
+ 
+   outputs = [
+diff --git a/pkgs/development/libraries/boost/cmake-paths-188.patch b/pkgs/development/libraries/boost/cmake-paths-188.patch
+new file mode 100644
+index 000000000000..0abb97111dcf
+--- /dev/null
++++ b/pkgs/development/libraries/boost/cmake-paths-188.patch
+@@ -0,0 +1,21 @@
++diff --color -ur boost_1_88_0-unpatched/tools/boost_install/boost-install.jam boost_1_88_0/tools/boost_install/boost-install.jam
++--- boost_1_88_0-unpatched/tools/boost_install/boost-install.jam	2025-07-29 21:46:33.010181683 +0800
+++++ boost_1_88_0/tools/boost_install/boost-install.jam	2025-07-29 21:47:34.346642613 +0800
++@@ -794,7 +794,7 @@
++         ""
++         "# Compute the include and library directories relative to this file."
++         ""
++-        "get_filename_component(_BOOST_CMAKEDIR \"${CMAKE_CURRENT_LIST_DIR}/../\" REALPATH)"
+++        "get_filename_component(_BOOST_REAL_CMAKEDIR \"${CMAKE_CURRENT_LIST_DIR}/../\" REALPATH)"
++         : true ;
++ 
++     if [ path.is-rooted $(cmakedir) ]
++@@ -813,6 +813,8 @@
++             "  unset(_BOOST_CMAKEDIR_ORIGINAL)"
++             "endif()"
++             ""
+++	    "# Assume that the installer actually did know where the libs were to be installed"
+++            "get_filename_component(_BOOST_CMAKEDIR \"$(cmakedir-native)\" REALPATH)"
++             : true ;
++     }
++ 
+diff --git a/pkgs/development/libraries/boost/generic.nix b/pkgs/development/libraries/boost/generic.nix
+index f94b1bff762e..a0d55690b227 100644
+--- a/pkgs/development/libraries/boost/generic.nix
++++ b/pkgs/development/libraries/boost/generic.nix
+@@ -169,6 +169,7 @@ stdenv.mkDerivation {
+       lib.versionOlder version "1.88" && stdenv.hostPlatform.isDarwin
+     ) ./darwin-no-system-python.patch
+     ++ lib.optional (lib.versionOlder version "1.88") ./cmake-paths-173.patch
++    ++ lib.optional (lib.versionAtLeast version "1.88") ./cmake-paths-188.patch
+     ++ lib.optional (version == "1.77.0") (fetchpatch {
+       url = "https://github.com/boostorg/math/commit/7d482f6ebc356e6ec455ccb5f51a23971bf6ce5b.patch";
+       relative = "include";
+diff --git a/pkgs/kde/default.nix b/pkgs/kde/default.nix
+index 14acfe0f2f7f..3532c3c09f1c 100644
+--- a/pkgs/kde/default.nix
++++ b/pkgs/kde/default.nix
+@@ -91,6 +91,9 @@ let
+         krohnkite = self.callPackage ./third-party/krohnkite { };
+         kzones = self.callPackage ./third-party/kzones { };
+         wallpaper-engine-plugin = self.callPackage ./third-party/wallpaper-engine-plugin { };
++
++        # Convenient for users to install various tools provided by kde
++        kdeGear = gear;
+       }
+     );
+ in
