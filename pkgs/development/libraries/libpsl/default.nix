@@ -23,7 +23,7 @@ let
     # https://bugs.kde.org/show_bug.cgi?id=435441
     && !stdenv.hostPlatform.isMusl
     # error on tigerlake and cascadelake
-    && !builtins.elem (stdenv.hostPlatform.gcc.arch or null) [ "tigerlake" "cascadelake" ]
+    && !builtins.elem (stdenv.hostPlatform.gcc.arch or null) [ "tigerlake" "cascadelake" "icelake-server" ]
   ;
 in stdenv.mkDerivation rec {
   pname = "libpsl";
