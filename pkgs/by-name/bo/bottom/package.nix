@@ -10,16 +10,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "bottom";
-  version = "0.11.1";
+  version = "0.11.3";
 
   src = fetchFromGitHub {
     owner = "ClementTsang";
     repo = "bottom";
     tag = version;
-    hash = "sha256-qxs205EQ4cb4oIWWAHw2xuS78ViHCHUVcV3YjCTzoT0=";
+    hash = "sha256-7rVvKAqK8hqICnSr/Ax9ndsIZAdTaUyOAoVZ13W5BJs=";
   };
 
-  cargoHash = "sha256-GQYnsnc1Yogt/sIuVWO7qlZ7DLzwLn8LvW09njY8COA=";
+  cargoHash = "sha256-OXprj84ixm5KFayWsHuxCB3p5Ob/oZgsk3u3lqkOiuk=";
 
   nativeBuildInputs = [
     autoAddDriverRunpath
@@ -59,7 +59,6 @@ rustPlatform.buildRustPackage rec {
     mainProgram = "btm";
     maintainers = with lib.maintainers; [
       berbiche
-      figsoda
       gepbird
     ];
   };

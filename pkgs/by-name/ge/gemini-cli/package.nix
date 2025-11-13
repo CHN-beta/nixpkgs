@@ -1,31 +1,34 @@
 {
   lib,
+  stdenv,
   buildNpmPackage,
   fetchFromGitHub,
-  nix-update-script,
-  ripgrep,
   jq,
   pkg-config,
+  clang_20,
   libsecret,
+  ripgrep,
+  nix-update-script,
 }:
 
 buildNpmPackage (finalAttrs: {
   pname = "gemini-cli";
-  version = "0.5.3";
+  version = "0.13.0";
 
   src = fetchFromGitHub {
     owner = "google-gemini";
     repo = "gemini-cli";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-fs/69CmnDtCrPAv/wxORGyigNdQQw/R7gv9D47hhfnM=";
+    hash = "sha256-Y6RIFF65uzgeOKU03wibEeLtUub1iG52tljM+rHDZbg=";
   };
 
-  npmDepsHash = "sha256-JWP5eM+e6YVOIYIU43iSTuPxmYf8Sgho1VT9GzGoJrU=";
+  npmDepsHash = "sha256-6YhbPj+gbSi/OvyH+dFxkTD4qVj+/7TiMQuP7f1aZYE=";
 
   nativeBuildInputs = [
     jq
     pkg-config
-  ];
+  ]
+  ++ lib.optionals stdenv.isDarwin [ clang_20 ]; # clang_21 breaks @vscode/vsce's optionalDependencies keytar
 
   buildInputs = [
     ripgrep

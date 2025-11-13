@@ -24,20 +24,23 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "geph5";
-  version = "0.2.83";
+  version = "0.2.85";
 
   src = fetchFromGitHub {
     owner = "geph-official";
     repo = "geph5";
     rev = "geph5-client-v${finalAttrs.version}";
-    hash = "sha256-gEhr+goQYcjhgkoFGG1swbC0LHKwVlGAijFcwzBEF/Q=";
+    hash = "sha256-n9LeGXXL4HK4fy/lvOlyXhhu10JmxGILmhIYxhEJ1B8=";
   };
 
-  cargoHash = "sha256-k0VZFyVqGdfXFsmQ5cscTMZZeEk3PxaEDHzfqLGH3H4=";
+  cargoHash = "sha256-XCaf2sa4898xZFJLcFBRe9HTk2NCGpefQF6bfvrlca4=";
 
   postPatch = ''
     substituteInPlace binaries/geph5-client/src/vpn/*.sh \
       --replace-fail 'PATH=' 'PATH=${binPath}:'
+
+    # This setting is dumped from https://github.com/geph-official/gephgui-wry/blob/a85a632448e548f69f9d1eea3d06a4bdc8be3d57/src/daemon.rs#L230
+    cat ${./settings_default.yaml} | base32 -w 0  | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567' '0123456789ABCDEFGHJKMNPQRSTVWXYZ' | sed 's/=//g' > binaries/geph5-client-gui/src/settings_default.yaml.base32
   '';
 
   nativeBuildInputs = [

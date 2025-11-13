@@ -34,6 +34,7 @@ let
     toList
     isList
     elem
+    unique
     ;
 
   inherit (lib.meta)
@@ -54,7 +55,7 @@ let
   showWarnings = config.showDerivationWarnings;
 
   getNameWithVersion =
-    attrs: attrs.name or ("${attrs.pname or "«name-missing»"}-${attrs.version or "«version-missing»"}");
+    attrs: attrs.name or "${attrs.pname or "«name-missing»"}-${attrs.version or "«version-missing»"}";
 
   allowUnfree = config.allowUnfree || builtins.getEnv "NIXPKGS_ALLOW_UNFREE" == "1";
 
@@ -308,7 +309,7 @@ let
 
       and is missing the following outputs:
 
-      ${concatStrings (builtins.map (output: "  - ${output}\n") missingOutputs)}
+      ${concatStrings (map (output: "  - ${output}\n") missingOutputs)}
     '';
 
   handleEvalIssue =
@@ -667,8 +668,9 @@ let
       # Maintainers should be inclusive of teams.
       # Note that there may be external consumers of this API (repology, for instance) -
       # if you add a new maintainer or team attribute please ensure that this expectation is still met.
-      maintainers =
-        attrs.meta.maintainers or [ ] ++ concatMap (team: team.members or [ ]) attrs.meta.teams or [ ];
+      maintainers = unique (
+        attrs.meta.maintainers or [ ] ++ concatMap (team: team.members or [ ]) attrs.meta.teams or [ ]
+      );
 
       identifiers =
         let
@@ -677,7 +679,7 @@ let
           defaultCPEParts = {
             part = "a";
             #vendor = null;
-            ${if attrs ? pname then "product" else null} = attrs.pname;
+            ${if attrs.pname or null != null then "product" else null} = attrs.pname;
             #version = null;
             #update = null;
             edition = "*";

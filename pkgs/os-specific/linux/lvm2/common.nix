@@ -28,7 +28,6 @@
   multipath-tools,
   nixosTests,
   buildFHSEnv,
-  recurseIntoAttrs,
 }:
 
 # configure: error: --enable-dmeventd requires --enable-cmdlib to be used as well
@@ -144,6 +143,8 @@ stdenv.mkDerivation rec {
       }
     ))
     ./fix-stdio-usage.patch
+    # https://gitlab.com/lvmteam/lvm2/-/merge_requests/33
+    ./fix-manpage-reproducibility.patch
   ];
 
   doCheck = false; # requires root
@@ -202,6 +203,7 @@ stdenv.mkDerivation rec {
       moveToOutput bin/blkdeactivate $scripts
       moveToOutput bin/lvmdump $scripts
       moveToOutput bin/lvm_import_vdo $scripts
+      moveToOutput bin/lvmpersist $scripts
       moveToOutput libexec/lvresize_fs_helper $scripts/lib
     ''
     + lib.optionalString (!enableCmdlib) ''
@@ -221,7 +223,7 @@ stdenv.mkDerivation rec {
 
   passthru.tests = {
     installer = nixosTests.installer.lvm;
-    lvm2 = recurseIntoAttrs nixosTests.lvm2;
+    lvm2 = lib.recurseIntoAttrs nixosTests.lvm2;
 
     # https://github.com/NixOS/nixpkgs/issues/369732
     lvm2-fhs-env = buildFHSEnv {

@@ -6,13 +6,13 @@
 
 buildGoModule rec {
   pname = "hermit";
-  version = "0.45.0";
+  version = "0.46.2";
 
   src = fetchFromGitHub {
     rev = "v${version}";
     owner = "cashapp";
     repo = "hermit";
-    hash = "sha256-Dk+m/23d5CMwjOXoD3mDs5fB7KgWfmX6BjrS3h/HB7w=";
+    hash = "sha256-4SOwOO9ee7fKrby9sokWW/GPujT9/O+9emcaLIe+0C0=";
   };
 
   vendorHash = "sha256-bko9N3dbxe4K98BdG78lYYipAgAtGntrEAgoLeOY1NM=";

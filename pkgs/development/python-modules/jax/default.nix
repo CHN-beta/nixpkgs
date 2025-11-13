@@ -6,6 +6,7 @@
   lapack,
   buildPythonPackage,
   fetchFromGitHub,
+  fetchpatch2,
   cudaSupport ? config.cudaSupport,
 
   # build-system
@@ -40,7 +41,7 @@ let
 in
 buildPythonPackage rec {
   pname = "jax";
-  version = "0.7.1";
+  version = "0.8.0";
   pyproject = true;
 
   src = fetchFromGitHub {
@@ -48,8 +49,16 @@ buildPythonPackage rec {
     repo = "jax";
     # google/jax contains tags for jax and jaxlib. Only use jax tags!
     tag = "jax-v${version}";
-    hash = "sha256-k3yuWs+SOxrDXysVWCFR3wliATtro+aDdDXfFVtOTBo=";
+    hash = "sha256-Ilcp4WW65SyqrqDGBRdnB25m7OCbrsfdtxWvl0uTjNw=";
   };
+
+  patches = [
+    # https://github.com/jax-ml/jax/pull/32840
+    (fetchpatch2 {
+      url = "https://github.com/Prince213/jax/commit/af5c211d49f3b99447db2252d2cc2b8e0fb54d1c.patch?full_index=1";
+      hash = "sha256-ijEd+MDe91qyYfE+aMzR5rNmTeGadin6Io8PIfJWc3o=";
+    })
+  ];
 
   build-system = [ setuptools ];
 
@@ -179,6 +188,9 @@ buildPythonPackage rec {
     description = "Source-built JAX frontend: differentiate, compile, and transform Numpy code";
     homepage = "https://github.com/google/jax";
     license = lib.licenses.asl20;
-    maintainers = with lib.maintainers; [ samuela ];
+    maintainers = with lib.maintainers; [
+      GaetanLepage
+      samuela
+    ];
   };
 }

@@ -7,6 +7,7 @@
   newScope,
   overrideCC,
   stdenvNoLibc,
+  emptyDirectory,
 }:
 
 lib.makeScope newScope (
@@ -26,9 +27,13 @@ lib.makeScope newScope (
       else
         buildPackages.gccWithoutTargetLibc.override (old: {
           bintools = old.bintools.override {
-            libc = pkgs.libc;
+            libc = pkgs.pkgsHostTarget.libc;
+            noLibc = pkgs.libc == null;
+            nativeLibc = false;
           };
-          libc = pkgs.libc;
+          libc = pkgs.pkgsHostTarget.libc;
+          noLibc = pkgs.libc == null;
+          nativeLibc = false;
         })
     );
 

@@ -27,14 +27,14 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "eduke32";
-  version = "0-unstable-2025-08-13";
+  version = "0-unstable-2025-10-17";
 
   src = fetchFromGitLab {
     domain = "voidpoint.io";
     owner = "terminx";
     repo = "eduke32";
-    rev = "126f35ca8c24368f101996523935d08b269f45be";
-    hash = "sha256-TuCb2LLeg/MZ3fG1fqGNNeJb8qLjom0nXger8cMgk1c=";
+    rev = "227c11dee0abaa57bbc22b06f0002e064efa7191";
+    hash = "sha256-bWty/eOq5dWltNREo9ba68pWDpBxOIfjJK1EtZ27l1U=";
     deepClone = true;
     leaveDotGit = true;
     postFetch = ''

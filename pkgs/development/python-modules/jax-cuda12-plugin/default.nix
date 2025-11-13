@@ -39,32 +39,32 @@ let
     "3.11-x86_64-linux" = getSrcFromPypi {
       platform = "manylinux_2_27_x86_64";
       dist = "cp311";
-      hash = "sha256-Yw9aGxuorpSsC0K8N1IeGXBcmlRURWV5+NKY5FC2/tw=";
+      hash = "sha256-cL6wFZM7RyEDSBonUh1NtBz1kgCHBfRBLL86HsrzXC4=";
     };
     "3.11-aarch64-linux" = getSrcFromPypi {
-      platform = "manylinux2014_aarch64";
+      platform = "manylinux_2_27_aarch64";
       dist = "cp311";
-      hash = "sha256-iAQd0J4Bm4JnTZ9xZ7eWtIy1so3pVHLBosA2OxZtS/Y=";
+      hash = "sha256-x+pdt1IZS4o/v0xWS7e7wk8k4HEJu1nmWf1LETFLunY=";
     };
     "3.12-x86_64-linux" = getSrcFromPypi {
       platform = "manylinux_2_27_x86_64";
       dist = "cp312";
-      hash = "sha256-LPPm/mNDtbV2TTWJPON16z5qhZBIty3I9wCv7CFai6Y=";
+      hash = "sha256-VVbj9Iy+HfYI2dDTQAMIZJ3eyqjQ4kOUkMb4i0GAMcs=";
     };
     "3.12-aarch64-linux" = getSrcFromPypi {
-      platform = "manylinux2014_aarch64";
+      platform = "manylinux_2_27_aarch64";
       dist = "cp312";
-      hash = "sha256-M9ZGYPYVg1pg4M+Z656KMuz/1dIGYTV/RZEqHYFkMPE=";
+      hash = "sha256-SdBMFULqpAi3utAXASC82oMqAvuUT8iT3OiCbublpJM=";
     };
     "3.13-x86_64-linux" = getSrcFromPypi {
       platform = "manylinux_2_27_x86_64";
       dist = "cp313";
-      hash = "sha256-dDC8RnptxbvBhvgcq5L0GhJy9aodFkbBu/rqkleD2oU=";
+      hash = "sha256-Rw6W5+pNsPN1jabn0VxF6BAmYpJP46hHIV7mXKySxo0=";
     };
     "3.13-aarch64-linux" = getSrcFromPypi {
-      platform = "manylinux2014_aarch64";
+      platform = "manylinux_2_27_aarch64";
       dist = "cp313";
-      hash = "sha256-w8IAegYZmwlYMZdsamZcEvylWs1+yEq0SI4a5Y7stJQ=";
+      hash = "sha256-IGmVNdeaLM+X8SEGC2BAUzhvQRzLMMElxmtqWgJsiSE=";
     };
   };
 in

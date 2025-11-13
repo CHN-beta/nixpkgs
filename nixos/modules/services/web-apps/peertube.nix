@@ -70,10 +70,11 @@ let
 
   envFile = pkgs.writeText "peertube.env" (
     lib.concatMapStrings (s: s + "\n") (
-      (lib.concatLists (
+      lib.concatLists (
         lib.mapAttrsToList (name: value: lib.optional (value != null) ''${name}="${toString value}"'') env
-      ))
+      )
     )
+
   );
 
   peertubeEnv = pkgs.writeShellScriptBin "peertube-env" ''
@@ -338,12 +339,7 @@ in
       };
     };
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.peertube;
-      defaultText = lib.literalExpression "pkgs.peertube";
-      description = "PeerTube package to use.";
-    };
+    package = lib.mkPackageOption pkgs "peertube" { };
   };
 
   config = lib.mkIf cfg.enable {

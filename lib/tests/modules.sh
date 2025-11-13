@@ -210,6 +210,9 @@ checkConfigError 'A definition for option .intStrings\.badTagTypeError\.left. is
 checkConfigError 'A definition for option .nested\.right\.left. is not of type .signed integer.' config.nested.right.left ./types-attrTag.nix
 checkConfigError 'In attrTag, each tag value must be an option, but tag int was a bare type, not wrapped in mkOption.' config.opt.int ./types-attrTag-wrong-decl.nix
 
+# types
+checkConfigOutput '"ok"' config.assertions ./types.nix
+
 # types.pathInStore
 checkConfigOutput '".*/store/0lz9p8xhf89kb1c1kk6jxrzskaiygnlh-bash-5.2-p15.drv"' config.pathInStore.ok1 ./types.nix
 checkConfigOutput '".*/store/0fb3ykw9r5hpayd05sr0cizwadzq1d8q-bash-5.2-p15"' config.pathInStore.ok2 ./types.nix
@@ -219,6 +222,26 @@ checkConfigError 'A definition for option .* is not of type .path in the Nix sto
 checkConfigError 'A definition for option .* is not of type .path in the Nix store.. Definition values:\n\s*- In .*: ".*/store/"' config.pathInStore.bad3 ./types.nix
 checkConfigError 'A definition for option .* is not of type .path in the Nix store.. Definition values:\n\s*- In .*: ".*/store/.links"' config.pathInStore.bad4 ./types.nix
 checkConfigError 'A definition for option .* is not of type .path in the Nix store.. Definition values:\n\s*- In .*: "/foo/bar"' config.pathInStore.bad5 ./types.nix
+
+# types.externalPath
+checkConfigOutput '".*/foo/bar"' config.externalPath.ok1 ./types.nix
+checkConfigOutput '".*/"' config.externalPath.ok2 ./types.nix
+checkConfigError 'A definition for option .* is not of type .absolute path not in the Nix store.' config.externalPath.bad1 ./types.nix
+checkConfigError 'A definition for option .* is not of type .absolute path not in the Nix store.' config.externalPath.bad2 ./types.nix
+checkConfigError 'A definition for option .* is not of type .absolute path not in the Nix store.' config.externalPath.bad3 ./types.nix
+checkConfigError 'A definition for option .* is not of type .absolute path not in the Nix store.' config.externalPath.bad4 ./types.nix
+checkConfigError 'A definition for option .* is not of type .absolute path not in the Nix store.' config.externalPath.bad5 ./types.nix
+
+# types.fileset
+checkConfigOutput '^0$' config.filesetCardinal.ok1 ./fileset.nix
+checkConfigOutput '^1$' config.filesetCardinal.ok2 ./fileset.nix
+checkConfigOutput '^1$' config.filesetCardinal.ok3 ./fileset.nix
+checkConfigOutput '^1$' config.filesetCardinal.ok4 ./fileset.nix
+checkConfigOutput '^0$' config.filesetCardinal.ok5 ./fileset.nix
+checkConfigError 'A definition for option .* is not of type .fileset.. Definition values:\n.*' config.filesetCardinal.err1 ./fileset.nix
+checkConfigError 'A definition for option .* is not of type .fileset.. Definition values:\n.*' config.filesetCardinal.err2 ./fileset.nix
+checkConfigError 'A definition for option .* is not of type .fileset.. Definition values:\n.*' config.filesetCardinal.err3 ./fileset.nix
+checkConfigError 'A definition for option .* is not of type .fileset.. Definition values:\n.*' config.filesetCardinal.err4 ./fileset.nix
 
 # Check boolean option.
 checkConfigOutput '^false$' config.enable ./declare-enable.nix
@@ -802,6 +825,25 @@ checkConfigOutput '^0$' config.v1CheckedPass ./add-check.nix
 checkConfigError 'A definition for option .* is not of type .signed integer.*' config.v1CheckedFail ./add-check.nix
 checkConfigOutput '^true$' config.v2checkedPass ./add-check.nix
 checkConfigError 'A definition for option .* is not of type .attribute set of signed integer.*' config.v2checkedFail ./add-check.nix
+
+# v2 merge check coherence
+# Tests checkV2MergeCoherence call in modules.nix (mergeDefinitions for lazyAttrsOf)
+checkConfigError 'ad-hoc.*override.*incompatible' config.adhocFail.foo ./v2-check-coherence.nix
+# Tests checkV2MergeCoherence call in modules.nix (mergeDefinitions for lazyAttrsOf)
+checkConfigError 'ad-hoc.*override.*incompatible' config.adhocOuterFail.bar ./v2-check-coherence.nix
+# Tests checkV2MergeCoherence call in types.nix (either t1)
+checkConfigError 'ad-hoc.*override.*incompatible' config.eitherLeftFail ./v2-check-coherence.nix
+# Tests checkV2MergeCoherence call in types.nix (either t2)
+checkConfigError 'ad-hoc.*override.*incompatible' config.eitherRightFail ./v2-check-coherence.nix
+# Tests checkV2MergeCoherence call in types.nix (coercedTo coercedType)
+checkConfigError 'ad-hoc.*override.*incompatible' config.coercedFromFail.bar ./v2-check-coherence.nix
+# Tests checkV2MergeCoherence call in types.nix (coercedTo finalType)
+checkConfigError 'ad-hoc.*override.*incompatible' config.coercedToFail.foo ./v2-check-coherence.nix
+# Tests checkV2MergeCoherence call in types.nix (addCheck elemType)
+checkConfigError 'ad-hoc.*override.*incompatible' config.addCheckNested.foo ./v2-check-coherence.nix
+checkConfigError 'Please use.*lib.types.addCheck.*instead' config.adhocFail.foo ./v2-check-coherence.nix
+checkConfigError 'A definition for option .* is not of type .*' config.addCheckFail.bar.baz ./v2-check-coherence.nix
+checkConfigOutput '^true$' config.result ./v2-check-coherence.nix
 
 
 cat <<EOF

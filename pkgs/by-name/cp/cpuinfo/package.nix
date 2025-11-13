@@ -10,13 +10,13 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "cpuinfo";
-  version = "0-unstable-2025-07-24";
+  version = "0-unstable-2025-11-06";
 
   src = fetchFromGitHub {
     owner = "pytorch";
     repo = "cpuinfo";
-    rev = "33ed0be77d7767d0e2010e2c3cf972ef36c7c307";
-    hash = "sha256-0rZzbZkOo6DAt1YnH4rtx0FvmCuYH8M6X3DNJ0gURpU=";
+    rev = "f01ce870215f9e5d4c32006796994469c5334fd7";
+    hash = "sha256-v6U+Z5YHHSP0WUPxQ0G2zpP4a2D4I+BfhdY6q5BylBo=";
   };
 
   passthru.updateScript = nix-update-script { extraArgs = [ "--version=branch" ]; };
@@ -50,7 +50,7 @@ stdenv.mkDerivation (finalAttrs: {
     mainProgram = "cpu-info";
     maintainers = with lib.maintainers; [ pawelchcki ];
     pkgConfigModules = [ "libcpuinfo" ];
-    # https://github.com/pytorch/cpuinfo/blob/877328f188a3c7d1fa855871a278eb48d530c4c0/CMakeLists.txt#L98
+    # https://github.com/pytorch/cpuinfo/blob/f01ce870215f9e5d4c32006796994469c5334fd7/CMakeLists.txt#L98
     platforms = lib.platforms.x86 ++ lib.platforms.aarch ++ lib.platforms.riscv;
   };
 })

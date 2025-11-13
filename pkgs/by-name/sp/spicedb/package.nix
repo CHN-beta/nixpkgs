@@ -1,5 +1,6 @@
 {
   lib,
+  stdenv,
   buildGoModule,
   fetchFromGitHub,
   installShellFiles,
@@ -7,16 +8,16 @@
 
 buildGoModule rec {
   pname = "spicedb";
-  version = "1.45.4";
+  version = "1.46.2";
 
   src = fetchFromGitHub {
     owner = "authzed";
     repo = "spicedb";
     tag = "v${version}";
-    hash = "sha256-q5szY9eJcmlxoA5FcBgOb81l5p8b9+SUSQffXV3KMgk=";
+    hash = "sha256-4/6u/yYlPB85Et+9Bkv6qsVwIvhHoyvkbYkEtbRdDVM=";
   };
 
-  vendorHash = "sha256-XqXbQYUAQiOZ0MjWwFSRe0suaQzXb6KQb+KoGAvvceM=";
+  vendorHash = "sha256-WICi1OPVLrawmo6zW4hOygf0UXsdtuuwl6Cp78yCC9c=";
 
   ldflags = [
     "-X 'github.com/jzelinskie/cobrautil/v2.Version=${src.tag}'"
@@ -26,7 +27,7 @@ buildGoModule rec {
 
   nativeBuildInputs = [ installShellFiles ];
 
-  postInstall = ''
+  postInstall = lib.optionalString (stdenv.buildPlatform.canExecute stdenv.hostPlatform) ''
     installShellCompletion --cmd spicedb \
       --bash <($out/bin/spicedb completion bash) \
       --fish <($out/bin/spicedb completion fish) \

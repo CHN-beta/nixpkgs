@@ -17,6 +17,7 @@
   python-debian,
   jinja2,
   license-expression,
+  python-magic,
   tomlkit,
 
   # test dependencies
@@ -26,14 +27,14 @@
 
 buildPythonPackage rec {
   pname = "reuse";
-  version = "5.1.1";
+  version = "6.2.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "fsfe";
     repo = "reuse-tool";
     tag = "v${version}";
-    hash = "sha256-xrYr68PpTLglTlLgTHWHJjTd62tzcOvY9h//CxYJOzM=";
+    hash = "sha256-J49RIt7MxnsMJqJAaGvYgUzXMHAT9/frMmrkhWXe5tQ=";
   };
 
   outputs = [
@@ -59,6 +60,7 @@ buildPythonPackage rec {
     python-debian
     jinja2
     license-expression
+    python-magic
     tomlkit
   ];
 

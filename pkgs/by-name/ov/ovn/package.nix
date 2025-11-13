@@ -51,6 +51,9 @@ stdenv.mkDerivation (finalAttrs: {
       url = "https://github.com/ovn-org/ovn/commit/b396babaa54ea0c8d943bbfef751dbdbf288c7af.patch";
       hash = "sha256-RjWxT3EYKjGhtvCq3bAhKN9PrPTkSR72xPkQQ4SPWWU=";
     })
+    # Fix build failure due to make install race condition.
+    # Posted at: https://patchwork.ozlabs.org/project/ovn/patch/20251012225908.37855-1-ihar.hrachyshka@gmail.com/
+    ./0001-build-Fix-race-condition-when-installing-ovn-detrace.patch
   ];
 
   nativeBuildInputs = [
@@ -141,7 +144,11 @@ stdenv.mkDerivation (finalAttrs: {
     '';
     homepage = "https://www.ovn.org";
     changelog = "https://github.com/ovn-org/ovn/blob/refs/tags/${finalAttrs.src.tag}/NEWS";
-    license = lib.licenses.asl20;
+    license = with lib.licenses; [
+      asl20
+      lgpl21Plus # bugtool plugins
+      sissl11 # lib/sflow from ovs submodule
+    ];
     maintainers = with lib.maintainers; [
       adamcstephens
       booxter

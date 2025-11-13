@@ -41,9 +41,9 @@ let
     ${lib.optionalString (cfg.registerHostname != "") "registerHostname=${cfg.registerHostname}"}
 
     certrequired=${lib.boolToString cfg.clientCertRequired}
-    ${lib.optionalString (cfg.sslCert != "") "sslCert=${cfg.sslCert}"}
-    ${lib.optionalString (cfg.sslKey != "") "sslKey=${cfg.sslKey}"}
-    ${lib.optionalString (cfg.sslCa != "") "sslCA=${cfg.sslCa}"}
+    ${lib.optionalString (cfg.sslCert != null) "sslCert=${cfg.sslCert}"}
+    ${lib.optionalString (cfg.sslKey != null) "sslKey=${cfg.sslKey}"}
+    ${lib.optionalString (cfg.sslCa != null) "sslCA=${cfg.sslCa}"}
 
     ${lib.optionalString (cfg.dbus != null) "dbus=${cfg.dbus}"}
 
@@ -56,7 +56,7 @@ in
     (lib.mkRemovedOptionModule [
       "services"
       "murmur"
-      "logfile"
+      "logFile"
     ] "This option has been superseded by services.murmur.logToFile")
   ];
 
@@ -238,20 +238,20 @@ in
       clientCertRequired = lib.mkEnableOption "requiring clients to authenticate via certificates";
 
       sslCert = lib.mkOption {
-        type = lib.types.str;
-        default = "";
+        type = lib.types.nullOr lib.types.path;
+        default = null;
         description = "Path to your SSL certificate.";
       };
 
       sslKey = lib.mkOption {
-        type = lib.types.str;
-        default = "";
+        type = lib.types.nullOr lib.types.path;
+        default = null;
         description = "Path to your SSL key.";
       };
 
       sslCa = lib.mkOption {
-        type = lib.types.str;
-        default = "";
+        type = lib.types.nullOr lib.types.path;
+        default = null;
         description = "Path to your SSL CA certificate.";
       };
 
@@ -345,17 +345,24 @@ in
         CapabilityBoundingSet = "CAP_NET_BIND_SERVICE";
         LockPersonality = true;
         MemoryDenyWriteExecute = true;
+        MountAPIVFS = true;
         NoNewPrivileges = true;
         PrivateDevices = true;
+        PrivateMounts = true;
         PrivateTmp = true;
+        PrivateUsers = true;
         ProtectClock = true;
-        ProtectControlGroups = true;
+        ProtectControlGroups = "strict";
         ProtectHome = true;
         ProtectHostname = true;
         ProtectKernelLogs = true;
         ProtectKernelModules = true;
         ProtectKernelTunables = true;
-        ProtectSystem = "full";
+        ProtectProc = "invisible";
+        ProtectSystem = "strict";
+        ReadWritePaths = [
+          cfg.stateDir
+        ];
         RestrictAddressFamilies = [
           "AF_INET"
           "AF_INET6"
@@ -415,13 +422,13 @@ in
     + lib.optionalString cfg.logToFile ''
       rw /var/log/murmur/murmurd.log,
     ''
-    + lib.optionalString (cfg.sslCert != "") ''
+    + lib.optionalString (cfg.sslCert != null) ''
       r ${cfg.sslCert},
     ''
-    + lib.optionalString (cfg.sslKey != "") ''
+    + lib.optionalString (cfg.sslKey != null) ''
       r ${cfg.sslKey},
     ''
-    + lib.optionalString (cfg.sslCa != "") ''
+    + lib.optionalString (cfg.sslCa != null) ''
       r ${cfg.sslCa},
     ''
     + lib.optionalString (cfg.dbus != null) ''

@@ -1,42 +1,37 @@
 {
     "testing": {
-        "version": "6.17-rc5",
-        "hash": "sha256:14dvh8vbc3digvx96mhqnd4ijbxkhn1ph1nqkxlri3sff5z51k9x",
+        "version": "6.18-rc3",
+        "hash": "sha256:01cjjg23av5p8hxbqwfz4jbl0rzm3d1ldibapqcbkkxfcjri612n",
         "lts": false
     },
     "6.1": {
-        "version": "6.1.152",
-        "hash": "sha256:1ndpnlmpsp2137aqis8bpa2cvdl28jg66pi0p2c6d26cm7i3n5qs",
+        "version": "6.1.158",
+        "hash": "sha256:1nmz4rknw82k9ylyrbm4g2m0hh4lmgkwi1g3gm7hzv04nvyqn1md",
         "lts": true
     },
     "5.15": {
-        "version": "5.15.193",
-        "hash": "sha256:168ymh51hm0l6pd9g2kc33ji28gznc25rwzj7rvhnw82z79640n7",
+        "version": "5.15.196",
+        "hash": "sha256:018ffzi91xh46l7r3fgc4mpri3pxzl6wc1n946vny0lbb59pj5c3",
         "lts": true
     },
     "5.10": {
-        "version": "5.10.244",
-        "hash": "sha256:1h3dqaran5zrfgs0vybwq576yka8s9jirahiy3bb7hpm1763f2i1",
-        "lts": true
-    },
-    "5.4": {
-        "version": "5.4.299",
-        "hash": "sha256:0bdzy3bpywm24nx73ah9smwmmlmyhvlf5xcp2kk1z54dxfp9bpl8",
+        "version": "5.10.246",
+        "hash": "sha256:0xd8r8qqgxh3zhqkl4a5plmgsycxrffhpc9q2rwhkp6jd717cszb",
         "lts": true
     },
     "6.6": {
-        "version": "6.6.106",
-        "hash": "sha256:18584vys8qmbqj4hndiyhwbsn6z3832djm1mx07vgl6wv3i80c8c",
+        "version": "6.6.116",
+        "hash": "sha256:07d5629579apc1d8yb0ki226iyb5n3lwp1yw0p189qlvq919g9d9",
         "lts": true
     },
     "6.12": {
-        "version": "6.12.47",
-        "hash": "sha256:099fj9qd8knafbl400drm8aqn5h7y6g39gc7d4i4hc3lf44f8bz8",
+        "version": "6.12.57",
+        "hash": "sha256:06jlsawz1wgk13gyxphkglb8a4iiwg0vg5hrfc7bj1s6gk1s2p0n",
         "lts": true
     },
-    "6.16": {
-        "version": "6.16.7",
-        "hash": "sha256:108sk9r6ac0sc7h6ydvlyv7kib6z3af4v2f46kdinys2z6hxmqsv",
+    "6.17": {
+        "version": "6.17.7",
+        "hash": "sha256:03lxl2p8hvi4hdzbf72v3xh8yigr58826dmy6rqxbq9r8h6ymwnx",
         "lts": false
     }
 }

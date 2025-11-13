@@ -14,13 +14,19 @@
   biosSupport ? true,
   pxeSupport ? false,
 }:
-
 let
   stdenv = llvmPackages.stdenv;
 
   hasX86 =
     (if targets == [ ] then stdenv.hostPlatform.isx86_32 else (builtins.elem "i686" targets))
     || (if targets == [ ] then stdenv.hostPlatform.isx86_64 else (builtins.elem "x86_64" targets))
+    || enableAll;
+
+  missingZerocallusedregs =
+    (
+      if targets == [ ] then stdenv.hostPlatform.isLoongArch64 else (builtins.elem "loongarch64" targets)
+    )
+    || (if targets == [ ] then stdenv.hostPlatform.isRiscV64 else (builtins.elem "riscv64" targets))
     || enableAll;
 
   biosSupport' = biosSupport && hasX86;
@@ -37,22 +43,25 @@ let
     }
     .${target} or (throw "Unsupported target ${target}");
 in
-
 # The output of the derivation is a tool to create bootable images using Limine
 # as bootloader for various platforms and corresponding binary and helper files.
 stdenv.mkDerivation (finalAttrs: {
   pname = "limine";
-  version = "9.6.7";
+  version = "10.2.1";
 
   # We don't use the Git source but the release tarball, as the source has a
   # `./bootstrap` script performing network access to download resources.
   # Packaging that in Nix is very cumbersome.
   src = fetchurl {
     url = "https://codeberg.org/Limine/Limine/releases/download/v${finalAttrs.version}/limine-${finalAttrs.version}.tar.gz";
-    hash = "sha256-VGn/Ny9wVKBVFW7SNTTx+u7rr519jQ+CzbcZwTTBKps=";
+    hash = "sha256-t9uNKbJKU9qvx9LJRCyDAeLeImDMBxl6m13VQt8E6BY=";
   };
 
   enableParallelBuilding = true;
+
+  hardeningDisable = lib.optionals missingZerocallusedregs [
+    "zerocallusedregs"
+  ];
 
   nativeBuildInputs = [
     llvmPackages.libllvm
@@ -109,6 +118,7 @@ stdenv.mkDerivation (finalAttrs: {
       prince213
       programmerlexi
       surfaceflinger
+      ryand56
     ];
   };
 })

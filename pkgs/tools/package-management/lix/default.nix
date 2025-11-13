@@ -22,6 +22,7 @@
   haskell,
   nix-serve-ng,
   colmena,
+  nix-update,
 
   storeDir ? "/nix/store",
   stateDir ? "/nix/var",
@@ -56,7 +57,10 @@ let
           boehmgc =
             # TODO: Why is this called `boehmgc-nix_2_3`?
             let
-              boehmgc-nix_2_3 = boehmgc.override { enableLargeConfig = true; };
+              boehmgc-nix_2_3 = boehmgc.override {
+                enableLargeConfig = true;
+                initialMarkStackSize = 1048576;
+              };
             in
             # Since Lix 2.91 does not use boost coroutines, it does not need boehmgc patches either.
             if lib.versionOlder lix-args.version "2.91" then
@@ -126,6 +130,11 @@ let
           colmena = colmena.override {
             nix = self.lix;
             inherit (self) nix-eval-jobs;
+          };
+
+          nix-update = nix-update.override {
+            nix = self.lix;
+            inherit (self) nixpkgs-review;
           };
         };
     };
@@ -208,14 +217,14 @@ lib.makeExtensible (
       attrName = "git";
 
       lix-args = rec {
-        version = "2.94.0-pre-20250807_${builtins.substring 0 12 src.rev}";
+        version = "2.94.0-pre-20251018_${builtins.substring 0 12 src.rev}";
 
         src = fetchFromGitea {
           domain = "git.lix.systems";
           owner = "lix-project";
           repo = "lix";
-          rev = "8bbd5e1d0df9c31b4d86ba07bc85beb952e42ccb";
-          hash = "sha256-P+WiN95OjCqHhfygglS/VOFTSj7qNdL5XQDo2wxhQqg=";
+          rev = "6e2edbff930dbf5b17a23e23f0b563e1db201f5b";
+          hash = "sha256-t2f3YDiRTi6GTHc940lwozaxY7RFE1CW7EeNtVYG+FE=";
         };
 
         cargoDeps = rustPlatform.fetchCargoVendor {

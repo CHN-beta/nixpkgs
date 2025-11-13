@@ -7,18 +7,21 @@
   php84,
 }:
 
-php84.buildComposerProject2 (finalAttrs: {
+let
+  php = php84;
+in
+php.buildComposerProject2 (finalAttrs: {
   pname = "snipe-it";
-  version = "8.3.0";
+  version = "8.3.5";
 
   src = fetchFromGitHub {
     owner = "grokability";
     repo = "snipe-it";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-YeedBSpEzdMOPpbwqEFpVtMY4hnnN/Sb/XB1YNDnDNc=";
+    hash = "sha256-n0N164v3pSlrsFCx52hBGB1f7E1FSoo5XS7uM+SHQXg=";
   };
 
-  vendorHash = "sha256-32TbhVhfi8i9jwBQ2gpeb7sLmrtHQXSjlaVVdgFdaxs=";
+  vendorHash = "sha256-QRRvjaLYuYXnvrSVx+OITjHtn/UdWRC8aSEXy8uu5IA=";
 
   postInstall = ''
     snipe_it_out="$out/share/php/snipe-it"
@@ -42,7 +45,7 @@ php84.buildComposerProject2 (finalAttrs: {
 
   passthru = {
     tests = nixosTests.snipe-it;
-    phpPackage = php84;
+    phpPackage = php;
   };
 
   meta = {

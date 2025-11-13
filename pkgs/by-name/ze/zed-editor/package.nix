@@ -72,6 +72,8 @@ let
         (with pkgs; [
           # ld-linux-x86-64-linux.so.2 and others
           glibc
+          # required by at least https://github.com/zed-industries/package-version-server
+          openssl
         ])
         ++ additionalPkgs pkgs;
 
@@ -99,7 +101,7 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "zed-editor";
-  version = "0.204.2";
+  version = "0.211.6";
 
   outputs = [
     "out"
@@ -112,38 +114,27 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "zed-industries";
     repo = "zed";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-WYdSWyWkCberMBJlow/V7FGQTL0ww1SQ5L0zNsnNg58=";
+    hash = "sha256-JlRsiQHDsQ80/8aM0trCrfvEAAXQtkO75CAKotP1mFs=";
   };
 
-  patches = [
-    # Upstream delegates linking on Linux to clang to make use of mold,
-    # but builds fine with our standard linker.
-    # This patch removes their linker override from the cargo config.
-    ./0001-linux-linker.patch
-  ];
-
-  cargoPatches = [
-    ./0002-fix-duplicate-reqwest.patch
-  ];
-
-  postPatch =
+  postPatch = ''
     # Dynamically link WebRTC instead of static
-    ''
-      substituteInPlace $cargoDepsCopy/webrtc-sys-*/build.rs \
-        --replace-fail "cargo:rustc-link-lib=static=webrtc" "cargo:rustc-link-lib=dylib=webrtc"
+    substituteInPlace $cargoDepsCopy/webrtc-sys-*/build.rs \
+      --replace-fail "cargo:rustc-link-lib=static=webrtc" "cargo:rustc-link-lib=dylib=webrtc"
 
-      # Zed team renamed the function but forgot to update its usage in this file
-      # We rename it ourselves for now, until upstream fixes the issue
-      substituteInPlace $cargoDepsCopy/reqwest-0.12*/src/blocking/client.rs \
-        --replace-fail "inner.redirect(policy)" "inner.redirect_policy(policy)"
+    # The generate-licenses script wants a specific version of cargo-about eventhough
+    # newer versions work just as well.
+    substituteInPlace script/generate-licenses \
+      --replace-fail '$CARGO_ABOUT_VERSION' '${cargo-about.version}'
+  '';
 
-      # The generate-licenses script wants a specific version of cargo-about eventhough
-      # newer versions work just as well.
-      substituteInPlace script/generate-licenses \
-        --replace-fail '$CARGO_ABOUT_VERSION' '${cargo-about.version}'
-    '';
+  # remove package that has a broken Cargo.toml
+  # see: https://github.com/NixOS/nixpkgs/pull/445924#issuecomment-3334648753
+  depsExtraArgs.postBuild = ''
+    rm -r $out/git/*/candle-book/
+  '';
 
-  cargoHash = "sha256-cDlcwbxE+52YAHLPb+ijJZE9zQwvtm7glfru0qyQWwA=";
+  cargoHash = "sha256-DHAERsHGDk7bjTi+nCTf75qt6+uGzHLojEzoDCFkVDc=";
 
   nativeBuildInputs = [
     cmake

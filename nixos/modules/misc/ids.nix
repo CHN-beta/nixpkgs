@@ -31,7 +31,7 @@ in
       description = ''
         The user IDs used in NixOS.
       '';
-      type = types.attrsOf types.int;
+      type = types.attrsOf types.ints.u32;
     };
 
     ids.gids = lib.mkOption {
@@ -39,7 +39,7 @@ in
       description = ''
         The group IDs used in NixOS.
       '';
-      type = types.attrsOf types.int;
+      type = types.attrsOf types.ints.u32;
     };
 
   };
@@ -690,6 +690,7 @@ in
       rstudio-server = 324;
       localtimed = 325;
       automatic-timezoned = 326;
+      clock = 327;
 
       # When adding a gid, make sure it doesn't match an existing
       # uid. Users and groups with the same name should have equal

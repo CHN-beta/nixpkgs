@@ -25,14 +25,14 @@ in
 
 python.pkgs.buildPythonApplication rec {
   pname = "awsebcli";
-  version = "3.25";
+  version = "3.25.2";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "aws";
     repo = "aws-elastic-beanstalk-cli";
     tag = version;
-    hash = "sha256-RqUVG4aIZDAVuKcT41ODKkyEidmschcFaY24P1CjosU=";
+    hash = "sha256-6PeOn0owjEjTWdEwgXILiGq+6T5GBBc61viiG5GNeYo=";
   };
 
   pythonRelaxDeps = [

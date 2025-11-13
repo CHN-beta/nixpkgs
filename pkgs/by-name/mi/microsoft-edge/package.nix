@@ -6,7 +6,7 @@
   patchelf,
   bintools,
   dpkg,
-  # Linked dynamic libraries.
+  # Linked dynamic libraries
   alsa-lib,
   at-spi2-atk,
   at-spi2-core,
@@ -55,7 +55,7 @@
   # Loaded at runtime.
   libexif,
   pciutils,
-  # Additional dependencies according to other distros.
+  # Additional dependencies according to other distros
   ## Ubuntu
   curl,
   liberation_ttf,
@@ -162,11 +162,11 @@ let
 in
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "microsoft-edge";
-  version = "140.0.3485.66";
+  version = "142.0.3595.65";
 
   src = fetchurl {
     url = "https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/microsoft-edge-stable_${finalAttrs.version}-1_amd64.deb";
-    hash = "sha256-/ITJFChnQa5XK4nQe3biGw6vvV+pLbbZNb989XecUGY=";
+    hash = "sha256-aqQH4ttBWTjpzAEeWpheEJiu1FUMKMJu9j8Gu2pldbA=";
   };
 
   # With strictDeps on, some shebangs were not being patched correctly
@@ -216,9 +216,6 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       --replace-fail /usr/bin/microsoft-edge-$dist $exe
     substituteInPlace $out/share/gnome-control-center/default-apps/microsoft-edge.xml \
       --replace-fail /opt/microsoft/msedge $exe
-    substituteInPlace $out/share/menu/microsoft-edge.menu \
-      --replace-fail /opt $out/share \
-      --replace-fail $out/share/microsoft/$appname/microsoft-edge $exe
 
     for icon_file in $out/share/microsoft/msedge/product_logo_[0-9]*.png; do
       num_and_suffix="''${icon_file##*logo_}"
@@ -277,7 +274,6 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       leleuvilela
       bricklou
       jonhermansen
-      iedame
     ];
     platforms = [ "x86_64-linux" ];
     sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];

@@ -20,19 +20,20 @@
 
 buildPythonPackage rec {
   pname = "checkdmarc";
-  version = "5.10.8";
-  format = "pyproject";
-
-  disabled = pythonOlder "3.7";
+  version = "5.10.12";
+  pyproject = true;
 
   src = fetchFromGitHub {
     owner = "domainaware";
     repo = "checkdmarc";
     tag = version;
-    hash = "sha256-+vRHuTUKO0O/B6d9+p79wSkwAngG+h7p4P7DAR+bCKA=";
+    hash = "sha256-XbBdBef3+kt26XP5GDH5rgHYGh8xIjHUUVOcdeVICLs=";
   };
 
-  pythonRelaxDeps = [ "xmltodict" ];
+  pythonRelaxDeps = [
+    "cryptography"
+    "xmltodict"
+  ];
 
   build-system = [ hatchling ];
 
@@ -69,10 +70,10 @@ buildPythonPackage rec {
 
   meta = with lib; {
     description = "Parser for SPF and DMARC DNS records";
-    mainProgram = "checkdmarc";
     homepage = "https://github.com/domainaware/checkdmarc";
     changelog = "https://github.com/domainaware/checkdmarc/blob/${src.tag}/CHANGELOG.md";
     license = licenses.asl20;
     maintainers = with maintainers; [ fab ];
+    mainProgram = "checkdmarc";
   };
 }

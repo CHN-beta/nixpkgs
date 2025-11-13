@@ -11,7 +11,7 @@ rustPlatform.buildRustPackage rec {
   src = fetchFromGitHub {
     owner = "mitsuhiko";
     repo = "insta";
-    rev = version;
+    tag = version;
     hash = "sha256-+0FJr1IXTnIc947ytB00z30m81peY/CjnBHMYvcQZl0=";
   };
 
@@ -35,7 +35,6 @@ rustPlatform.buildRustPackage rec {
     changelog = "https://github.com/mitsuhiko/insta/blob/${version}/CHANGELOG.md";
     license = lib.licenses.asl20;
     maintainers = with lib.maintainers; [
-      figsoda
       oxalica
       matthiasbeyer
     ];

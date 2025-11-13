@@ -20,20 +20,15 @@
 
 buildGoModule rec {
   pname = "gonic";
-  version = "0.17.0";
+  version = "0.19.0";
   src = fetchFromGitHub {
     owner = "sentriz";
     repo = "gonic";
     rev = "v${version}";
-    sha256 = "sha256-/oQKlM8mJuFuIEAXwGuJtdS4mEZXvGPmOUD992Z08ww=";
+    sha256 = "sha256-la3xBECo4zZfkp5BlXuUzFEUGtxMl8ZAQdwgjFXIuSM=";
   };
 
-  nativeBuildInputs = [ pkg-config ];
-  buildInputs = [
-    taglib
-    zlib
-  ];
-  vendorHash = "sha256-EPl8qy8d7fs0GJ0b29nBqpg4JYF84Kd4my74ySlCwVA=";
+  vendorHash = "sha256-HrYS7c0MtiOYRyiSg7eLbiSIUkHeRikJ0Rwf4EoZIsQ=";
 
   # TODO(Profpatsch): write a test for transcoding support,
   # since it is prone to break

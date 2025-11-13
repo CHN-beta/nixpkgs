@@ -2,7 +2,7 @@
 # Do not edit!
 
 {
-  version = "2025.9.3";
+  version = "2025.11.1";
   components = {
     "3_day_blinds" =
       ps: with ps; [
@@ -55,6 +55,10 @@
       ];
     "actiontec" =
       ps: with ps; [
+      ];
+    "actron_air" =
+      ps: with ps; [
+        actron-neo-api
       ];
     "adax" =
       ps: with ps; [
@@ -907,6 +911,7 @@
       ];
     "citybikes" =
       ps: with ps; [
+        python-citybikes
       ];
     "clementine" =
       ps: with ps; [
@@ -984,6 +989,10 @@
       ps: with ps; [
         numpy
       ];
+    "compit" =
+      ps: with ps; [
+        compit-inext-api
+      ];
     "concord232" =
       ps: with ps; [
         concord232
@@ -1052,6 +1061,10 @@
     "currencylayer" =
       ps: with ps; [
       ];
+    "cync" =
+      ps: with ps; [
+        pycync
+      ];
     "dacia" =
       ps: with ps; [
       ];
@@ -1117,6 +1130,7 @@
         cached-ipaddress
         cronsim
         dbus-fast
+        file-read-backwards
         fnv-hash-fast
         go2rtc-client
         ha-ffmpeg
@@ -1320,6 +1334,10 @@
         dropmqttapi
         paho-mqtt
       ];
+    "droplet" =
+      ps: with ps; [
+        pydroplet
+      ];
     "dsmr" =
       ps: with ps; [
         dsmr-parser
@@ -1437,6 +1455,9 @@
     "eight_sleep" =
       ps: with ps; [
       ];
+    "ekeybionyx" =
+      ps: with ps; [
+      ]; # missing inputs: ekey-bionyxpy
     "electrasmart" =
       ps: with ps; [
         pyelectra
@@ -1448,6 +1469,7 @@
     "elevenlabs" =
       ps: with ps; [
         elevenlabs
+        sentence-stream
       ];
     "elgato" =
       ps: with ps; [
@@ -1526,9 +1548,6 @@
     "enigma2" =
       ps: with ps; [
         openwebifpy
-      ];
-    "enmax" =
-      ps: with ps; [
       ];
     "enocean" =
       ps: with ps; [
@@ -1743,12 +1762,19 @@
         psutil-home-assistant
         sqlalchemy
       ];
+    "fing" =
+      ps: with ps; [
+      ]; # missing inputs: fing_agent_api
     "fints" =
       ps: with ps; [
         fints
       ];
     "fire_tv" =
       ps: with ps; [
+      ];
+    "firefly_iii" =
+      ps: with ps; [
+        pyfirefly
       ];
     "fireservicerota" =
       ps: with ps; [
@@ -2106,9 +2132,6 @@
         python-google-drive-api
         securetar
       ];
-    "google_gemini" =
-      ps: with ps; [
-      ];
     "google_generative_ai_conversation" =
       ps: with ps; [
         google-genai
@@ -2351,17 +2374,30 @@
       ps: with ps; [
         aiohasupervisor
       ];
+    "homeassistant_connect_zbt2" =
+      ps: with ps; [
+        aiohasupervisor
+        aiousbwatcher
+        ha-silabs-firmware-client
+        psutil-home-assistant
+        pyserial
+        universal-silabs-flasher
+      ];
     "homeassistant_green" =
       ps: with ps; [
         aiohasupervisor
+        aiousbwatcher
         ha-silabs-firmware-client
         psutil-home-assistant
+        pyserial
         universal-silabs-flasher
       ];
     "homeassistant_hardware" =
       ps: with ps; [
         aiohasupervisor
+        aiousbwatcher
         ha-silabs-firmware-client
+        pyserial
         universal-silabs-flasher
       ];
     "homeassistant_sky_connect" =
@@ -2376,8 +2412,10 @@
     "homeassistant_yellow" =
       ps: with ps; [
         aiohasupervisor
+        aiousbwatcher
         ha-silabs-firmware-client
         psutil-home-assistant
+        pyserial
         universal-silabs-flasher
       ];
     "homee" =
@@ -2688,6 +2726,11 @@
     "indianamichiganpower" =
       ps: with ps; [
       ];
+    "inels" =
+      ps: with ps; [
+        aiohasupervisor
+        paho-mqtt
+      ]; # missing inputs: elkoep-aio-mqtt
     "influxdb" =
       ps: with ps; [
         influxdb
@@ -2803,6 +2846,10 @@
     "irish_rail_transport" =
       ps: with ps; [
         pyirishrail
+      ];
+    "irm_kmi" =
+      ps: with ps; [
+        irm-kmi-api
       ];
     "iron_os" =
       ps: with ps; [
@@ -3035,6 +3082,9 @@
       ps: with ps; [
         konnected
       ];
+    "konnected_esphome" =
+      ps: with ps; [
+      ];
     "kostal_plenticore" =
       ps: with ps; [
         pykoplenti
@@ -3252,6 +3302,10 @@
       ps: with ps; [
         thinqconnect
       ];
+    "libre_hardware_monitor" =
+      ps: with ps; [
+        librehardwaremonitor-api
+      ];
     "lidarr" =
       ps: with ps; [
         aiopyarr
@@ -3393,6 +3447,10 @@
     "luftdaten" =
       ps: with ps; [
         luftdaten
+      ];
+    "lunatone" =
+      ps: with ps; [
+        lunatone-rest-api-client
       ];
     "lupusec" =
       ps: with ps; [
@@ -3587,6 +3645,10 @@
     "meteo_france" =
       ps: with ps; [
         meteofrance-api
+      ];
+    "meteo_lt" =
+      ps: with ps; [
+        meteo-lt-pkg
       ];
     "meteoalarm" =
       ps: with ps; [
@@ -3859,6 +3921,9 @@
       ps: with ps; [
         mutesync
       ];
+    "mvglive" =
+      ps: with ps; [
+      ]; # missing inputs: mvg
     "my" =
       ps: with ps; [
         home-assistant-frontend
@@ -3916,6 +3981,9 @@
         nsapi
       ];
     "neff" =
+      ps: with ps; [
+      ];
+    "neo" =
       ps: with ps; [
       ];
     "ness_alarm" =
@@ -4013,6 +4081,10 @@
     "nina" =
       ps: with ps; [
         pynina
+      ];
+    "nintendo_parental_controls" =
+      ps: with ps; [
+        pynintendoparental
       ];
     "nissan_leaf" =
       ps: with ps; [
@@ -4185,7 +4257,7 @@
       ];
     "onewire" =
       ps: with ps; [
-        pyownet
+        aio-ownet
       ];
     "onkyo" =
       ps: with ps; [
@@ -4248,6 +4320,10 @@
     "openhome" =
       ps: with ps; [
         openhomedevice
+      ];
+    "openrgb" =
+      ps: with ps; [
+        openrgb-python
       ];
     "opensensemap" =
       ps: with ps; [
@@ -4544,7 +4620,6 @@
       ];
     "plum_lightpad" =
       ps: with ps; [
-        plumlightpad
       ];
     "pocketcasts" =
       ps: with ps; [
@@ -4561,6 +4636,10 @@
     "poolsense" =
       ps: with ps; [
         poolsense
+      ];
+    "portainer" =
+      ps: with ps; [
+        pyportainer
       ];
     "portlandgeneral" =
       ps: with ps; [
@@ -4653,7 +4732,7 @@
       ];
     "prowl" =
       ps: with ps; [
-      ];
+      ]; # missing inputs: prowlpy
     "proximity" =
       ps: with ps; [
       ];
@@ -5056,6 +5135,12 @@
       ps: with ps; [
         boto3
       ];
+    "route_b_smart_meter" =
+      ps: with ps; [
+        aiousbwatcher
+        momonga
+        pyserial
+      ];
     "rova" =
       ps: with ps; [
         rova
@@ -5353,6 +5438,13 @@
       ps: with ps; [
         sfrbox-api
       ];
+    "sftp_storage" =
+      ps: with ps; [
+        aiohasupervisor
+        asyncssh
+        cronsim
+        securetar
+      ];
     "sharkiq" =
       ps: with ps; [
         sharkiq
@@ -5577,6 +5669,10 @@
     "solaredge" =
       ps: with ps; [
         aiosolaredge
+        fnv-hash-fast
+        psutil-home-assistant
+        solaredge-web
+        sqlalchemy
         stringcase
       ];
     "solaredge_local" =
@@ -5742,6 +5838,10 @@
       ];
     "sun" =
       ps: with ps; [
+      ];
+    "sunricher_dali" =
+      ps: with ps; [
+        pysrdaligateway
       ];
     "sunweg" =
       ps: with ps; [
@@ -6382,6 +6482,12 @@
       ps: with ps; [
         pyuptimerobot
       ];
+    "usage_prediction" =
+      ps: with ps; [
+        fnv-hash-fast
+        psutil-home-assistant
+        sqlalchemy
+      ];
     "usb" =
       ps: with ps; [
         aiousbwatcher
@@ -6465,6 +6571,10 @@
       ps: with ps; [
         pyvicare
       ];
+    "victron_remote_monitoring" =
+      ps: with ps; [
+        victron-vrm
+      ];
     "vilfo" =
       ps: with ps; [
         vilfo-api-client
@@ -6517,11 +6627,6 @@
       ];
     "volvooncall" =
       ps: with ps; [
-        volvooncall
-      ];
-    "vultr" =
-      ps: with ps; [
-        vultr
       ];
     "w800rf32" =
       ps: with ps; [
@@ -6552,10 +6657,6 @@
     "watergate" =
       ps: with ps; [
         watergate-local-api
-      ];
-    "watson_iot" =
-      ps: with ps; [
-        ibmiotf
       ];
     "watttime" =
       ps: with ps; [
@@ -6943,6 +7044,7 @@
     "acaia"
     "accuweather"
     "acmeda"
+    "actron_air"
     "adax"
     "adguard"
     "advantage_air"
@@ -7067,6 +7169,7 @@
     "comfoconnect"
     "command_line"
     "compensation"
+    "compit"
     "config"
     "configurator"
     "control4"
@@ -7078,6 +7181,7 @@
     "cpuspeed"
     "crownstone"
     "cups"
+    "cync"
     "daikin"
     "datadog"
     "date"
@@ -7114,6 +7218,7 @@
     "downloader"
     "dremel_3d_printer"
     "drop_connect"
+    "droplet"
     "dsmr"
     "dsmr_reader"
     "duckdns"
@@ -7180,6 +7285,7 @@
     "filesize"
     "filter"
     "fints"
+    "firefly_iii"
     "fireservicerota"
     "firmata"
     "fitbit"
@@ -7275,6 +7381,7 @@
     "home_connect"
     "homeassistant"
     "homeassistant_alerts"
+    "homeassistant_connect_zbt2"
     "homeassistant_green"
     "homeassistant_hardware"
     "homeassistant_sky_connect"
@@ -7337,6 +7444,7 @@
     "ipma"
     "ipp"
     "iqvia"
+    "irm_kmi"
     "iron_os"
     "isal"
     "iskra"
@@ -7383,6 +7491,7 @@
     "lg_netcast"
     "lg_soundbar"
     "lg_thinq"
+    "libre_hardware_monitor"
     "lidarr"
     "life360"
     "lifx"
@@ -7406,6 +7515,7 @@
     "loqed"
     "lovelace"
     "luftdaten"
+    "lunatone"
     "lupusec"
     "lutron"
     "lutron_caseta"
@@ -7435,6 +7545,7 @@
     "met"
     "met_eireann"
     "meteo_france"
+    "meteo_lt"
     "meteoclimatic"
     "metoffice"
     "mfi"
@@ -7487,6 +7598,7 @@
     "nanoleaf"
     "nasweb"
     "neato"
+    "nederlandse_spoorwegen"
     "ness_alarm"
     "nest"
     "netatmo"
@@ -7503,6 +7615,7 @@
     "nightscout"
     "niko_home_control"
     "nina"
+    "nintendo_parental_controls"
     "nmap_tracker"
     "nmbs"
     "no_ip"
@@ -7544,6 +7657,7 @@
     "opengarage"
     "openhardwaremonitor"
     "openhome"
+    "openrgb"
     "opensky"
     "opentherm_gw"
     "openuv"
@@ -7587,6 +7701,7 @@
     "point"
     "pooldose"
     "poolsense"
+    "portainer"
     "powerfox"
     "powerwall"
     "private_ble_device"
@@ -7657,6 +7772,7 @@
     "romy"
     "roomba"
     "roon"
+    "route_b_smart_meter"
     "rova"
     "rpi_power"
     "rss_feed_template"
@@ -7668,6 +7784,7 @@
     "sabnzbd"
     "samsungtv"
     "sanix"
+    "satel_integra"
     "scene"
     "schedule"
     "schlage"
@@ -7689,6 +7806,7 @@
     "senz"
     "seventeentrack"
     "sfr_box"
+    "sftp_storage"
     "sharkiq"
     "shell_command"
     "shelly"
@@ -7757,6 +7875,7 @@
     "subaru"
     "suez_water"
     "sun"
+    "sunricher_dali"
     "sunweg"
     "surepetcare"
     "swiss_public_transport"
@@ -7848,6 +7967,7 @@
     "uptime"
     "uptime_kuma"
     "uptimerobot"
+    "usage_prediction"
     "usb"
     "usgs_earthquakes_feed"
     "utility_meter"
@@ -7865,6 +7985,7 @@
     "version"
     "vesync"
     "vicare"
+    "victron_remote_monitoring"
     "vilfo"
     "vizio"
     "vlc_telnet"
@@ -7874,7 +7995,6 @@
     "volumio"
     "volvo"
     "volvooncall"
-    "vultr"
     "wake_on_lan"
     "wake_word"
     "wallbox"

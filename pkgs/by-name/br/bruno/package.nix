@@ -1,6 +1,7 @@
 {
   lib,
   stdenv,
+  clang_20,
   fetchFromGitHub,
   buildNpmPackage,
   nix-update-script,
@@ -19,25 +20,26 @@
 
 buildNpmPackage rec {
   pname = "bruno";
-  version = "2.11.0";
+  version = "2.14.0";
 
   src = fetchFromGitHub {
     owner = "usebruno";
     repo = "bruno";
     tag = "v${version}";
-    hash = "sha256-U6q82T/xqwREGsUcCdeAzvk9DWu9579MtF/JE0OIBW4=";
+    hash = "sha256-fmT+KA8v/fdVQu7KUkZNOkNtcl5uPxzHVKplml2HbSM=";
 
     postFetch = ''
       ${lib.getExe npm-lockfile-fix} $out/package-lock.json
     '';
   };
 
-  npmDepsHash = "sha256-i7bT6ZvdkHwqw+LkMqCdSMCNUsz1LPOHuF+u//lUYJ8=";
+  npmDepsHash = "sha256-H2v9dm4VCRQrhs9g/D1QOu1L5AeN+Vqhez4qrBdd9Gs=";
   npmFlags = [ "--legacy-peer-deps" ];
 
   nativeBuildInputs = [
     pkg-config
   ]
+  ++ lib.optional stdenv.isDarwin clang_20 # clang_21 breaks gyp builds
   ++ lib.optionals (!stdenv.hostPlatform.isDarwin) [
     makeWrapper
     copyDesktopItems

@@ -9,16 +9,16 @@
 
 buildGoModule (finalAttrs: {
   pname = "temporal-cli";
-  version = "1.4.1";
+  version = "1.5.1";
 
   src = fetchFromGitHub {
     owner = "temporalio";
     repo = "cli";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-fbaqRjYFDeGuCheg3EIUVh/QMhFzLNUb6MUoc/J51Ko=";
+    hash = "sha256-Y/hTD31WUcVn/OBuNwdhbjDZd36EKbOJRr9PFDKHifg=";
   };
 
-  vendorHash = "sha256-dWcf4X8/Wy/TULdT6PbiMaOd1d+haBlnII+6VKazrD4=";
+  vendorHash = "sha256-dZhrozZc3SeZQQ7lGeeICrptL2I0DH0EpsjCt4CjCJU=";
 
   overrideModAttrs = old: {
     # https://gitlab.com/cznic/libc/-/merge_requests/10
@@ -47,7 +47,7 @@ buildGoModule (finalAttrs: {
     export HOME="$(mktemp -d)"
   '';
 
-  postInstall = ''
+  postInstall = lib.optionalString (stdenv.buildPlatform.canExecute stdenv.hostPlatform) ''
     installShellCompletion --cmd temporal \
       --bash <($out/bin/temporal completion bash) \
       --fish <($out/bin/temporal completion fish) \

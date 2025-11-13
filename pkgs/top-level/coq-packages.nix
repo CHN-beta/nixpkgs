@@ -5,7 +5,6 @@
   fetchzip,
   callPackage,
   newScope,
-  recurseIntoAttrs,
   ocamlPackages_4_09,
   ocamlPackages_4_10,
   ocamlPackages_4_12,
@@ -42,7 +41,7 @@ let
       };
       mkCoqDerivation = lib.makeOverridable (callPackage ../build-support/coq { });
 
-      contribs = recurseIntoAttrs (callPackage ../development/coq-modules/contribs { });
+      contribs = lib.recurseIntoAttrs (callPackage ../development/coq-modules/contribs { });
 
       aac-tactics = callPackage ../development/coq-modules/aac-tactics { };
       addition-chains = callPackage ../development/coq-modules/addition-chains { };
@@ -61,9 +60,9 @@ let
       Cheerios = callPackage ../development/coq-modules/Cheerios { };
       coinduction = callPackage ../development/coq-modules/coinduction { };
       CoLoR = callPackage ../development/coq-modules/CoLoR (
-        (lib.optionalAttrs (lib.versions.isEq self.coq.coq-version "8.13") {
+        lib.optionalAttrs (lib.versions.isEq self.coq.coq-version "8.13") {
           bignums = self.bignums.override { version = "8.13.0"; };
-        })
+        }
       );
       compcert = callPackage ../development/coq-modules/compcert {
         inherit
@@ -85,9 +84,9 @@ let
       coq-record-update = callPackage ../development/coq-modules/coq-record-update { };
       coq-tactical = callPackage ../development/coq-modules/coq-tactical { };
       coqeal = callPackage ../development/coq-modules/coqeal (
-        (lib.optionalAttrs (lib.versions.range "8.13" "8.14" self.coq.coq-version) {
+        lib.optionalAttrs (lib.versions.range "8.13" "8.14" self.coq.coq-version) {
           bignums = self.bignums.override { version = "${self.coq.coq-version}.0"; };
-        })
+        }
       );
       coqhammer = callPackage ../development/coq-modules/coqhammer { };
       coqide = callPackage ../development/coq-modules/coqide { };
@@ -337,6 +336,6 @@ rec {
   coqPackages_9_0 = mkCoqPackages coq_9_0;
   coqPackages_9_1 = mkCoqPackages coq_9_1;
 
-  coqPackages = recurseIntoAttrs coqPackages_9_0;
+  coqPackages = lib.recurseIntoAttrs coqPackages_9_0;
   coq = coqPackages.coq;
 }

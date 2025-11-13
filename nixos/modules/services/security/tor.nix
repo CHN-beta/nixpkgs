@@ -795,7 +795,7 @@ in
                     };
                     options.HiddenServiceMaxStreams = lib.mkOption {
                       description = (descriptionGeneric "HiddenServiceMaxStreams");
-                      type = with lib.types; nullOr (ints.between 0 65535);
+                      type = with lib.types; nullOr ints.u16;
                       default = null;
                     };
                     options.HiddenServiceMaxStreamsCloseCircuit = optionBool "HiddenServiceMaxStreamsCloseCircuit";
@@ -1410,7 +1410,18 @@ in
         RootDirectoryStartOnly = true;
         #InaccessiblePaths = [ "-+${runDir}/root" ];
         UMask = "0066";
-        BindPaths = [ stateDir ];
+        BindPaths = [
+          stateDir
+        ]
+        ++ lib.filter (x: x != null) (
+          lib.catAttrs "unix" (
+            lib.filter (x: x != null) (
+              lib.catAttrs "target" (
+                lib.concatMap (onionService: onionService.map) (lib.attrValues cfg.relay.onionServices)
+              )
+            )
+          )
+        );
         BindReadOnlyPaths = [
           builtins.storeDir
           "/etc"

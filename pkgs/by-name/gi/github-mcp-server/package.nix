@@ -8,16 +8,16 @@
 
 buildGoModule (finalAttrs: {
   pname = "github-mcp-server";
-  version = "0.14.0";
+  version = "0.20.1";
 
   src = fetchFromGitHub {
     owner = "github";
     repo = "github-mcp-server";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-IGjbuW4gPOZQrLMhyrZ3ii/GeRrgEyNVb0w3/Z0hihU=";
+    hash = "sha256-gB2MXeQQjVP/b+3hne6Mauork5szSOFz4uWIGzecN+U=";
   };
 
-  vendorHash = "sha256-F6PR4bxFSixgYQX65zjrVxcxEQxCoavQqa5mBGrZH8o=";
+  vendorHash = "sha256-DcRpKFsCdGV3sOVHeyZbo/djVVBkuxRgFh7Z5yyElRw=";
 
   ldflags = [
     "-s"
@@ -41,6 +41,6 @@ buildGoModule (finalAttrs: {
     homepage = "https://github.com/github/github-mcp-server";
     license = lib.licenses.mit;
     mainProgram = "github-mcp-server";
-    maintainers = with lib.maintainers; [ ];
+    maintainers = with lib.maintainers; [ logger ];
   };
 })

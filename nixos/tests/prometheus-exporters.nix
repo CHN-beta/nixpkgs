@@ -1502,9 +1502,6 @@ let
       metricProvider = {
         services.sabnzbd.enable = true;
 
-        # unrar is required for sabnzbd
-        nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (pkgs.lib.getName pkg) [ "unrar" ];
-
         # extract the generated api key before starting
         systemd.services.sabnzbd-apikey = {
           requires = [ "sabnzbd.service" ];
@@ -1612,6 +1609,21 @@ let
                 'smokeping_response_ttl{host="127.0.0.1",ip="127.0.0.1",source="",tos="0"}'
             )
         )
+      '';
+    };
+
+    storagebox = {
+      exporterConfig = {
+        enable = true;
+        tokenFile = "/tmp/faketoken";
+      };
+      exporterTest = ''
+        succeed(
+          'echo faketoken > /tmp/faketoken'
+        )
+        wait_for_unit("prometheus-storagebox-exporter.service")
+        wait_for_open_port(9509)
+        succeed("curl -sSf localhost:9509/metrics | grep 'process_open_fds'")
       '';
     };
 

@@ -167,6 +167,16 @@ lib.mapAttrs mkLicense (
       fullName = "Apache License 2.0";
     };
 
+    baekmuk = {
+      spdxId = "Baekmuk";
+      fullName = "Baekmuk License";
+    };
+
+    bitstreamCharter = {
+      spdxId = "Bitstream-Charter";
+      fullName = "Bitstream Charter Font License";
+    };
+
     bitstreamVera = {
       spdxId = "Bitstream-Vera";
       fullName = "Bitstream Vera Font License";
@@ -180,6 +190,11 @@ lib.mapAttrs mkLicense (
     bitTorrent11 = {
       spdxId = "BitTorrent-1.1";
       fullName = " BitTorrent Open Source License v1.1";
+    };
+
+    boehmGC = {
+      spdxId = "Boehm-GC";
+      fullName = "Boehm-Demers-Weiser GC License";
     };
 
     bola11 = {
@@ -471,6 +486,11 @@ lib.mapAttrs mkLicense (
       fullName = "Common Public License 1.0";
     };
 
+    cnri-python = {
+      spdxId = "CNRI-Python";
+      fullName = "CNRI Python License";
+    };
+
     cronyx = {
       spdxId = "Cronyx";
       fullName = "Cronyx License";
@@ -586,6 +606,11 @@ lib.mapAttrs mkLicense (
       free = false;
     };
 
+    fontException = {
+      spdxId = "Font-exception-2.0";
+      fullName = "Font exception 2.0";
+    };
+
     fraunhofer-fdk = {
       fullName = "Fraunhofer FDK AAC Codec Library";
       spdxId = "FDK-AAC";
@@ -638,6 +663,11 @@ lib.mapAttrs mkLicense (
     gfsl = {
       fullName = "GUST Font Source License";
       url = "https://www.gust.org.pl/projects/e-foundry/licenses/GUST-FONT-SOURCE-LICENSE.txt";
+    };
+
+    gnuplot = {
+      spdxId = "gnuplot";
+      fullName = "gnuplot License";
     };
 
     gpl1Only = {
@@ -717,6 +747,11 @@ lib.mapAttrs mkLicense (
       fullName = "Historical Permission Notice and Disclaimer - University of California variant";
     };
 
+    hyphenBulgarian = {
+      fullName = "hyphen-bulgarian License";
+      spdxId = "hyphen-bulgarian";
+    };
+
     # Intel's license, seems free
     iasl = {
       spdxId = "Intel-ACPI";
@@ -764,6 +799,17 @@ lib.mapAttrs mkLicense (
       fullName = "INRIA Non-Commercial License Agreement for the Zélus compiler";
       url = "https://github.com/INRIA/zelus/raw/829f2b97cba93b0543a9ca0272269e6b8fdad356/LICENSE";
       free = false;
+    };
+
+    intel-eula = {
+      fullName = "Intel End User License Agreement for Developer Tools";
+      url = "https://software.intel.com/sites/manageability/AMT_Implementation_and_Reference_Guide/WordDocuments/intelamtsdklicense.htm";
+      free = false;
+    };
+
+    interbase = {
+      spdxId = "Interbase-1.0";
+      fullName = "Interbase Public License v1.0";
     };
 
     ipa = {
@@ -952,6 +998,11 @@ lib.mapAttrs mkLicense (
       fullName = "CMU License";
     };
 
+    mit-enna = {
+      spdxId = "MIT-enna";
+      fullName = "enna License";
+    };
+
     mit-feh = {
       spdxId = "MIT-feh";
       fullName = "feh License";
@@ -1040,6 +1091,11 @@ lib.mapAttrs mkLicense (
       fullName = "Netdata Cloud UI License v1.0";
       free = false;
       redistributable = true; # Only if used in Netdata products.
+    };
+
+    ngpl = {
+      spdxId = "NGPL";
+      fullName = "Nethack General Public License";
     };
 
     nistSoftware = {
@@ -1134,6 +1190,11 @@ lib.mapAttrs mkLicense (
       fullName = "Open Software License 3.0";
     };
 
+    paratype = {
+      fullName = "ParaType Free Font Licensing Agreement";
+      url = "https://web.archive.org/web/20161209023955/http://www.paratype.ru/public/pt_openlicense_eng.asp";
+    };
+
     parity70 = {
       spdxId = "Parity-7.0.0";
       fullName = "Parity Public License 7.0.0";
@@ -1213,6 +1274,11 @@ lib.mapAttrs mkLicense (
       fullName = "SGML UG SGML Parser Materials license";
     };
 
+    sissl11 = {
+      spdxId = "SISSL";
+      fullName = "Sun Industry Standards Source License 1.1";
+    };
+
     sleepycat = {
       spdxId = "Sleepycat";
       fullName = "Sleepycat License";
@@ -1255,6 +1321,11 @@ lib.mapAttrs mkLicense (
       fullName = "Sustainable Use License";
       free = false;
       redistributable = false; # only free to redistribute "for non-commercial purposes"
+    };
+
+    tcpWrappers = {
+      spdxId = "TCP-wrappers";
+      fullName = "TCP Wrappers License";
     };
 
     teamspeak = {
@@ -1302,6 +1373,11 @@ lib.mapAttrs mkLicense (
       # TODO: add spdxId when it gets accepted to spdx
       # https://tools.spdx.org/app/license_requests/458
       # https://github.com/spdx/license-list-XML/issues/2757
+    };
+
+    torque11 = {
+      spdxId = "TORQUE-1.1";
+      fullName = "TORQUE v2.5+ Software License v1.1";
     };
 
     tsl = {
@@ -1442,6 +1518,11 @@ lib.mapAttrs mkLicense (
     x11 = {
       spdxId = "X11";
       fullName = "X11 License";
+    };
+
+    xerox = {
+      spdxId = "Xerox";
+      fullName = "Xerox License";
     };
 
     xfig = {

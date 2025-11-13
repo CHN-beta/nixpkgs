@@ -2,31 +2,32 @@
   lib,
   stdenv,
   callPackage,
-  python312Packages,
+  python313Packages,
   fetchFromGitHub,
   fetchurl,
   ffmpeg-headless,
   sqlite-vec,
   frigate,
   nixosTests,
+  fetchpatch,
 }:
 
 let
-  version = "0.16.1";
+  version = "0.16.2";
 
   src = fetchFromGitHub {
     name = "frigate-${version}-source";
     owner = "blakeblackshear";
     repo = "frigate";
     tag = "v${version}";
-    hash = "sha256-Uhqs9n4igP9+BtIHiEiurjvKfo2prIXnnVXqyPDbzQ8=";
+    hash = "sha256-8Lm4iLRdMqgZvy24WS1SOkbj855c2t9yg8n91WMg5Fg=";
   };
 
   frigate-web = callPackage ./web.nix {
     inherit version src;
   };
 
-  python = python312Packages.python.override {
+  python = python313Packages.python.override {
     packageOverrides = self: super: {
       joserfc = super.joserfc.overridePythonAttrs (oldAttrs: {
         version = "1.1.0";
@@ -36,6 +37,11 @@ let
           tag = version;
           hash = "sha256-95xtUzzIxxvDtpHX/5uCHnTQTB8Fc08DZGUOR/SdKLs=";
         };
+      });
+      onnxruntime = super.onnxruntime.override (old: {
+        onnxruntime = old.onnxruntime.override (old: {
+          withFullProtobuf = true;
+        });
       });
     };
   };
@@ -77,6 +83,11 @@ python3Packages.buildPythonApplication rec {
 
   patches = [
     ./constants.patch
+    # Fixes hardcoded path /media/frigate/clips/faces. Remove in next version.
+    (fetchpatch {
+      url = "https://github.com/blakeblackshear/frigate/commit/b86e6e484f64bd43b64d7adebe78671a7a426edb.patch";
+      hash = "sha256-1+n0n0yCtjfAHkXzsZdIF0iCVdPGmsG7l8/VTqBVEjU=";
+    })
     ./ffmpeg.patch
   ];
 
@@ -130,7 +141,6 @@ python3Packages.buildPythonApplication rec {
     distlib
     fastapi
     filelock
-    future
     importlib-metadata
     importlib-resources
     google-generativeai

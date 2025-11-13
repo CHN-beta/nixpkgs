@@ -1,5 +1,6 @@
 {
   lib,
+  stdenv,
   ttyd,
   buildGoModule,
   fetchFromGitHub,
@@ -28,11 +29,13 @@ buildGoModule rec {
   ];
 
   ldflags = [
-    "-X github.com/koki-develop/clive/cmd.version=${version}"
+    "-X github.com/koki-develop/clive/cmd.version=v${version}"
   ];
 
   postInstall = ''
     wrapProgram $out/bin/clive --prefix PATH : ${ttyd}/bin
+  ''
+  + lib.optionalString (stdenv.buildPlatform.canExecute stdenv.hostPlatform) ''
     installShellCompletion --cmd clive \
       --bash <($out/bin/clive completion bash) \
       --fish <($out/bin/clive completion fish) \

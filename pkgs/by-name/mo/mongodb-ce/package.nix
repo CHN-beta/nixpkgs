@@ -17,7 +17,7 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "mongodb-ce";
-  version = "8.0.13";
+  version = "8.0.15";
 
   src =
     finalAttrs.passthru.sources.${stdenv.hostPlatform.system}
@@ -54,19 +54,19 @@ stdenv.mkDerivation (finalAttrs: {
     sources = {
       "x86_64-linux" = fetchurl {
         url = "https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2404-${finalAttrs.version}.tgz";
-        hash = "sha256-gJgjVmUbjIw/VG9B/Mp/0cNfE6UxluA/QLi7Lp3fq48=";
+        hash = "sha256-hHlTsXbzDBhesK6hrGV27zXBBd7uEFlt/5QDJFn5aFA=";
       };
       "aarch64-linux" = fetchurl {
         url = "https://fastdl.mongodb.org/linux/mongodb-linux-aarch64-ubuntu2404-${finalAttrs.version}.tgz";
-        hash = "sha256-DR0RzV0CenrYTX86ttWUW4VItzqWYqAfCr/gcEDMlCg=";
+        hash = "sha256-th67W8GA62AcKlASxafYBZLM2j+kZGuk4N706nXQKQ0=";
       };
       "x86_64-darwin" = fetchurl {
         url = "https://fastdl.mongodb.org/osx/mongodb-macos-x86_64-${finalAttrs.version}.tgz";
-        hash = "sha256-Phd02vOrkdMjkWvANRwVFpaE/G5h5ZUVUL/MJ3M+3HU=";
+        hash = "sha256-MBNmctpSZjHZyYkUyt6q/uGmSGRdRD+7GHrh/Aj+bmA=";
       };
       "aarch64-darwin" = fetchurl {
         url = "https://fastdl.mongodb.org/osx/mongodb-macos-arm64-${finalAttrs.version}.tgz";
-        hash = "sha256-YSicegbDaOIDMmMJL82nEyDNMptneRSSmkH1VVnkIRw=";
+        hash = "sha256-3yXoOMD6S90XErUWCctCMV5aulljrvXsVGEUBvHmk5w=";
       };
     };
     updateScript =
@@ -121,7 +121,7 @@ stdenv.mkDerivation (finalAttrs: {
       This pre-compiled binary distribution package provides the MongoDB daemon (mongod) and the MongoDB Shard utility
       (mongos).
     '';
-    maintainers = with lib.maintainers; [ ];
+    maintainers = [ ];
     platforms = lib.attrNames finalAttrs.passthru.sources;
     sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
   };

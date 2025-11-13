@@ -18,7 +18,7 @@
 }:
 
 let
-  version = "0.7.1";
+  version = "0.8.0";
   inherit (python) pythonVersion;
 
   # As of 2023-06-06, google/jax upstream is no longer publishing CPU-only wheels to their GCS bucket. Instead the
@@ -49,49 +49,49 @@ let
       "3.11-x86_64-linux" = getSrcFromPypi {
         platform = "manylinux_2_27_x86_64";
         dist = "cp311";
-        hash = "sha256-6vX2j1O/TcuTtlElOFR2Z2JViOTzzK7vBIeI/RjYwNU=";
+        hash = "sha256-/1Pouvl49rfEB2IVr3jwupacrENO0vclZdh+OMI/AOc=";
       };
       "3.11-aarch64-linux" = getSrcFromPypi {
-        platform = "manylinux2014_aarch64";
+        platform = "manylinux_2_27_aarch64";
         dist = "cp311";
-        hash = "sha256-n7GJw7OUcMQ5T/yxi3HkfP/Fv4Xo/LHjNpJoaww+BN0=";
+        hash = "sha256-Qa693vZ6VVpt4XQnpOZs5gpSioFYR+Ldltq85Xn3rPg=";
       };
       "3.11-aarch64-darwin" = getSrcFromPypi {
         platform = "macosx_11_0_arm64";
         dist = "cp311";
-        hash = "sha256-PzLD5MFntzJ8NC6C09+EB5cU6gtDcYvocdA5mZZws8k=";
+        hash = "sha256-u2AqjCTGFMuMpu7tPnCnM9k5nGoviJAKAlJiPNZydrU=";
       };
 
       "3.12-x86_64-linux" = getSrcFromPypi {
         platform = "manylinux_2_27_x86_64";
         dist = "cp312";
-        hash = "sha256-dKvTE1eX+CRA3TcRo1y6FsQw0bumVHS4W7cOQXM6Uuk=";
+        hash = "sha256-LIZ1v4bjka/k+NhjCAvhoCTXNN/T3RN/eqjn8iCRrc0=";
       };
       "3.12-aarch64-linux" = getSrcFromPypi {
-        platform = "manylinux2014_aarch64";
+        platform = "manylinux_2_27_aarch64";
         dist = "cp312";
-        hash = "sha256-8PH1KVa4wlGKsACk09jCG+d34dR/kmugNkDjkQYaQe4=";
+        hash = "sha256-2D/4zxsHApljnNpPhCdwf2kFHchCHln7tzMFUjk3Vw0=";
       };
       "3.12-aarch64-darwin" = getSrcFromPypi {
         platform = "macosx_11_0_arm64";
         dist = "cp312";
-        hash = "sha256-EnwHxydwPl1Z+E9lUWm+yEn0Qi5S+FRjSc7MMKihPh0=";
+        hash = "sha256-9gqsD2Tp5wpc7zQf4pJoRRhpVRTHGtAANndLvtX3MS4=";
       };
 
       "3.13-x86_64-linux" = getSrcFromPypi {
         platform = "manylinux_2_27_x86_64";
         dist = "cp313";
-        hash = "sha256-s1D1Gahu/1pLHuAUx/qjZYX0fz1jeH0fPpvf/pzEGmY=";
+        hash = "sha256-Zsb1dvVKY+0FL1xGm+9NtyP18FC4OewMQpVzARNBvVg=";
       };
       "3.13-aarch64-linux" = getSrcFromPypi {
-        platform = "manylinux2014_aarch64";
+        platform = "manylinux_2_27_aarch64";
         dist = "cp313";
-        hash = "sha256-zmobpgGXZIcMJ1B6yhjlJpmK061L6i3WHhnQSZw7iwQ=";
+        hash = "sha256-s+rFA7kP/sxo8R+hIhM+7yxixTbbKOgB5DbX56m2e/g=";
       };
       "3.13-aarch64-darwin" = getSrcFromPypi {
         platform = "macosx_11_0_arm64";
         dist = "cp313";
-        hash = "sha256-Kic3nl7Sl2WYDvMtTXf1fdDh3ZZYA6xnRVQESsI80+w=";
+        hash = "sha256-X88zpWOfjxZKRzqceKH6Cy4VrD/L7NbZaqD4i/Jeprs=";
       };
     };
 in

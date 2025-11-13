@@ -28,24 +28,24 @@
 
 buildPythonPackage rec {
   pname = "mkdocs-material";
-  version = "9.6.17";
+  version = "9.6.23";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "squidfunk";
     repo = "mkdocs-material";
     tag = version;
-    hash = "sha256-yl5bc037gr3oAUH01uNvNj7fIe8ca2jH+yfWlgMImZE=";
+    hash = "sha256-k9xoysCbmWqdu1hNUTbWbTvPCuo8gcyvXEDecHiOpEw=";
   };
 
-  nativeBuildInputs = [
+  build-system = [
     hatch-requirements-txt
     hatch-nodejs-version
     hatchling
     trove-classifiers
   ];
 
-  propagatedBuildInputs = [
+  dependencies = [
     babel
     backrefs
     colorama
@@ -89,6 +89,9 @@ buildPythonPackage rec {
     downloadPage = "https://github.com/squidfunk/mkdocs-material";
     homepage = "https://squidfunk.github.io/mkdocs-material/";
     license = licenses.mit;
-    maintainers = with maintainers; [ dandellion ];
+    maintainers = with maintainers; [
+      dandellion
+      jaysa68
+    ];
   };
 }

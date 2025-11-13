@@ -44,6 +44,7 @@
   nix-update-script,
   darwinMinVersionHook,
   apple-sdk_12,
+  fetchpatch2,
 }:
 let
   inherit (lib)
@@ -55,16 +56,22 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "azahar";
-  version = "2123.1";
+  version = "2123.3";
 
   src = fetchzip {
     url = "https://github.com/azahar-emu/azahar/releases/download/${finalAttrs.version}/azahar-unified-source-${finalAttrs.version}.tar.xz";
-    hash = "sha256-Rwq1fkRCzOna04d71w175iSQnH26z7gQfwfIZhFW/90=";
+    hash = "sha256-iFYA4qbeMHIV5nPlRc0OSnb4D5y6WacPIXvt/1ZwnTA=";
   };
 
   patches = [
     # https://github.com/azahar-emu/azahar/pull/1305
     ./fix-zstd-seekable-include.patch
+
+    # TODO: Remove in next release
+    (fetchpatch2 {
+      url = "https://github.com/azahar-emu/azahar/commit/1f483e1d335374482845d0325ac8b13af3162c53.patch?full_index=1";
+      hash = "sha256-9rmRbv7VFMhHly5qTGaeBLpvtWMu6HkCGUUM+t78Meg=";
+    })
   ];
 
   strictDeps = true;

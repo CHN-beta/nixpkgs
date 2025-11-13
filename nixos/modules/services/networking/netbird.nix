@@ -92,7 +92,6 @@ in
         services.netbird.clients.default = {
           port = 51820;
           name = "netbird";
-          systemd.name = "netbird";
           interface = "wt0";
           hardened = false;
         };
@@ -229,6 +228,14 @@ in
                 description = ''
                   Opens up firewall `port` for communication between NetBird peers directly over LAN or public IP,
                   without using (internet-hosted) TURN servers as intermediaries.
+                '';
+              };
+
+              openInternalFirewall = mkOption {
+                type = bool;
+                default = true;
+                description = ''
+                  Opens up internal firewall ports for the NetBird's network interface.
                 '';
               };
 
@@ -503,8 +510,11 @@ in
         interfaces = listToAttrs (
           toClientList (client: {
             name = client.interface;
-            value.allowedUDPPorts = optionals client.openFirewall [
-              5353 # required for the DNS forwarding/routing to work
+            value.allowedUDPPorts = optionals client.openInternalFirewall [
+              # note: those should be opened up by NetBird itself, but it needs additional
+              #  NixOS -specific debugging and tweaking before it works
+              5353 # <0.59.0 DNS forwarder port, kept for compatibility with those clients
+              22054 # >=0.59.0 DNS forwarder port
             ];
           })
         );
@@ -543,14 +553,7 @@ in
           after = [ "network.target" ];
           wantedBy = [ "multi-user.target" ];
 
-          path =
-            optionals (!config.services.resolved.enable) [ pkgs.openresolv ]
-            # useful for `netbird debug` system info gathering
-            ++ optionals config.networking.nftables.enable [ pkgs.nftables ]
-            ++ optionals (!config.networking.nftables.enable) [
-              pkgs.iptables
-              pkgs.ipset
-            ];
+          path = optionals (!config.services.resolved.enable) [ pkgs.openresolv ];
 
           serviceConfig = {
             ExecStart = "${getExe client.wrapper} service run";
@@ -571,6 +574,38 @@ in
           };
 
           stopIfChanged = false;
+        }
+      );
+    }
+    # netbird debug bundle related configurations
+    {
+      systemd.services = toClientAttrs (
+        client:
+        nameValuePair client.service.name {
+          /*
+            lets NetBird daemon know which systemd service to gather logs for
+            see https://github.com/netbirdio/netbird/blob/2c87fa623654c5eef76bc0226062290201eef13a/client/internal/debug/debug_linux.go#L50-L51
+          */
+          environment.SYSTEMD_UNIT = client.service.name;
+
+          path =
+            optionals config.networking.nftables.enable [ pkgs.nftables ]
+            ++ optionals (!config.networking.nftables.enable) [
+              pkgs.iptables
+              pkgs.ipset
+            ];
+        }
+      );
+      users.users = toHardenedClientAttrs (
+        client:
+        nameValuePair client.user.name {
+          extraGroups = [
+            /*
+              allows debug bundles to gather systemd logs for `netbird*.service`
+              this is not ideal for hardening as it grants access to the whole journal, not just own logs
+            */
+            "systemd-journal"
+          ];
         }
       );
     }

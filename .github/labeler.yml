@@ -1,4 +1,4 @@
-# This file is used by .github/workflows/labels.yml
+# This file is used by .github/workflows/bot.yml
 # This version uses `sync-labels: true`, meaning that a non-match will remove the label
 
 # keep-sorted start case=no numeric=yes newline_separated=yes skip_lines=1
@@ -58,6 +58,8 @@
               - nixos/modules/services/display-managers/cosmic-greeter.nix
               - nixos/tests/cosmic.nix
               - pkgs/by-name/co/cosmic-*/**/*
+              - pkgs/by-name/li/libcosmicAppHook/*
+              - pkgs/by-name/po/pop-launcher/*
               - pkgs/by-name/xd/xdg-desktop-portal-cosmic/*
 
 "6.topic: crystal":

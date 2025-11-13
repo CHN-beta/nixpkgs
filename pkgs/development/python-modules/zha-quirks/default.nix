@@ -13,7 +13,7 @@
 
 buildPythonPackage rec {
   pname = "zha-quirks";
-  version = "0.0.145";
+  version = "0.0.148";
   pyproject = true;
 
   disabled = pythonOlder "3.12";
@@ -22,7 +22,7 @@ buildPythonPackage rec {
     owner = "zigpy";
     repo = "zha-device-handlers";
     tag = version;
-    hash = "sha256-CJiva7ZFm9jjWoQ1qjRUIbk5UHb2o9qdbVHDK+wIZKw=";
+    hash = "sha256-A2+pBLPexQLMDE/feQ7mQ1bbzGBAXs/5GktOVn2D2JM=";
   };
 
   postPatch = ''
@@ -45,10 +45,6 @@ buildPythonPackage rec {
   ];
 
   disabledTests = [
-    # RuntimeError: no running event loop
-    "test_mfg_cluster_events"
-    "test_co2_sensor"
-    "test_smart_air_sensor"
     # AssertionError: expected call not found
     "test_moes"
     "test_tuya_mcu_set_time"

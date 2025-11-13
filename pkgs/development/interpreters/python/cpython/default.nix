@@ -195,6 +195,12 @@ let
         pythonOnHostForHost
         pythonOnTargetForTarget
         ;
+
+      pythonABITags = [
+        "abi3"
+        "none"
+        "cp${sourceVersion.major}${sourceVersion.minor}${lib.optionalString (!enableGIL) "t"}"
+      ];
     };
 
   version = with sourceVersion; "${major}.${minor}.${patch}${suffix}";
@@ -403,7 +409,7 @@ stdenv.mkDerivation (finalAttrs: {
         hash = "sha256-kpXoIHlz53+0FAm/fK99ZBdNUg0u13erOr1XP2FSkQY=";
       };
     in
-    (builtins.map (f: "${mingw-patch}/${f}") [
+    (map (f: "${mingw-patch}/${f}") [
       # The other patches in that repo are already applied to 3.11.10
       "mingw-python3_distutils.patch"
       "mingw-python3_frozenmain.patch"
@@ -510,8 +516,8 @@ stdenv.mkDerivation (finalAttrs: {
     "ac_cv_have_size_t_format=yes"
     "ac_cv_computed_gotos=yes"
     # Both fail when building for windows, normally configure checks this by itself but on other platforms this is set to yes always.
-    "ac_cv_file__dev_ptmx=${if stdenv.hostPlatform.isWindows then "no" else "yes"}"
-    "ac_cv_file__dev_ptc=${if stdenv.hostPlatform.isWindows then "no" else "yes"}"
+    "ac_cv_file__dev_ptmx=${lib.boolToYesNo (!stdenv.hostPlatform.isWindows)}"
+    "ac_cv_file__dev_ptc=${lib.boolToYesNo (!stdenv.hostPlatform.isWindows)}"
   ]
   ++ optionals (stdenv.hostPlatform != stdenv.buildPlatform && pythonAtLeast "3.11") [
     "--with-build-python=${pythonOnBuildForHostInterpreter}"

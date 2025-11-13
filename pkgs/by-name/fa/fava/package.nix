@@ -8,17 +8,17 @@
 let
   src = buildNpmPackage (finalAttrs: {
     pname = "fava-frontend";
-    version = "1.30.5";
+    version = "1.30.7";
 
     src = fetchFromGitHub {
       owner = "beancount";
       repo = "fava";
       tag = "v${finalAttrs.version}";
-      hash = "sha256-46ze+1sdgXq9Unhu1ec4buXbH3s/PCcfCx+rmYc+fZw=";
+      hash = "sha256-gO6eJIFp/yWAXFWhUcqkkfk2pA8/vyTxgPRPBmv4a6Q=";
     };
     sourceRoot = "${finalAttrs.src.name}/frontend";
 
-    npmDepsHash = "sha256-ImBNqccAd61c9ASzklcooQyh7BYdgJW9DTcQRmFHqho=";
+    npmDepsHash = "sha256-cXIhEzYFpLOxUEY7lhTWW7R3/ptkx7hB9K92Fd2m1Ng=";
     makeCacheWritable = true;
 
     preBuild = ''
@@ -34,7 +34,7 @@ let
 in
 python3Packages.buildPythonApplication {
   pname = "fava";
-  version = "1.30.5";
+  inherit (src) version;
   pyproject = true;
 
   inherit src;
@@ -77,10 +77,6 @@ python3Packages.buildPythonApplication {
     # Disable some tests when building with beancount2
     SNAPSHOT_IGNORE = lib.versions.major python3Packages.beancount.version == "2";
   };
-
-  preCheck = ''
-    export HOME=$TEMPDIR
-  '';
 
   meta = {
     description = "Web interface for beancount";

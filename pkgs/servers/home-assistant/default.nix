@@ -126,19 +126,6 @@ let
         };
       });
 
-      mcp = super.mcp.overridePythonAttrs (oldAttrs: rec {
-        version = "1.5.0";
-        src = fetchFromGitHub {
-          inherit (oldAttrs.src) owner repo;
-          tag = "v${version}";
-          hash = "sha256-Z2NN6k4mD6NixDON1MUOELpBZW9JvMvFErcCbFPdg2o=";
-        };
-        pytestFlagsArray = [
-          "-W"
-          "ignore::pydantic.warnings.PydanticDeprecatedSince211"
-        ];
-      });
-
       notifications-android-tv = super.notifications-android-tv.overridePythonAttrs (oldAttrs: rec {
         version = "0.1.5";
         format = "setuptools";
@@ -272,53 +259,7 @@ let
         doCheck = false;
       });
 
-      python-roborock =
-        (super.python-roborock.override {
-          pytest-asyncio = self.pytest-asyncio_0;
-        }).overridePythonAttrs
-          rec {
-            version = "2.18.2";
-
-            src = fetchFromGitHub {
-              owner = "Python-roborock";
-              repo = "python-roborock";
-              tag = "v${version}";
-              hash = "sha256-7xcw1jNCDapHjH1YVB5NW7jxMyb8Raf8HuTnWf2vdFo=";
-            };
-          };
-
-      python-telegram-bot = super.python-telegram-bot.overridePythonAttrs (oldAttrs: rec {
-        version = "21.5";
-
-        src = fetchFromGitHub {
-          inherit (oldAttrs.src) owner repo;
-          tag = version;
-          hash = "sha256-i1YEcN615xeI4HcygXV9kzuXpT2yDSnlNU6bZqu1dPM=";
-        };
-      });
-
-      pytraccar = super.pytraccar.overridePythonAttrs (oldAttrs: rec {
-        version = "2.1.1";
-
-        src = fetchFromGitHub {
-          inherit (oldAttrs.src) owner repo;
-          tag = version;
-          hash = "sha256-WTRqYw66iD4bbb1aWJfBI67+DtE1FE4oiuUKpfVqypE=";
-        };
-      });
-
-      # Pinned due to API changes ~1.0
-      vultr = super.vultr.overridePythonAttrs (oldAttrs: rec {
-        version = "0.1.2";
-        src = fetchFromGitHub {
-          owner = "spry-group";
-          repo = "python-vultr";
-          rev = version;
-          hash = "sha256-sHCZ8Csxs5rwg1ZG++hP3MfK7ldeAdqm5ta9tEXeW+I=";
-        };
-      });
-
-      wolf-comm = super.wolf-comm.overridePythonAttrs (rec {
+      wolf-comm = super.wolf-comm.overridePythonAttrs rec {
         version = "0.0.23";
         src = fetchFromGitHub {
           owner = "janrothkegel";
@@ -326,7 +267,7 @@ let
           tag = version;
           hash = "sha256-LpehooW3vmohiyMwOQTFNLiNCsaLKelWQxQk8bl+y1k=";
         };
-      });
+      };
 
       # internal python packages only consumed by home-assistant itself
       hass-web-proxy-lib = self.callPackage ./python-modules/hass-web-proxy-lib { };
@@ -358,7 +299,7 @@ let
   extraBuildInputs = extraPackages python.pkgs;
 
   # Don't forget to run update-component-packages.py after updating
-  hassVersion = "2025.9.3";
+  hassVersion = "2025.11.1";
 
 in
 python.pkgs.buildPythonApplication rec {
@@ -379,13 +320,13 @@ python.pkgs.buildPythonApplication rec {
     owner = "home-assistant";
     repo = "core";
     tag = version;
-    hash = "sha256-iGOpLZMrEu0z+VdQMn1OeI1rw4x3WawQemyOdt7j124=";
+    hash = "sha256-39OY9lKlqnv3QdIdJ698cMTBrF41SxbqQfz6N32mD5s=";
   };
 
   # Secondary source is pypi sdist for translations
   sdist = fetchPypi {
     inherit pname version;
-    hash = "sha256-iw5RNM6VoiGfCmGgqfqMQot9ArPlKk/tXJUJZNs7Kzg=";
+    hash = "sha256-W9xuWfz9lCQXaPg+O313mzMxvBfY64CrU7vwNjra/3k=";
   };
 
   build-system = with python.pkgs; [
@@ -499,7 +440,6 @@ python.pkgs.buildPythonApplication rec {
       pytest-asyncio
       pytest-aiohttp
       pytest-freezer
-      pytest-mock
       pytest-socket
       pytest-timeout
       pytest-unordered
@@ -508,17 +448,15 @@ python.pkgs.buildPythonApplication rec {
       requests-mock
       respx
       syrupy
-      tomli
-      # Sneakily imported in tests/conftest.py
-      paho-mqtt
       # Used in tests/non_packaged_scripts/test_alexa_locales.py
       beautifulsoup4
+      # Used in tests/scripts/test_check_config.py
+      colorlog
     ]
     ++ lib.concatMap (component: getPackages component python.pkgs) [
       # some components are needed even if tests in tests/components are disabled
       "default_config"
       "hue"
-      "qwikswitch"
     ];
 
   pytestFlags = [
@@ -550,12 +488,6 @@ python.pkgs.buildPythonApplication rec {
     "tests/test_bootstrap.py::test_setup_hass_takes_longer_than_log_slow_startup"
     "tests/test_test_fixtures.py::test_evict_faked_translations"
     "tests/helpers/test_backup.py::test_async_get_manager"
-    # (2025.9.0) Extra argument (demo platform) in list that is expected to be empty
-    "tests/scripts/test_check_config.py::test_config_platform_valid"
-    # (2025.9.0) Schema mismatch, diff shows a required field that needs to be removed
-    "tests/test_data_entry_flow.py::test_section_in_serializer"
-    # (2025.9.0) unique id collision in async_update_entry
-    "tests/test_config_entries.py::test_async_update_entry_unique_id_collision"
   ];
 
   preCheck = ''

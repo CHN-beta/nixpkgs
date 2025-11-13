@@ -27,13 +27,12 @@
     "libheif"
     "libnsgif"
   ],
-  freeimage,
   libtiff,
   libjpeg_turbo,
   libjxl,
   libpng,
   librsvg,
-  netsurf,
+  libnsgif,
   libheif,
 }:
 
@@ -50,18 +49,18 @@ let
 
   backends = {
     inherit
-      freeimage
       libtiff
       libpng
       librsvg
       libheif
       libjxl
+      libnsgif
       ;
     libjpeg = libjpeg_turbo;
-    inherit (netsurf) libnsgif;
+    freeimage = throw "freeimage backend not supported";
   };
 
-  backendFlags = builtins.map (
+  backendFlags = map (
     b: if builtins.elem b withBackends then "-D${b}=enabled" else "-D${b}=disabled"
   ) (builtins.attrNames backends);
 in
@@ -114,7 +113,7 @@ stdenv.mkDerivation rec {
     inih
   ]
   ++ windowSystems."${withWindowSystem}"
-  ++ builtins.map (b: backends."${b}") withBackends;
+  ++ map (b: backends."${b}") withBackends;
 
   patches = [
     (fetchpatch {

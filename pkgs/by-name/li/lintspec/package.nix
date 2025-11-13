@@ -6,18 +6,22 @@
   stdenv,
 }:
 
-rustPlatform.buildRustPackage rec {
+rustPlatform.buildRustPackage (finalAttrs: {
   pname = "lintspec";
-  version = "0.9.0";
+  version = "0.12.0";
 
   src = fetchFromGitHub {
     owner = "beeb";
     repo = "lintspec";
-    tag = "v${version}";
-    hash = "sha256-5jNOMAohfzq/S+1LASQh0hvzqdMLQGdPYSb6rcGxmD8=";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-CxtzAtbjk7rS00EAvu6pMXN7VsF75tO79p7au5+4jGI=";
   };
 
-  cargoHash = "sha256-m9n9r3SJtGx3/MURmZak2XRCLkmQZU06nPMQpROfvVs=";
+  cargoHash = "sha256-kmv62yq4JdNv2komTjnsH5kjbaxI30iph3pKa2+qqck=";
+  cargoBuildFlags = [
+    "--package"
+    "lintspec"
+  ];
 
   nativeBuildInputs = [ installShellFiles ];
   postInstall = lib.optionalString (stdenv.buildPlatform.canExecute stdenv.hostPlatform) ''
@@ -30,7 +34,7 @@ rustPlatform.buildRustPackage rec {
   meta = {
     description = "Blazingly fast linter for NatSpec comments in Solidity code";
     homepage = "https://github.com/beeb/lintspec";
-    changelog = "https://github.com/beeb/lintspec/releases/tag/v${version}";
+    changelog = "https://github.com/beeb/lintspec/releases/tag/v${finalAttrs.version}";
     license = with lib.licenses; [
       mit
       asl20
@@ -38,4 +42,4 @@ rustPlatform.buildRustPackage rec {
     maintainers = with lib.maintainers; [ beeb ];
     mainProgram = "lintspec";
   };
-}
+})

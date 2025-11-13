@@ -1,26 +1,26 @@
 {
-  lib,
-  stdenv,
+  btrfs-progs,
   buildGoModule,
   fetchFromGitHub,
-  btrfs-progs,
-  writableTmpDirAsHomeHook,
   installShellFiles,
+  lib,
+  stdenv,
   versionCheckHook,
+  writableTmpDirAsHomeHook,
 }:
 buildGoModule (finalAttrs: {
   pname = "werf";
-  version = "2.47.5";
+  version = "2.51.3";
 
   src = fetchFromGitHub {
     owner = "werf";
     repo = "werf";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-rr0jHeAz8gcKj1rUzL8BoDFvuVrZF1+3I7ruKIvt8Rw=";
+    hash = "sha256-xka8poabuG1Bwmo+Q+VeWLZIkKSY9+k5JHYTO2ecz2I=";
   };
 
   proxyVendor = true;
-  vendorHash = "sha256-dULy4iLpp+wlvk8gdzLQTJ6reRI1YQ8//+EU7/U/Xkw=";
+  vendorHash = "sha256-v2/b618nKua8+y7Imyz3+expBQlIS13TWkNRMh2NCVo=";
 
   subPackages = [ "cmd/werf" ];
 
@@ -83,7 +83,7 @@ buildGoModule (finalAttrs: {
 
   versionCheckProgramArg = "version";
 
-  postInstall = ''
+  postInstall = lib.optionalString (stdenv.buildPlatform.canExecute stdenv.hostPlatform) ''
     for shell in bash fish zsh; do
       installShellCompletion \
         --cmd werf \

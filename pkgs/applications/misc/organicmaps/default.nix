@@ -33,13 +33,13 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "organicmaps";
-  version = "2025.09.01-6";
+  version = "2025.10.23-22";
 
   src = fetchFromGitHub {
     owner = "organicmaps";
     repo = "organicmaps";
     tag = "${finalAttrs.version}-android";
-    hash = "sha256-wxJgfvZvksW/U3ZC7/apRHQTcGvfdi8mYTPCzT8FM3U=";
+    hash = "sha256-4TSN4G5tUvtzSXASDfOE1xiitQx9wE2/ZydFwpov+UM=";
     fetchSubmodules = true;
   };
 

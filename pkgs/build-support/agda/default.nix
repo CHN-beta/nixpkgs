@@ -44,8 +44,8 @@ let
       ghc ? ghcWithPackages (p: with p; [ ieee754 ]),
     }:
     let
-      library-file = mkLibraryFile pkgs;
-      pname = "agdaWithPackages";
+      libraryFile = mkLibraryFile pkgs;
+      pname = "${Agda.meta.mainProgram}WithPackages";
       version = Agda.version;
     in
     runCommand "${pname}-${version}"
@@ -54,7 +54,10 @@ let
         nativeBuildInputs = [ makeWrapper ];
         passthru = {
           unwrapped = Agda;
-          inherit withPackages;
+          inherit
+            withPackages
+            libraryFile
+            ;
           tests = {
             inherit (nixosTests) agda;
             allPackages = withPackages (filter self.lib.isUnbrokenAgdaPackage (attrValues self));
@@ -65,10 +68,12 @@ let
       }
       ''
         mkdir -p $out/bin
-        makeWrapper ${lib.getExe Agda} $out/bin/agda \
+        makeWrapper ${lib.getExe Agda} $out/bin/${Agda.meta.mainProgram} \
           ${lib.optionalString (ghc != null) ''--add-flags "--with-compiler=${ghc}/bin/ghc"''} \
-          --add-flags "--library-file=${library-file}"
-        ln -s ${lib.getExe' Agda "agda-mode"} $out/bin/agda-mode
+          --add-flags "--library-file=${libraryFile}"
+        if [ -e ${lib.getExe' Agda "agda-mode"} ]; then
+          ln -s ${lib.getExe' Agda "agda-mode"} $out/bin/agda-mode
+        fi
       '';
 
   withPackages = arg: if isAttrs arg then withPackages' arg else withPackages' { pkgs = arg; };
@@ -113,7 +118,7 @@ let
         else
           ''
             runHook preBuild
-            agda --build-library
+            ${lib.getExe agdaWithPkgs} --build-library
             runHook postBuild
           '';
 

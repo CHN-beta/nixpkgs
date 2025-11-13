@@ -3,22 +3,19 @@
   buildPythonPackage,
   fetchFromGitHub,
   poetry-core,
-  pythonOlder,
   requests,
 }:
 
 buildPythonPackage rec {
   pname = "pylacus";
-  version = "1.16.1";
+  version = "1.19.1";
   pyproject = true;
-
-  disabled = pythonOlder "3.8";
 
   src = fetchFromGitHub {
     owner = "ail-project";
     repo = "PyLacus";
     tag = "v${version}";
-    hash = "sha256-sGTr0M3cintyjXtdABtaw7tvbKz/reibYM3xDUL0kOk=";
+    hash = "sha256-aOTXz/77ZeX0xiMeUIaqDrtpMvIM7Idp+3rYeXJ4bpg=";
   };
 
   build-system = [ poetry-core ];

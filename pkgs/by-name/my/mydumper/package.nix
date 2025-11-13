@@ -6,7 +6,6 @@
   installShellFiles,
   pkg-config,
   glib,
-  pcre,
   pcre2,
   util-linux,
   libsysprof-capture,
@@ -21,16 +20,15 @@
   versionCheckHook,
   mydumper,
 }:
-
 stdenv.mkDerivation rec {
   pname = "mydumper";
-  version = "0.19.3-3";
+  version = "0.20.1-2";
 
   src = fetchFromGitHub {
     owner = "mydumper";
     repo = "mydumper";
     tag = "v${version}";
-    hash = "sha256-CrjI6jwktBxKn7hgL8+pCikbtCFUK6z90Do9fWmLZlQ=";
+    hash = "sha256-ypFXxmKnG1yiJjvHGmYJJz5ZjhhGHCRklG7y83jypms=";
     # as of mydumper v0.16.5-1, mydumper extracted its docs into a submodule
     fetchSubmodules = true;
   };
@@ -52,7 +50,6 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     glib
-    pcre
     pcre2
     util-linux
     libmysqlclient
@@ -84,7 +81,8 @@ stdenv.mkDerivation rec {
   postPatch = ''
     # as of mydumper v0.14.5-1, mydumper tries to install its config to /etc
     substituteInPlace CMakeLists.txt\
-      --replace-fail "/etc" "$out/etc"
+      --replace-fail "/etc" "$out/etc" \
+      --replace-fail "cmake_minimum_required(VERSION 2.8.12)" "cmake_minimum_required(VERSION 3.10)"
   '';
 
   # copy man files & docs over

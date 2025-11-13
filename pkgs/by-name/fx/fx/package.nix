@@ -1,8 +1,11 @@
 {
   lib,
+  stdenv,
   buildGoModule,
   fetchFromGitHub,
   installShellFiles,
+  versionCheckHook,
+  writableTmpDirAsHomeHook,
 }:
 
 buildGoModule (finalAttrs: {
@@ -22,12 +25,21 @@ buildGoModule (finalAttrs: {
 
   nativeBuildInputs = [ installShellFiles ];
 
-  postInstall = ''
+  postInstall = lib.optionalString (stdenv.buildPlatform.canExecute stdenv.hostPlatform) ''
     installShellCompletion --cmd fx \
       --bash <($out/bin/fx --comp bash) \
       --fish <($out/bin/fx --comp fish) \
       --zsh <($out/bin/fx --comp zsh)
   '';
+
+  nativeInstallCheckInputs = [
+    versionCheckHook
+    writableTmpDirAsHomeHook
+  ];
+
+  doInstallCheck = true;
+  versionCheckProgramArg = "--version";
+  versionCheckKeepEnvironment = [ "HOME" ];
 
   meta = {
     changelog = "https://github.com/antonmedv/fx/releases/tag/${finalAttrs.src.tag}";
@@ -35,6 +47,6 @@ buildGoModule (finalAttrs: {
     homepage = "https://github.com/antonmedv/fx";
     license = lib.licenses.mit;
     mainProgram = "fx";
-    maintainers = with lib.maintainers; [ figsoda ];
+    maintainers = with lib.maintainers; [ phanirithvij ];
   };
 })

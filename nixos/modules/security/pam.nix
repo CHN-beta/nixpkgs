@@ -2298,7 +2298,7 @@ in
       ++ lib.optionals config.security.pam.enableFscrypt [ pkgs.fscrypt-experimental ]
       ++ lib.optionals config.security.pam.u2f.enable [ pkgs.pam_u2f ];
 
-    boot.supportedFilesystems = lib.optionals config.security.pam.enableEcryptfs [ "ecryptfs" ];
+    boot.supportedFilesystems = lib.mkIf config.security.pam.enableEcryptfs [ "ecryptfs" ];
 
     security.wrappers = {
       unix_chkpwd = {
@@ -2312,8 +2312,7 @@ in
     environment.etc = lib.mapAttrs' makePAMService enabledServices;
 
     systemd =
-      lib.optionalAttrs
-        (lib.any (service: service.updateWtmp) (lib.attrValues config.security.pam.services))
+      lib.mkIf (lib.any (service: service.updateWtmp) (lib.attrValues config.security.pam.services))
         {
           tmpfiles.packages = [ pkgs.util-linux.lastlog ]; # /lib/tmpfiles.d/lastlog2-tmpfiles.conf
           services.lastlog2-import = {
