@@ -27,9 +27,6 @@
   versionCheckHook,
   writableTmpDirAsHomeHook,
 
-  versionCheckHook,
-  writableTmpDirAsHomeHook,
-
   # passthru
   nixosTests,
   ollama,
