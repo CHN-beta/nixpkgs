@@ -98,6 +98,9 @@ let
         krohnkite = self.callPackage ./third-party/krohnkite { };
         kzones = self.callPackage ./third-party/kzones { };
         wallpaper-engine-plugin = self.callPackage ./third-party/wallpaper-engine-plugin { };
+
+        # Convenient for users to install various tools provided by kde
+        kdeGear = gear;
       }
     );
 in
