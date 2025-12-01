@@ -1,0 +1,761 @@
+diff --git a/lib/systems/examples.nix b/lib/systems/examples.nix
+index d05c05910523..560dc1372e64 100644
+--- a/lib/systems/examples.nix
++++ b/lib/systems/examples.nix
+@@ -354,6 +354,8 @@ rec {
+     libc = "msvcrt"; # This distinguishes the mingw (non posix) toolchain
+   };
+ 
++  mingwW64Static = mingwW64 // { isStatic = true; };
++
+   ucrt64 = {
+     config = "x86_64-w64-mingw32";
+     libc = "ucrt"; # This distinguishes the mingw (non posix) toolchain
+diff --git a/nixos/doc/manual/release-notes/rl-2511.section.md b/nixos/doc/manual/release-notes/rl-2511.section.md
+index 96659c6cbdd0..0111b2d8d696 100644
+--- a/nixos/doc/manual/release-notes/rl-2511.section.md
++++ b/nixos/doc/manual/release-notes/rl-2511.section.md
+@@ -39,6 +39,8 @@
+ 
+ - [Pi-hole](https://pi-hole.net/), a DNS sinkhole for advertisements based on Dnsmasq. Available as [services.pihole-ftl](#opt-services.pihole-ftl.enable), and [services.pihole-web](#opt-services.pihole-web.enable) for the web GUI and API.
+ 
++- [Howdy](https://github.com/boltgolt/howdy), a Windows Hello™ style facial authentication program for Linux.
++
+ - [Fediwall](https://fediwall.social), a web application for live displaying toots from mastodon, inspired by mastowall. Available as [services.fediwall](#opt-services.fediwall.enable).
+ 
+ - [umami](https://github.com/umami-software/umami), a simple, fast, privacy-focused alternative to Google Analytics. Available with [services.umami](#opt-services.umami.enable).
+@@ -56,6 +58,8 @@
+ 
+ - Auto-scrub support for Bcachefs filesystems can now be enabled through [services.bcachefs.autoScrub.enable](#opt-services.bcachefs.autoScrub.enable) to periodically check for data corruption. If there's a correct copy available, it will automatically repair corrupted blocks.
+ 
++- [linux-enable-ir-emitter](https://github.com/EmixamPP/linux-enable-ir-emitter), a tool used to set up IR cameras, used with Howdy.
++
+ - [LibreTranslate](https://libretranslate.com), a free and open source machine translation API. Available as [services.libretranslate](#opt-services.libretranslate.enable).
+ 
+ - [Linyaps](https://linyaps.org.cn/), a cross-distribution package manager with sandboxed apps and shared runtime. Available as [services.linyaps](#opt-services.linyaps.enable).
+diff --git a/nixos/modules/module-list.nix b/nixos/modules/module-list.nix
+index ab964994d908..9e7d1b12c0e7 100644
+--- a/nixos/modules/module-list.nix
++++ b/nixos/modules/module-list.nix
+@@ -869,6 +869,7 @@
+   ./services/misc/languagetool.nix
+   ./services/misc/leaps.nix
+   ./services/misc/lifecycled.nix
++  ./services/misc/linux-enable-ir-emitter.nix
+   ./services/misc/litellm.nix
+   ./services/misc/llama-cpp.nix
+   ./services/misc/local-content-share.nix
+@@ -1471,6 +1472,7 @@
+   ./services/security/hockeypuck.nix
+   ./services/security/hologram-agent.nix
+   ./services/security/hologram-server.nix
++  ./services/security/howdy
+   ./services/security/infnoise.nix
+   ./services/security/intune.nix
+   ./services/security/jitterentropy-rngd.nix
+diff --git a/nixos/modules/security/pam.nix b/nixos/modules/security/pam.nix
+index d313187d9fe9..83a51fe9e6e2 100644
+--- a/nixos/modules/security/pam.nix
++++ b/nixos/modules/security/pam.nix
+@@ -322,6 +322,16 @@ let
+           '';
+         };
+ 
++        howdyAuth = lib.mkOption {
++          default = config.services.howdy.enable;
++          defaultText = lib.literalExpression "config.services.howdy.enable";
++          type = lib.types.bool;
++          description = ''
++            If set, IR camera will be used (if it exists and your
++            facial models are enrolled).
++          '';
++        };
++
+         oathAuth = lib.mkOption {
+           default = config.security.pam.oath.enable;
+           defaultText = lib.literalExpression "config.security.pam.oath.enable";
+@@ -944,6 +954,12 @@ let
+                   control = "sufficient";
+                   modulePath = "${config.services.fprintd.package}/lib/security/pam_fprintd.so";
+                 }
++                {
++                  name = "howdy";
++                  enable = cfg.howdyAuth;
++                  control = "sufficient";
++                  modulePath = "${config.services.howdy.package}/lib/security/pam_howdy.so";
++                }
+               ]
+               ++
+                 # Modules in this block require having the password set in PAM_AUTHTOK.
+diff --git a/nixos/modules/services/databases/mysql.nix b/nixos/modules/services/databases/mysql.nix
+index 3d65823c73d8..c0c99b97f8e8 100644
+--- a/nixos/modules/services/databases/mysql.nix
++++ b/nixos/modules/services/databases/mysql.nix
+@@ -609,10 +609,10 @@ in
+           then
+               # While MariaDB comes with a 'mysql' super user account since 10.4.x, MySQL does not
+               # Since we don't want to run this service as 'root' we need to ensure the account exists on first run
+-              ( echo "CREATE USER IF NOT EXISTS '${cfg.user}'@'localhost' IDENTIFIED WITH ${
++              ( echo "CREATE USER IF NOT EXISTS '${cfg.user}' IDENTIFIED WITH ${
+                 if isMariaDB then "unix_socket" else "auth_socket"
+               };"
+-                echo "GRANT ALL PRIVILEGES ON *.* TO '${cfg.user}'@'localhost' WITH GRANT OPTION;"
++                echo "GRANT ALL PRIVILEGES ON *.* TO '${cfg.user}' WITH GRANT OPTION;"
+               ) | ${cfg.package}/bin/mysql -u ${superUser} -N
+ 
+               ${lib.concatMapStrings (database: ''
+@@ -676,12 +676,12 @@ in
+           ''}
+ 
+           ${lib.concatMapStrings (user: ''
+-            ( echo "CREATE USER IF NOT EXISTS '${user.name}'@'localhost' IDENTIFIED WITH ${
++            ( echo "CREATE USER IF NOT EXISTS '${user.name}' IDENTIFIED WITH ${
+               if isMariaDB then "unix_socket" else "auth_socket"
+             };"
+               ${lib.concatStringsSep "\n" (
+                 lib.mapAttrsToList (database: permission: ''
+-                  echo "GRANT ${permission} ON ${database} TO '${user.name}'@'localhost';"
++                  echo "GRANT ${permission} ON ${database} TO '${user.name}';"
+                 '') user.ensurePermissions
+               )}
+             ) | ${cfg.package}/bin/mysql -N
+diff --git a/nixos/modules/services/misc/linux-enable-ir-emitter.nix b/nixos/modules/services/misc/linux-enable-ir-emitter.nix
+new file mode 100644
+index 000000000000..21de5e9c24d0
+--- /dev/null
++++ b/nixos/modules/services/misc/linux-enable-ir-emitter.nix
+@@ -0,0 +1,67 @@
++{
++  config,
++  lib,
++  pkgs,
++  ...
++}:
++let
++  cfg = config.services.linux-enable-ir-emitter;
++in
++{
++  options = {
++    services.linux-enable-ir-emitter = {
++      enable = lib.mkEnableOption "" // {
++        description = ''
++          Whether to enable IR emitter hardware. Designed to be used with the
++          Howdy facial authentication. After enabling the service, configure
++          the emitter with `sudo linux-enable-ir-emitter configure`.
++        '';
++      };
++
++      package = lib.mkPackageOption pkgs "linux-enable-ir-emitter" { } // {
++        description = ''
++          Package to use for the Linux Enable IR Emitter service.
++        '';
++      };
++
++      device = lib.mkOption {
++        type = lib.types.str;
++        default = "video2";
++        description = ''
++          IR camera device to depend on. For example, for `/dev/video2`
++          the value would be `video2`. Find this with the command
++          {command}`realpath /dev/v4l/by-path/<generated-driver-name>`.
++        '';
++      };
++    };
++  };
++
++  config = lib.mkIf cfg.enable {
++    environment.systemPackages = [ cfg.package ];
++
++    # https://github.com/EmixamPP/linux-enable-ir-emitter/blob/7e3a6527ef2efccabaeefc5a93c792628325a8db/sources/systemd/linux-enable-ir-emitter.service
++    systemd.services.linux-enable-ir-emitter =
++      let
++        targets = [
++          "suspend.target"
++          "sleep.target"
++          "hybrid-sleep.target"
++          "hibernate.target"
++          "suspend-then-hibernate.target"
++        ];
++      in
++      {
++        description = "Enable the infrared emitter";
++        preStart = ''
++          ${pkgs.kmod}/bin/modprobe uvcvideo
++          sleep 1
++        '';
++        script = "${lib.getExe cfg.package} --verbose run";
++        serviceConfig.StateDirectory = "linux-enable-ir-emitter";
++        serviceConfig.LogsDirectory = "linux-enable-ir-emitter";
++
++        wantedBy = targets ++ [ "multi-user.target" ];
++        after = targets ++ [ "dev-${cfg.device}.device" ];
++      };
++  };
++}
+diff --git a/nixos/modules/services/security/howdy/config.nix b/nixos/modules/services/security/howdy/config.nix
+new file mode 100644
+index 000000000000..e806366d377e
+--- /dev/null
++++ b/nixos/modules/services/security/howdy/config.nix
+@@ -0,0 +1,46 @@
++{
++  core = {
++    detection_notice = false;
++    timeout_notice = true;
++    no_confirmation = false;
++    suppress_unknown = false;
++    abort_if_ssh = true;
++    abort_if_lid_closed = true;
++    disabled = false;
++    use_cnn = false;
++    workaround = "off";
++  };
++
++  video = {
++    certainty = 3.5;
++    timeout = 4;
++    device_path = "/dev/video2";
++    warn_no_device = true;
++    max_height = 320;
++    frame_width = -1;
++    frame_height = -1;
++    dark_threshold = 60;
++    recording_plugin = "opencv";
++    device_format = "v4l2";
++    force_mjpeg = false;
++    exposure = -1;
++    device_fps = -1;
++    rotate = 0;
++  };
++
++  snapshots = {
++    save_failed = false;
++    save_successful = false;
++  };
++
++  rubberstamps = {
++    enabled = false;
++    stamp_rules = "nod		5s		failsafe     min_distance=12";
++  };
++
++  debug = {
++    end_report = false;
++    verbose_stamps = false;
++    gtk_stdout = false;
++  };
++}
+diff --git a/nixos/modules/services/security/howdy/default.nix b/nixos/modules/services/security/howdy/default.nix
+new file mode 100644
+index 000000000000..979be38c3be1
+--- /dev/null
++++ b/nixos/modules/services/security/howdy/default.nix
+@@ -0,0 +1,57 @@
++{
++  config,
++  lib,
++  pkgs,
++  ...
++}:
++let
++  cfg = config.services.howdy;
++  settingsType = pkgs.formats.ini { };
++in
++{
++  options = {
++    services.howdy = {
++      enable = lib.mkEnableOption "" // {
++        description = ''
++          Whether to enable Howdy and its PAM module for face recognition. See
++          `services.linux-enable-ir-emitter` for enabling the IR emitter support.
++
++          ::: {.caution}
++          Howdy is not a safe alternative to unlocking with your password. It
++          can be fooled using a well-printed photo.
++
++          Do **not** use it as the sole authentication method for your system.
++          :::
++        '';
++      };
++
++      package = lib.mkPackageOption pkgs "howdy" { };
++
++      settings = lib.mkOption {
++        inherit (settingsType) type;
++        default = import ./config.nix;
++        description = ''
++          Howdy configuration file. Refer to
++          <https://github.com/boltgolt/howdy/blob/beta/howdy/src/config.ini>
++          for options.
++        '';
++      };
++    };
++  };
++
++  config = lib.mkMerge [
++    (lib.mkIf cfg.enable {
++      environment.systemPackages = [ cfg.package ];
++      environment.etc."howdy/config.ini".source = settingsType.generate "howdy-config.ini" cfg.settings;
++      assertions = [
++        {
++          assertion = !(builtins.elem "v4l2loopback" config.boot.kernelModules);
++          message = "Adding 'v4l2loopback' to `boot.kernelModules` causes Howdy to no longer work. Consider adding it to `boot.extraModulePackages` instead.";
++        }
++      ];
++    })
++    {
++      services.howdy.settings = lib.mapAttrsRecursive (name: lib.mkDefault) (import ./config.nix);
++    }
++  ];
++}
+diff --git a/nixos/modules/services/web-apps/peertube.nix b/nixos/modules/services/web-apps/peertube.nix
+index 24258cdc7a4f..df9baf0cd5ec 100644
+--- a/nixos/modules/services/web-apps/peertube.nix
++++ b/nixos/modules/services/web-apps/peertube.nix
+@@ -538,7 +538,7 @@ in
+           secrets:
+             peertube: '$(cat ${cfg.secrets.secretsFile})'
+         ''}
+-        ${lib.optionalString ((!cfg.database.createLocally) && (cfg.database.passwordFile != null)) ''
++        ${lib.optionalString (cfg.database.passwordFile != null) ''
+           database:
+             password: '$(cat ${cfg.database.passwordFile})'
+         ''}
+diff --git a/nixos/modules/services/web-servers/nginx/default.nix b/nixos/modules/services/web-servers/nginx/default.nix
+index aa18102fd766..81883db288a5 100644
+--- a/nixos/modules/services/web-servers/nginx/default.nix
++++ b/nixos/modules/services/web-servers/nginx/default.nix
+@@ -111,6 +111,14 @@ let
+     proxy_set_header        X-Forwarded-Server $hostname;
+   '';
+ 
++  recommendedProxyConfigNoHost = pkgs.writeText "nginx-recommended-proxy-headers-no-host.conf" ''
++    proxy_set_header        X-Real-IP $remote_addr;
++    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
++    proxy_set_header        X-Forwarded-Proto $scheme;
++    proxy_set_header        X-Forwarded-Host $host;
++    proxy_set_header        X-Forwarded-Server $host;
++  '';
++
+   proxyCachePathConfig = concatStringsSep "\n" (
+     mapAttrsToList (name: proxyCachePath: ''
+       proxy_cache_path ${
+@@ -259,6 +267,18 @@ let
+               include ${recommendedProxyConfig};
+             ''}
+ 
++            ${optionalString cfg.recommendedProxySettingsNoHost ''
++              proxy_redirect          off;
++              proxy_connect_timeout   ${cfg.proxyTimeout};
++              proxy_send_timeout      ${cfg.proxyTimeout};
++              proxy_read_timeout      ${cfg.proxyTimeout};
++              proxy_http_version      1.1;
++              # don't let clients close the keep-alive connection to upstream. See the nginx blog for details:
++              # https://www.nginx.com/blog/avoiding-top-10-nginx-configuration-mistakes/#no-keepalives
++              proxy_set_header        "Connection" "";
++              include ${recommendedProxyConfigNoHost};
++            ''}
++
+             ${optionalString cfg.recommendedUwsgiSettings ''
+               uwsgi_connect_timeout   ${cfg.uwsgiTimeout};
+               uwsgi_send_timeout      ${cfg.uwsgiTimeout};
+@@ -541,6 +561,7 @@ let
+           ${optionalString (
+             config.proxyPass != null && config.recommendedProxySettings
+           ) "include ${recommendedProxyConfig};"}
++          ${optionalString (config.proxyPass != null && config.recommendedProxySettingsNoHost) "include ${recommendedProxyConfigNoHost};"}
+           ${optionalString (
+             config.uwsgiPass != null && config.recommendedUwsgiSettings
+           ) "include ${cfg.package}/conf/uwsgi_params;"}
+@@ -647,6 +668,12 @@ in
+         '';
+       };
+ 
++      recommendedProxySettingsNoHost = mkOption {
++        default = false;
++        type = types.bool;
++        description = ''recommendedProxySettingsNoHost'';
++      };
++
+       proxyTimeout = mkOption {
+         type = types.str;
+         default = "60s";
+diff --git a/nixos/modules/services/web-servers/nginx/location-options.nix b/nixos/modules/services/web-servers/nginx/location-options.nix
+index 3a13291addd1..c92744de4682 100644
+--- a/nixos/modules/services/web-servers/nginx/location-options.nix
++++ b/nixos/modules/services/web-servers/nginx/location-options.nix
+@@ -150,6 +150,13 @@ with lib;
+       '';
+     };
+ 
++    recommendedProxySettingsNoHost = mkOption {
++      type = types.bool;
++      default = config.services.nginx.recommendedProxySettingsNoHost;
++      defaultText = literalExpression "config.services.nginx.recommendedProxySettingsNoHost";
++      description = ''recommendedProxySettingsNoHost'';
++    };
++
+     recommendedUwsgiSettings = mkOption {
+       type = types.bool;
+       default = config.services.nginx.recommendedUwsgiSettings;
+diff --git a/pkgs/applications/editors/vscode/with-extensions.nix b/pkgs/applications/editors/vscode/with-extensions.nix
+index 5097d177d624..cd066c69ef13 100644
+--- a/pkgs/applications/editors/vscode/with-extensions.nix
++++ b/pkgs/applications/editors/vscode/with-extensions.nix
+@@ -8,6 +8,7 @@
+   makeWrapper,
+   writeTextFile,
+   vscodeExtensions ? [ ],
++  extraFlags ? "",
+ }:
+ 
+ /*
+@@ -66,9 +67,7 @@ let
+     paths = vscodeExtensions ++ [ extensionJsonFile ];
+   };
+ 
+-  extensionsFlag = ''
+-    --add-flags "--extensions-dir ${combinedExtensionsDrv}/share/vscode/extensions"
+-  '';
++  extensionsFlag = ''--add-flags "--extensions-dir ${combinedExtensionsDrv}/share/vscode/extensions" '' + extraFlags;
+ in
+ 
+ runCommand "${wrappedPkgName}-with-extensions-${wrappedPkgVersion}"
+diff --git a/pkgs/by-name/ho/howdy/dont-install-config.patch b/pkgs/by-name/ho/howdy/dont-install-config.patch
+new file mode 100644
+index 000000000000..15932cca38f5
+--- /dev/null
++++ b/pkgs/by-name/ho/howdy/dont-install-config.patch
+@@ -0,0 +1,16 @@
++diff --git a/howdy/src/meson.build b/howdy/src/meson.build
++index 6533951..ef60e0a 100644
++--- a/howdy/src/meson.build
+++++ b/howdy/src/meson.build
++@@ -101,11 +101,6 @@ install_data(
++     rename: 'howdy',
++ )
++ 
++-fs = import('fs')
++-if not fs.exists(config_path)
++-    install_data('config.ini', install_dir: confdir, install_mode: 'rwxr--r--', install_tag: 'config')
++-endif
++-
++ install_data('dlib-data/install.sh', 'dlib-data/Readme.md', install_dir: dlibdatadir, install_mode: 'rwxr--r--')
++ 
++ install_man('../howdy.1')
+diff --git a/pkgs/by-name/ho/howdy/fix-gtk-py-path.patch b/pkgs/by-name/ho/howdy/fix-gtk-py-path.patch
+new file mode 100644
+index 000000000000..f3ead460498e
+--- /dev/null
++++ b/pkgs/by-name/ho/howdy/fix-gtk-py-path.patch
+@@ -0,0 +1,14 @@
++diff --git a/howdy-gtk/meson.build b/howdy-gtk/meson.build
++--- a/howdy-gtk/meson.build
+++++ a/howdy-gtk/meson.build
++@@ -24,9 +24,7 @@
++     'src/window.py'
++ )
++
++-py = import('python').find_installation(
++-    # modules: ['gi', 'elevate']
++-)
+++py = import('python').find_installation(paths_dict.get('python_path'))
++ py.dependency()
++
++ if get_option('install_in_site_packages')
+diff --git a/pkgs/by-name/ho/howdy/package.nix b/pkgs/by-name/ho/howdy/package.nix
+new file mode 100644
+index 000000000000..314ccfafba6e
+--- /dev/null
++++ b/pkgs/by-name/ho/howdy/package.nix
+@@ -0,0 +1,155 @@
++{
++  stdenv,
++  lib,
++  fetchFromGitHub,
++  fetchurl,
++  bzip2,
++  gobject-introspection,
++  imagemagick,
++  meson,
++  ninja,
++  pkg-config,
++  wrapGAppsHook3,
++  makeDesktopItem,
++  makeWrapper,
++  fmt,
++  gettext,
++  gtk3,
++  inih,
++  libevdev,
++  pam,
++  python3,
++  writeShellScriptBin,
++}:
++
++let
++  inherit (lib.attrsets) mapAttrsToList;
++  inherit (lib.lists) concatLists;
++  inherit (lib.strings) concatStrings mesonBool mesonOption;
++
++  data =
++    let
++      baseurl = "https://github.com/davisking/dlib-models/raw/daf943f7819a3dda8aec4276754ef918dc26491f";
++    in
++    {
++      "dlib_face_recognition_resnet_model_v1.dat" = fetchurl {
++        url = "${baseurl}/dlib_face_recognition_resnet_model_v1.dat.bz2";
++        hash = "sha256-q7H2EEHkNEZYVc6Bwr1UboMNKLy+2NJ/++W7QIsRVTo=";
++      };
++      "mmod_human_face_detector.dat" = fetchurl {
++        url = "${baseurl}/mmod_human_face_detector.dat.bz2";
++        hash = "sha256-256eQPCSwRjV6z5kOTWyFoOBcHk1WVFVQcVqK1DZ/IQ=";
++      };
++      "shape_predictor_5_face_landmarks.dat" = fetchurl {
++        url = "${baseurl}/shape_predictor_5_face_landmarks.dat.bz2";
++        hash = "sha256-bnh7vr9cnv23k/bNHwIyMMRBMwZgXyTymfEoaflapHI=";
++      };
++    };
++
++  # wrap howdy and howdy-gtk
++  py = python3.withPackages (p: [
++    p.dlib
++    p.elevate
++    p.face-recognition.override
++    p.keyboard
++    (p.opencv4.override { enableGtk3 = true; })
++    p.pycairo
++    p.pygobject3
++  ]);
++
++  wrappedPy = writeShellScriptBin "python-howdy-wrapper" ''
++    export OMP_NUM_THREADS=1
++    exec ${py.interpreter} "$@"
++  '';
++
++  desktopItem = makeDesktopItem {
++    name = "howdy";
++    exec = "howdy-gtk";
++    icon = "howdy";
++    comment = "Howdy facial authentication";
++    desktopName = "Howdy";
++    genericName = "Facial authentication";
++    categories = [
++      "System"
++      "Security"
++    ];
++  };
++in
++stdenv.mkDerivation {
++  pname = "howdy";
++  version = "3.0.0";
++
++  src = fetchFromGitHub {
++    owner = "boltgolt";
++    repo = "howdy";
++    rev = "d3ab99382f88f043d15f15c1450ab69433892a1c";
++    hash = "sha256-Xd/uScMnX1GMwLD5GYSbE2CwEtzrhwHocsv0ESKV8IM=";
++  };
++
++  patches = [
++    # Don't install the config file. We handle it in the module.
++    ./dont-install-config.patch
++
++    # Fix python path for howdy-gtk
++    ./fix-gtk-py-path.patch
++  ];
++
++  mesonFlags = concatLists [
++    (mapAttrsToList mesonOption {
++      config_dir = "/etc/howdy";
++      python_path = "${wrappedPy}/bin/python-howdy-wrapper";
++      user_models_dir = "/var/lib/howdy/models";
++    })
++    (mapAttrsToList mesonBool {
++      with_polkit = true;
++    })
++  ];
++
++  nativeBuildInputs = [
++    bzip2
++    gobject-introspection
++    imagemagick
++    meson
++    ninja
++    pkg-config
++    wrapGAppsHook3
++    makeWrapper
++  ];
++
++  buildInputs = [
++    fmt
++    gettext
++    gtk3
++    inih
++    libevdev
++    pam
++    py
++  ];
++
++  postInstall = ''
++    # install dlib data
++    rm -rf $out/share/dlib-data/*
++    ${concatStrings (
++      mapAttrsToList (n: v: ''
++        bzip2 -dc ${v} > $out/share/dlib-data/${n}
++      '') data
++    )}
++
++    mkdir -p $out/share/applications
++    cp "${desktopItem}"/share/applications/* "$out/share/applications/"
++
++    for size in 16 24 32 48 64 128 256 512; do
++      mkdir -p $out/share/icons/hicolor/"$size"x"$size"/apps
++      magick -background none "$out/share/howdy-gtk/logo.png" -resize "$size"x"$size" $out/share/icons/hicolor/"$size"x"$size"/apps/howdy.png
++    done
++  '';
++
++  meta = {
++    description = "Windows Hello™ style facial authentication for Linux";
++    homepage = "https://github.com/boltgolt/howdy";
++    license = lib.licenses.mit;
++    mainProgram = "howdy";
++    platforms = lib.platforms.linux;
++    maintainers = with lib.maintainers; [ fufexan ];
++  };
++}
+diff --git a/pkgs/by-name/ht/httplib/package.nix b/pkgs/by-name/ht/httplib/package.nix
+index 60cab3dd28ac..d75a925326b0 100644
+--- a/pkgs/by-name/ht/httplib/package.nix
++++ b/pkgs/by-name/ht/httplib/package.nix
+@@ -9,13 +9,13 @@
+ }:
+ stdenv.mkDerivation (finalAttrs: {
+   pname = "httplib";
+-  version = "0.19.0";
++  version = "0.26.0";
+ 
+   src = fetchFromGitHub {
+     owner = "yhirose";
+     repo = "cpp-httplib";
+     rev = "v${finalAttrs.version}";
+-    hash = "sha256-OLwD7mpwqG7BUugUca+CJpPMaabJzUMC0zYzJK9PBCg=";
++    hash = "sha256-+VPebnFMGNyChM20q4Z+kVOyI/qDLQjRsaGS0vo8kDM=";
+   };
+ 
+   nativeBuildInputs = [
+diff --git a/pkgs/by-name/li/linux-enable-ir-emitter/package.nix b/pkgs/by-name/li/linux-enable-ir-emitter/package.nix
+new file mode 100644
+index 000000000000..cf37704c0c7d
+--- /dev/null
++++ b/pkgs/by-name/li/linux-enable-ir-emitter/package.nix
+@@ -0,0 +1,62 @@
++{
++  lib,
++  stdenv,
++  makeWrapper,
++  fetchFromGitHub,
++  meson,
++  ninja,
++  pkg-config,
++  argparse,
++  gtk3,
++  opencv,
++  spdlog,
++  usbutils,
++  yaml-cpp,
++}:
++stdenv.mkDerivation (finalAttrs: {
++  pname = "linux-enable-ir-emitter";
++  version = "6.1.2";
++
++  src = fetchFromGitHub {
++    owner = "EmixamPP";
++    repo = "linux-enable-ir-emitter";
++    rev = finalAttrs.version;
++    hash = "sha256-wSmWebX4H3Hj8bbFoVMq3DY3i/nKkQaeu3mXX0o6IaY=";
++  };
++
++  nativeBuildInputs = [
++    makeWrapper
++    meson
++    ninja
++    pkg-config
++  ];
++
++  buildInputs = [
++    argparse
++    gtk3
++    spdlog
++    usbutils
++    yaml-cpp
++    (opencv.override { enableGtk3 = true; })
++  ];
++
++  mesonFlags = lib.lists.flatten [
++    (lib.attrsets.mapAttrsToList lib.strings.mesonOption {
++      "config_dir" = "/var/lib";
++      "localstatedir" = "/var";
++    })
++    (lib.attrsets.mapAttrsToList lib.strings.mesonBool {
++      "create_config_dir" = false;
++      "create_log_dir" = false;
++    })
++  ];
++
++  meta = {
++    description = "Provides support for infrared cameras that are not directly enabled out-of-the box";
++    homepage = "https://github.com/EmixamPP/linux-enable-ir-emitter";
++    license = lib.licenses.mit;
++    maintainers = with lib.maintainers; [ fufexan ];
++    mainProgram = "linux-enable-ir-emitter";
++    platforms = lib.platforms.linux;
++  };
++})
+diff --git a/pkgs/by-name/op/openmpi/package.nix b/pkgs/by-name/op/openmpi/package.nix
+index df150d6eb66d..b6a4afef5e01 100644
+--- a/pkgs/by-name/op/openmpi/package.nix
++++ b/pkgs/by-name/op/openmpi/package.nix
+@@ -36,6 +36,7 @@
+   # note that opempi fails to build with AVX disabled, meaning that everything
+   # up to AVX is enabled by default.
+   avxOptions ? { },
++  enableSubstitute ? true,
+ }:
+ 
+ stdenv.mkDerivation (finalAttrs: {
+@@ -218,7 +219,7 @@ stdenv.mkDerivation (finalAttrs: {
+       # compilers at build time
+       ${lib.pipe wrapperDataFileNames [
+         (lib.mapCartesianProduct (
+-          { part1, part2 }:
++          { part1, part2 }: lib.optionalString enableSubstitute
+           ''
+             substituteInPlace "''${!outputDev}/share/openmpi/${part1}${part2}-wrapper-data.txt" \
+               --replace-fail \
+diff --git a/pkgs/by-name/su/super-productivity/package.nix b/pkgs/by-name/su/super-productivity/package.nix
+index 3bd462d69b7b..0a171480aac6 100644
+--- a/pkgs/by-name/su/super-productivity/package.nix
++++ b/pkgs/by-name/su/super-productivity/package.nix
+@@ -125,7 +125,7 @@ buildNpmPackage rec {
+ 
+           makeWrapper '${lib.getExe electron}' "$out/bin/super-productivity" \
+             --add-flags "$out/share/super-productivity/app.asar" \
+-            --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}" \
++            --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations --disable-features=GlobalShortcutsPortal}}" \
+             --set-default ELECTRON_FORCE_IS_PACKAGED 1 \
+             --inherit-argv0
+         ''
+diff --git a/pkgs/kde/default.nix b/pkgs/kde/default.nix
+index 03436b9bf0e6..891379d5c5a2 100644
+--- a/pkgs/kde/default.nix
++++ b/pkgs/kde/default.nix
+@@ -98,6 +98,9 @@ let
+         krohnkite = self.callPackage ./third-party/krohnkite { };
+         kzones = self.callPackage ./third-party/kzones { };
+         wallpaper-engine-plugin = self.callPackage ./third-party/wallpaper-engine-plugin { };
++
++        # Convenient for users to install various tools provided by kde
++        kdeGear = gear;
+       }
+     );
+ in
