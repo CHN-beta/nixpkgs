@@ -242,9 +242,6 @@ stdenv.mkDerivation (finalAttrs: {
     rm tests/checks/cd.fish
   ''
   + ''
-    substituteInPlace share/functions/grep.fish \
-      --replace-fail "command grep" "command ${lib.getExe gnugrep}"
-
     substituteInPlace share/completions/{sudo.fish,doas.fish} \
       --replace-fail "/usr/local/sbin /sbin /usr/sbin" ""
   ''
@@ -260,12 +257,7 @@ stdenv.mkDerivation (finalAttrs: {
   + lib.optionalString stdenv.hostPlatform.isLinux ''
     for cur in share/functions/*.fish; do
       substituteInPlace "$cur" \
-        --replace-quiet '/usr/bin/getent' '${lib.getExe getent}' \
-        --replace-quiet 'awk' '${lib.getExe' gawk "awk"}'
-    done
-    for cur in share/completions/*.fish; do
-      substituteInPlace "$cur" \
-        --replace-quiet 'awk' '${lib.getExe' gawk "awk"}'
+        --replace-quiet '/usr/bin/getent' '${lib.getExe getent}'
     done
   ''
   + ''
@@ -289,6 +281,9 @@ stdenv.mkDerivation (finalAttrs: {
     rustPlatform.cargoSetupHook
     # Avoid warnings when building the manpages about HOME not being writable
     writableTmpDirAsHomeHook
+    gnugrep
+  ] ++ lib.optionals stdenv.hostPlatform.isLinux [
+    gawk
   ];
 
   buildInputs = [
