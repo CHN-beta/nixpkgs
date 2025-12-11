@@ -390,6 +390,7 @@ with pkgs;
 
   oletools = with python3.pkgs; toPythonApplication oletools;
 
+  ollama-cpu = callPackage ../by-name/ol/ollama/package.nix { acceleration = false; };
   ollama-rocm = callPackage ../by-name/ol/ollama/package.nix { acceleration = "rocm"; };
   ollama-cuda = callPackage ../by-name/ol/ollama/package.nix { acceleration = "cuda"; };
   ollama-vulkan = callPackage ../by-name/ol/ollama/package.nix { acceleration = "vulkan"; };
@@ -4190,7 +4191,13 @@ with pkgs;
   yapf = with python3Packages; toPythonApplication yapf;
 
   yarn-berry_4 = yarn-berry.override { berryVersion = 4; };
+  yarn-berry_4-fetcher = callPackage ../by-name/ya/yarn-berry/fetcher {
+    yarn-berry = yarn-berry_4;
+  };
   yarn-berry_3 = yarn-berry.override { berryVersion = 3; };
+  yarn-berry_3-fetcher = callPackage ../by-name/ya/yarn-berry/fetcher {
+    yarn-berry = yarn-berry_3;
+  };
 
   yarn2nix-moretea = callPackage ../development/tools/yarn2nix-moretea { };
 
@@ -10766,6 +10773,7 @@ with pkgs;
   inherit (callPackage ../applications/virtualization/docker { })
     docker_25
     docker_28
+    docker_29
     ;
 
   docker = docker_28;
