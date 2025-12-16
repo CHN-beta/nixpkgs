@@ -153,10 +153,6 @@ buildGoModule (finalAttrs: {
         # Fails because we vendor dependencies
         "TestLicenseHeaders"
       ]
-      ++ lib.optionals (stdenv.hostPlatform.isLinux && stdenv.hostPlatform.isAarch64) [
-        "TestXDP"
-        "TestRTT"
-      ]
       ++ lib.optionals stdenv.hostPlatform.isDarwin [
         # syscall default route interface en0 differs from netstat
         "TestLikelyHomeRouterIPSyscallExec" # net/netmon
