@@ -83,16 +83,6 @@ in
             slurm to work properly (see `services.munge.password`).
           '';
         };
-
-        extraFlags = lib.mkOption {
-          type = lib.types.listOf lib.types.str;
-          default = [ ];
-          example = [ "-i" ];
-          description = ''
-            Extra flags to pass to `slurmctld` daemon.
-            see {manpage}`slurmctld(8)`.
-          '';
-        };
       };
 
       dbdserver = {
@@ -439,7 +429,7 @@ in
 
         serviceConfig = {
           Type = "forking";
-          ExecStart = "${wrappedSlurm}/bin/slurmctld ${lib.concatStringsSep " " cfg.server.extraFlags}";
+          ExecStart = "${wrappedSlurm}/bin/slurmctld";
           PIDFile = "/run/slurmctld.pid";
           ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
         };
