@@ -6,7 +6,9 @@
   makeWrapper,
   nixosTests,
   nodejs,
-  pnpm_10,
+  fetchPnpmDeps,
+  pnpmConfigHook,
+  pnpm,
   prisma,
   prisma-engines,
   openssl,
@@ -18,7 +20,6 @@
 }:
 let
   sources = lib.importJSON ./sources.json;
-  pnpm = pnpm_10;
 
   geocities = stdenvNoCC.mkDerivation {
     pname = "umami-geocities";
@@ -72,33 +73,40 @@ let
 in
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "umami";
-  version = "3.0.2";
+  version = "3.0.3";
 
   nativeBuildInputs = [
     makeWrapper
     nodejs
-    pnpm.configHook
+    pnpmConfigHook
+    pnpm
   ];
 
   src = fetchFromGitHub {
     owner = "umami-software";
     repo = "umami";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-6ega3ShfZlEnoFuFSh420hB8sp2qoJuAYnzeoOdpODs=";
+    hash = "sha256-rkOD52suE6bihJqKvMdIvqHRIcWhSxXzUkCfmdNbC40=";
   };
 
-  # install dev dependencies as well, for rollup
-  pnpmInstallFlags = [ "--prod=false" ];
-
-  pnpmDeps = pnpm.fetchDeps {
+  pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs)
       pname
-      pnpmInstallFlags
       version
       src
       ;
+    # prevent downloading dependencies for windows
+    # which bloat derivation size and fail to build on hydra
+    # https://github.com/NixOS/nixpkgs/pull/467820#issuecomment-3624054271
+    pnpmInstallFlags = [
+      "--force=false"
+      "--os=linux"
+      "--os=darwin"
+      "--cpu=x64"
+      "--cpu=arm64"
+    ];
     fetcherVersion = 2;
-    hash = "sha256-zHpIqhxfvJ/so7bKvrGMqVGGnquJNnSI/0q3PE+VQ1Y=";
+    hash = "sha256-bqeJ0wzCtnuR6V67Qe1N9UcaHPLziuBhsn7eN8JVJbQ=";
   };
 
   env.CYPRESS_INSTALL_BINARY = "0";
@@ -182,7 +190,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     updateScript = ./update.sh;
   };
 
-  meta = with lib; {
+  meta = {
     changelog = "https://github.com/umami-software/umami/releases/tag/v${finalAttrs.version}";
     description = "Simple, easy to use, self-hosted web analytics solution";
     homepage = "https://umami.is/";
@@ -192,6 +200,6 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     ];
     platforms = lib.platforms.linux;
     mainProgram = "umami-server";
-    maintainers = with maintainers; [ diogotcorreia ];
+    maintainers = with lib.maintainers; [ diogotcorreia ];
   };
 })
