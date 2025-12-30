@@ -61,6 +61,11 @@ buildPythonPackage {
   # jaraco-path depends ob pyobjc
   doCheck = !stdenv.hostPlatform.isDarwin;
 
+  disabledTests = [
+    # Sometimes c++ preprocessor path contains pattern `xxx`, which makes the test fail.
+    "test_config_cmd"
+  ];
+
   meta = {
     description = "Distutils as found in cpython";
     homepage = "https://github.com/pypa/distutils";
