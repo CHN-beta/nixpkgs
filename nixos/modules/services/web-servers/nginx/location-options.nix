@@ -131,6 +131,14 @@ with lib;
       '';
     };
 
+    extraConfigPre = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        These lines go to the beginning of the location verbatim.
+      '';
+    };
+
     priority = mkOption {
       type = types.int;
       default = 1000;
