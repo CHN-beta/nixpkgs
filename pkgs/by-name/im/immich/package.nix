@@ -115,27 +115,27 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "immich";
-  version = "2.3.1";
+  version = "2.5.3";
 
   src = fetchFromGitHub {
     owner = "immich-app";
     repo = "immich";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-K/E5bQraTlvNx1Cd0bKyY6ZhesafGccqVZ9Mu6Q0pZ0=";
+    hash = "sha256-9jZ2Jpsce56O0kcpugvpn6tDKnNAqu6v/87sH0fdzfs=";
   };
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
     inherit pnpm;
-    fetcherVersion = 2;
-    hash = "sha256-i0JHKjsQcdDUrDLK0hJGOvVRh/aOyvms/k+6WEPbyh8=";
+    fetcherVersion = 3;
+    hash = "sha256-+2rm184Hb+S75VyDn3FU36M/3SH2hUDYbKotIGopmvU=";
   };
 
   postPatch = ''
     # pg_dumpall fails without database root access
     # see https://github.com/immich-app/immich/issues/13971
-    substituteInPlace server/src/services/backup.service.ts \
-      --replace-fail '`/usr/lib/postgresql/''${databaseMajorVersion}/bin/pg_dumpall`' '`pg_dump`'
+    substituteInPlace server/src/utils/database-backups.ts \
+      --replace-fail '`/usr/lib/postgresql/''${databaseMajorVersion}/bin/''${bin}`' '`''${bin}`'
   '';
 
   nativeBuildInputs = [
