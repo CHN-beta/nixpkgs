@@ -322,13 +322,13 @@ stdenv.mkDerivation (finalAttrs: {
       hash = "sha256-lbPOkc1HeT5Qsp6XfVyVJtmvSL68qTrmbd3q9lvKSu8=";
     })
   ]
-  ++ lib.optionals (lib.versionAtLeast version "25.8.2.2") [
-    # Fix build with Poppler 25.10
-    (fetchpatch2 {
-      url = "https://gitlab.archlinux.org/archlinux/packaging/packages/libreoffice-fresh/-/raw/f7b0e4385108b95c134599502a7bccf0a41925c8/poppler-25.10.patch";
-      hash = "sha256-KMsjDtRRH8Vy/FXaVwxUo0Ww10PCE0sK8+ZL0Ja2kJQ=";
-    })
-  ]
+  # ++ lib.optionals (lib.versionAtLeast version "25.8.2.2") [
+  #   # Fix build with Poppler 25.10
+  #   (fetchpatch2 {
+  #     url = "https://gitlab.archlinux.org/archlinux/packaging/packages/libreoffice-fresh/-/raw/f7b0e4385108b95c134599502a7bccf0a41925c8/poppler-25.10.patch";
+  #     hash = "sha256-KMsjDtRRH8Vy/FXaVwxUo0Ww10PCE0sK8+ZL0Ja2kJQ=";
+  #   })
+  # ]
   ++ lib.optionals (variant == "collabora") [
     # Backport patch to fix build with Poppler 25.05
     (fetchpatch2 {
