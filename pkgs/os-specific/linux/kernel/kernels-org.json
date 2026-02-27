@@ -29,14 +29,14 @@
         "hash": "sha256:1cvxvwlmnqw71nf6nizf0hpp710a8dsczz5bjwy3i55qwkzwa0lm",
         "lts": true
     },
-    "6.17": {
-        "version": "6.17.13",
-        "hash": "sha256:1fgdy9j90yfd4c2yqdciasdhda14pbfrpzkgriin2r6i7bf04s0i",
-        "lts": false
-    },
     "6.18": {
-        "version": "6.18.13",
-        "hash": "sha256:0zv8qml075jpk2i58cxp61hm3yb74mpkbkjg15n87riqzmakqb7d",
+        "version": "6.18.15",
+        "hash": "sha256:0w7iy9mx1b42q4qz6y9rvny7nmvpwq0mf6b9vv84w4y4qcb64wbw",
+        "lts": true
+    },
+    "6.19": {
+        "version": "6.19.5",
+        "hash": "sha256:1yig0i2q7vn7p8g4lmkviddxi62mzhp0fv2hx3057qq9qz40bblm",
         "lts": false
     }
 }
