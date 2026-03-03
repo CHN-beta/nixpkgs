@@ -361,6 +361,8 @@ rec {
     libc = "ucrt"; # This distinguishes the mingw (non posix) toolchain
   };
 
+  ucrt64Static = ucrt64 // { isStatic = true; };
+
   # LLVM-based mingw-w64 for ARM
   ucrtAarch64 = {
     config = "aarch64-w64-mingw32";
