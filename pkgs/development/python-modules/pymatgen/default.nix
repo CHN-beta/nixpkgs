@@ -26,6 +26,9 @@ buildPythonPackage rec {
     hash = "sha256-BT50dhPI5/g3/a6jwLen5uOcpTTAfzAzlo5erUnqnZ8=";
   };
 
+  # $out/bin/pmg have been provided by pymatgen-core, so we need to prevent pymatgen from installing it again
+  patches = [ ./do-not-install-pmg.patch ];
+
   build-system = [ setuptools ];
 
   nativeBuildInputs = [

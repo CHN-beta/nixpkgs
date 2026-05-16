@@ -1,0 +1,12 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 905204d153..d83b276887 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -101,7 +101,6 @@ vis = ["vtk>=9.6.0"]
+ zeopp = ["pyzeo; platform_system != 'Windows'"]  # Note: requires Voro++ and Zeo++ to be installed
+ 
+ [project.scripts]
+-pmg = "pymatgen.cli.pmg:main"
+ feff_plot_cross_section = "pymatgen.cli.feff_plot_cross_section:main"
+ feff_plot_dos = "pymatgen.cli.feff_plot_dos:main"
+ get_environment = "pymatgen.cli.get_environment:main"
