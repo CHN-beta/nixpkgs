@@ -5,11 +5,10 @@
   pythonOlder,
 
   # build-system
-  cmake,
   scikit-build-core,
   numpy,
+  cmake,
   ninja,
-  pybind11,
   setuptools-scm,
 
   # dependencies
@@ -22,21 +21,20 @@
 
 buildPythonPackage rec {
   pname = "spglib";
-  version = "2.7.0";
+  version = "2.6.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "spglib";
     repo = "spglib";
     tag = "v${version}";
-    hash = "sha256-RFvd/j/14YRIcQTpnYPx5edeF3zbHbi90jb32i3ZU/c=";
+    hash = "sha256-rmQYFFfpyUhT9pfQZk1fN5tZWTg40wwtszhPhiZpXs4=";
   };
 
   build-system = [
-    cmake
     scikit-build-core
     numpy
-    pybind11
+    cmake
     ninja
     setuptools-scm
   ];
@@ -60,7 +58,7 @@ buildPythonPackage rec {
   meta = {
     description = "Python bindings for C library for finding and handling crystal symmetries";
     homepage = "https://spglib.github.io/spglib/";
-    changelog = "https://github.com/spglib/spglib/raw/${src.tag}/ChangeLog";
+    changelog = "https://github.com/spglib/spglib/raw/v${version}/ChangeLog";
     license = lib.licenses.bsd3;
     maintainers = with lib.maintainers; [ psyanticy ];
   };
