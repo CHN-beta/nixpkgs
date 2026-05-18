@@ -1,32 +1,24 @@
 {
   lib,
-  stdenv,
   buildPythonPackage,
   fetchFromGitHub,
-
-  # build-system
   setuptools,
-
-  # dependencies
   numpy,
   scipy,
   spglib,
-
-  # tests
   pytestCheckHook,
 }:
 
-buildPythonPackage (finalAttrs: {
+buildPythonPackage rec {
   pname = "symfc";
-  version = "1.7.0";
+  version = "1.5.4";
   pyproject = true;
-  __structuredAttrs = true;
 
   src = fetchFromGitHub {
     owner = "symfc";
     repo = "symfc";
-    tag = "v${finalAttrs.version}";
-    hash = "sha256-UTiVJQQxMmjZjgqfeDJn6g0XQ6i1JVktwgEt2StSsGE=";
+    tag = "v${version}";
+    hash = "sha256-SGFKbOVi5cVw+8trXrSnO0v2obpJBZrj+7yXk7hK+1s=";
   };
 
   build-system = [
@@ -39,22 +31,19 @@ buildPythonPackage (finalAttrs: {
     spglib
   ];
 
-  pythonImportsCheck = [ "symfc" ];
+  pythonImportsCheck = [
+    "symfc"
+  ];
 
   nativeCheckInputs = [
     pytestCheckHook
   ];
 
-  disabledTests = lib.optionals stdenv.hostPlatform.isx86_64 [
-    # assert (np.float64(0.5555555555555556) == 1.0 ± 1.0e-06
-    "test_fc_basis_set_o3"
-  ];
-
   meta = {
     description = "Generate symmetrized force constants";
     homepage = "https://github.com/symfc/symfc";
-    changelog = "https://github.com/symfc/symfc/releases/tag/${finalAttrs.src.tag}";
+    changelog = "https://github.com/symfc/symfc/releases/tag/v${version}";
     license = lib.licenses.bsd3;
     maintainers = with lib.maintainers; [ GaetanLepage ];
   };
-})
+}
