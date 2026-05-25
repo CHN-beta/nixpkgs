@@ -36,6 +36,7 @@
   # note that opempi fails to build with AVX disabled, meaning that everything
   # up to AVX is enabled by default.
   avxOptions ? { },
+  enableSubstitute ? true,
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -224,7 +225,7 @@ stdenv.mkDerivation (finalAttrs: {
       # compilers at build time
       ${lib.pipe wrapperDataFileNames [
         (lib.mapCartesianProduct (
-          { part1, part2 }:
+          { part1, part2 }: lib.optionalString enableSubstitute
           ''
             substituteInPlace "''${!outputDev}/share/openmpi/${part1}${part2}-wrapper-data.txt" \
               --replace-fail \

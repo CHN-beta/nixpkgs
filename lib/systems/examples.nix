@@ -386,6 +386,8 @@ rec {
     libc = "ucrt"; # This distinguishes the mingw (non posix) toolchain
   };
 
+  mingw-ucrt-x86_64-static = mingw-ucrt-x86_64 // { isStatic = true; };
+
   # mingw-w64 with UCRT for x86_64, LLVM
   mingw-ucrt-x86_64-llvm = {
     config = "x86_64-w64-mingw32";

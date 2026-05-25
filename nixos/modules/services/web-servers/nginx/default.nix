@@ -111,6 +111,14 @@ let
     proxy_set_header        X-Forwarded-Server $hostname;
   '';
 
+  recommendedProxyConfigNoHost = pkgs.writeText "nginx-recommended-proxy-headers-no-host.conf" ''
+    proxy_set_header        X-Real-IP $remote_addr;
+    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header        X-Forwarded-Proto $scheme;
+    proxy_set_header        X-Forwarded-Host $host;
+    proxy_set_header        X-Forwarded-Server $host;
+  '';
+
   proxyCachePathConfig = concatStringsSep "\n" (
     mapAttrsToList (name: proxyCachePath: ''
       proxy_cache_path ${
@@ -265,6 +273,18 @@ let
               # https://www.nginx.com/blog/avoiding-top-10-nginx-configuration-mistakes/#no-keepalives
               proxy_set_header        "Connection" "";
               include ${recommendedProxyConfig};
+            ''}
+
+            ${optionalString cfg.recommendedProxySettingsNoHost ''
+              proxy_redirect          off;
+              proxy_connect_timeout   ${cfg.proxyTimeout};
+              proxy_send_timeout      ${cfg.proxyTimeout};
+              proxy_read_timeout      ${cfg.proxyTimeout};
+              proxy_http_version      1.1;
+              # don't let clients close the keep-alive connection to upstream. See the nginx blog for details:
+              # https://www.nginx.com/blog/avoiding-top-10-nginx-configuration-mistakes/#no-keepalives
+              proxy_set_header        "Connection" "";
+              include ${recommendedProxyConfigNoHost};
             ''}
 
             ${optionalString cfg.recommendedUwsgiSettings ''
@@ -516,6 +536,7 @@ let
     concatStringsSep "\n" (
       map (config: ''
         location ${config.location} {
+          ${config.extraConfigPre}
           ${optionalString (
             config.proxyPass != null && !cfg.proxyResolveWhileRunning
           ) "proxy_pass ${config.proxyPass};"}
@@ -549,6 +570,7 @@ let
           ${optionalString (
             config.proxyPass != null && config.recommendedProxySettings
           ) "include ${recommendedProxyConfig};"}
+          ${optionalString (config.proxyPass != null && config.recommendedProxySettingsNoHost) "include ${recommendedProxyConfigNoHost};"}
           ${optionalString (
             config.uwsgiPass != null && config.recommendedUwsgiSettings
           ) "include ${cfg.package}/conf/uwsgi_params;"}
@@ -650,6 +672,12 @@ in
         description = ''
           Whether to enable recommended proxy settings if a vhost does not specify the option manually.
         '';
+      };
+
+      recommendedProxySettingsNoHost = mkOption {
+        default = false;
+        type = types.bool;
+        description = ''recommendedProxySettingsNoHost'';
       };
 
       proxyTimeout = mkOption {

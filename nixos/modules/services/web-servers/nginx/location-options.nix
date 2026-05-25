@@ -131,6 +131,14 @@ with lib;
       '';
     };
 
+    extraConfigPre = mkOption {
+      type = types.lines;
+      default = "";
+      description = ''
+        These lines go to the beginning of the location verbatim.
+      '';
+    };
+
     priority = mkOption {
       type = types.int;
       default = 1000;
@@ -148,6 +156,13 @@ with lib;
       description = ''
         Enable recommended proxy settings.
       '';
+    };
+
+    recommendedProxySettingsNoHost = mkOption {
+      type = types.bool;
+      default = config.services.nginx.recommendedProxySettingsNoHost;
+      defaultText = literalExpression "config.services.nginx.recommendedProxySettingsNoHost";
+      description = ''recommendedProxySettingsNoHost'';
     };
 
     recommendedUwsgiSettings = mkOption {

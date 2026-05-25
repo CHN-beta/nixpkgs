@@ -193,6 +193,7 @@ stdenv.mkDerivation (finalAttrs: {
     cudaPackages.cuda_cudart
     cudaPackages.libcublas
     cudaPackages.cuda_nvrtc
+    cudaPackages.libcufft
   ]
   ++ lib.optionals (gpuBackend == "rocm") [
     rocmPackages.clr
