@@ -348,7 +348,7 @@ stdenv.mkDerivation (finalAttrs: {
   ]
   ++ lib.optional withCoredump elfutils
   ++ lib.optional withCryptsetup (
-    lib.getDev (cryptsetup.override { withLuks2ExternalTokens = false; }).dev
+    lib.getDev (cryptsetup.override { systemdTokensSupport = false; }).dev
   )
   ++ lib.optional withKexectools kexec-tools
   ++ lib.optional withKmod kmod

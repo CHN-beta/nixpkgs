@@ -12,7 +12,7 @@
   nixosTests,
   libargon2,
   systemd,
-  withLuks2ExternalTokens ? !stdenv.hostPlatform.isStatic,
+  systemdTokensSupport ? !stdenv.hostPlatform.isStatic,
   withInternalArgon2 ? false,
 
   # Programs enabled by default upstream are implicitly enabled unless
@@ -73,10 +73,10 @@ stdenv.mkDerivation (finalAttrs: {
   ++ lib.optionals (!withInternalArgon2) [
     "--enable-libargon2"
   ]
-  ++ lib.optionals withLuks2ExternalTokens [
+  ++ lib.optionals systemdTokensSupport [
     "--with-luks2-external-tokens-path=${systemd}/lib/cryptsetup"
   ]
-  ++ lib.optionals (!withLuks2ExternalTokens) [
+  ++ lib.optionals stdenv.hostPlatform.isStatic [
     "--disable-external-tokens"
     # We have to override this even though we're removing token
     # support, because the path still gets included in the binary even
@@ -97,9 +97,9 @@ stdenv.mkDerivation (finalAttrs: {
 
   enableParallelBuilding = true;
 
-  postFixup = lib.optionals withLuks2ExternalTokens ''
+  postFixup = if systemdTokensSupport then ''
     patchelf --add-rpath ${systemd}/lib/cryptsetup $out/lib/libcryptsetup.so
-  '';
+  '' else null;
 
   # The test [7] header backup in compat-test fails with a mysterious
   # "out of memory" error, even though tons of memory is available.
