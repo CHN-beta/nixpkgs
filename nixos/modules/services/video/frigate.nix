@@ -283,7 +283,6 @@ in
       enable = true;
       additionalModules = with pkgs.nginxModules; [
         develkit
-        rtmp
         secure-token
         set-misc
         vod
@@ -676,23 +675,6 @@ in
           gzip_types application/vnd.apple.mpegurl;
         '';
       };
-      appendConfig = ''
-        # frigate
-        rtmp {
-            server {
-                listen 1935;
-                chunk_size 4096;
-                allow publish 127.0.0.1;
-                deny publish all;
-                allow play all;
-                application live {
-                    live on;
-                    record off;
-                    meta copy;
-                }
-            }
-        }
-      '';
       appendHttpConfig = ''
         # frigate
         map $sent_http_content_type $should_not_cache {
