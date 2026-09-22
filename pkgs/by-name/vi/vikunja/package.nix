@@ -3,23 +3,26 @@
   fetchFromGitHub,
   stdenv,
   nodejs_24,
-  pnpm_10_29_2,
+  pnpm_11,
   fetchPnpmDeps,
   pnpmConfigHook,
-  buildGoModule,
+  buildGo127Module,
   mage,
   dart-sass,
+  writableTmpDirAsHomeHook,
   writeShellScriptBin,
   nixosTests,
 }:
 
 let
-  version = "2.3.0";
+  version = "2.6.0";
+  # Fork of go-vikunja/vikunja carrying the hourly-granularity Gantt rewrite.
+  # Bump with the rev below; the tree is upstream v${version} plus frontend changes.
   src = fetchFromGitHub {
-    owner = "go-vikunja";
+    owner = "CHN-beta";
     repo = "vikunja";
-    rev = "v${version}";
-    hash = "sha256-bdHiSFaN0vNQMhy6GPlpoFeYrk2CLvO7E30d8J/9GC0=";
+    rev = "8de134cc6fd1bee9fc2adc71f8869c6670fc66a1";
+    hash = "sha256-aigl9KT7Pj0gheT/oqd/HLQw2NkNN0wU8G6T1OR7V0c=";
   };
 
   frontend = stdenv.mkDerivation (finalAttrs: {
@@ -35,17 +38,22 @@ let
         src
         sourceRoot
         ;
-      pnpm = pnpm_10_29_2;
+      pnpm = pnpm_11;
       fetcherVersion = 3;
-      hash = "sha256-cDGeIrCxZtcomu3YxikutjXpVe3EeUZ/L3+3y9yx67s=";
+      hash = "sha256-dINCE8NXzjafCPG1A9rDwOZzyA9fv5hYWmjpYI0VJQI=";
     };
 
     nativeBuildInputs = [
       nodejs_24
       dart-sass
       pnpmConfigHook
-      pnpm_10_29_2
+      pnpm_11
     ];
+
+    postPatch = ''
+      substituteInPlace src/version.json \
+        --replace-fail '"dev"' '"${finalAttrs.version}"'
+    '';
 
     doCheck = true;
 
@@ -57,11 +65,15 @@ let
     '';
 
     checkPhase = ''
+      runHook preCheck
       pnpm run test:unit --run
+      runHook postCheck
     '';
 
     installPhase = ''
+      runHook preInstall
       cp -r dist/ $out
+      runHook postInstall
     '';
   });
 
@@ -77,7 +89,7 @@ let
       }' ${file}
     '';
 in
-buildGoModule {
+buildGo127Module {
   inherit src version;
   pname = "vikunja";
 
@@ -95,9 +107,11 @@ buildGoModule {
     [
       fakeGit
       mage
+      # mage wants to write some files to HOME
+      writableTmpDirAsHomeHook
     ];
 
-  vendorHash = "sha256-4UMnfbwL2JFnw9KZDO5sq6XCSBUD5ejeqp6vaTbYWJc=";
+  vendorHash = "sha256-R6M5UyF10pIdoAvjWnS6Dqe/U6LTxmS6OwRTgmxfU4g=";
 
   inherit frontend;
 
@@ -117,28 +131,31 @@ buildGoModule {
   buildPhase = ''
     runHook preBuild
 
-    # Fixes "mkdir /homeless-shelter: permission denied" - "Error: error compiling magefiles" during build
-    export HOME=$(mktemp -d)
     mage build:build
 
     runHook postBuild
   '';
 
   checkPhase = ''
+    runHook preCheck
+
     mage test:feature
     mage test:web
+
+    runHook postCheck
   '';
 
   installPhase = ''
     runHook preInstall
+
     install -Dt $out/bin vikunja
+
     runHook postInstall
   '';
 
   passthru = {
     tests.vikunja = nixosTests.vikunja;
-    frontend = frontend;
-    updateScript = ./update.sh;
+    inherit frontend;
   };
 
   meta = {
