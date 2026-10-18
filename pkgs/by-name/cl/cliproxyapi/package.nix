@@ -2,6 +2,8 @@
   lib,
   buildGoModule,
   fetchFromGitHub,
+  fetchurl,
+  makeBinaryWrapper,
   nix-update-script,
   nixosTests,
   versionCheckHook,
@@ -24,6 +26,8 @@ buildGoModule (finalAttrs: {
 
   subPackages = [ "cmd/server" ];
 
+  nativeBuildInputs = [ makeBinaryWrapper ];
+
   ldflags = [
     "-s"
     "-w"
@@ -34,6 +38,10 @@ buildGoModule (finalAttrs: {
 
   postInstall = ''
     mv $out/bin/server $out/bin/cliproxyapi
+    mkdir -p $out/share/cliproxyapi
+    cp ${finalAttrs.passthru.management} $out/share/cliproxyapi/management.html
+    wrapProgram $out/bin/cliproxyapi \
+      --set-default MANAGEMENT_STATIC_PATH "$out/share/cliproxyapi"
   '';
 
   nativeInstallCheckInputs = [ versionCheckHook ];
@@ -41,6 +49,11 @@ buildGoModule (finalAttrs: {
   doInstallCheck = true;
 
   passthru = {
+    managementVersion = "1.26.5";
+    management = fetchurl {
+      url = "https://github.com/router-for-me/Cli-Proxy-API-Management-Center/releases/download/v${finalAttrs.passthru.managementVersion}/management.html";
+      hash = "sha256-V1WM0CNHVnRjShFIJLAU0+WsFh9vN5Hj2Gtq2rlipwA=";
+    };
     tests = { inherit (nixosTests) cliproxyapi; };
     updateScript = nix-update-script { };
   };
@@ -52,5 +65,9 @@ buildGoModule (finalAttrs: {
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [ anish ];
     mainProgram = "cliproxyapi";
+    sourceProvenance = with lib.sourceTypes; [
+      fromSource
+      binaryBytecode # for management
+    ];
   };
 })

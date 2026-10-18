@@ -39,5 +39,11 @@
     machine.succeed(
         "curl -sf -H 'Authorization: Bearer test-key' http://127.0.0.1:8317/v1/models"
     )
+
+    # Management control panel is available.
+    machine.succeed(
+        "curl -sf http://127.0.0.1:8317/management.html -o /tmp/management.html"
+    )
+    machine.succeed("grep -qi '<!doctype html>' /tmp/management.html")
   '';
 }
