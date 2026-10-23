@@ -13,16 +13,21 @@ buildGoModule (finalAttrs: {
   __structuredAttrs = true;
 
   pname = "cliproxyapi";
-  version = "8.0.32";
+  version = "8.0.40";
 
   src = fetchFromGitHub {
     owner = "router-for-me";
     repo = "CLIProxyAPI";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-B2aUQ5vnO6mIFq0HF0zQH8pOUkr4/Sn+GbffReGB4nk=";
+    hash = "sha256-rWCsTBnTBDmdGZjMpG4NqXMGAU5x9GnlA9BGcrpXRfI=";
   };
 
-  vendorHash = "sha256-r3yWkdMcM40G9jV7MxW/qNv3E9WrHavFilW24quEf+8=";
+  vendorHash = "sha256-yMO0DdE0pjtFxWaQXV17enV8u0KA5fIUbE8Gui/RvWU=";
+
+  postPatch = ''
+    substituteInPlace go.mod \
+      --replace-fail "go 1.26.10" "go 1.26.0"
+  '';
 
   subPackages = [ "cmd/server" ];
 
@@ -49,10 +54,10 @@ buildGoModule (finalAttrs: {
   doInstallCheck = true;
 
   passthru = {
-    managementVersion = "1.26.5";
+    managementVersion = "1.26.7";
     management = fetchurl {
       url = "https://github.com/router-for-me/Cli-Proxy-API-Management-Center/releases/download/v${finalAttrs.passthru.managementVersion}/management.html";
-      hash = "sha256-V1WM0CNHVnRjShFIJLAU0+WsFh9vN5Hj2Gtq2rlipwA=";
+      hash = "sha256-jJxrfT+zEeaq1dBuGZPlOi0oOJ5kBEihvGME7SCwV7U=";
     };
     tests = { inherit (nixosTests) cliproxyapi; };
     updateScript = nix-update-script { };
