@@ -12,7 +12,6 @@ let
   buildNodejs = callPackage ./nodejs.nix {
     inherit openssl;
     python = python3;
-    stdenv = buildPackages.llvmPackages_20.libcxxStdenv;
   };
 
   gypPatches =
