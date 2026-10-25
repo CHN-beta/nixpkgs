@@ -26,14 +26,16 @@ stdenv.mkDerivation (finalAttrs: {
   cmakeFlags = [
     (lib.cmakeBool "BUILD_SHARED_LIBS" (!static))
     (lib.cmakeBool "MERVE_TESTING" finalAttrs.finalPackage.doCheck)
-  ]
-  ++ lib.optional (simdutf != null) (lib.cmakeBool "MERVE_USE_SIMDUTF" true);
+    (lib.cmakeBool "MERVE_USE_SIMDUTF" true)
+  ];
 
   nativeBuildInputs = [
     cmake
     validatePkgConfig
   ];
-  buildInputs = lib.optional (simdutf != null) simdutf;
+  buildInputs = [
+    simdutf
+  ];
   checkInputs = [
     gtest
   ];
