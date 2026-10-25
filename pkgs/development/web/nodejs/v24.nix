@@ -9,15 +9,11 @@
 }:
 
 let
-  buildNodejs =
-    callPackage ./nodejs.nix {
-      inherit openssl;
-      python = python3;
-    }
-    // lib.optionalAttrs stdenv.hostPlatform.isDarwin {
-      # libcxx21 makes FD tracking unreliable on Darwin. Pinning to libcxx20:
-      stdenv = buildPackages.llvmPackages_20.libcxxStdenv;
-    };
+  buildNodejs = callPackage ./nodejs.nix {
+    inherit openssl;
+    python = python3;
+    stdenv = buildPackages.llvmPackages_20.libcxxStdenv;
+  };
 
   gypPatches =
     if stdenv.buildPlatform.isDarwin then
