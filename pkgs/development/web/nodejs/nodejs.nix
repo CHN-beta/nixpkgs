@@ -348,7 +348,7 @@ let
 
       dontDisableStatic = true;
 
-      configureScript = "${python.pythonOnBuildForHost.interpreter} configure.py";
+      configureScript = "${python.interpreter} configure.py";
 
       # In order to support unsupported cross configurations, we copy some intermediate executables
       # from a native build and replace all the build-system tools with a script which simply touches
