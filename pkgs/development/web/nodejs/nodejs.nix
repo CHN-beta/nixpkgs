@@ -676,9 +676,6 @@ let
         done
       '';
 
-      # reduces build time from ~90 to ~15 minutes on hydra
-      requiredSystemFeatures = [ "big-parallel" ];
-
       passthru.tests = {
         version = testers.testVersion {
           package = self;
